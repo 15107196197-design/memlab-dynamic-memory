@@ -3039,6 +3039,1769 @@
         "event": null,
         "time_expression": null
       }
-    ]
+    ],
+    "D18:18": [
+      {
+        "entity": "Andrew",
+        "attribute": "housing_search_status",
+        "value": "searching for dog-friendly place",
+        "event": "mentioned previously",
+        "time_expression": null
+      }
+    ],
+    "D18:19": [
+      {
+        "entity": "Andrew",
+        "attribute": "housing_search_status",
+        "value": "still working on finding dog-friendly place",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:20": [],
+    "D18:21": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "find perfect place for dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:22": [],
+    "D19:1": [],
+    "D19:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_incident",
+        "value": "leash busted and chased dog",
+        "event": "dog pulled hard at park",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "pet_outcome",
+        "value": "caught dog before harm",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:3": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_name",
+        "value": "Precious",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:4": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_care_action",
+        "value": "petted, hugged, spoke calmly, walked dog",
+        "event": "calming dog after incident",
+        "time_expression": null
+      }
+    ],
+    "D19:5": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_name",
+        "value": "Toby",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:6": [],
+    "D19:7": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_appearance",
+        "value": "wearing green hat",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:8": [
+      {
+        "entity": "Audrey",
+        "attribute": "training_activities",
+        "value": "obedience and tricks (sit, stay, shake, roll over)",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:9": [],
+    "D19:10": [
+      {
+        "entity": "Audrey",
+        "attribute": "walk_frequency",
+        "value": "multiple times a day",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:11": [],
+    "D19:12": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "breed_composition",
+        "value": "Two Jack Russell mixes and two Chihuahua mixes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:13": [],
+    "D19:14": [
+      {
+        "entity": "Audrey",
+        "attribute": "feeling_about_dogs",
+        "value": "loves them for bringing joy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:15": [
+      {
+        "entity": "Andrew",
+        "attribute": "current_activity",
+        "value": "taking care of flowers",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D19:16": [
+      {
+        "entity": "Audrey",
+        "attribute": "garden_ownership",
+        "value": "has a small garden",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:17": [],
+    "D19:18": [
+      {
+        "entity": "Audrey's garden",
+        "attribute": "status",
+        "value": "flowers looking great and veggie patch coming along",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:19": [],
+    "D19:20": [
+      {
+        "entity": "Audrey's flowers",
+        "attribute": "species",
+        "value": "Peruvian Lilies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:21": [],
+    "D19:22": [
+      {
+        "entity": "Peruvian Lilies",
+        "attribute": "care_difficulty",
+        "value": "easy to take care of",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Peruvian Lilies",
+        "attribute": "care_requirements",
+        "value": "water and enough sun",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:23": [],
+    "D19:24": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "garden_behavior",
+        "value": "enjoy the garden, running around and exploring",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:25": [],
+    "D19:26": [
+      {
+        "entity": "Audrey",
+        "attribute": "pets",
+        "value": "fur babies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:27": [],
+    "D19:28": [
+      {
+        "entity": "Audrey",
+        "attribute": "sentiment_towards_pets",
+        "value": "they mean everything to her",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:29": [],
+    "D19:30": [
+      {
+        "entity": "Audrey",
+        "attribute": "sentiment_towards_pets",
+        "value": "they are everything to her",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:1": [
+      {
+        "entity": "Andrew",
+        "attribute": "planned_activity",
+        "value": "beach trip with girlfriend and Toby",
+        "event": "planning beach trip",
+        "time_expression": "next month"
+      }
+    ],
+    "D20:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "planned_activity",
+        "value": "hike with dogs",
+        "event": "planning hike",
+        "time_expression": "next month"
+      }
+    ],
+    "D20:3": [],
+    "D20:4": [
+      {
+        "entity": "Audrey",
+        "attribute": "relaxation_method",
+        "value": "taking dogs for a walk in the park",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:5": [],
+    "D20:6": [
+      {
+        "entity": "Audrey",
+        "attribute": "past_activity",
+        "value": "took dogs to nearby dog park",
+        "event": "visited dog park",
+        "time_expression": "last Saturday"
+      }
+    ],
+    "D20:7": [],
+    "D20:8": [
+      {
+        "entity": "Audrey",
+        "attribute": "activity_preference",
+        "value": "enjoys checking out new trails with dogs in nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:9": [],
+    "D20:10": [],
+    "D20:11": [
+      {
+        "entity": "Andrew",
+        "attribute": "experience",
+        "value": "seen birds up close",
+        "event": "observing birds",
+        "time_expression": null
+      }
+    ],
+    "D20:12": [
+      {
+        "entity": "Audrey",
+        "attribute": "preference",
+        "value": "loves how birds can fly around and explore",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "wish to have freedom like birds",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:13": [
+      {
+        "entity": "Andrew",
+        "attribute": "preference",
+        "value": "finds watching birds fly freeing and awe-inspiring",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:14": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "wanting to do some birdwatching",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:15": [
+      {
+        "entity": "Andrew",
+        "attribute": "knowledge",
+        "value": "knows a thing or two about bird watching",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "suggests going birdwatching together sometimes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:16": [
+      {
+        "entity": "Audrey",
+        "attribute": "resource",
+        "value": "using a book that writes about bird watching guides",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:17": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "plan a birdwatching trip together",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:18": [
+      {
+        "entity": "Audrey",
+        "attribute": "action",
+        "value": "going to check schedule and get back to Andrew",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:19": [],
+    "D20:20": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "learn some of the common birds in this area",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:21": [
+      {
+        "entity": "Andrew",
+        "attribute": "plan",
+        "value": "bring binos and a notebook to log birds at the trip",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:22": [],
+    "D20:23": [
+      {
+        "entity": "Andrew",
+        "attribute": "preference",
+        "value": "enjoys watching birds in nature",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "activity",
+        "value": "reads books about ecological systems",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:24": [],
+    "D20:25": [
+      {
+        "entity": "Andrew",
+        "attribute": "knowledge",
+        "value": "learned a lot about animals, plants, and ecosystems",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:26": [],
+    "D20:27": [],
+    "D20:28": [],
+    "D20:29": [],
+    "D20:30": [],
+    "D20:31": [],
+    "D20:32": [
+      {
+        "entity": "Audrey",
+        "attribute": "recycling_habit",
+        "value": "recycles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:33": [],
+    "D20:34": [
+      {
+        "entity": "Audrey",
+        "attribute": "transportation_habit",
+        "value": "usually takes public transport",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:35": [],
+    "D20:36": [],
+    "D20:37": [
+      {
+        "entity": "Andrew",
+        "attribute": "preferred_bike_routes_location",
+        "value": "near the river",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:38": [],
+    "D20:39": [],
+    "D20:40": [],
+    "D21:1": [],
+    "D21:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "owns_dogs",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "activity",
+        "value": "took dogs to the beach",
+        "event": "beach_trip",
+        "time_expression": "over the weekend"
+      }
+    ],
+    "D21:3": [
+      {
+        "entity": "Andrew",
+        "attribute": "past_activity",
+        "value": "went to the beach",
+        "event": "beach_trip",
+        "time_expression": "last trip"
+      }
+    ],
+    "D21:4": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "activity",
+        "value": "swimming at the beach",
+        "event": "beach_trip",
+        "time_expression": null
+      }
+    ],
+    "D21:5": [
+      {
+        "entity": "Andrew",
+        "attribute": "past_habit",
+        "value": "hiked a lot",
+        "event": null,
+        "time_expression": "used to"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "current_state",
+        "value": "hard to find open spaces in the city",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:6": [],
+    "D21:7": [
+      {
+        "entity": "Andrew",
+        "attribute": "preference",
+        "value": "exploring nature is an escape to find peace",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:8": [],
+    "D21:9": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "get more plants for his house",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:10": [],
+    "D21:11": [],
+    "D21:12": [],
+    "D21:13": [],
+    "D21:14": [],
+    "D21:15": [],
+    "D21:16": [],
+    "D21:17": [],
+    "D21:18": [],
+    "D22:1": [
+      {
+        "entity": "Audrey",
+        "attribute": "past_medical_condition",
+        "value": "knee injury",
+        "event": "injury prevented walking dogs",
+        "time_expression": "the other day"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "pet_ownership",
+        "value": "dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:2": [],
+    "D22:3": [],
+    "D22:4": [],
+    "D22:5": [
+      {
+        "entity": "Audrey",
+        "attribute": "hobby",
+        "value": "making jewelry out of recycled stuff",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "jewelry_materials",
+        "value": "bottle caps, buttons, and broken jewelry",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:6": [],
+    "D22:7": [
+      {
+        "entity": "Audrey",
+        "attribute": "jewelry_business_status",
+        "value": "selling jewelry",
+        "event": "started selling after hobby",
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "charitable_donation",
+        "value": "donates a portion of profits",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:8": [],
+    "D22:9": [
+      {
+        "entity": "Audrey",
+        "attribute": "donation_recipient",
+        "value": "animal shelter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:10": [
+      {
+        "entity": "Audrey",
+        "attribute": "volunteering_status",
+        "value": "cannot volunteer at the shelter",
+        "event": null,
+        "time_expression": "anymore"
+      }
+    ],
+    "D22:11": [],
+    "D22:12": [],
+    "D22:13": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "stay strong and keep making a difference",
+        "event": null,
+        "time_expression": "challenging times"
+      }
+    ],
+    "D23:1": [
+      {
+        "entity": "Andrew",
+        "attribute": "partner",
+        "value": "Toby",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "played board games with gf and Toby",
+        "event": "board game night",
+        "time_expression": "Last Tuesday"
+      }
+    ],
+    "D23:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "action",
+        "value": "made goodies to thank neighbors",
+        "event": "making goodies",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Audrey's neighbors",
+        "attribute": "home_type",
+        "value": "pup-friendly",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:3": [
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "board game session",
+        "event": "board game session",
+        "time_expression": "Friday night"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "plan",
+        "value": "check out a cozy cafe",
+        "event": null,
+        "time_expression": "This weekend"
+      }
+    ],
+    "D23:4": [],
+    "D23:5": [
+      {
+        "entity": "new spot",
+        "attribute": "status",
+        "value": "just opened",
+        "event": null,
+        "time_expression": "the other day"
+      }
+    ],
+    "D23:6": [],
+    "D23:7": [
+      {
+        "entity": "dog park",
+        "attribute": "location",
+        "value": "close by to the cafe",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:8": [],
+    "D23:9": [
+      {
+        "entity": "Andrew's pup",
+        "attribute": "attire",
+        "value": "wearing a sweater",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:10": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "preference",
+        "value": "love socializing and exercise at dog park",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:11": [
+      {
+        "entity": "Andrew's pup",
+        "attribute": "event",
+        "value": "chased a squirrel around a tree",
+        "event": "chasing squirrel",
+        "time_expression": null
+      }
+    ],
+    "D23:12": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "preference",
+        "value": "hate snow",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "event",
+        "value": "took dogs to a snowy park",
+        "event": "visiting snowy park",
+        "time_expression": "last winter"
+      },
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "preference",
+        "value": "prefer sunny days in the grass",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:13": [
+      {
+        "entity": "Toby",
+        "attribute": "breed",
+        "value": "German Shepherd",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Toby",
+        "attribute": "preference",
+        "value": "loves cute sweaters",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Toby",
+        "attribute": "trait",
+        "value": "active",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:14": [
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "preference",
+        "value": "love Fetch and Frisbee",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey's dogs",
+        "attribute": "preference",
+        "value": "love running around and meeting other pups",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:15": [],
+    "D23:16": [],
+    "D23:17": [],
+    "D23:18": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_count",
+        "value": "4",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "tattoo_history",
+        "value": "had a tattoo of four dogs",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "tattoo_action",
+        "value": "went to tattoo parlor and got more drawings on the tattoo",
+        "event": "tattoo update",
+        "time_expression": null
+      }
+    ],
+    "D23:19": [],
+    "D23:20": [
+      {
+        "entity": "Audrey",
+        "attribute": "tattoo_status",
+        "value": "finished for now",
+        "event": null,
+        "time_expression": "right now"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "future_goal",
+        "value": "get another tattoo if she gets another dog",
+        "event": null,
+        "time_expression": "someday"
+      }
+    ],
+    "D23:21": [],
+    "D23:22": [],
+    "D23:23": [
+      {
+        "entity": "Andrew",
+        "attribute": "residence_type",
+        "value": "city",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "habit",
+        "value": "goes to nearby parks or on hikes",
+        "event": null,
+        "time_expression": "Whenever I can"
+      }
+    ],
+    "D23:24": [
+      {
+        "entity": "Audrey",
+        "attribute": "recent_activity_status",
+        "value": "has not taken dogs for a walk recently",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D23:25": [],
+    "D23:26": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "go on a hike with dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:27": [
+      {
+        "entity": "Audrey",
+        "attribute": "past_activity",
+        "value": "hiked with dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:28": [
+      {
+        "entity": "Audrey",
+        "attribute": "past_activity",
+        "value": "went on hiking trips with dog",
+        "event": null,
+        "time_expression": "everytime"
+      }
+    ],
+    "D24:1": [
+      {
+        "entity": "Audrey",
+        "attribute": "activity",
+        "value": "went to a pet store to buy toys for dogs",
+        "event": "pet store visit",
+        "time_expression": "last Monday"
+      }
+    ],
+    "D24:2": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_ownership_event",
+        "value": "adopted another pup from a shelter",
+        "event": "adoption of a new dog",
+        "time_expression": "recently"
+      }
+    ],
+    "D24:3": [],
+    "D24:4": [
+      {
+        "entity": "Andrew",
+        "attribute": "existing_pet_name",
+        "value": "Toby",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "new_pet_status",
+        "value": "getting used to Toby and the new environment",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:5": [],
+    "D24:6": [
+      {
+        "entity": "Andrew",
+        "attribute": "new_pet_name",
+        "value": "Buddy",
+        "event": "naming the new dog",
+        "time_expression": null
+      }
+    ],
+    "D24:7": [],
+    "D24:8": [
+      {
+        "entity": "Andrew",
+        "attribute": "shared_activity_with_new_pet",
+        "value": "walks",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:9": [],
+    "D24:10": [
+      {
+        "entity": "Andrew",
+        "attribute": "shared_activity_with_new_pet",
+        "value": "checking out new hiking trails",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:11": [],
+    "D24:12": [
+      {
+        "entity": "Andrew",
+        "attribute": "planned_activity",
+        "value": "taking both dogs to the trails together",
+        "event": "planning a hike with both dogs",
+        "time_expression": "soon"
+      }
+    ],
+    "D24:13": [
+      {
+        "entity": "Audrey",
+        "attribute": "planned_activity",
+        "value": "hike with furry friends",
+        "event": "planning a hike",
+        "time_expression": "next month"
+      }
+    ],
+    "D24:14": [],
+    "D24:15": [],
+    "D24:16": [
+      {
+        "entity": "Andrew",
+        "attribute": "location_preference",
+        "value": "far from the city",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:17": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "find a nice spot for a hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:18": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "find a nice spot for a hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:19": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "research to find a nice spot for a hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:20": [
+      {
+        "entity": "Andrew",
+        "attribute": "sentiment",
+        "value": "appreciates Audrey's effort",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:21": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "find the best spot for the hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:22": [
+      {
+        "entity": "Andrew",
+        "attribute": "sentiment",
+        "value": "excited about the hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:1": [
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "went to a wine tasting with his girlfriend",
+        "event": "wine tasting",
+        "time_expression": "last weekend"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "sentiment",
+        "value": "enjoyed the wine tasting",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "event",
+        "value": "had an accident while playing with her pups at the park",
+        "event": "accident at park",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "taking care of pups with one arm",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:3": [
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "tried a new spot in town that serves sushi",
+        "event": "visited sushi spot",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "sentiment",
+        "value": "thought the sushi was great",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:4": [
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "feeling better each day",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "get sushi for dinner",
+        "event": null,
+        "time_expression": "tonight"
+      }
+    ],
+    "D25:5": [
+      {
+        "entity": "Andrew",
+        "attribute": "experience",
+        "value": "never tried sushi before",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:6": [
+      {
+        "entity": "Audrey",
+        "attribute": "preference",
+        "value": "loves sushi",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:7": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "try more sushi soon",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:8": [
+      {
+        "entity": "Audrey",
+        "attribute": "recommendation",
+        "value": "try a California or salmon roll first",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:9": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "go with a California or salmon roll and try out some sauces",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:10": [],
+    "D25:11": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "try different sushi",
+        "event": "planning to try sushi",
+        "time_expression": null
+      }
+    ],
+    "D25:12": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "Andrew takes photos of sushi",
+        "event": "requesting photos",
+        "time_expression": null
+      }
+    ],
+    "D25:13": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "take photos of sushi adventure",
+        "event": "committing to take photos",
+        "time_expression": null
+      }
+    ],
+    "D25:14": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "order sushi for tonight",
+        "event": "planning to order sushi",
+        "time_expression": "tonight"
+      }
+    ],
+    "D25:15": [],
+    "D25:16": [],
+    "D26:1": [
+      {
+        "entity": "Audrey",
+        "attribute": "event",
+        "value": "made appointment with animal behaviorist",
+        "event": "scheduled appointment",
+        "time_expression": "last Wed"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "dogs not acting normally",
+        "event": "noticing dog behavior",
+        "time_expression": null
+      }
+    ],
+    "D26:2": [],
+    "D26:3": [
+      {
+        "entity": "Audrey",
+        "attribute": "event",
+        "value": "behaviorist checked dogs and asked questions",
+        "event": "appointment occurred",
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "received tips to help with dog problems",
+        "event": "received advice",
+        "time_expression": null
+      }
+    ],
+    "D26:4": [],
+    "D26:5": [
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "using positive reinforcement techniques",
+        "event": "implementing behaviorist tips",
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "suggested changes in dog routine",
+        "event": "implementing behaviorist tips",
+        "time_expression": null
+      }
+    ],
+    "D26:6": [],
+    "D26:7": [
+      {
+        "entity": "Audrey",
+        "attribute": "state",
+        "value": "dogs responding well to positive reinforcement",
+        "event": "observing progress",
+        "time_expression": "So far"
+      }
+    ],
+    "D26:8": [],
+    "D26:9": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "keeping them healthy and happy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:10": [],
+    "D26:11": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "want the best for them",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "looking forward the day they are back to normal",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:12": [],
+    "D26:13": [
+      {
+        "entity": "Pepper",
+        "attribute": "breed",
+        "value": "Lab mix",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Panda",
+        "attribute": "breed",
+        "value": "Lab mix",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Precious",
+        "attribute": "breed",
+        "value": "Chihuahua mix",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Pixie",
+        "attribute": "breed",
+        "value": "Chihuahua mix",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "can't wait the day they're all back to normal",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:14": [
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "took a pic at a national park",
+        "event": "took a pic at a national park",
+        "time_expression": "a while ago"
+      }
+    ],
+    "D26:15": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "hope to join you and the furry friends soon",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:16": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "hope your pups can get better and join us soon",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:17": [],
+    "D26:18": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "plan a hike soon",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:19": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "pick a date and go hike",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:20": [
+      {
+        "entity": "Andrew",
+        "attribute": "event",
+        "value": "going on a picnic date with my girlfriend",
+        "event": "going on a picnic date with my girlfriend",
+        "time_expression": "on Sunday"
+      }
+    ],
+    "D26:21": [
+      {
+        "entity": "Audrey",
+        "attribute": "event",
+        "value": "going to bring some snack",
+        "event": "going to bring some snack",
+        "time_expression": "Saturday"
+      }
+    ],
+    "D26:22": [],
+    "D26:23": [],
+    "D26:24": [],
+    "D26:25": [
+      {
+        "entity": "Audrey",
+        "attribute": "plan",
+        "value": "check out the trail first",
+        "event": "planning a trip",
+        "time_expression": "for the day"
+      }
+    ],
+    "D26:26": [
+      {
+        "entity": "lake",
+        "attribute": "location",
+        "value": "near the trail",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:27": [
+      {
+        "entity": "Audrey",
+        "attribute": "action",
+        "value": "found a photo of the lake online",
+        "event": "sharing photo",
+        "time_expression": null
+      }
+    ],
+    "D26:28": [],
+    "D26:29": [
+      {
+        "entity": "Audrey",
+        "attribute": "plan",
+        "value": "try the trail by the lake",
+        "event": "planning a trip",
+        "time_expression": null
+      }
+    ],
+    "D26:30": [],
+    "D26:31": [
+      {
+        "entity": "Audrey",
+        "attribute": "preference",
+        "value": "loves exploring and being outside with dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:32": [
+      {
+        "entity": "Andrew",
+        "attribute": "preference",
+        "value": "loves outdoor trips with dogs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:33": [],
+    "D26:34": [
+      {
+        "entity": "Andrew",
+        "attribute": "action",
+        "value": "shared a photo of a trail near the location",
+        "event": "sharing photo",
+        "time_expression": null
+      }
+    ],
+    "D26:35": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "take dogs to the trail shown in photo",
+        "event": null,
+        "time_expression": "sometime"
+      }
+    ],
+    "D26:36": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "go to the trail on the next trip",
+        "event": null,
+        "time_expression": "the next trip"
+      }
+    ],
+    "D26:37": [],
+    "D26:38": [],
+    "D26:39": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "capture amazing moments with furry friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:40": [],
+    "D26:41": [
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "make awesome memories with furry friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:42": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_ownership",
+        "value": "has a dog",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "past_activity",
+        "value": "hiked with his dog",
+        "event": "hiking",
+        "time_expression": "last time"
+      }
+    ],
+    "D26:43": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_ownership",
+        "value": "has pups",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "goal",
+        "value": "see her pups being happy and hiking",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:44": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "make the hike epic and fun",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:45": [],
+    "D26:46": [
+      {
+        "entity": "Andrew",
+        "attribute": "intent",
+        "value": "head out soon",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D26:47": [],
+    "D27:1": [
+      {
+        "entity": "Andrew",
+        "attribute": "relationship",
+        "value": "has a girlfriend",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "past_activity",
+        "value": "went on a bike ride with his girlfriend",
+        "event": "bike ride",
+        "time_expression": "had a great weekend"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "past_event",
+        "value": "stumbled upon a cool park outside of town",
+        "event": "discovered park",
+        "time_expression": "had a great weekend"
+      }
+    ],
+    "D27:2": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_ownership",
+        "value": "has four pups",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "past_activity",
+        "value": "checked out new parks with her four pups",
+        "event": "park visit",
+        "time_expression": "Last weekend"
+      },
+      {
+        "entity": "Audrey",
+        "attribute": "membership",
+        "value": "joined a dog owners group",
+        "event": "joined group",
+        "time_expression": "recently"
+      }
+    ],
+    "D27:3": [],
+    "D27:4": [
+      {
+        "entity": "Audrey",
+        "attribute": "routine",
+        "value": "meets up with other dog owners once a week",
+        "event": null,
+        "time_expression": "once a week"
+      }
+    ],
+    "D27:5": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_ownership",
+        "value": "has two dogs",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "considering getting another dog",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:6": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_names",
+        "value": "Toby and Buddy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:7": [
+      {
+        "entity": "Andrew",
+        "attribute": "priority",
+        "value": "taking good care of his dogs",
+        "event": "stating priority",
+        "time_expression": null
+      }
+    ],
+    "D27:8": [
+      {
+        "entity": "Audrey",
+        "attribute": "opinion",
+        "value": "Andrew does not need more dogs to make his current dogs happy",
+        "event": "expressing opinion",
+        "time_expression": null
+      }
+    ],
+    "D27:9": [
+      {
+        "entity": "Andrew",
+        "attribute": "living_situation",
+        "value": "living in the city with dogs",
+        "event": "stating current situation",
+        "time_expression": null
+      }
+    ],
+    "D27:10": [
+      {
+        "entity": "Audrey",
+        "attribute": "dog_care_method",
+        "value": "entertains dogs in house with toys and games",
+        "event": "describing dog care routine",
+        "time_expression": null
+      }
+    ],
+    "D27:11": [
+      {
+        "entity": "Andrew",
+        "attribute": "intent",
+        "value": "keep in mind ways to keep dogs active in the city",
+        "event": "stating intent",
+        "time_expression": null
+      }
+    ],
+    "D27:12": [
+      {
+        "entity": "Audrey",
+        "attribute": "dog_activity",
+        "value": "dogs play fetch in the park",
+        "event": "describing dog activity",
+        "time_expression": null
+      }
+    ],
+    "D27:13": [],
+    "D27:14": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_activities",
+        "value": "puzzles, training, hide-and-seek",
+        "event": "giving activities to pets",
+        "time_expression": null
+      }
+    ],
+    "D27:15": [
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "try activities with his pups",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:16": [],
+    "D27:17": [],
+    "D27:18": [],
+    "D28:1": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_event",
+        "value": "took fur kids to pet salon",
+        "event": "pet salon visit",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D28:2": [],
+    "D28:3": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_behavior",
+        "value": "really good at the salon",
+        "event": "salon visit",
+        "time_expression": null
+      }
+    ],
+    "D28:4": [],
+    "D28:5": [
+      {
+        "entity": "Audrey",
+        "attribute": "role",
+        "value": "dog owner",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:6": [
+      {
+        "entity": "Andrew",
+        "attribute": "action",
+        "value": "adopted another dog",
+        "event": "adoption of a new dog",
+        "time_expression": "the other day"
+      }
+    ],
+    "D28:7": [],
+    "D28:8": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_name",
+        "value": "Scout",
+        "event": "naming the new dog",
+        "time_expression": null
+      }
+    ],
+    "D28:9": [],
+    "D28:10": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_names",
+        "value": "Toby, Buddy",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "goal",
+        "value": "take Scout, Toby, and Buddy to a nearby park",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:11": [],
+    "D28:12": [
+      {
+        "entity": "Andrew",
+        "attribute": "pet_care_state",
+        "value": "keeping Scout on a leash",
+        "event": null,
+        "time_expression": "For now"
+      },
+      {
+        "entity": "Andrew",
+        "attribute": "pet_supplies",
+        "value": "bed, toys, puppy pads",
+        "event": "purchased essentials",
+        "time_expression": null
+      }
+    ],
+    "D28:13": [
+      {
+        "entity": "Andrew",
+        "attribute": "relationship",
+        "value": "girlfriend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:14": [],
+    "D28:15": [
+      {
+        "entity": "Audrey",
+        "attribute": "pet_state",
+        "value": "happy, safe, exploring",
+        "event": null,
+        "time_expression": "now"
+      }
+    ],
+    "D28:16": [],
+    "D28:17": [],
+    "D28:18": []
   }
 }
