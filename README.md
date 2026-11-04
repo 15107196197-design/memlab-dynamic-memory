@@ -1,39 +1,128 @@
-# 动态记忆工作台
+# 动态记忆工作台 · Dynamic Memory Workbench
 
-> 数据处理进度：conv-44 的机器事实抽取目前完成 420/675 轮，其余五段已完成。未完成的发言仍保留原文与来源，机器事实标记为 pending；可按下文运行 extract.py 续跑。覆盖情况见 coverage.json。
+基于 LoCoMo 长期多会话对话的智能体动态记忆管理系统，包含以下能力：
 
-以 Zep 开源生态为起点构建的独立课程项目。上游当前仓库是 Zep Cloud 示例与集成，不包含托管产品；本应用独立实现检索与状态解析，工作台可只读浏览本机 Graphiti 三轮示例图谱，主问答流程尚未接入 Graphiti。本仓库保留上游 Apache 2.0 许可文件，不包含 Zep Cloud 服务源码。本地使用 Ollama；不需要云账号。
+- **结构化记忆构建**：从原始对话抽取人物 / 属性 / 值 / 事件 / 时间，每条记忆都能追溯到来源会话和轮次。
+- **离线多版本记忆**：把同一人物同一方面的事实归入同一“状态槽”，并判断版本之间的关系：RETAIN（保留）、UPDATE（更新）、SUPERSEDE（替代）、CONFLICT（冲突）。
+- **查询驱动的动态状态解析**：针对问题检索相关记忆，沿记忆图谱补全历史版本，判断在当前问题和截止日期下哪些记忆仍然有效，再据此回答。
+- **Web 可视化**：记忆浏览、状态演化、图谱视图，并展示问答中的解析过程。
+- **对照评测**：Full Text 与 Vector RAG 两个基线，指标为答案 F1、证据 Recall@K 和状态判断准确率。
 
-## 启动
+全部在本机运行：Python 标准库 + 本地 Ollama，无第三方 Python 依赖，也不需要云账号。
 
-确保安装 Python 3.10+ 和运行 Ollama，具备 `qwen3.8:27b-q4_K_M` 和 `bge-m3` 模型。在本目录运行：
+## 快速开始
 
-```powershell
-python app.py
-```
-
-Windows 也可在 PowerShell 中运行 `./start.ps1` 检查本地模型并启动。
-
-访问 http://127.0.0.1:8765 。网页支持导入 LoCoMo 结构的 JSON（单段对象或数组，最大 20 MB），导入数据保存在本机 `imported/`，不会被 Git 跟踪。可通过环境变量 `MEMORY_MODEL`、`EMBED_MODEL`、`OLLAMA_URL` 调整；`EMBED_URL` 可将向量模型指向另一个 Ollama 服务，`EMBED_CPU_ONLY=1` 可让向量模型在 CPU 上运行。模型推理和首次向量索引可能较慢；服务仅监听本机。
-
-## 数据和方法
-
-`locomo10.json` 来自 SNAP LoCoMo。自定划分：开发 conv-26、30、43、44；测试 conv-41、42；扩展 conv-47、48、49、50。不是课程官方划分。发言作为可追溯记忆，保存原文、会话记录时间和原始轮次。数据文件自带且可追溯的 observation 标注单独展示为 `dataset_observations`，与本系统的模型抽取结果分开；这些标注不参与检索排序或状态判定。`extract.py` 使用本地模型按批提取实体、属性、值、事件和时间表达；提取结果未经人工验证，pending 表示尚未抽取，空数组表示模型认为该轮无可提取事实。结果以批次保存，失败的批次会分割重试，可重复运行以补齐遗漏。启动完整抽取：
+需要 Python 3.10+，以及安装了 `qwen3.8:27b-q4_K_M`（回答 / 抽取）和 `bge-m3`（向量）模型的 [Ollama](https://ollama.com)。
 
 ```powershell
-$env:MEMORY_CONTEXT='8192'
-python extract.py --batch-size 15
-python export_memories.py
+ollama pull bge-m3
+python server.py            # 打开 http://127.0.0.1:8765
 ```
 
-抽取持续较长时间；导出 JSON 是运行导出命令时的快照，网页每次读取最新检查点。抽取模型默认与 `MEMORY_MODEL` 一致，展示默认读取 `EXTRACTION_MODEL=qwen3.8:27b-q4_K_M`，若采用其他模型需设置该变量。当前动态查询以原始发言为检索单元，动态方法融合 bge-m3 向量检索与词法检索；无状态的混合检索基线使用相同候选集，另保留纯向量基线；动态方法先由模型推断状态关系，先标记仅有宽泛动作重合的弱证据关系，再对其他关系进行第二轮证据复核，再基于有效及未解决冲突证据回答。弱证据规则可能误拒真实关系；两轮使用同一模型，复核不能保证正确。模型判断不保证正确，应检查来源；网页可分别导出完整记忆 JSON 和包含本次状态、关系、原始证据的分析 JSON。截止日期使用 YYYY-MM-DD，按会话记录日期过滤，不代表真实事件发生日期。原始数据无时区，不人为设定时区。对 yesterday/today/tomorrow 和 last + 星期等少数表达，系统按会话日期推算候选日期并标记为启发式结果；引述、转述或语境不同可能导致错误。
+Windows 下也可以运行 `./start.ps1`，它会先检查模型再启动服务。仓库已经包含 6 段课程对话的事实抽取和离线状态解析结果，因此浏览类页面不需要模型；只有问答和评测会调用模型。
 
-## 评测工具
+| 环境变量 | 默认值 | 作用 |
+|---|---|---|
+| `OLLAMA_URL` | `http://127.0.0.1:11434` | 生成模型服务 |
+| `EMBED_URL` | 同 `OLLAMA_URL` | 向量模型服务 |
+| `MEMORY_MODEL` / `EXTRACTION_MODEL` | `qwen3.8:27b-q4_K_M` | 回答模型 / 抽取结果所对应的模型 |
+| `EMBED_MODEL` | `bge-m3` | 向量模型 |
+| `MEMORY_CONTEXT` | `32768` | 上下文窗口（Full Text 基线需要） |
+| `MEMORY_PORT` | `8765` | Web 端口 |
+| `MEMORY_CPU_ONLY` / `EMBED_CPU_ONLY` | – | 设为 `1` 时只用 CPU |
 
-`python evaluate.py --split test --limit 4` 对每段对话从类别 1–4 依次选择 4 个有标准答案的问题，比较全文、纯向量、无状态混合检索和动态状态分析四种方法并保存逐题结果与汇总；`--limit 0` 为全部有答案问题。类别 5 缺少普通参考答案，不计入答案 F1。可设置 `MEMORY_CPU_ONLY=1` 与 `MEMORY_THREADS=4` 限制本应用的模型和向量请求使用 CPU；CPU 全文评测会很慢。生成请求显式关闭截断和上下文滑动（要求 Ollama 支持相关参数）；全文输入超过上下文时应报错，全文证据召回仍不单独报告。请用当前 Ollama 验证，旧版服务可能忽略这些参数。任何失败均记录，不会默认为正确。缺少独立关系标签时，状态更新准确率明确记为 null。状态分析由本地模型完成，结果需要对照原始证据核查。运行 `python -m unittest -v test_course` 执行基础测试。
+## 数据
 
-数据来源：https://github.com/snap-research/locomo 。LoCoMo 数据上游许可为 CC BY-NC 4.0，含非商业用途限制；详情见 [数据来源与许可](DATA-SOURCE.md)。
+`data/locomo10.json` 是 [SNAP LoCoMo](https://github.com/snap-research/locomo) 官方的 10 段对话（CC BY-NC 4.0，见 [DATA-SOURCE.md](DATA-SOURCE.md)）。课程数据子集按对话 ID 固定划分：
 
-## Graphiti 示例
+| 划分 | 对话 |
+|---|---|
+| 开发集 | conv-26、conv-30、conv-43、conv-44 |
+| 测试集 | conv-41、conv-42 |
+| 扩展集 | conv-47、conv-48、conv-49、conv-50 |
 
-工作台的 Graphiti 面板只读加载项目自带的压缩图谱 `examples/graphiti-demo.kuzu.gz`（首次使用时解压到本地缓存）。使用此面板需安装 `pip install kuzu==0.11.3`，也可设置 `GRAPHITI_PYTHON` 和 `GRAPHITI_DEMO_DB` 指向对应的 Python 和数据库。此图谱仅包含 conv-26 的 D2:8、D13:1、D19:1 三轮，图谱中有两条事实，不代表全量数据。原始示例将无时区的会话时间赋予 UTC 标记，该标记不是已证实的时区。Kuzu 驱动已弃用；本面板仅为本地探索，未用于主问答或评测。原始证据显示来自 LoCoMo 数据，而不是依赖图谱中的文本副本。
+网页的“导入”可以载入其他 LoCoMo 格式的 JSON（单个对话或数组，≤20 MB），数据保存在本机 `data/imported/`，不纳入版本控制。
+
+## 系统设计
+
+```
+LoCoMo 对话 ──► 轮次记忆（原文 · 时间 · 会话/轮次）
+                   │  scripts/extract.py      LLM 抽取 entity / attribute / value / event / time_expression
+                   ▼
+              事实记忆 ──► scripts/build_states.py
+                   │       ① 状态槽：同一人物同一方面（如 adoption_process、job）
+                   │       ② 版本链：RETAIN / UPDATE / SUPERSEDE / CONFLICT + 有效性 ACTIVE / HISTORICAL / CONFLICT
+                   ▼
+问题 ──► BM25 + bge-m3 向量（RRF 融合）──► 记忆图谱扩展（补入同槽历史版本）
+     ──► LLM 判断状态与关系 ──► 同槽关系由图谱支持；其余关系二次复核
+     ──► 仅以有效记忆作答（被替代的记忆只作历史参考） ──► 答案 + 证据 + 解析过程
+```
+
+| 模块 | 职责 |
+|---|---|
+| [memwb/dataset.py](memwb/dataset.py) | 读取 LoCoMo、校验结构、原子化导入 |
+| [memwb/memory.py](memwb/memory.py) | 轮次记忆与事实记忆、相对日期推算、截止日期过滤、合并离线状态 |
+| [memwb/extraction.py](memwb/extraction.py) | 事实抽取（可断点续跑，失败批次二分重试） |
+| [memwb/states.py](memwb/states.py) | 离线状态槽与版本链（可断点续跑） |
+| [memwb/retrieval.py](memwb/retrieval.py) | BM25、向量检索（按轮次缓存向量）、RRF |
+| [memwb/pipeline.py](memwb/pipeline.py) | 四种问答方法与动态状态解析 |
+| [memwb/evaluation.py](memwb/evaluation.py) | F1（LoCoMo 规则）、Recall@K、状态判断准确率 |
+| [memwb/export.py](memwb/export.py) | 统一 Memory JSON 导出 |
+| [server.py](server.py) / [web/](web) | HTTP API 与 Obsidian 风格前端 |
+
+**时间语义。** `timestamp` / `session_time` 是会话的记录时间（数据不带时区），不一定等于事件发生的时间。`yesterday`、`last Friday` 等相对表达会按记录日期推算，并标注为启发式结果。截止日期（as-of）用于过滤记录时间，同时据此重新推导各版本的有效性。比如截至 2023-09-30 时，Caroline 的领养进度仍是 “applied”。
+
+## 统一 Memory JSON
+
+`python scripts/export_memories.py` 会为每段对话生成 `exports/<conv>.json`；网页右上角也能导出当前对话。结构示例：
+
+```json
+{
+  "schema": "dynamic-memory-workbench/memory-export@1",
+  "conversation": "conv-26",
+  "memories": [{
+    "memory_id": "conv26_D19_1_f0",
+    "content": "Caroline · adoption status: passed adoption agency interviews",
+    "entity": "Caroline", "attribute": "adoption_status", "value": "passed adoption agency interviews",
+    "time_expression": "last Friday", "resolved_date": "2023-10-20",
+    "timestamp": "9:55 am on 22 October, 2023", "session_time": "2023-10-22T09:55",
+    "source": {"conversation": "conv-26", "session": 19, "turn": "D19:1"},
+    "source_text": "Woohoo Melanie! I passed the adoption agency interviews last Friday! ...",
+    "slot": "adoption_process", "kind": "state", "state": "ACTIVE",
+    "relations": [{"type": "UPDATE", "direction": "from", "memory_id": "conv26_D17_1_f0"}]
+  }],
+  "turns": ["… 轮次记忆（检索单元）…"],
+  "slots": ["… 状态槽及其版本链 …"]
+}
+```
+
+## 评测
+
+```powershell
+python scripts/evaluate.py retrieval --split test          # Recall@K：全部可回答问题，无需 LLM
+python scripts/evaluate.py qa --split test --limit 60      # 答案 F1：每段对话按类别分层抽 60 题 × 4 种方法
+python scripts/evaluate.py state                           # 状态判断准确率：eval/state_benchmark.json
+python scripts/evaluate.py summary                         # 汇总到 eval/results.json，网页“评测”页读取
+```
+
+- **对照方法**：`full`（Full Text 全文）、`vector`（Vector RAG，检索但不做状态判断）、`hybrid`（与动态方法候选集相同、但不做状态判断的消融）、`dynamic`（本系统）。
+- **答案 F1**：按 LoCoMo 官方规则（多跳题按逗号拆分，开放域题取 `;` 前的部分）。类别 5（对抗题）没有标准答案，不计分；失败的题按 0 分计入。
+- **Recall@K**：以 LoCoMo 标注的证据轮次为准。
+- **状态判断准确率**：课程标注没有随数据提供，所以项目自建了参考集 [eval/state_benchmark.json](eval/state_benchmark.json)，共 17 题：测试集 12 题、开发集 5 题，含 PDF 中的 UPDATE / SUPERSEDE 示例和 6 道带截止日期的题。每题标注相关轮次的有效性和关系；两种关系都说得通时，两者都算对。课程标注到位后，按相同格式替换即可复用这套评测。
+
+评测结果见 [eval/results.json](eval/results.json)，网页“评测”页也有可视化展示。
+
+## 测试
+
+```powershell
+python -m unittest discover -s tests -t .
+```
+
+单元测试会 mock 掉模型，覆盖以下内容：导入校验与回滚、记忆来源与时间、相对日期、截止日期、检索与向量缓存、离线状态一致性、图谱扩展、动态流程（伪造 ID 过滤、重复状态拒绝、复核、仅用有效记忆作答）、评测指标和 HTTP 接口。
+
+## 已知限制
+
+- 事实、状态槽、关系都由本地 27B 模型生成，没有经过逐条人工核验。网页和 JSON 都保留了原文证据，方便核查。
+- 状态参考集是项目自己标注的，规模较小，结论只具有参考意义。
+- 记录时间不等于事件时间；相对日期推算只覆盖少数表达。
+- 服务只监听本机，没有身份认证，不适合直接暴露到公网。
