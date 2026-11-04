@@ -325,7 +325,7 @@ class HttpTests(StoreCase):
 
     def test_static_files_and_traversal(self):
         with urllib.request.urlopen(self.base + "/") as r:
-            self.assertIn(b"Memory Vault", r.read())
+            self.assertIn(b'id="view"', r.read())
         with self.assertRaises(urllib.error.HTTPError) as err:
             urllib.request.urlopen(self.base + "/../server.py")
         self.assertEqual(err.exception.code, 404)

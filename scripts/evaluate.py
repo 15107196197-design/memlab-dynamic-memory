@@ -50,7 +50,9 @@ def run_qa(args):
     rows = [r for r in rows if (r["sample"], r["qa_index"], r["method"]) in done]
     store = dataset.store()
     for sid in ids:
-        for index, qa in evaluation.stratified(store.get(sid)["qa"], args.limit):
+        for position, (index, qa) in enumerate(evaluation.stratified(store.get(sid)["qa"], args.limit)):
+            if position % args.shards != args.shard:
+                continue
             for method in args.methods:
                 if (sid, index, method) in done:
                     continue
@@ -122,6 +124,8 @@ def main():
         p.add_argument("--k", type=int, default=15)
         p.add_argument("--methods", nargs="+", choices=pipeline.METHODS, default=list(pipeline.METHODS))
         p.add_argument("--retry-errors", action="store_true")
+        p.add_argument("--shard", type=int, default=0, help="with --shards N: only questions at positions where pos %% N == shard")
+        p.add_argument("--shards", type=int, default=1)
     args = parser.parse_args()
     {"retrieval": run_retrieval, "qa": run_qa, "state": run_state, "summary": run_summary}[args.command](args)
 

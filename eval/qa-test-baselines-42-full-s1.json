@@ -1,0 +1,519 @@
+{
+ "generated_at": "2026-11-04T23:33:15",
+ "answer_model": "qwen3.8:27b-q4_K_M",
+ "embedding_model": "bge-m3",
+ "split": "test",
+ "limit_per_conversation": 60,
+ "k": 15,
+ "rows": [
+  {
+   "sample": "conv-42",
+   "qa_index": 1,
+   "category": 1,
+   "method": "full",
+   "question": "What kind of interests do Joanna and Nate share?",
+   "gold_answer": "Watching movies, making desserts",
+   "gold_evidence": [
+    "D10:9",
+    "D1:10",
+    "D1:11",
+    "D1:12",
+    "D20:2",
+    "D3:4",
+    "D4:9"
+   ],
+   "prediction": "watching movies",
+   "answer_f1": 0.5,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 9.9
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 3,
+   "category": 2,
+   "method": "full",
+   "question": "When did Nate win his first video game tournament?",
+   "gold_answer": "the week before 21Janury, 2022",
+   "gold_evidence": [
+    "D1:3"
+   ],
+   "prediction": "the week before 21 January 2022",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 5,
+   "category": 1,
+   "method": "full",
+   "question": "What are Joanna's hobbies?",
+   "gold_answer": "Writing, watchingmovies, exploringnature, hanging withfriends.",
+   "gold_evidence": [
+    "D1:10",
+    "D2:25"
+   ],
+   "prediction": "writing, reading, watching movies, exploring nature, hiking, cooking, baking, DIYs",
+   "answer_f1": 0.25,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.4
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 7,
+   "category": 2,
+   "method": "full",
+   "question": "When did Joanna finish her first screenplay?",
+   "gold_answer": "The Friday before 23January, 2022",
+   "gold_evidence": [
+    "D2:3"
+   ],
+   "prediction": "the week before 23 January 2022",
+   "answer_f1": 0.4444,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 9,
+   "category": 2,
+   "method": "full",
+   "question": "What major achievement did Joanna accomplish in January 2022?",
+   "gold_answer": "finished her screenplay and printed it",
+   "gold_evidence": [
+    "D2:3"
+   ],
+   "prediction": "finished her first full screenplay",
+   "answer_f1": 0.6,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 11,
+   "category": 1,
+   "method": "full",
+   "question": "What is Joanna allergic to?",
+   "gold_answer": "Most reptiles,animals with fur,cockroaches, dairy",
+   "gold_evidence": [
+    "D2:23",
+    "D4:4",
+    "D5:11"
+   ],
+   "prediction": "most reptiles, animals with fur, and cockroaches",
+   "answer_f1": 0.75,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.3
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 13,
+   "category": 2,
+   "method": "full",
+   "question": "When did Joanna have an audition for a writing gig?",
+   "gold_answer": "23 March, 2022.",
+   "gold_evidence": [
+    "D6:2"
+   ],
+   "prediction": "23 March 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 15,
+   "category": 2,
+   "method": "full",
+   "question": "When did Nate get purple hair?",
+   "gold_answer": "The week before 15April, 2022.",
+   "gold_evidence": [
+    "D7:1"
+   ],
+   "prediction": "the week before 15 April 2022",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 17,
+   "category": 2,
+   "method": "full",
+   "question": "What movie did Joanna watch on 1 May, 2022?",
+   "gold_answer": "Lord of the Rings",
+   "gold_evidence": [
+    "D10:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.0
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 19,
+   "category": 1,
+   "method": "full",
+   "question": "How many times has Joanna found new hiking trails?",
+   "gold_answer": "twice",
+   "gold_evidence": [
+    "D11:3",
+    "D8:4"
+   ],
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.0
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 21,
+   "category": 2,
+   "method": "full",
+   "question": "Who was the new addition to Nate's family in May 2022?",
+   "gold_answer": "Max",
+   "gold_evidence": [
+    "D12:3"
+   ],
+   "prediction": "Max",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.0
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 23,
+   "category": 1,
+   "method": "full",
+   "question": "Which of Joanna's screenplay were rejected from production companies?",
+   "gold_answer": "first screenplay on drama and romance, third screenplay on loss identity and connection",
+   "gold_evidence": [
+    "D14:1",
+    "D24:12",
+    "D24:13",
+    "D2:7",
+    "D3:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.0
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 25,
+   "category": 2,
+   "method": "full",
+   "question": "When did Joanna hike with her buddies?",
+   "gold_answer": "The weekend after 3June, 2022.",
+   "gold_evidence": [
+    "D14:19"
+   ],
+   "prediction": "the weekend of 3 June 2022",
+   "answer_f1": 0.4444,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 30,
+   "category": 1,
+   "method": "full",
+   "question": "What kind of writings does Joanna do?",
+   "gold_answer": "Screenplays,books, online blog posts, journal",
+   "gold_evidence": [
+    "D17:14",
+    "D18:1",
+    "D18:5",
+    "D2:3"
+   ],
+   "prediction": "screenplays, books, and blog posts",
+   "answer_f1": 0.7,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 42,
+   "category": 1,
+   "method": "full",
+   "question": "What movies have both Joanna and Nate seen?",
+   "gold_answer": "\"Little Women\", \"Lord of the Rings\"",
+   "gold_evidence": [
+    "D10:1",
+    "D22:8",
+    "D3:17"
+   ],
+   "prediction": "Little Women",
+   "answer_f1": 0.5,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 47,
+   "category": 1,
+   "method": "full",
+   "question": "What places has Nate met new people?",
+   "gold_answer": "A tournament and agaming convention.",
+   "gold_evidence": [
+    "D14:8",
+    "D23:1"
+   ],
+   "prediction": "the tournament, the game convention",
+   "answer_f1": 0.5,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.4
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 50,
+   "category": 1,
+   "method": "full",
+   "question": "What is something Nate gave to Joanna that brings her a lot of joy?",
+   "gold_answer": "stuffed toy pup",
+   "gold_evidence": [
+    "D13:9",
+    "D24:2"
+   ],
+   "prediction": "stuffed animal dog",
+   "answer_f1": 0.3333,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.6
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 52,
+   "category": 1,
+   "method": "full",
+   "question": "How many of Joanna's writing have made it to the big screen?",
+   "gold_answer": "two",
+   "gold_evidence": [
+    "D15:1",
+    "D25:2"
+   ],
+   "prediction": "3",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.5
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 60,
+   "category": 3,
+   "method": "full",
+   "question": "What Console does Nate own?",
+   "gold_answer": "A Nintendo Switch; since the game \"Xenoblade 2\" is made for this console.",
+   "gold_evidence": [
+    "D27:23"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.4
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 68,
+   "category": 3,
+   "method": "full",
+   "question": "How many hikes has Joanna been on?",
+   "gold_answer": "Four",
+   "gold_evidence": [
+    "D11:5",
+    "D14:21",
+    "D28:22",
+    "D7:6"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 84,
+   "category": 3,
+   "method": "full",
+   "question": "Was the first half of September 2022 a good month career-wise for Nate and Joanna? Answer yes or no.",
+   "gold_answer": "No; because both of them faced setbacks in their career",
+   "gold_evidence": [
+    "D20:1",
+    "D21:1"
+   ],
+   "prediction": "no",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 87,
+   "category": 3,
+   "method": "full",
+   "question": "What state did Nate visit?",
+   "gold_answer": "Florida",
+   "gold_evidence": [
+    "D29:6"
+   ],
+   "prediction": "Tampa",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.2
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 89,
+   "category": 4,
+   "method": "full",
+   "question": "What color did Nate choose for his hair?",
+   "gold_answer": "purple",
+   "gold_evidence": [
+    "D7:1",
+    "D7:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 91,
+   "category": 4,
+   "method": "full",
+   "question": "What is Nate's favorite book series about?",
+   "gold_answer": "dragons",
+   "gold_evidence": [
+    "D9:14"
+   ],
+   "prediction": "adventures, magic, and great characters",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.3
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 93,
+   "category": 4,
+   "method": "full",
+   "question": "What game was the second tournament that Nate won based on?",
+   "gold_answer": "Street Fighter",
+   "gold_evidence": [
+    "D10:4",
+    "D10:6"
+   ],
+   "prediction": "Street Fighter",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.0
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 95,
+   "category": 4,
+   "method": "full",
+   "question": "What is Nate's favorite video game?",
+   "gold_answer": "Xenoblade Chronicles",
+   "gold_evidence": [
+    "D27:22",
+    "D27:23"
+   ],
+   "prediction": "Counter-Strike: Global Offensive",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 97,
+   "category": 4,
+   "method": "full",
+   "question": "What did Joanna just finish last Friday on 23 January, 2022?",
+   "gold_answer": "screenplay",
+   "gold_evidence": [
+    "D2:3"
+   ],
+   "prediction": "her first full screenplay",
+   "answer_f1": 0.4,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 99,
+   "category": 4,
+   "method": "full",
+   "question": "What are Joanna's plans for her finished screenplay in January 2022?",
+   "gold_answer": "submit it to film festivals and get producers and directors to check it out",
+   "gold_evidence": [
+    "D2:7"
+   ],
+   "prediction": "submit it to some film festivals and get producers and directors to check it out",
+   "answer_f1": 0.96,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.4
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 101,
+   "category": 4,
+   "method": "full",
+   "question": "What did Nate think of the coconut milk ice cream he made?",
+   "gold_answer": "Super good, rich and creamy",
+   "gold_evidence": [
+    "D3:6"
+   ],
+   "prediction": "Super good",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 103,
+   "category": 4,
+   "method": "full",
+   "question": "What did Joanna recently watch and recommend to Nate on February 7, 2022?",
+   "gold_answer": "\"Little Women\"",
+   "gold_evidence": [
+    "D3:17"
+   ],
+   "prediction": "Little Women",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 629,
+   "seconds": 10.1
+  }
+ ]
+}

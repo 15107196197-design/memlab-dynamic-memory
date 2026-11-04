@@ -1,0 +1,3008 @@
+{
+ "generated_at": "2026-11-04T23:21:04",
+ "answer_model": "qwen3.8:27b-q4_K_M",
+ "embedding_model": "bge-m3",
+ "split": "test",
+ "limit_per_conversation": 60,
+ "k": 15,
+ "rows": [
+  {
+   "sample": "conv-41",
+   "qa_index": 0,
+   "category": 2,
+   "method": "vector",
+   "question": "Who did Maria have dinner with on May 3, 2023?",
+   "gold_answer": "her mother",
+   "gold_evidence": [
+    "D13:16"
+   ],
+   "prediction": "her mom",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 20.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 0,
+   "category": 2,
+   "method": "hybrid",
+   "question": "Who did Maria have dinner with on May 3, 2023?",
+   "gold_answer": "her mother",
+   "gold_evidence": [
+    "D13:16"
+   ],
+   "prediction": "her mom",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 7.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 0,
+   "category": 2,
+   "method": "full",
+   "question": "Who did Maria have dinner with on May 3, 2023?",
+   "gold_answer": "her mother",
+   "gold_evidence": [
+    "D13:16"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 49.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 1,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria donate her car?",
+   "gold_answer": "21 December 2022",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "21 December 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 9.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 1,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria donate her car?",
+   "gold_answer": "21 December 2022",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "21 December 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 6.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 1,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria donate her car?",
+   "gold_answer": "21 December 2022",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "21 December 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 23.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 2,
+   "category": 1,
+   "method": "vector",
+   "question": "What martial arts has John done?",
+   "gold_answer": "Kickboxing, Taekwondo",
+   "gold_evidence": [
+    "D1:4",
+    "D2:28"
+   ],
+   "prediction": "Kickboxing",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 9.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 2,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What martial arts has John done?",
+   "gold_answer": "Kickboxing, Taekwondo",
+   "gold_evidence": [
+    "D1:4",
+    "D2:28"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 8.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 2,
+   "category": 1,
+   "method": "full",
+   "question": "What martial arts has John done?",
+   "gold_answer": "Kickboxing, Taekwondo",
+   "gold_evidence": [
+    "D1:4",
+    "D2:28"
+   ],
+   "prediction": "kickboxing, taekwondo",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 14.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 3,
+   "category": 1,
+   "method": "vector",
+   "question": "What type of volunteering have John and Maria both done?",
+   "gold_answer": "Volunteering at a homeless shelter",
+   "gold_evidence": [
+    "D2:1",
+    "D3:5"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 29.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 3,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What type of volunteering have John and Maria both done?",
+   "gold_answer": "Volunteering at a homeless shelter",
+   "gold_evidence": [
+    "D2:1",
+    "D3:5"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 4.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 3,
+   "category": 1,
+   "method": "full",
+   "question": "What type of volunteering have John and Maria both done?",
+   "gold_answer": "Volunteering at a homeless shelter",
+   "gold_evidence": [
+    "D2:1",
+    "D3:5"
+   ],
+   "prediction": "volunteering at a homeless shelter",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 20.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 4,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John join the online support group?",
+   "gold_answer": "The week before 1 January 2023",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "the week before 1 January 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 28.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 4,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John join the online support group?",
+   "gold_answer": "The week before 1 January 2023",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "the week before 1 January 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 15.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 4,
+   "category": 2,
+   "method": "full",
+   "question": "When did John join the online support group?",
+   "gold_answer": "The week before 1 January 2023",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "the week before 1 January 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 18.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 5,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria go to the beach?",
+   "gold_answer": "December 2022",
+   "gold_evidence": [
+    "D3:15"
+   ],
+   "prediction": "December 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 7.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 5,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria go to the beach?",
+   "gold_answer": "December 2022",
+   "gold_evidence": [
+    "D3:15"
+   ],
+   "prediction": "December 2022",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 45.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 5,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria go to the beach?",
+   "gold_answer": "December 2022",
+   "gold_evidence": [
+    "D3:15"
+   ],
+   "prediction": "last month (relative to 1 January 2023)",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 20.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 6,
+   "category": 1,
+   "method": "vector",
+   "question": "Where has Maria made friends?",
+   "gold_answer": "homeless shelter, gym, church",
+   "gold_evidence": [
+    "D14:10",
+    "D19:1",
+    "D2:1",
+    "D4:1"
+   ],
+   "prediction": "with one of her fellow volunteers",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.25,
+   "retrieved_count": 15,
+   "seconds": 18.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 6,
+   "category": 1,
+   "method": "hybrid",
+   "question": "Where has Maria made friends?",
+   "gold_answer": "homeless shelter, gym, church",
+   "gold_evidence": [
+    "D14:10",
+    "D19:1",
+    "D2:1",
+    "D4:1"
+   ],
+   "prediction": "with fellow volunteers",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.25,
+   "retrieved_count": 15,
+   "seconds": 16.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 6,
+   "category": 1,
+   "method": "full",
+   "question": "Where has Maria made friends?",
+   "gold_answer": "homeless shelter, gym, church",
+   "gold_evidence": [
+    "D14:10",
+    "D19:1",
+    "D2:1",
+    "D4:1"
+   ],
+   "prediction": "homeless shelter, church, gym",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 26.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 7,
+   "category": 1,
+   "method": "vector",
+   "question": "What items des John mention having as a child?",
+   "gold_answer": "A doll, a film camera",
+   "gold_evidence": [
+    "D3:15",
+    "D5:13"
+   ],
+   "prediction": "a little doll",
+   "answer_f1": 0.3333,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 18.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 7,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What items des John mention having as a child?",
+   "gold_answer": "A doll, a film camera",
+   "gold_evidence": [
+    "D3:15",
+    "D5:13"
+   ],
+   "prediction": "a little doll",
+   "answer_f1": 0.3333,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 11.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 7,
+   "category": 1,
+   "method": "full",
+   "question": "What items des John mention having as a child?",
+   "gold_answer": "A doll, a film camera",
+   "gold_evidence": [
+    "D3:15",
+    "D5:13"
+   ],
+   "prediction": "film camera, little doll",
+   "answer_f1": 0.8333,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 17.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 8,
+   "category": 3,
+   "method": "vector",
+   "question": "What might John's financial status be?",
+   "gold_answer": "Middle-class or wealthy",
+   "gold_evidence": [
+    "D5:5"
+   ],
+   "prediction": "strained",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 22.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 8,
+   "category": 3,
+   "method": "hybrid",
+   "question": "What might John's financial status be?",
+   "gold_answer": "Middle-class or wealthy",
+   "gold_evidence": [
+    "D5:5"
+   ],
+   "prediction": "strained",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 12.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 8,
+   "category": 3,
+   "method": "full",
+   "question": "What might John's financial status be?",
+   "gold_answer": "Middle-class or wealthy",
+   "gold_evidence": [
+    "D5:5"
+   ],
+   "prediction": "financially strained",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 27.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 9,
+   "category": 1,
+   "method": "vector",
+   "question": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8",
+    "D6:9"
+   ],
+   "prediction": "her auntie",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 12.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 9,
+   "category": 1,
+   "method": "hybrid",
+   "question": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8",
+    "D6:9"
+   ],
+   "prediction": "her auntie",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 14.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 9,
+   "category": 1,
+   "method": "full",
+   "question": "Who gave Maria's family money when she was younger and her family was going through tough times?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8",
+    "D6:9"
+   ],
+   "prediction": "her aunt",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 32.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 10,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria meet Jean?",
+   "gold_answer": "February 24, 2023",
+   "gold_evidence": [
+    "D7:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 21.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 10,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria meet Jean?",
+   "gold_answer": "February 24, 2023",
+   "gold_evidence": [
+    "D7:1"
+   ],
+   "prediction": "24 February 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 9.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 10,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria meet Jean?",
+   "gold_answer": "February 24, 2023",
+   "gold_evidence": [
+    "D7:1"
+   ],
+   "prediction": "25 February 2023",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 14.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 11,
+   "category": 1,
+   "method": "vector",
+   "question": "What people has Maria met and helped while volunteering?",
+   "gold_answer": "David, Jean, Cindy, Laura",
+   "gold_evidence": [
+    "D21:19",
+    "D27:8",
+    "D6:5",
+    "D7:5"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 5.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 11,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What people has Maria met and helped while volunteering?",
+   "gold_answer": "David, Jean, Cindy, Laura",
+   "gold_evidence": [
+    "D21:19",
+    "D27:8",
+    "D6:5",
+    "D7:5"
+   ],
+   "prediction": "Jean",
+   "answer_f1": 0.25,
+   "evidence_recall": 0.25,
+   "retrieved_count": 15,
+   "seconds": 13.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 11,
+   "category": 1,
+   "method": "full",
+   "question": "What people has Maria met and helped while volunteering?",
+   "gold_answer": "David, Jean, Cindy, Laura",
+   "gold_evidence": [
+    "D21:19",
+    "D27:8",
+    "D6:5",
+    "D7:5"
+   ],
+   "prediction": "a little girl around 8, David, Jean, Laura, Cindy",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 19.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 12,
+   "category": 1,
+   "method": "vector",
+   "question": "What test has John taken multiple times?",
+   "gold_answer": "The military aptitude test",
+   "gold_evidence": [
+    "D3:11",
+    "D8:18"
+   ],
+   "prediction": "aptitude test",
+   "answer_f1": 0.8,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 5.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 12,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What test has John taken multiple times?",
+   "gold_answer": "The military aptitude test",
+   "gold_evidence": [
+    "D3:11",
+    "D8:18"
+   ],
+   "prediction": "aptitude test",
+   "answer_f1": 0.8,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 4.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 12,
+   "category": 1,
+   "method": "full",
+   "question": "What test has John taken multiple times?",
+   "gold_answer": "The military aptitude test",
+   "gold_evidence": [
+    "D3:11",
+    "D8:18"
+   ],
+   "prediction": "military aptitude test",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 18.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 13,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria's grandmother pass away?",
+   "gold_answer": "The week before 6 March 2023",
+   "gold_evidence": [
+    "D8:1"
+   ],
+   "prediction": "the week before 6 March 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 4.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 13,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria's grandmother pass away?",
+   "gold_answer": "The week before 6 March 2023",
+   "gold_evidence": [
+    "D8:1"
+   ],
+   "prediction": "the week before 6 March 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 6.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 13,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria's grandmother pass away?",
+   "gold_answer": "The week before 6 March 2023",
+   "gold_evidence": [
+    "D8:1"
+   ],
+   "prediction": "the week before 6 March 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 14.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 14,
+   "category": 3,
+   "method": "vector",
+   "question": "Would John be considered a patriotic person?",
+   "gold_answer": "Yes",
+   "gold_evidence": [
+    "D8:18",
+    "D8:20"
+   ],
+   "prediction": "yes",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 27.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 14,
+   "category": 3,
+   "method": "hybrid",
+   "question": "Would John be considered a patriotic person?",
+   "gold_answer": "Yes",
+   "gold_evidence": [
+    "D8:18",
+    "D8:20"
+   ],
+   "prediction": "yes",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 48.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 14,
+   "category": 3,
+   "method": "full",
+   "question": "Would John be considered a patriotic person?",
+   "gold_answer": "Yes",
+   "gold_evidence": [
+    "D8:18",
+    "D8:20"
+   ],
+   "prediction": "yes",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 32.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 15,
+   "category": 1,
+   "method": "vector",
+   "question": "What writing classes has Maria taken?",
+   "gold_answer": "Poetry, creative writing",
+   "gold_evidence": [
+    "D7:1",
+    "D9:1"
+   ],
+   "prediction": "creative writing class, poetry class",
+   "answer_f1": 0.7333,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 48.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 15,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What writing classes has Maria taken?",
+   "gold_answer": "Poetry, creative writing",
+   "gold_evidence": [
+    "D7:1",
+    "D9:1"
+   ],
+   "prediction": "creative writing class, poetry class",
+   "answer_f1": 0.7333,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 21.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 15,
+   "category": 1,
+   "method": "full",
+   "question": "What writing classes has Maria taken?",
+   "gold_answer": "Poetry, creative writing",
+   "gold_evidence": [
+    "D7:1",
+    "D9:1"
+   ],
+   "prediction": "creative writing class, poetry class",
+   "answer_f1": 0.7333,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 30.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 16,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John get his degree?",
+   "gold_answer": "The week before 2 April 2023",
+   "gold_evidence": [
+    "D9:2"
+   ],
+   "prediction": "the week before 2 April 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 32.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 16,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John get his degree?",
+   "gold_answer": "The week before 2 April 2023",
+   "gold_evidence": [
+    "D9:2"
+   ],
+   "prediction": "the week before 2 April 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 29.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 16,
+   "category": 2,
+   "method": "full",
+   "question": "When did John get his degree?",
+   "gold_answer": "The week before 2 April 2023",
+   "gold_evidence": [
+    "D9:2"
+   ],
+   "prediction": "the week before 2 April 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 53.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 17,
+   "category": 3,
+   "method": "vector",
+   "question": "What might John's degree be in?",
+   "gold_answer": "Political science, Public administration, Public affairs",
+   "gold_evidence": [
+    "D9:6"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 21.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 17,
+   "category": 3,
+   "method": "hybrid",
+   "question": "What might John's degree be in?",
+   "gold_answer": "Political science, Public administration, Public affairs",
+   "gold_evidence": [
+    "D9:6"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 47.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 17,
+   "category": 3,
+   "method": "full",
+   "question": "What might John's degree be in?",
+   "gold_answer": "Political science, Public administration, Public affairs",
+   "gold_evidence": [
+    "D9:6"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 33.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 18,
+   "category": 1,
+   "method": "vector",
+   "question": "Who did John go to yoga with?",
+   "gold_answer": "Rob",
+   "gold_evidence": [
+    "D10:1",
+    "D7:16"
+   ],
+   "prediction": "a colleague",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 50.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 18,
+   "category": 1,
+   "method": "hybrid",
+   "question": "Who did John go to yoga with?",
+   "gold_answer": "Rob",
+   "gold_evidence": [
+    "D10:1",
+    "D7:16"
+   ],
+   "prediction": "a colleague",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 21.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 18,
+   "category": 1,
+   "method": "full",
+   "question": "Who did John go to yoga with?",
+   "gold_answer": "Rob",
+   "gold_evidence": [
+    "D10:1",
+    "D7:16"
+   ],
+   "prediction": "Rob",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 29.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 19,
+   "category": 1,
+   "method": "vector",
+   "question": "What damages have happened to John's car?",
+   "gold_answer": "Broken windshield, Car broke down",
+   "gold_evidence": [
+    "D11:1",
+    "D4:2"
+   ],
+   "prediction": "broke down",
+   "answer_f1": 0.4,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 43.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 19,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What damages have happened to John's car?",
+   "gold_answer": "Broken windshield, Car broke down",
+   "gold_evidence": [
+    "D11:1",
+    "D4:2"
+   ],
+   "prediction": "broke down",
+   "answer_f1": 0.4,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 20.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 19,
+   "category": 1,
+   "method": "full",
+   "question": "What damages have happened to John's car?",
+   "gold_answer": "Broken windshield, Car broke down",
+   "gold_evidence": [
+    "D11:1",
+    "D4:2"
+   ],
+   "prediction": "broke down",
+   "answer_f1": 0.4,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 16.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 20,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John take a road trip to the Pacific Northwest?",
+   "gold_answer": "2022",
+   "gold_evidence": [
+    "D11:3",
+    "D11:5"
+   ],
+   "prediction": "last year (relative to 10 April 2023)",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 29.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 20,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John take a road trip to the Pacific Northwest?",
+   "gold_answer": "2022",
+   "gold_evidence": [
+    "D11:3",
+    "D11:5"
+   ],
+   "prediction": "last year relative to 10 April 2023",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 18.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 20,
+   "category": 2,
+   "method": "full",
+   "question": "When did John take a road trip to the Pacific Northwest?",
+   "gold_answer": "2022",
+   "gold_evidence": [
+    "D11:3",
+    "D11:5"
+   ],
+   "prediction": "last year",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 37.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 21,
+   "category": 1,
+   "method": "vector",
+   "question": "What areas of the U.S. has John been to or is planning to go to?",
+   "gold_answer": "Pacific northwest, east coast",
+   "gold_evidence": [
+    "D11:5",
+    "D12:17"
+   ],
+   "prediction": "East Coast",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 21.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 21,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What areas of the U.S. has John been to or is planning to go to?",
+   "gold_answer": "Pacific northwest, east coast",
+   "gold_evidence": [
+    "D11:5",
+    "D12:17"
+   ],
+   "prediction": "East Coast",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 29.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 21,
+   "category": 1,
+   "method": "full",
+   "question": "What areas of the U.S. has John been to or is planning to go to?",
+   "gold_answer": "Pacific northwest, east coast",
+   "gold_evidence": [
+    "D11:5",
+    "D12:17"
+   ],
+   "prediction": "Pacific Northwest, East Coast, California",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 17.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 22,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John go to a convention with colleagues?",
+   "gold_answer": "March 2023",
+   "gold_evidence": [
+    "D12:9"
+   ],
+   "prediction": "March 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 49.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 22,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John go to a convention with colleagues?",
+   "gold_answer": "March 2023",
+   "gold_evidence": [
+    "D12:9"
+   ],
+   "prediction": "March 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 14.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 22,
+   "category": 2,
+   "method": "full",
+   "question": "When did John go to a convention with colleagues?",
+   "gold_answer": "March 2023",
+   "gold_evidence": [
+    "D12:9"
+   ],
+   "prediction": "last month (relative to 18 April 2023)",
+   "answer_f1": 0.2222,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 27.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 23,
+   "category": 1,
+   "method": "vector",
+   "question": "What desserts has Maria made?",
+   "gold_answer": "Banana split sundae, Peach cobbler",
+   "gold_evidence": [
+    "D13:18",
+    "D2:25"
+   ],
+   "prediction": "peach cobbler",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 37.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 23,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What desserts has Maria made?",
+   "gold_answer": "Banana split sundae, Peach cobbler",
+   "gold_evidence": [
+    "D13:18",
+    "D2:25"
+   ],
+   "prediction": "banana split sundae, cakes",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 11.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 23,
+   "category": 1,
+   "method": "full",
+   "question": "What desserts has Maria made?",
+   "gold_answer": "Banana split sundae, Peach cobbler",
+   "gold_evidence": [
+    "D13:18",
+    "D2:25"
+   ],
+   "prediction": "peach cobbler, banana split sundae, cakes",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 45.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 24,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John start boot camp with his family?",
+   "gold_answer": "April.2023",
+   "gold_evidence": [
+    "D13:3"
+   ],
+   "prediction": "April 2023",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 17.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 24,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John start boot camp with his family?",
+   "gold_answer": "April.2023",
+   "gold_evidence": [
+    "D13:3"
+   ],
+   "prediction": "April 2023",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 29.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 24,
+   "category": 2,
+   "method": "full",
+   "question": "When did John start boot camp with his family?",
+   "gold_answer": "April.2023",
+   "gold_evidence": [
+    "D13:3"
+   ],
+   "prediction": "April 2023",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 36.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 25,
+   "category": 1,
+   "method": "vector",
+   "question": "What European countries has Maria been to?",
+   "gold_answer": "Spain, England",
+   "gold_evidence": [
+    "D13:24",
+    "D8:15"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 5.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 25,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What European countries has Maria been to?",
+   "gold_answer": "Spain, England",
+   "gold_evidence": [
+    "D13:24",
+    "D8:15"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 18.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 25,
+   "category": 1,
+   "method": "full",
+   "question": "What European countries has Maria been to?",
+   "gold_answer": "Spain, England",
+   "gold_evidence": [
+    "D13:24",
+    "D8:15"
+   ],
+   "prediction": "England, Spain",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 34.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 26,
+   "category": 1,
+   "method": "vector",
+   "question": "What has Maria done to feel closer to her faith?",
+   "gold_answer": "Join a local church, buy a cross necklace",
+   "gold_evidence": [
+    "D11:10",
+    "D14:10"
+   ],
+   "prediction": "joined a nearby church",
+   "answer_f1": 0.3333,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 8.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 26,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What has Maria done to feel closer to her faith?",
+   "gold_answer": "Join a local church, buy a cross necklace",
+   "gold_evidence": [
+    "D11:10",
+    "D14:10"
+   ],
+   "prediction": "joined a nearby church and bought a cross necklace",
+   "answer_f1": 0.4444,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 37.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 26,
+   "category": 1,
+   "method": "full",
+   "question": "What has Maria done to feel closer to her faith?",
+   "gold_answer": "Join a local church, buy a cross necklace",
+   "gold_evidence": [
+    "D11:10",
+    "D14:10"
+   ],
+   "prediction": "bought a cross necklace",
+   "answer_f1": 0.3333,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 45.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 27,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John have a party with veterans?",
+   "gold_answer": "The Friday before 20 May 2023",
+   "gold_evidence": [
+    "D15:11"
+   ],
+   "prediction": "20 May 2023",
+   "answer_f1": 0.75,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 5.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 27,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John have a party with veterans?",
+   "gold_answer": "The Friday before 20 May 2023",
+   "gold_evidence": [
+    "D15:11"
+   ],
+   "prediction": "19 May 2023",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 40.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 27,
+   "category": 2,
+   "method": "full",
+   "question": "When did John have a party with veterans?",
+   "gold_answer": "The Friday before 20 May 2023",
+   "gold_evidence": [
+    "D15:11"
+   ],
+   "prediction": "19 May 2023",
+   "answer_f1": 0.5,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 15.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 28,
+   "category": 1,
+   "method": "vector",
+   "question": "What causes does John feel passionate about supporting?",
+   "gold_answer": "Veterans, schools, infrastructure",
+   "gold_evidence": [
+    "D12:5",
+    "D15:3",
+    "D1:8",
+    "D9:8"
+   ],
+   "prediction": "education, infrastructure, and veterans",
+   "answer_f1": 0.6667,
+   "evidence_recall": 0.25,
+   "retrieved_count": 15,
+   "seconds": 22.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 28,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What causes does John feel passionate about supporting?",
+   "gold_answer": "Veterans, schools, infrastructure",
+   "gold_evidence": [
+    "D12:5",
+    "D15:3",
+    "D1:8",
+    "D9:8"
+   ],
+   "prediction": "veterans, education, and infrastructure",
+   "answer_f1": 0.6667,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 7.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 28,
+   "category": 1,
+   "method": "full",
+   "question": "What causes does John feel passionate about supporting?",
+   "gold_answer": "Veterans, schools, infrastructure",
+   "gold_evidence": [
+    "D12:5",
+    "D15:3",
+    "D1:8",
+    "D9:8"
+   ],
+   "prediction": "education, infrastructure, veterans, and community",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 37.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 29,
+   "category": 1,
+   "method": "vector",
+   "question": "What events is Maria planning for the homeless shelter funraiser?",
+   "gold_answer": "Chili cook-off, ring-toss tournament",
+   "gold_evidence": [
+    "D15:18",
+    "D16:4"
+   ],
+   "prediction": "ring-toss tournament",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 19.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 29,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What events is Maria planning for the homeless shelter funraiser?",
+   "gold_answer": "Chili cook-off, ring-toss tournament",
+   "gold_evidence": [
+    "D15:18",
+    "D16:4"
+   ],
+   "prediction": "ring-toss tournament",
+   "answer_f1": 0.5,
+   "evidence_recall": 0.5,
+   "retrieved_count": 15,
+   "seconds": 27.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 29,
+   "category": 1,
+   "method": "full",
+   "question": "What events is Maria planning for the homeless shelter funraiser?",
+   "gold_answer": "Chili cook-off, ring-toss tournament",
+   "gold_evidence": [
+    "D15:18",
+    "D16:4"
+   ],
+   "prediction": "ring-toss tournament and chili cook-off",
+   "answer_f1": 0.6667,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 21.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 30,
+   "category": 1,
+   "method": "vector",
+   "question": "What shelters does Maria volunteer at?",
+   "gold_answer": "The homeless shelter, the dog shelter",
+   "gold_evidence": [
+    "D11:10",
+    "D17:12",
+    "D2:1"
+   ],
+   "prediction": "homeless shelter",
+   "answer_f1": 0.75,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 33.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 30,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What shelters does Maria volunteer at?",
+   "gold_answer": "The homeless shelter, the dog shelter",
+   "gold_evidence": [
+    "D11:10",
+    "D17:12",
+    "D2:1"
+   ],
+   "prediction": "homeless shelter",
+   "answer_f1": 0.75,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 5.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 30,
+   "category": 1,
+   "method": "full",
+   "question": "What shelters does Maria volunteer at?",
+   "gold_answer": "The homeless shelter, the dog shelter",
+   "gold_evidence": [
+    "D11:10",
+    "D17:12",
+    "D2:1"
+   ],
+   "prediction": "homeless shelter, dog shelter",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 38.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 31,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John get his dog Max?",
+   "gold_answer": "In 2013",
+   "gold_evidence": [
+    "D17:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 14.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 31,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John get his dog Max?",
+   "gold_answer": "In 2013",
+   "gold_evidence": [
+    "D17:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 31.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 31,
+   "category": 2,
+   "method": "full",
+   "question": "When did John get his dog Max?",
+   "gold_answer": "In 2013",
+   "gold_evidence": [
+    "D17:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 17.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 32,
+   "category": 1,
+   "method": "vector",
+   "question": "What outdoor activities has John done with his colleagues?",
+   "gold_answer": "Hiking, mountaineering",
+   "gold_evidence": [
+    "D16:2",
+    "D18:2"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 25.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 32,
+   "category": 1,
+   "method": "hybrid",
+   "question": "What outdoor activities has John done with his colleagues?",
+   "gold_answer": "Hiking, mountaineering",
+   "gold_evidence": [
+    "D16:2",
+    "D18:2"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 11.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 32,
+   "category": 1,
+   "method": "full",
+   "question": "What outdoor activities has John done with his colleagues?",
+   "gold_answer": "Hiking, mountaineering",
+   "gold_evidence": [
+    "D16:2",
+    "D18:2"
+   ],
+   "prediction": "hiking, mountaineering, yoga",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 39.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 34,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria join a gym?",
+   "gold_answer": "The week before 16 June 2023",
+   "gold_evidence": [
+    "D19:1"
+   ],
+   "prediction": "the week before 16 June 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 5.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 34,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria join a gym?",
+   "gold_answer": "The week before 16 June 2023",
+   "gold_evidence": [
+    "D19:1"
+   ],
+   "prediction": "the week before 16 June 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 31.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 34,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria join a gym?",
+   "gold_answer": "The week before 16 June 2023",
+   "gold_evidence": [
+    "D19:1"
+   ],
+   "prediction": "the week before 16 June 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 15.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 38,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria get in a car accident?",
+   "gold_answer": "July 2, 2023",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "3 July 2023",
+   "answer_f1": 0.6667,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 17.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 38,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria get in a car accident?",
+   "gold_answer": "July 2, 2023",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "3 July 2023",
+   "answer_f1": 0.6667,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 25.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 38,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria get in a car accident?",
+   "gold_answer": "July 2, 2023",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "2 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 41.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 39,
+   "category": 3,
+   "method": "vector",
+   "question": "Around which US holiday did Maria get into a car accident?",
+   "gold_answer": "Independence Day",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 56.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 39,
+   "category": 3,
+   "method": "hybrid",
+   "question": "Around which US holiday did Maria get into a car accident?",
+   "gold_answer": "Independence Day",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 17.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 39,
+   "category": 3,
+   "method": "full",
+   "question": "Around which US holiday did Maria get into a car accident?",
+   "gold_answer": "Independence Day",
+   "gold_evidence": [
+    "D21:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 58.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 41,
+   "category": 3,
+   "method": "vector",
+   "question": "Does John live close to a beach or the mountains?",
+   "gold_answer": "beach",
+   "gold_evidence": [
+    "D22:15"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 5.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 41,
+   "category": 3,
+   "method": "hybrid",
+   "question": "Does John live close to a beach or the mountains?",
+   "gold_answer": "beach",
+   "gold_evidence": [
+    "D22:15"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 30.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 41,
+   "category": 3,
+   "method": "full",
+   "question": "Does John live close to a beach or the mountains?",
+   "gold_answer": "beach",
+   "gold_evidence": [
+    "D22:15"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 28.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 43,
+   "category": 2,
+   "method": "vector",
+   "question": "When was John's old area hit with a flood?",
+   "gold_answer": "The week before 7 July 2023",
+   "gold_evidence": [
+    "D23:1"
+   ],
+   "prediction": "the week before 7 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 8.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 43,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When was John's old area hit with a flood?",
+   "gold_answer": "The week before 7 July 2023",
+   "gold_evidence": [
+    "D23:1"
+   ],
+   "prediction": "the week before 7 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 36.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 43,
+   "category": 2,
+   "method": "full",
+   "question": "When was John's old area hit with a flood?",
+   "gold_answer": "The week before 7 July 2023",
+   "gold_evidence": [
+    "D23:1"
+   ],
+   "prediction": "the week before 7 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 19.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 45,
+   "category": 3,
+   "method": "vector",
+   "question": "Would John be open to moving to another country?",
+   "gold_answer": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+   "gold_evidence": [
+    "D24:3",
+    "D7:2"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 10.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 45,
+   "category": 3,
+   "method": "hybrid",
+   "question": "Would John be open to moving to another country?",
+   "gold_answer": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+   "gold_evidence": [
+    "D24:3",
+    "D7:2"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 55.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 45,
+   "category": 3,
+   "method": "full",
+   "question": "Would John be open to moving to another country?",
+   "gold_answer": "No, he has goals specifically in the U.S. like joining the military and running for office.",
+   "gold_evidence": [
+    "D24:3",
+    "D7:2"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 17.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 46,
+   "category": 2,
+   "method": "vector",
+   "question": "When did Maria go hiking with her church friends?",
+   "gold_answer": "The weekend before 22 July 2023",
+   "gold_evidence": [
+    "D25:2"
+   ],
+   "prediction": "the weekend before 22 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 10.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 46,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did Maria go hiking with her church friends?",
+   "gold_answer": "The weekend before 22 July 2023",
+   "gold_evidence": [
+    "D25:2"
+   ],
+   "prediction": "last weekend before 22 July 2023",
+   "answer_f1": 0.9091,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 40.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 46,
+   "category": 2,
+   "method": "full",
+   "question": "When did Maria go hiking with her church friends?",
+   "gold_answer": "The weekend before 22 July 2023",
+   "gold_evidence": [
+    "D25:2"
+   ],
+   "prediction": "the weekend before 22 July 2023",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 33.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 48,
+   "category": 2,
+   "method": "vector",
+   "question": "When did John have his first firefighter call-out?",
+   "gold_answer": "The sunday before 3` July 2023",
+   "gold_evidence": [
+    "D26:4"
+   ],
+   "prediction": "30 July 2023",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 49.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 48,
+   "category": 2,
+   "method": "hybrid",
+   "question": "When did John have his first firefighter call-out?",
+   "gold_answer": "The sunday before 3` July 2023",
+   "gold_evidence": [
+    "D26:4"
+   ],
+   "prediction": "30 July 2023",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 68.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 48,
+   "category": 2,
+   "method": "full",
+   "question": "When did John have his first firefighter call-out?",
+   "gold_answer": "The sunday before 3` July 2023",
+   "gold_evidence": [
+    "D26:4"
+   ],
+   "prediction": "the Sunday before 31 July 2023",
+   "answer_f1": 0.8,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 43.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 50,
+   "category": 3,
+   "method": "vector",
+   "question": "What attributes describe John?",
+   "gold_answer": "Selfless, family-oriented, passionate, rational",
+   "gold_evidence": [
+    "D26:6",
+    "D2:14",
+    "D3:5",
+    "D4:6"
+   ],
+   "prediction": "passionate, dedicated, resilient, resourceful, enthusiastic, hardworking",
+   "answer_f1": 0.2,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 12.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 50,
+   "category": 3,
+   "method": "hybrid",
+   "question": "What attributes describe John?",
+   "gold_answer": "Selfless, family-oriented, passionate, rational",
+   "gold_evidence": [
+    "D26:6",
+    "D2:14",
+    "D3:5",
+    "D4:6"
+   ],
+   "prediction": "passionate, dedicated, resilient, resourceful, enthusiastic",
+   "answer_f1": 0.2222,
+   "evidence_recall": 0.25,
+   "retrieved_count": 15,
+   "seconds": 42.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 50,
+   "category": 3,
+   "method": "full",
+   "question": "What attributes describe John?",
+   "gold_answer": "Selfless, family-oriented, passionate, rational",
+   "gold_evidence": [
+    "D26:6",
+    "D2:14",
+    "D3:5",
+    "D4:6"
+   ],
+   "prediction": "passionate, determined, supportive, resilient, community-focused, family-oriented, optimistic, dedicated, kind, motivated",
+   "answer_f1": 0.2857,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 43.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 64,
+   "category": 3,
+   "method": "vector",
+   "question": "What job might Maria pursue in the future?",
+   "gold_answer": "Shelter coordinator, Counselor",
+   "gold_evidence": [
+    "D11:10",
+    "D27:4",
+    "D32:14",
+    "D5:8"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 10.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 64,
+   "category": 3,
+   "method": "hybrid",
+   "question": "What job might Maria pursue in the future?",
+   "gold_answer": "Shelter coordinator, Counselor",
+   "gold_evidence": [
+    "D11:10",
+    "D27:4",
+    "D32:14",
+    "D5:8"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 27.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 64,
+   "category": 3,
+   "method": "full",
+   "question": "What job might Maria pursue in the future?",
+   "gold_answer": "Shelter coordinator, Counselor",
+   "gold_evidence": [
+    "D11:10",
+    "D27:4",
+    "D32:14",
+    "D5:8"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 24.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 65,
+   "category": 4,
+   "method": "vector",
+   "question": "What is John's main focus in local politics?",
+   "gold_answer": "Improving education and infrastructure",
+   "gold_evidence": [
+    "D1:8"
+   ],
+   "prediction": "education reform and infrastructure development",
+   "answer_f1": 0.5714,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 5.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 65,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What is John's main focus in local politics?",
+   "gold_answer": "Improving education and infrastructure",
+   "gold_evidence": [
+    "D1:8"
+   ],
+   "prediction": "education and infrastructure",
+   "answer_f1": 0.8,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 34.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 65,
+   "category": 4,
+   "method": "full",
+   "question": "What is John's main focus in local politics?",
+   "gold_answer": "Improving education and infrastructure",
+   "gold_evidence": [
+    "D1:8"
+   ],
+   "prediction": "education and infrastructure",
+   "answer_f1": 0.8,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 23.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 66,
+   "category": 4,
+   "method": "vector",
+   "question": "What sparked John's interest in improving education and infrastructure in the community?",
+   "gold_answer": "Seeing how lack of education and crumbling infrastructure affected his neighborhood while growing up.",
+   "gold_evidence": [
+    "D1:10"
+   ],
+   "prediction": "seeing how lack of education and crumbling infrastructure affected his neighborhood growing up",
+   "answer_f1": 0.96,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 35.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 66,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What sparked John's interest in improving education and infrastructure in the community?",
+   "gold_answer": "Seeing how lack of education and crumbling infrastructure affected his neighborhood while growing up.",
+   "gold_evidence": [
+    "D1:10"
+   ],
+   "prediction": "seeing how lack of education and crumbling infrastructure affected his neighborhood growing up",
+   "answer_f1": 0.96,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 9.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 66,
+   "category": 4,
+   "method": "full",
+   "question": "What sparked John's interest in improving education and infrastructure in the community?",
+   "gold_answer": "Seeing how lack of education and crumbling infrastructure affected his neighborhood while growing up.",
+   "gold_evidence": [
+    "D1:10"
+   ],
+   "prediction": "Growing up, seeing how lack of education and crumbling infrastructure affected his neighborhood",
+   "answer_f1": 0.96,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 19.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 67,
+   "category": 4,
+   "method": "vector",
+   "question": "How did the extra funding help the school shown in the photo shared by John?",
+   "gold_answer": "Enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "gold_evidence": [
+    "D1:12"
+   ],
+   "prediction": "It enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "answer_f1": 0.96,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 27.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 67,
+   "category": 4,
+   "method": "hybrid",
+   "question": "How did the extra funding help the school shown in the photo shared by John?",
+   "gold_answer": "Enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "gold_evidence": [
+    "D1:12"
+   ],
+   "prediction": "It enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "answer_f1": 0.96,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 7.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 67,
+   "category": 4,
+   "method": "full",
+   "question": "How did the extra funding help the school shown in the photo shared by John?",
+   "gold_answer": "Enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "gold_evidence": [
+    "D1:12"
+   ],
+   "prediction": "It enabled needed repairs and renovations, making the learning environment safer and more modern for students.",
+   "answer_f1": 0.96,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 44.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 68,
+   "category": 4,
+   "method": "vector",
+   "question": "What type of workout class did Maria start doing in December 2023?",
+   "gold_answer": "aerial yoga",
+   "gold_evidence": [
+    "D1:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 29.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 68,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What type of workout class did Maria start doing in December 2023?",
+   "gold_answer": "aerial yoga",
+   "gold_evidence": [
+    "D1:3"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 9.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 68,
+   "category": 4,
+   "method": "full",
+   "question": "What type of workout class did Maria start doing in December 2023?",
+   "gold_answer": "aerial yoga",
+   "gold_evidence": [
+    "D1:3"
+   ],
+   "prediction": "aerial yoga",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 38.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 69,
+   "category": 4,
+   "method": "vector",
+   "question": "What did Maria donate to a homeless shelter in December 2023?",
+   "gold_answer": "old car",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 43.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 69,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What did Maria donate to a homeless shelter in December 2023?",
+   "gold_answer": "old car",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 6.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 69,
+   "category": 4,
+   "method": "full",
+   "question": "What did Maria donate to a homeless shelter in December 2023?",
+   "gold_answer": "old car",
+   "gold_evidence": [
+    "D2:1"
+   ],
+   "prediction": "her old car",
+   "answer_f1": 0.8,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 15.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 70,
+   "category": 4,
+   "method": "vector",
+   "question": "What kind of meal did John and his family make together in the photo shared by John?",
+   "gold_answer": "pizza",
+   "gold_evidence": [
+    "D2:24"
+   ],
+   "prediction": "pizza",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 32.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 70,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What kind of meal did John and his family make together in the photo shared by John?",
+   "gold_answer": "pizza",
+   "gold_evidence": [
+    "D2:24"
+   ],
+   "prediction": "pizza",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 25.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 70,
+   "category": 4,
+   "method": "full",
+   "question": "What kind of meal did John and his family make together in the photo shared by John?",
+   "gold_answer": "pizza",
+   "gold_evidence": [
+    "D2:24"
+   ],
+   "prediction": "pizza",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 34.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 71,
+   "category": 4,
+   "method": "vector",
+   "question": "What kind of online group did John join?",
+   "gold_answer": "service-focused online group",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "service-focused online group",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 48.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 71,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What kind of online group did John join?",
+   "gold_answer": "service-focused online group",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "service-focused online group",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 47.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 71,
+   "category": 4,
+   "method": "full",
+   "question": "What kind of online group did John join?",
+   "gold_answer": "service-focused online group",
+   "gold_evidence": [
+    "D3:1"
+   ],
+   "prediction": "service-focused online group",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 31.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 72,
+   "category": 4,
+   "method": "vector",
+   "question": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+   "gold_answer": "gave out food and supplies at a homeless shelter, organized a toy drive for kids in need",
+   "gold_evidence": [
+    "D3:5"
+   ],
+   "prediction": "raising donations, getting sponsors, coordinating with the city, and spreading the word",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 57.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 72,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+   "gold_answer": "gave out food and supplies at a homeless shelter, organized a toy drive for kids in need",
+   "gold_evidence": [
+    "D3:5"
+   ],
+   "prediction": "sharing stories, advice, and encouragement",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 27.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 72,
+   "category": 4,
+   "method": "full",
+   "question": "What kind of activities did John and his mates from the online group do as part of their service efforts?",
+   "gold_answer": "gave out food and supplies at a homeless shelter, organized a toy drive for kids in need",
+   "gold_evidence": [
+    "D3:5"
+   ],
+   "prediction": "giving out food and supplies at a homeless shelter, organizing a toy drive",
+   "answer_f1": 0.75,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 22.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 73,
+   "category": 4,
+   "method": "vector",
+   "question": "Who inspired Maria to start volunteering?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8"
+   ],
+   "prediction": "her aunt",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 66.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 73,
+   "category": 4,
+   "method": "hybrid",
+   "question": "Who inspired Maria to start volunteering?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8"
+   ],
+   "prediction": "her aunt",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 21.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 73,
+   "category": 4,
+   "method": "full",
+   "question": "Who inspired Maria to start volunteering?",
+   "gold_answer": "Her aunt",
+   "gold_evidence": [
+    "D5:8"
+   ],
+   "prediction": "her aunt",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 58.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 74,
+   "category": 4,
+   "method": "vector",
+   "question": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+   "gold_answer": "The girl seemed sad and had no other family",
+   "gold_evidence": [
+    "D5:10"
+   ],
+   "prediction": "to give her comfort and a listening ear",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 21.1
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 74,
+   "category": 4,
+   "method": "hybrid",
+   "question": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+   "gold_answer": "The girl seemed sad and had no other family",
+   "gold_evidence": [
+    "D5:10"
+   ],
+   "prediction": "to give her comfort and a listening ear",
+   "answer_f1": 0.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 47.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 74,
+   "category": 4,
+   "method": "full",
+   "question": "Why did Maria sit with the little girl at the shelter event in February 2023?",
+   "gold_answer": "The girl seemed sad and had no other family",
+   "gold_evidence": [
+    "D5:10"
+   ],
+   "prediction": "to give her comfort and a listening ear",
+   "answer_f1": 0.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 32.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 75,
+   "category": 4,
+   "method": "vector",
+   "question": "What did Jean go through before meeting Maria?",
+   "gold_answer": "divorce, job loss, homelessness",
+   "gold_evidence": [
+    "D7:7"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 44.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 75,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What did Jean go through before meeting Maria?",
+   "gold_answer": "divorce, job loss, homelessness",
+   "gold_evidence": [
+    "D7:7"
+   ],
+   "prediction": "divorce, losing her job, and ending up homeless",
+   "answer_f1": 0.5455,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 20.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 75,
+   "category": 4,
+   "method": "full",
+   "question": "What did Jean go through before meeting Maria?",
+   "gold_answer": "divorce, job loss, homelessness",
+   "gold_evidence": [
+    "D7:7"
+   ],
+   "prediction": "divorce, losing her job, and ending up homeless",
+   "answer_f1": 0.5455,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 43.5
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 76,
+   "category": 4,
+   "method": "vector",
+   "question": "Why did John decide to run for office again?",
+   "gold_answer": "saw the impact he could make in the community through politics",
+   "gold_evidence": [
+    "D7:4"
+   ],
+   "prediction": "to make a difference in his community",
+   "answer_f1": 0.4,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 8.3
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 76,
+   "category": 4,
+   "method": "hybrid",
+   "question": "Why did John decide to run for office again?",
+   "gold_answer": "saw the impact he could make in the community through politics",
+   "gold_evidence": [
+    "D7:4"
+   ],
+   "prediction": "to make a difference in his community",
+   "answer_f1": 0.4,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 7.4
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 76,
+   "category": 4,
+   "method": "full",
+   "question": "Why did John decide to run for office again?",
+   "gold_answer": "saw the impact he could make in the community through politics",
+   "gold_evidence": [
+    "D7:4"
+   ],
+   "prediction": "saw the impact he could make in the community",
+   "answer_f1": 0.875,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 56.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 77,
+   "category": 4,
+   "method": "vector",
+   "question": "What activity did John's colleague, Rob, invite him to?",
+   "gold_answer": "beginner's yoga class",
+   "gold_evidence": [
+    "D7:16"
+   ],
+   "prediction": "beginner's yoga class",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 8.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 77,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What activity did John's colleague, Rob, invite him to?",
+   "gold_answer": "beginner's yoga class",
+   "gold_evidence": [
+    "D7:16"
+   ],
+   "prediction": "beginner's yoga class",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 42.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 77,
+   "category": 4,
+   "method": "full",
+   "question": "What activity did John's colleague, Rob, invite him to?",
+   "gold_answer": "beginner's yoga class",
+   "gold_evidence": [
+    "D7:16"
+   ],
+   "prediction": "beginner's yoga class",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 16.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 78,
+   "category": 4,
+   "method": "vector",
+   "question": "What is the name of John's one-year-old child?",
+   "gold_answer": "Kyle",
+   "gold_evidence": [
+    "D8:4"
+   ],
+   "prediction": "Kyle",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 6.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 78,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What is the name of John's one-year-old child?",
+   "gold_answer": "Kyle",
+   "gold_evidence": [
+    "D8:4"
+   ],
+   "prediction": "Kyle",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 31.0
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 78,
+   "category": 4,
+   "method": "full",
+   "question": "What is the name of John's one-year-old child?",
+   "gold_answer": "Kyle",
+   "gold_evidence": [
+    "D8:4"
+   ],
+   "prediction": "Kyle",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 15.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 79,
+   "category": 4,
+   "method": "vector",
+   "question": "How often does John take his kids to the park?",
+   "gold_answer": "A few times a week",
+   "gold_evidence": [
+    "D8:8"
+   ],
+   "prediction": "a few times a week",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 6.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 79,
+   "category": 4,
+   "method": "hybrid",
+   "question": "How often does John take his kids to the park?",
+   "gold_answer": "A few times a week",
+   "gold_evidence": [
+    "D8:8"
+   ],
+   "prediction": "a few times a week",
+   "answer_f1": 1.0,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 24.8
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 79,
+   "category": 4,
+   "method": "full",
+   "question": "How often does John take his kids to the park?",
+   "gold_answer": "A few times a week",
+   "gold_evidence": [
+    "D8:8"
+   ],
+   "prediction": "a few times a week",
+   "answer_f1": 1.0,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 21.7
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 80,
+   "category": 4,
+   "method": "vector",
+   "question": "What did Maria make for her home to remind her of a trip to England?",
+   "gold_answer": "painting of a castle on a hill",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a painting",
+   "answer_f1": 0.3333,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 34.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 80,
+   "category": 4,
+   "method": "hybrid",
+   "question": "What did Maria make for her home to remind her of a trip to England?",
+   "gold_answer": "painting of a castle on a hill",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a painting",
+   "answer_f1": 0.3333,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 13.9
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 80,
+   "category": 4,
+   "method": "full",
+   "question": "What did Maria make for her home to remind her of a trip to England?",
+   "gold_answer": "painting of a castle on a hill",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a painting",
+   "answer_f1": 0.3333,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 58.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 81,
+   "category": 4,
+   "method": "vector",
+   "question": "Where did Maria get the idea for the castle shadow box in her home?",
+   "gold_answer": "England",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a trip to England",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 35.6
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 81,
+   "category": 4,
+   "method": "hybrid",
+   "question": "Where did Maria get the idea for the castle shadow box in her home?",
+   "gold_answer": "England",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a trip to England",
+   "answer_f1": 0.5,
+   "evidence_recall": 1.0,
+   "retrieved_count": 15,
+   "seconds": 57.2
+  },
+  {
+   "sample": "conv-41",
+   "qa_index": 81,
+   "category": 4,
+   "method": "full",
+   "question": "Where did Maria get the idea for the castle shadow box in her home?",
+   "gold_answer": "England",
+   "gold_evidence": [
+    "D8:15"
+   ],
+   "prediction": "a trip to England",
+   "answer_f1": 0.5,
+   "evidence_recall": null,
+   "retrieved_count": 663,
+   "seconds": 23.4
+  },
+  {
+   "sample": "conv-42",
+   "qa_index": 0,
+   "category": 3,
+   "method": "vector",
+   "question": "Is it likely that Nate has friends besides Joanna?",
+   "gold_answer": "Yesteammates on hisvideo game team.",
+   "gold_evidence": [
+    "D1:7"
+   ],
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "evidence_recall": 0.0,
+   "retrieved_count": 15,
+   "seconds": 4.9
+  }
+ ]
+}

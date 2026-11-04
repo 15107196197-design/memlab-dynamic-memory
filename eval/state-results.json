@@ -1,0 +1,2293 @@
+{
+ "generated_at": "2026-11-04T23:08:58",
+ "answer_model": "qwen3.8:27b-q4_K_M",
+ "embedding_model": "bge-m3",
+ "split": "test",
+ "rows": [
+  {
+   "id": "t41-job",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He lost his job at the mechanical engineering company and may have found a job at a tech company.",
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D28:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D28:5",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D25:1",
+     "to": "D28:1",
+     "gold": "SUPERSEDE",
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D28:1",
+     "to": "D28:5",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "t41-job",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He lost his job at the mechanical engineering company and may have found a job at a tech company.",
+   "prediction": "joined the fire brigade",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D28:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D28:5",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D25:1",
+     "to": "D28:1",
+     "gold": "SUPERSEDE",
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D28:1",
+     "to": "D28:5",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.3333333333333333
+  },
+  {
+   "id": "t41-job-asof",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He is enjoying his new job with an encouraging team.",
+   "prediction": "new job",
+   "answer_f1": 0.3636,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-job-asof",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He is enjoying his new job with an encouraging team.",
+   "prediction": "enjoying his new job",
+   "answer_f1": 0.6154,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-dogs",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "Two, Coco and Shadow.",
+   "prediction": "1",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D31:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D30:1",
+     "to": "D31:2",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t41-dogs",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "Two, Coco and Shadow.",
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D31:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D30:1",
+     "to": "D31:2",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t41-dogs-asof",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "One, Coco.",
+   "prediction": "1",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-dogs-asof",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "One, Coco.",
+   "prediction": "1",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-john-volunteer",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "What is John currently doing as a volunteer?",
+   "gold_answer": "Mentoring students at a local school.",
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D28:11",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D30:18",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D31:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:11",
+     "to": "D30:18",
+     "gold": [
+      "UPDATE",
+      "RETAIN"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D30:18",
+     "to": "D31:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.6666666666666666
+  },
+  {
+   "id": "t41-john-volunteer",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "What is John currently doing as a volunteer?",
+   "gold_answer": "Mentoring students at a local school.",
+   "prediction": "volunteering as a mentor for a local school",
+   "answer_f1": 0.5455,
+   "memories": [
+    {
+     "turn": "D28:11",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D30:18",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D31:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:11",
+     "to": "D30:18",
+     "gold": [
+      "UPDATE",
+      "RETAIN"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D30:18",
+     "to": "D31:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-maria-volunteer",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "Where does Maria volunteer?",
+   "gold_answer": "At the homeless shelter and at a local dog shelter.",
+   "prediction": "the homeless shelter",
+   "answer_f1": 0.4444,
+   "memories": [
+    {
+     "turn": "D12:18",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:12",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D12:18",
+     "to": "D17:12",
+     "gold": "RETAIN",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t41-maria-volunteer",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "Where does Maria volunteer?",
+   "gold_answer": "At the homeless shelter and at a local dog shelter.",
+   "prediction": "homeless shelter",
+   "answer_f1": 0.4444,
+   "memories": [
+    {
+     "turn": "D12:18",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:12",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D12:18",
+     "to": "D17:12",
+     "gold": "RETAIN",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t41-max",
+   "sample": "conv-41",
+   "method": "vector",
+   "question": "Does John's family still have their dog Max?",
+   "gold_answer": "No, Max passed away; they are considering adopting a rescue dog.",
+   "prediction": "No, they said goodbye to Max",
+   "answer_f1": 0.375,
+   "memories": [
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:11",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D17:1",
+     "to": "D17:11",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-max",
+   "sample": "conv-41",
+   "method": "hybrid",
+   "question": "Does John's family still have their dog Max?",
+   "gold_answer": "No, Max passed away; they are considering adopting a rescue dog.",
+   "prediction": "No, they said goodbye to Max",
+   "answer_f1": 0.375,
+   "memories": [
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:11",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D17:1",
+     "to": "D17:11",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles",
+   "sample": "conv-42",
+   "method": "vector",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Three.",
+   "prediction": "three",
+   "answer_f1": 1.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D28:25",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:14",
+     "to": "D28:25",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles",
+   "sample": "conv-42",
+   "method": "hybrid",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Three.",
+   "prediction": "3",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D28:25",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:14",
+     "to": "D28:25",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles-asof",
+   "sample": "conv-42",
+   "method": "vector",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Two.",
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles-asof",
+   "sample": "conv-42",
+   "method": "hybrid",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Two.",
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-tournaments-asof",
+   "sample": "conv-42",
+   "method": "vector",
+   "question": "How many video game tournaments has Nate won?",
+   "gold_answer": "Four.",
+   "prediction": "4",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D10:4",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D10:4",
+     "to": "D17:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-tournaments-asof",
+   "sample": "conv-42",
+   "method": "hybrid",
+   "question": "How many video game tournaments has Nate won?",
+   "gold_answer": "Four.",
+   "prediction": "4",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D10:4",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D10:4",
+     "to": "D17:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-first-screenplay",
+   "sample": "conv-42",
+   "method": "vector",
+   "question": "What happened to the first screenplay Joanna submitted?",
+   "gold_answer": "It was rejected by a major company.",
+   "prediction": "rejected by a major company",
+   "answer_f1": 0.8,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D14:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D14:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t42-first-screenplay",
+   "sample": "conv-42",
+   "method": "hybrid",
+   "question": "What happened to the first screenplay Joanna submitted?",
+   "gold_answer": "It was rejected by a major company.",
+   "prediction": "rejected",
+   "answer_f1": 0.2857,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D14:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D14:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-movie",
+   "sample": "conv-42",
+   "method": "vector",
+   "question": "What is the latest stage of Joanna's own movie project?",
+   "gold_answer": "She is filming her own movie from the road-trip script.",
+   "prediction": "filming",
+   "answer_f1": 0.2,
+   "memories": [
+    {
+     "turn": "D28:8",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D29:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:8",
+     "to": "D29:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t42-movie",
+   "sample": "conv-42",
+   "method": "hybrid",
+   "question": "What is the latest stage of Joanna's own movie project?",
+   "gold_answer": "She is filming her own movie from the road-trip script.",
+   "prediction": "filming",
+   "answer_f1": 0.2,
+   "memories": [
+    {
+     "turn": "D28:8",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D29:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:8",
+     "to": "D29:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "d26-adoption",
+   "sample": "conv-26",
+   "method": "vector",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She passed the adoption agency interviews.",
+   "prediction": "Passed the adoption agency interviews on 20 October 2023",
+   "answer_f1": 0.6154,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D13:1",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D19:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D13:1",
+     "to": "D19:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 0.3333333333333333
+  },
+  {
+   "id": "d26-adoption",
+   "sample": "conv-26",
+   "method": "hybrid",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She passed the adoption agency interviews.",
+   "prediction": "passed the adoption agency interviews",
+   "answer_f1": 0.8889,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D13:1",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D19:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    },
+    {
+     "from": "D13:1",
+     "to": "D19:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d26-adoption-asof",
+   "sample": "conv-26",
+   "method": "vector",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She applied to adoption agencies.",
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D13:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "d26-adoption-asof",
+   "sample": "conv-26",
+   "method": "hybrid",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She applied to adoption agencies.",
+   "prediction": "applied to adoption agencies",
+   "answer_f1": 0.8889,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D13:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d30-gina",
+   "sample": "conv-30",
+   "method": "vector",
+   "question": "What does Gina do for work now?",
+   "gold_answer": "She runs her own clothing store.",
+   "prediction": "fashion internship",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D1:3",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D2:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D1:3",
+     "to": "D2:1",
+     "gold": "SUPERSEDE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "d30-gina",
+   "sample": "conv-30",
+   "method": "hybrid",
+   "question": "What does Gina do for work now?",
+   "gold_answer": "She runs her own clothing store.",
+   "prediction": "runs an online clothes store",
+   "answer_f1": 0.6,
+   "memories": [
+    {
+     "turn": "D1:3",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D2:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D1:3",
+     "to": "D2:1",
+     "gold": "SUPERSEDE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "d30-jon-studio-asof",
+   "sample": "conv-30",
+   "method": "vector",
+   "question": "Has Jon's dance studio officially opened yet?",
+   "gold_answer": "Not yet; the official opening night is tomorrow.",
+   "prediction": "No",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D15:5",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D15:5",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "d30-jon-studio-asof",
+   "sample": "conv-30",
+   "method": "hybrid",
+   "question": "Has Jon's dance studio officially opened yet?",
+   "gold_answer": "Not yet; the official opening night is tomorrow.",
+   "prediction": "No, opens 20 June 2023",
+   "answer_f1": 0.1667,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D15:5",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D15:5",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d30-jon-work",
+   "sample": "conv-30",
+   "method": "vector",
+   "question": "What is Jon's current work situation?",
+   "gold_answer": "His dance studio is on tenuous ground and he took a temp job while looking for investors.",
+   "prediction": "working on the dance studio",
+   "answer_f1": 0.3158,
+   "memories": [
+    {
+     "turn": "D15:5",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D18:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D15:5",
+     "to": "D18:2",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "d30-jon-work",
+   "sample": "conv-30",
+   "method": "hybrid",
+   "question": "What is Jon's current work situation?",
+   "gold_answer": "His dance studio is on tenuous ground and he took a temp job while looking for investors.",
+   "prediction": "working on the dance studio",
+   "answer_f1": 0.3158,
+   "memories": [
+    {
+     "turn": "D15:5",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D18:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D15:5",
+     "to": "D18:2",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct": false
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "t41-job",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He lost his job at the mechanical engineering company and may have found a job at a tech company.",
+   "prediction": "Unemployed",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D28:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D28:5",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D25:1",
+     "to": "D28:1",
+     "gold": "SUPERSEDE",
+     "predicted": "SUPERSEDE",
+     "correct_direct": true,
+     "correct": true
+    },
+    {
+     "from": "D28:1",
+     "to": "D28:5",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D19_8",
+     "to_id": "conv41_D25_1",
+     "type": "RETAIN",
+     "reason": "Both describe John being in a job (assistant manager/new job) before the job loss.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D25_1",
+     "to_id": "conv41_D28_1",
+     "type": "SUPERSEDE",
+     "reason": "John had a job (conv41_D25_1) but then lost it (conv41_D28_1), replacing the employed state with unemployed.",
+     "support": "memory_graph"
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.6666666666666666
+  },
+  {
+   "id": "t41-job-asof",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "What is John's current employment situation?",
+   "gold_answer": "He is enjoying his new job with an encouraging team.",
+   "prediction": "Fire brigade",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D25:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D19_8",
+     "to_id": "conv41_D25_1",
+     "type": "SUPERSEDE",
+     "reason": "John moved from being an assistant manager to a new job (identified as fire brigade in later context).",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D19_12",
+     "to_id": "conv41_D25_1",
+     "type": "SUPERSEDE",
+     "reason": "The promotion to assistant manager was the previous state, now replaced by the new job.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D25_1",
+     "to_id": "conv41_D26_3",
+     "type": "RETAIN",
+     "reason": "Both refer to John's current employment situation in July 2023; D26_3 clarifies the specific role (fire brigade) mentioned in D25_1.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-dogs",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "Two, Coco and Shadow.",
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D31:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D30:1",
+     "to": "D31:2",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D30_1",
+     "to_id": "conv41_D31_3",
+     "type": "RETAIN",
+     "reason": "The mention of 'your other dog' in the later message is compatible with and expands upon the earlier statement about getting Coco, confirming she has multiple dogs.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "t41-dogs-asof",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "How many dogs does Maria have now?",
+   "gold_answer": "One, Coco.",
+   "prediction": "1",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D30:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "predicted_relations": [],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-john-volunteer",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "What is John currently doing as a volunteer?",
+   "gold_answer": "Mentoring students at a local school.",
+   "prediction": "mentoring for a local school",
+   "answer_f1": 0.6667,
+   "memories": [
+    {
+     "turn": "D28:11",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D30:18",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D31:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:11",
+     "to": "D30:18",
+     "gold": [
+      "UPDATE",
+      "RETAIN"
+     ],
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    },
+    {
+     "from": "D30:18",
+     "to": "D31:1",
+     "gold": "UPDATE",
+     "predicted": "SUPERSEDE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D28_11",
+     "to_id": "conv41_D31_1",
+     "type": "SUPERSEDE",
+     "reason": "Past renovation volunteering replaced by current school mentoring.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D30_18",
+     "to_id": "conv41_D31_1",
+     "type": "SUPERSEDE",
+     "reason": "Exploring options replaced by actual school mentoring.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-maria-volunteer",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "Where does Maria volunteer?",
+   "gold_answer": "At the homeless shelter and at a local dog shelter.",
+   "prediction": "a homeless shelter",
+   "answer_f1": 0.4444,
+   "memories": [
+    {
+     "turn": "D12:18",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:12",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D12:18",
+     "to": "D17:12",
+     "gold": "RETAIN",
+     "predicted": "RETAIN",
+     "correct_direct": true,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D5_6",
+     "to_id": "conv41_D7_3",
+     "type": "RETAIN",
+     "reason": "Both refer to shelter volunteering; the specific type (kids vs homeless) is consistent with the general 'shelter' description.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D7_3",
+     "to_id": "conv41_D11_16",
+     "type": "RETAIN",
+     "reason": "Continued activity at the same shelter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D11_16",
+     "to_id": "conv41_D12_18",
+     "type": "RETAIN",
+     "reason": "Continued activity at the same shelter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D12_18",
+     "to_id": "conv41_D17_12",
+     "type": "RETAIN",
+     "reason": "Maria adds a new location (dog shelter) while maintaining the previous one (implied by later references).",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D17_12",
+     "to_id": "conv41_D20_7",
+     "type": "RETAIN",
+     "reason": "Reference to 'the shelter' is compatible with the established homeless shelter role.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D20_7",
+     "to_id": "conv41_D21_1",
+     "type": "RETAIN",
+     "reason": "Continued activity at the shelter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D21_1",
+     "to_id": "conv41_D25_8",
+     "type": "RETAIN",
+     "reason": "Plan to continue volunteering at shelters aligns with current state.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D25_8",
+     "to_id": "conv41_D27_2",
+     "type": "RETAIN",
+     "reason": "Continued activity at the homeless shelter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D27_2",
+     "to_id": "conv41_D27_4",
+     "type": "RETAIN",
+     "reason": "Provides background/history for the current state.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D27_4",
+     "to_id": "conv41_D29_1",
+     "type": "RETAIN",
+     "reason": "Continued activity at the homeless shelter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D29_1",
+     "to_id": "conv41_D32_14",
+     "type": "RETAIN",
+     "reason": "Continued activity at the shelter (specifically front desk).",
+     "support": "memory_graph"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t41-max",
+   "sample": "conv-41",
+   "method": "dynamic",
+   "question": "Does John's family still have their dog Max?",
+   "gold_answer": "No, Max passed away; they are considering adopting a rescue dog.",
+   "prediction": "No, Max has passed away",
+   "answer_f1": 0.5333,
+   "memories": [
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": false
+    },
+    {
+     "turn": "D17:11",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D17:1",
+     "to": "D17:11",
+     "gold": [
+      "RETAIN",
+      "UPDATE"
+     ],
+     "predicted": "UPDATE",
+     "correct_direct": true,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv41_D17_11",
+     "to_id": "conv41_D31_7",
+     "type": "RETAIN",
+     "reason": "Both memories indicate John is considering or planning to adopt a new dog, consistent with the ongoing state of not having Max.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv41_D17_1",
+     "to_id": "conv41_D17_11",
+     "type": "UPDATE",
+     "reason": "John moves from stating Max is gone to considering adopting a new dog, showing progression in his pet situation.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles",
+   "sample": "conv-42",
+   "method": "dynamic",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Three.",
+   "prediction": "3",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D28:25",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:14",
+     "to": "D28:25",
+     "gold": [
+      "UPDATE",
+      "SUPERSEDE"
+     ],
+     "predicted": "SUPERSEDE",
+     "correct_direct": true,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv42_D2_14",
+     "to_id": "conv42_D28_25",
+     "type": "SUPERSEDE",
+     "reason": "The initial state of having 2 turtles was replaced by the state of having 3 turtles.",
+     "support": "review"
+    },
+    {
+     "from_id": "conv42_D25_25",
+     "to_id": "conv42_D28_25",
+     "type": "SUPERSEDE",
+     "reason": "The description of two distinct turtles was replaced by the addition of a third turtle.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-turtles-asof",
+   "sample": "conv-42",
+   "method": "dynamic",
+   "question": "How many turtles does Nate have now?",
+   "gold_answer": "Two.",
+   "prediction": "2",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D2:14",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [],
+   "predicted_relations": [
+    {
+     "from_id": "conv42_D2_14",
+     "to_id": "conv42_D25_25",
+     "type": "RETAIN",
+     "reason": "Both memories confirm the count of two turtles ('both' vs 'One... the other') and are consistent over time.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-tournaments-asof",
+   "sample": "conv-42",
+   "method": "dynamic",
+   "question": "How many video game tournaments has Nate won?",
+   "gold_answer": "Four.",
+   "prediction": "4",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D10:4",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D17:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D10:4",
+     "to": "D17:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv42_D1_3",
+     "to_id": "conv42_D10_4",
+     "type": "UPDATE",
+     "reason": "Progression from 1st win to 2nd win.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D10_4",
+     "to_id": "conv42_D14_8",
+     "type": "UPDATE",
+     "reason": "Progression from 2nd win to another win (implied 3rd).",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D14_8",
+     "to_id": "conv42_D17_1",
+     "type": "UPDATE",
+     "reason": "Progression to the 4th win, which is the final state.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D9_4",
+     "to_id": "conv42_D17_1",
+     "type": "UPDATE",
+     "reason": "The 4th tournament mentioned as upcoming in April was won in July.",
+     "support": "memory_graph"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-first-screenplay",
+   "sample": "conv-42",
+   "method": "dynamic",
+   "question": "What happened to the first screenplay Joanna submitted?",
+   "gold_answer": "It was rejected by a major company.",
+   "prediction": "Rejected by a major company",
+   "answer_f1": 0.8,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D14:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D14:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv42_D2_7",
+     "to_id": "conv42_D3_1",
+     "type": "UPDATE",
+     "reason": "Planned to submit, then confirmed it was sent to a festival.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D4_10",
+     "to_id": "conv42_D14_1",
+     "type": "UPDATE",
+     "reason": "Waiting for feedback, then received a rejection letter.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D3_1",
+     "to_id": "conv42_D4_10",
+     "type": "UPDATE",
+     "reason": "Sent to festival, then waiting for feedback on the first one.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "t42-movie",
+   "sample": "conv-42",
+   "method": "dynamic",
+   "question": "What is the latest stage of Joanna's own movie project?",
+   "gold_answer": "She is filming her own movie from the road-trip script.",
+   "prediction": "filming",
+   "answer_f1": 0.2,
+   "memories": [
+    {
+     "turn": "D28:8",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D29:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D28:8",
+     "to": "D29:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv42_D26_1",
+     "to_id": "conv42_D26_3",
+     "type": "UPDATE",
+     "reason": "From setting up meetings to meetings going well.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv42_D1_2",
+     "to_id": "conv42_D17_2",
+     "type": "UPDATE",
+     "reason": "From general project to specific research for the next movie.",
+     "support": "review"
+    },
+    {
+     "from_id": "conv42_D17_2",
+     "to_id": "conv42_D26_1",
+     "type": "UPDATE",
+     "reason": "From research to setting up producer meetings.",
+     "support": "review"
+    },
+    {
+     "from_id": "conv42_D26_3",
+     "to_id": "conv42_D29_1",
+     "type": "UPDATE",
+     "reason": "From successful meetings to actually filming the movie.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 0.5
+  },
+  {
+   "id": "d26-adoption",
+   "sample": "conv-26",
+   "method": "dynamic",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She passed the adoption agency interviews.",
+   "prediction": "Passed the adoption agency interviews on 20 October 2023",
+   "answer_f1": 0.6154,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D13:1",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D19:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": true
+    },
+    {
+     "from": "D13:1",
+     "to": "D19:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv26_D2_8",
+     "to_id": "conv26_D8_9",
+     "type": "UPDATE",
+     "reason": "Progressed from researching agencies to attending a related council meeting.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv26_D8_9",
+     "to_id": "conv26_D13_1",
+     "type": "UPDATE",
+     "reason": "Progressed from attending meetings to formally applying to agencies.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv26_D13_1",
+     "to_id": "conv26_D17_1",
+     "type": "UPDATE",
+     "reason": "Progressed from applying to seeking further advice from a mentor.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv26_D17_1",
+     "to_id": "conv26_D19_1",
+     "type": "UPDATE",
+     "reason": "Progressed from seeking advice to successfully passing the agency interviews.",
+     "support": "memory_graph"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d26-adoption-asof",
+   "sample": "conv-26",
+   "method": "dynamic",
+   "question": "What is Caroline's latest progress with adoption?",
+   "gold_answer": "She applied to adoption agencies.",
+   "prediction": "Applied to adoption agencies",
+   "answer_f1": 0.8889,
+   "memories": [
+    {
+     "turn": "D2:8",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D13:1",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D2:8",
+     "to": "D13:1",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": true
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv26_D2_8",
+     "to_id": "conv26_D8_9",
+     "type": "UPDATE",
+     "reason": "Progressed from researching agencies to attending a related council meeting.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv26_D8_9",
+     "to_id": "conv26_D13_1",
+     "type": "UPDATE",
+     "reason": "Progressed from attending meetings to formally applying to agencies.",
+     "support": "memory_graph"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d30-gina",
+   "sample": "conv-30",
+   "method": "dynamic",
+   "question": "What does Gina do for work now?",
+   "gold_answer": "She runs her own clothing store.",
+   "prediction": "runs an online clothes store",
+   "answer_f1": 0.6,
+   "memories": [
+    {
+     "turn": "D1:3",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D2:1",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D1:3",
+     "to": "D2:1",
+     "gold": "SUPERSEDE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  },
+  {
+   "id": "d30-jon-studio-asof",
+   "sample": "conv-30",
+   "method": "dynamic",
+   "question": "Has Jon's dance studio officially opened yet?",
+   "gold_answer": "Not yet; the official opening night is tomorrow.",
+   "prediction": "No, opens 20 June 2023",
+   "answer_f1": 0.1667,
+   "memories": [
+    {
+     "turn": "D3:1",
+     "gold": "HISTORICAL",
+     "predicted": "HISTORICAL",
+     "retrieved": true,
+     "correct": true
+    },
+    {
+     "turn": "D15:5",
+     "gold": "ACTIVE",
+     "predicted": "ACTIVE",
+     "retrieved": true,
+     "correct": true
+    }
+   ],
+   "relations": [
+    {
+     "from": "D3:1",
+     "to": "D15:5",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv30_D1_4",
+     "to_id": "conv30_D15_5",
+     "type": "UPDATE",
+     "reason": "Progress from initial intent to specific opening date.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D5_4",
+     "to_id": "conv30_D15_5",
+     "type": "CONFLICT",
+     "reason": "Feb claim of running studio vs June claim of opening tomorrow.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D11_1",
+     "to_id": "conv30_D15_5",
+     "type": "UPDATE",
+     "reason": "Progress from 'working on it' to 'opening tomorrow'.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D15_3",
+     "to_id": "conv30_D15_5",
+     "type": "RETAIN",
+     "reason": "Both are true on June 19; one is general status, one is specific date.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D11_9",
+     "to_id": "conv30_D15_5",
+     "type": "CONFLICT",
+     "reason": "May claim of having studio vs June claim of opening tomorrow.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": true,
+   "evidence_recall": 1.0
+  },
+  {
+   "id": "d30-jon-work",
+   "sample": "conv-30",
+   "method": "dynamic",
+   "question": "What is Jon's current work situation?",
+   "gold_answer": "His dance studio is on tenuous ground and he took a temp job while looking for investors.",
+   "prediction": "unknown",
+   "answer_f1": 0.0,
+   "memories": [
+    {
+     "turn": "D15:5",
+     "gold": "HISTORICAL",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    },
+    {
+     "turn": "D18:2",
+     "gold": "ACTIVE",
+     "predicted": "MISSING",
+     "retrieved": false,
+     "correct": false
+    }
+   ],
+   "relations": [
+    {
+     "from": "D15:5",
+     "to": "D18:2",
+     "gold": "UPDATE",
+     "predicted": "NONE",
+     "correct_direct": false,
+     "correct": false
+    }
+   ],
+   "predicted_relations": [
+    {
+     "from_id": "conv30_D4_11",
+     "to_id": "conv30_D5_10",
+     "type": "UPDATE",
+     "reason": "D4_11 mentions working on business. D5_10 clarifies the context: he left his job to do this. The business venture is the same ongoing goal, but the employment context was updated/clarified.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D5_10",
+     "to_id": "conv30_D11_1",
+     "type": "UPDATE",
+     "reason": "D5_10 establishes he is aiming to turn passion into business. D11_1 shows progress: 'working on the dance studio and things are looking up'. The business venture progressed from aim to active work with positive results.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D11_1",
+     "to_id": "conv30_D12_12",
+     "type": "UPDATE",
+     "reason": "D11_1 says working on studio. D12_12 says wrapping up business plan and looking for investors. The business venture progressed to the funding/planning stage.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D12_12",
+     "to_id": "conv30_D13_3",
+     "type": "UPDATE",
+     "reason": "D12_12 mentions business plan/investors. D13_3 says prepping for dance studio. The business venture continues to progress with preparation activities.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D13_3",
+     "to_id": "conv30_D14_3",
+     "type": "UPDATE",
+     "reason": "D13_3 mentions prepping. D14_3 mentions doing promotion. The business venture progressed to marketing/promotion stage.",
+     "support": "memory_graph"
+    },
+    {
+     "from_id": "conv30_D1_24",
+     "to_id": "conv30_D5_10",
+     "type": "SUPERSEDE",
+     "reason": "In D1_24 he rehearses 'after work', implying he still had a job. In D5_10 he explicitly states he got out of his 9-5 job as a banker. The state of 'having a job' was replaced by 'no longer having a job'.",
+     "support": "review"
+    }
+   ],
+   "valid_set_exact": false,
+   "evidence_recall": 0.0
+  }
+ ]
+}
