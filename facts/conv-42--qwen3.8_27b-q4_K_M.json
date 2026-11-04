@@ -1,0 +1,4478 @@
+{
+  "sample": "conv-42",
+  "model": "qwen3.8:27b-q4_K_M",
+  "turns": {
+    "D1:1": [],
+    "D1:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "working on a project",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D1:3": [
+      {
+        "entity": "Nate",
+        "attribute": "achievement",
+        "value": "won first video game tournament",
+        "event": "won tournament",
+        "time_expression": "last week"
+      }
+    ],
+    "D1:4": [],
+    "D1:5": [
+      {
+        "entity": "Nate",
+        "attribute": "game_type",
+        "value": "team shooter game",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:6": [],
+    "D1:7": [
+      {
+        "entity": "Nate",
+        "attribute": "game_title",
+        "value": "Counter-Strike: Global Offensive",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "interest_preference",
+        "value": "not into games",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:9": [],
+    "D1:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "hobbies",
+        "value": "writing, reading, watching movies, exploring nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:11": [
+      {
+        "entity": "Nate",
+        "attribute": "hobbies",
+        "value": "playing video games, watching movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:12": [],
+    "D1:13": [
+      {
+        "entity": "Nate",
+        "attribute": "movie_preference",
+        "value": "action and sci-fi movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "movie_preference",
+        "value": "dramas and romcoms",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:15": [],
+    "D1:16": [],
+    "D1:17": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves watching classics",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "watched a romantic drama about memory and relationships",
+        "event": "first watched the movie",
+        "time_expression": "around 3 years ago"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "bought a physical copy of the movie",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:19": [],
+    "D1:20": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "the romantic drama is one of her favorites",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:21": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "check out the recommended movie",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:22": [],
+    "D2:1": [],
+    "D2:2": [],
+    "D2:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "achievement",
+        "value": "finished her first full screenplay",
+        "event": "finished writing the screenplay",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "printed the screenplay",
+        "event": null,
+        "time_expression": "last Friday"
+      }
+    ],
+    "D2:4": [],
+    "D2:5": [
+      {
+        "entity": "Joanna's screenplay",
+        "attribute": "genre",
+        "value": "mix of drama and romance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:6": [],
+    "D2:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "submit the screenplay to film festivals",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get producers and directors to check out the screenplay",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:8": [],
+    "D2:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "positive feedback and new opportunities",
+        "event": "hoping for outcome",
+        "time_expression": null
+      }
+    ],
+    "D2:10": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "having little ones around to keep calm when nervous",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:11": [],
+    "D2:12": [
+      {
+        "entity": "Nate",
+        "attribute": "duration_of_ownership",
+        "value": "3 years",
+        "event": "having them",
+        "time_expression": "for 3 years now"
+      }
+    ],
+    "D2:13": [],
+    "D2:14": [
+      {
+        "entity": "Nate",
+        "attribute": "recommendation",
+        "value": "having something like these little guys for times of stress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get pets of my own soon",
+        "event": "thinking about it",
+        "time_expression": "soon"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "constraint",
+        "value": "allergic to some pets",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:16": [
+      {
+        "entity": "Nate",
+        "attribute": "social_activity",
+        "value": "hang out with some people outside of my circle at the tournament",
+        "event": "start to hang out",
+        "time_expression": null
+      }
+    ],
+    "D2:17": [],
+    "D2:18": [
+      {
+        "entity": "Nate",
+        "attribute": "social_preference",
+        "value": "stick around the more chill people",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:19": [],
+    "D2:20": [
+      {
+        "entity": "Nate",
+        "attribute": "expectation",
+        "value": "don't expect to win big",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "motivation",
+        "value": "playing for fun",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:21": [
+      {
+        "entity": "Joanna",
+        "attribute": "allergy_symptom",
+        "value": "face gets all puffy and itchy",
+        "event": "being around certain animals",
+        "time_expression": null
+      }
+    ],
+    "D2:22": [],
+    "D2:23": [
+      {
+        "entity": "Joanna",
+        "attribute": "allergy_type",
+        "value": "allergic to most reptiles and animals with fur",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:24": [],
+    "D2:25": [
+      {
+        "entity": "Joanna",
+        "attribute": "source_of_joy",
+        "value": "writing and hanging with friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:26": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "experiences anxiousness",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "constraint",
+        "value": "not being able to have animals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:27": [
+      {
+        "entity": "Joanna",
+        "attribute": "writing_style",
+        "value": "creates wild worlds with awesome characters",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "writing_purpose",
+        "value": "express feelings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:28": [],
+    "D2:29": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "keep pursuing passion for writing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "sent screenplay to film festival",
+        "event": "submission of screenplay",
+        "time_expression": "all day everyday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "screenplay ends up on the big screen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:2": [],
+    "D3:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "effort",
+        "value": "put a lot of effort into screenplay",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:4": [
+      {
+        "entity": "Nate",
+        "attribute": "skill_discovery",
+        "value": "can make coconut milk icecream",
+        "event": "discovered ability to make coconut milk icecream",
+        "time_expression": "just"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "made coconut milk icecream",
+        "event": "tried making coconut milk icecream",
+        "time_expression": "just"
+      }
+    ],
+    "D3:5": [],
+    "D3:6": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "coconut milk icecream might be new favorite snack",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:7": [],
+    "D3:8": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try out different flavors and toppings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:9": [],
+    "D3:10": [
+      {
+        "entity": "Nate",
+        "attribute": "preferred_flavors",
+        "value": "coconut milk, chocolate, mixed berry",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "try dairy-free flavors",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:12": [
+      {
+        "entity": "Nate",
+        "attribute": "cooking_activity",
+        "value": "made a dairy-free chocolate cake with berries",
+        "event": "made a dairy-free chocolate cake with berries",
+        "time_expression": "the other day"
+      }
+    ],
+    "D3:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "make a dairy-free chocolate cake or visit Nate to try one",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:14": [],
+    "D3:15": [],
+    "D3:16": [
+      {
+        "entity": "Nate",
+        "attribute": "movie_watching_status",
+        "value": "has not watched any good movies recently",
+        "event": null,
+        "time_expression": "recently"
+      }
+    ],
+    "D3:17": [
+      {
+        "entity": "Joanna",
+        "attribute": "movie_watching_event",
+        "value": "watched the movie \"Little Women\"",
+        "event": "watched the movie \"Little Women\"",
+        "time_expression": "just"
+      }
+    ],
+    "D3:18": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "add \"Little Women\" to his watch list",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:19": [],
+    "D3:20": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "ask Joanna for movie recommendations when out of things to watch",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:21": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "receive Nate's opinion on the movie after he is done",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:22": [
+      {
+        "entity": "Nate",
+        "attribute": "commitment",
+        "value": "tell Joanna his opinion on the movie first",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:23": [],
+    "D3:24": [],
+    "D3:25": [],
+    "D4:1": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "made ice cream for a friend",
+        "event": "made ice cream",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Nate's friend",
+        "attribute": "reaction",
+        "value": "loved the ice cream",
+        "event": "ate ice cream",
+        "time_expression": "null"
+      }
+    ],
+    "D4:2": [],
+    "D4:3": [
+      {
+        "entity": "Nate",
+        "attribute": "ice_cream_flavor",
+        "value": "chocolate and vanilla swirl",
+        "event": "made ice cream",
+        "time_expression": "null"
+      }
+    ],
+    "D4:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "dietary_restriction",
+        "value": "cannot have dairy",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "find a dairy-free ice cream recipe",
+        "event": "asked for recipe",
+        "time_expression": "null"
+      }
+    ],
+    "D4:5": [
+      {
+        "entity": "Nate",
+        "attribute": "recipe_ingredient",
+        "value": "coconut milk",
+        "event": "offered recipe",
+        "time_expression": "null"
+      }
+    ],
+    "D4:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "likes sweet things",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:7": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "likes desserts",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:8": [],
+    "D4:9": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "bakes desserts",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "writing a new screenplay",
+        "event": "started writing",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "status",
+        "value": "waiting for feedback on first screenplay",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:11": [],
+    "D4:12": [
+      {
+        "entity": "Joanna's new screenplay",
+        "attribute": "protagonist_age",
+        "value": "thirty years old",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna's new screenplay",
+        "attribute": "theme",
+        "value": "self-discovery after a loss",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:13": [],
+    "D4:14": [
+      {
+        "entity": "Joanna's new screenplay",
+        "attribute": "plot_element",
+        "value": "road trip to heal and grow",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D4:15": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves stories that tackle important issues",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:16": [
+      {
+        "entity": "Joanna",
+        "attribute": "inspiration_source",
+        "value": "personal experiences and own journey of self-discovery",
+        "event": "inspired a story",
+        "time_expression": null
+      }
+    ],
+    "D4:17": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "wants to see Joanna's first screenplay do well",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "hopes her screenplay gets noticed and makes it to the screen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:19": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "hopes Joanna's screenplay finds a fan and is given its due",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "status",
+        "value": "wrapped up second script",
+        "event": "completed writing second script",
+        "time_expression": "18 March, 2022"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "feels anxious about what comes next",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:2": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "hopes Joanna has been able to take time to relax",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "has been decompressing but finds it hard to switch off",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:4": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "shared a picture of pets",
+        "event": "sent a photo to Joanna",
+        "time_expression": null
+      }
+    ],
+    "D5:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "observation",
+        "value": "pets look relaxed outside",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:6": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "drawn to turtles",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "reason_for_preference",
+        "value": "turtles are unique, slow-paced, low-maintenance, and calming",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "observation",
+        "value": "turtles bring calm and joy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:8": [
+      {
+        "entity": "Nate",
+        "attribute": "care_requirements",
+        "value": "keep area clean, feed properly, ensure enough light",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "opinion",
+        "value": "having pets is a wonderful experience",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:10": [
+      {
+        "entity": "Nate",
+        "attribute": "belief",
+        "value": "pets bring joy and are a great way to chill",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "allergy",
+        "value": "cockroaches",
+        "event": "discovered allergy",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get two turtles",
+        "event": null,
+        "time_expression": "today"
+      }
+    ],
+    "D5:12": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_ownership",
+        "value": "turtles",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "send pictures of turtles to Joanna",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "invested in Nate's turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "project",
+        "value": "script",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "research and networking for script",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "make script happen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:16": [],
+    "D5:17": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "continue working on script",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:18": [],
+    "D5:19": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "motivated by support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:20": [],
+    "D5:21": [],
+    "D6:1": [],
+    "D6:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "audition for writing gig",
+        "event": "attended audition",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D6:3": [],
+    "D6:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "excited and anxious about audition",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:5": [],
+    "D6:6": [],
+    "D6:7": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "participating in video game tournament",
+        "event": "participating in video game tournament",
+        "time_expression": "currently"
+      }
+    ],
+    "D6:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "writing_inspiration_source",
+        "value": "go-to place",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:9": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "pursue writing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:10": [],
+    "D6:11": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "keep working hard on writing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:12": [],
+    "D6:13": [],
+    "D7:1": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "dyed hair",
+        "event": "dyed hair",
+        "time_expression": "last week"
+      }
+    ],
+    "D7:2": [],
+    "D7:3": [],
+    "D7:4": [],
+    "D7:5": [
+      {
+        "entity": "Nate",
+        "attribute": "hair_color_preference",
+        "value": "bright and bold",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "hiking",
+        "event": "saw sunset while hiking",
+        "time_expression": "the other day"
+      }
+    ],
+    "D7:7": [],
+    "D7:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "writing",
+        "event": "writing is consuming her",
+        "time_expression": "right now"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "vacation",
+        "event": "wishing for a vacation",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "good news",
+        "event": "hoping for good news",
+        "time_expression": "soon"
+      }
+    ],
+    "D7:9": [],
+    "D7:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "commitment",
+        "value": "update Nate",
+        "event": "promised to keep Nate updated",
+        "time_expression": "null"
+      }
+    ],
+    "D7:11": [],
+    "D7:12": [],
+    "D7:13": [],
+    "D8:1": [],
+    "D8:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "reading",
+        "event": "read a lot",
+        "time_expression": "in the past week"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "possession",
+        "value": "books",
+        "event": "owns books she forgot about",
+        "time_expression": "null"
+      }
+    ],
+    "D8:3": [],
+    "D8:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "found hiking trail",
+        "event": "found an awesome hiking trail in her hometown",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "nature",
+        "event": "finds nature inspiring",
+        "time_expression": "null"
+      }
+    ],
+    "D8:5": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "hiking",
+        "event": "not really into hiking",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "location",
+        "value": "trail north of home",
+        "event": "heard there is a nice trail north of where he lives",
+        "time_expression": "null"
+      }
+    ],
+    "D8:6": [],
+    "D8:7": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "nature",
+        "event": "likes nature",
+        "time_expression": "null"
+      }
+    ],
+    "D8:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "nature",
+        "event": "is a huge fan of nature",
+        "time_expression": "null"
+      }
+    ],
+    "D8:9": [],
+    "D8:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "nature is her haven",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:11": [
+      {
+        "entity": "Nate",
+        "attribute": "hobby",
+        "value": "spending time with pets",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "hobby",
+        "value": "engaging in hobbies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:12": [],
+    "D8:13": [],
+    "D8:14": [
+      {
+        "entity": "Nate",
+        "attribute": "pet",
+        "value": "turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:15": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "watching turtles play",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "bringing turtles into kitchen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:16": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "likes Nate's ice cream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:17": [
+      {
+        "entity": "Nate",
+        "attribute": "recipe_attribute",
+        "value": "dairy-free",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "medical_condition",
+        "value": "lactose intolerant",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:19": [
+      {
+        "entity": "Nate",
+        "attribute": "recipe_ingredients",
+        "value": "coconut milk, vanilla extract, sugar, pinch of salt",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:20": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "make ice cream tonight",
+        "event": null,
+        "time_expression": "tonight"
+      }
+    ],
+    "D8:21": [],
+    "D8:22": [
+      {
+        "entity": "Joanna",
+        "attribute": "commitment",
+        "value": "let Nate know how ice cream turns out",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "membership",
+        "value": "joined a writers group",
+        "event": "joined a writers group",
+        "time_expression": "just"
+      }
+    ],
+    "D9:2": [],
+    "D9:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "project_name",
+        "value": "Finding Home",
+        "event": "working on a script",
+        "time_expression": null
+      },
+      {
+        "entity": "Finding Home",
+        "attribute": "description",
+        "value": "a script about a girl on a journey to find her true home",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:4": [
+      {
+        "entity": "Nate",
+        "attribute": "upcoming_event",
+        "value": "gaming tournament",
+        "event": "participating in a tournament",
+        "time_expression": "next month"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "tournament_count",
+        "value": "4th",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "past_experience",
+        "value": "forgot lines during first play",
+        "event": "performed in a play",
+        "time_expression": "when I did my first play"
+      }
+    ],
+    "D9:6": [],
+    "D9:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "past_passion",
+        "value": "acting",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "current_focus",
+        "value": "writing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:8": [],
+    "D9:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "movie_preference",
+        "value": "dramas and emotionally-driven films",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:10": [
+      {
+        "entity": "Nate",
+        "attribute": "movie_preference",
+        "value": "fantasy and sci-fi movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:11": [],
+    "D9:12": [
+      {
+        "entity": "Nate",
+        "attribute": "favorite_movie_type",
+        "value": "a trilogy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:13": [],
+    "D9:14": [
+      {
+        "entity": "Nate",
+        "attribute": "favorite_book_type",
+        "value": "a series with adventures, magic, and great characters",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "reading_list_status",
+        "value": "has the series on her list",
+        "event": null,
+        "time_expression": "forever"
+      }
+    ],
+    "D9:16": [],
+    "D9:17": [],
+    "D9:18": [],
+    "D10:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "watched",
+        "value": "The Lord of the Rings Trilogy",
+        "event": "watched movie",
+        "time_expression": "last night"
+      }
+    ],
+    "D10:2": [],
+    "D10:3": [],
+    "D10:4": [
+      {
+        "entity": "Nate",
+        "attribute": "won_tournament",
+        "value": "second tournament",
+        "event": "won tournament",
+        "time_expression": "Last week"
+      }
+    ],
+    "D10:5": [],
+    "D10:6": [
+      {
+        "entity": "Nate",
+        "attribute": "usual_game",
+        "value": "CS:GO",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "played_game",
+        "value": "Street Fighter",
+        "event": "played in local tournament",
+        "time_expression": "this time"
+      }
+    ],
+    "D10:7": [],
+    "D10:8": [],
+    "D10:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "working_on",
+        "value": "screenplay",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "testing_recipes",
+        "value": "dairy-free dessert recipes",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "made_item",
+        "value": "cake",
+        "event": "made cake",
+        "time_expression": "recently"
+      }
+    ],
+    "D10:10": [],
+    "D10:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "cake_ingredients",
+        "value": "dairy-free vanilla, strawberry filling, coconut cream frosting",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:12": [],
+    "D10:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "creative_outlets",
+        "value": "cooking and baking",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:14": [],
+    "D10:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "trying new things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:16": [],
+    "D11:1": [],
+    "D11:2": [],
+    "D11:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "went hiking",
+        "event": "went hiking",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "found amazing trails in her town",
+        "event": "found amazing trails in her town",
+        "time_expression": null
+      }
+    ],
+    "D11:4": [],
+    "D11:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "took photos of the hike",
+        "event": "took photos of the hike",
+        "time_expression": null
+      }
+    ],
+    "D11:6": [],
+    "D11:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "took photo at Whispering Falls",
+        "event": "took photo at Whispering Falls",
+        "time_expression": null
+      }
+    ],
+    "D11:8": [],
+    "D11:9": [],
+    "D11:10": [],
+    "D11:11": [],
+    "D11:12": [],
+    "D11:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "creative_preference",
+        "value": "feels inspired to write a movie when in cool places",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:14": [
+      {
+        "entity": "Nate",
+        "attribute": "mental_activity_preference",
+        "value": "gets deep in thought about life or new recipes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "creative_preference",
+        "value": "feels inspired to write a drama on trails",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:16": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "go on trails with Joanna",
+        "event": null,
+        "time_expression": "sometime"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "publish a screenplay",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:17": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "go on trails with Nate",
+        "event": null,
+        "time_expression": "sometime"
+      }
+    ],
+    "D11:18": [],
+    "D11:19": [],
+    "D11:20": [],
+    "D12:1": [],
+    "D12:2": [],
+    "D12:3": [
+      {
+        "entity": "Nate",
+        "attribute": "family_member",
+        "value": "Max",
+        "event": "introduced Max as a new addition to the family",
+        "time_expression": "just"
+      }
+    ],
+    "D12:4": [],
+    "D12:5": [
+      {
+        "entity": "Max",
+        "attribute": "status",
+        "value": "adopted",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_ownership",
+        "value": "has other pets",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:6": [],
+    "D12:7": [],
+    "D12:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "has_allergies",
+        "value": "true",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "research alternative pets for allergies",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D12:9": [],
+    "D12:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "coping_mechanism",
+        "value": "writing and creative projects",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "has_supportive_friends",
+        "value": "true",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D12:11": [],
+    "D12:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "has_friends_who_appreciate_work",
+        "value": "true",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "completed_project",
+        "value": "true",
+        "event": "completed a project",
+        "time_expression": "null"
+      }
+    ],
+    "D12:13": [],
+    "D12:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "project_count",
+        "value": "3",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "project_theme",
+        "value": "loss, identity, and connection",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "project_origin",
+        "value": "personal story held for ages",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D12:15": [],
+    "D12:16": [
+      {
+        "entity": "Joanna",
+        "attribute": "writing_preference",
+        "value": "writing about sadness and loss",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "writing_style",
+        "value": "true to self/personal experiences",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D12:17": [],
+    "D12:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "feeling",
+        "value": "supported by Nate",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D12:19": [],
+    "D13:1": [
+      {
+        "entity": "Nate",
+        "attribute": "has_pet",
+        "value": "Max (dog)",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "met_neighbors",
+        "value": "couple with a dog",
+        "event": "ran into a couple with a dog while walking Max",
+        "time_expression": "the other day"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "arrangement",
+        "value": "doggy playdates with neighbors",
+        "event": "decided to do doggy playdates",
+        "time_expression": "null"
+      }
+    ],
+    "D13:2": [],
+    "D13:3": [
+      {
+        "entity": "Max",
+        "attribute": "likes_other_dog",
+        "value": "true",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D13:4": [],
+    "D13:5": [
+      {
+        "entity": "Nate",
+        "attribute": "shared_interest",
+        "value": "love of animals",
+        "event": "shared interest with a couple",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "relationship_status",
+        "value": "good friends",
+        "event": "became friends with a couple",
+        "time_expression": null
+      }
+    ],
+    "D13:6": [],
+    "D13:7": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "enjoys watching pets play with one another",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_ownership",
+        "value": "has a dog",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:8": [],
+    "D13:9": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "gave a new pup to Joanna",
+        "event": "gave a gift",
+        "time_expression": null
+      }
+    ],
+    "D13:10": [],
+    "D13:11": [
+      {
+        "entity": "Nate",
+        "attribute": "gift_description",
+        "value": "stuffed animal",
+        "event": "described the gift given to Joanna",
+        "time_expression": null
+      }
+    ],
+    "D13:12": [],
+    "D13:13": [],
+    "D13:14": [],
+    "D13:15": [],
+    "D13:16": [],
+    "D13:17": [],
+    "D13:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "finished a screenplay",
+        "event": "completed a project",
+        "time_expression": "tough times"
+      }
+    ],
+    "D13:19": [],
+    "D13:20": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "show work to Nate",
+        "event": "expressing intent to show work",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "values Nate's opinion",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:21": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "support Joanna",
+        "event": "expressing support",
+        "time_expression": null
+      }
+    ],
+    "D13:22": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "keep Nate updated",
+        "event": "committing to updates",
+        "time_expression": null
+      }
+    ],
+    "D13:23": [],
+    "D14:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "finished screenplay",
+        "event": "finished screenplay",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "received rejection letter from major company",
+        "event": "received rejection letter",
+        "time_expression": "after finishing my screenplay"
+      }
+    ],
+    "D14:2": [],
+    "D14:3": [],
+    "D14:4": [],
+    "D14:5": [
+      {
+        "entity": "major company",
+        "attribute": "action",
+        "value": "sent generic rejection letter without much feedback",
+        "event": "sent rejection letter",
+        "time_expression": null
+      }
+    ],
+    "D14:6": [],
+    "D14:7": [],
+    "D14:8": [
+      {
+        "entity": "Nate",
+        "attribute": "event",
+        "value": "won regional video game tournament",
+        "event": "won tournament",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "event",
+        "value": "met new people",
+        "event": "met new people",
+        "time_expression": "last week"
+      }
+    ],
+    "D14:9": [],
+    "D14:10": [],
+    "D14:11": [],
+    "D14:12": [
+      {
+        "entity": "Nate",
+        "attribute": "past_event",
+        "value": "participated in a first tournament",
+        "event": "participated in first tournament",
+        "time_expression": "a while since"
+      }
+    ],
+    "D14:13": [],
+    "D14:14": [
+      {
+        "entity": "Nate",
+        "attribute": "social_interaction",
+        "value": "talked to guys at the tournament who wanted to hang out",
+        "event": "talked to tournament participants",
+        "time_expression": "afterwards"
+      }
+    ],
+    "D14:15": [],
+    "D14:16": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "help tournament friends improve their game",
+        "event": "offered to help with game improvement",
+        "time_expression": null
+      }
+    ],
+    "D14:17": [],
+    "D14:18": [],
+    "D14:19": [
+      {
+        "entity": "Joanna",
+        "attribute": "plan",
+        "value": "hiking with buddies to check out a new trail with a waterfall",
+        "event": "planned hiking trip",
+        "time_expression": "this weekend"
+      }
+    ],
+    "D14:20": [
+      {
+        "entity": "Nate",
+        "attribute": "plan",
+        "value": "organizing a gaming party",
+        "event": "organizing gaming party",
+        "time_expression": "two weekends later"
+      }
+    ],
+    "D14:21": [],
+    "D14:22": [
+      {
+        "entity": "Nate",
+        "attribute": "guest_list",
+        "value": "tournament friends, old friends, and teammates from other tournaments",
+        "event": "planning guest list for gaming party",
+        "time_expression": null
+      }
+    ],
+    "D14:23": [],
+    "D14:24": [
+      {
+        "entity": "Nate",
+        "attribute": "plan",
+        "value": "getting custom controller decorations for guests",
+        "event": "preparing custom controller decorations",
+        "time_expression": null
+      }
+    ],
+    "D14:25": [],
+    "D14:26": [],
+    "D14:27": [],
+    "D15:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "screenplay_screening",
+        "value": "screenplay appeared on the big screen",
+        "event": "screening of screenplay",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D15:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "accessory",
+        "value": "spiderman pin on purse",
+        "event": "Nate noticed pin",
+        "time_expression": "last time we saw eachother"
+      }
+    ],
+    "D15:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "favorite_superhero",
+        "value": "Spider-Man",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:4": [
+      {
+        "entity": "Nate",
+        "attribute": "favorite_superhero",
+        "value": "Iron Man",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:5": [],
+    "D15:6": [
+      {
+        "entity": "Nate",
+        "attribute": "possession",
+        "value": "Iron Man figure",
+        "event": "Nate acquired figure",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "figure_location",
+        "value": "in my room",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "room_item",
+        "value": "cork board full of inspiring quotes and pictures",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:8": [],
+    "D15:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "cork_board_contents",
+        "value": "quotes, photos, and little keepsakes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "cork_board_item",
+        "value": "family picture",
+        "event": "Joanna hung picture on cork board",
+        "time_expression": null
+      }
+    ],
+    "D15:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "family_picture_purpose",
+        "value": "reminds me of the love and encouragement from them",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:12": [],
+    "D15:13": [],
+    "D15:14": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "start a cork board",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "recommendation",
+        "value": "start a cork board",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:16": [],
+    "D15:17": [],
+    "D16:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "submitted recent screenplay to a film contest",
+        "event": "submission of screenplay",
+        "time_expression": "just"
+      }
+    ],
+    "D16:2": [
+      {
+        "entity": "Nate",
+        "attribute": "event_outcome",
+        "value": "gaming party was a great success",
+        "event": "gaming party",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "played Chess",
+        "event": "played Chess after gaming party",
+        "time_expression": "afterward"
+      }
+    ],
+    "D16:3": [],
+    "D16:4": [
+      {
+        "entity": "Nate's friends",
+        "attribute": "reaction",
+        "value": "most liked the controller accessories",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:5": [],
+    "D16:6": [
+      {
+        "entity": "gaming party",
+        "attribute": "attendance",
+        "value": "7 people",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "gaming party attendees",
+        "attribute": "intent",
+        "value": "6 said they'd want to do it again next month",
+        "event": null,
+        "time_expression": "next month"
+      }
+    ],
+    "D16:7": [],
+    "D16:8": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "made vegan ice cream",
+        "event": "made vegan ice cream",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "shared vegan ice cream with vegan diet group",
+        "event": "shared vegan ice cream",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D16:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "request",
+        "value": "recipe for vegan ice cream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:10": [
+      {
+        "entity": "Nate",
+        "attribute": "commitment",
+        "value": "give recipe to Joanna",
+        "event": null,
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D16:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "make vegan ice cream for family",
+        "event": null,
+        "time_expression": "this weekend"
+      }
+    ],
+    "D16:12": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "to know how the family liked the item",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "makes new things for family",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna's family",
+        "attribute": "preference",
+        "value": "love it when Joanna makes them new things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:14": [
+      {
+        "entity": "Nate",
+        "attribute": "belief",
+        "value": "Joanna's family will love the icecream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to keep Nate updated",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:16": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "to hear about the outcome",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:1": [
+      {
+        "entity": "Nate",
+        "attribute": "achievement",
+        "value": "won fourth video game tournament",
+        "event": "winning video game tournament",
+        "time_expression": "on Friday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "attribute",
+        "value": "makes money doing what he loves",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate's tournament",
+        "attribute": "format",
+        "value": "online",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "took a road trip",
+        "event": "road trip",
+        "time_expression": "while you were winning"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "purpose",
+        "value": "research for next movie",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:3": [],
+    "D17:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "location_visited",
+        "value": "Woodhaven",
+        "event": "road trip",
+        "time_expression": null
+      },
+      {
+        "entity": "Woodhaven",
+        "attribute": "location_type",
+        "value": "small town in the Midwest",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "checked out the library",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Woodhaven library",
+        "attribute": "feature",
+        "value": "cool old book collection",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:5": [],
+    "D17:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "discovery",
+        "value": "found a book from the 1900s with stories and sketches",
+        "event": "stumbled upon book",
+        "time_expression": null
+      }
+    ],
+    "D17:7": [],
+    "D17:8": [
+      {
+        "entity": "Woodhaven",
+        "attribute": "history",
+        "value": "interesting past with lots of cool people",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "inspiration",
+        "value": "ideas for next script sparked by Woodhaven's changes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:9": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "to hear about Joanna's next project",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "excited about new script",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna's new script",
+        "attribute": "characteristic",
+        "value": "different from previous work",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to keep Nate posted",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:11": [],
+    "D17:12": [],
+    "D17:13": [],
+    "D17:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "recent_activity",
+        "value": "started on a book",
+        "event": "started writing a book",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "movie_performance",
+        "value": "did well",
+        "event": "movie did well",
+        "time_expression": null
+      }
+    ],
+    "D17:15": [],
+    "D17:16": [
+      {
+        "entity": "Joanna's book",
+        "attribute": "themes",
+        "value": "loss, redemption, and forgiveness",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:17": [],
+    "D17:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "publishing_history",
+        "value": "never really tried publishing a book",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:19": [],
+    "D17:20": [],
+    "D17:21": [],
+    "D18:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "busy with writing projects",
+        "event": "working on writing projects",
+        "time_expression": "long time no talk"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "journal_usage",
+        "value": "pretty much my rock",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:2": [],
+    "D18:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "writing_purpose",
+        "value": "escape and a way to express my feelings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:4": [],
+    "D18:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "wrote_blog_post",
+        "value": "about a hard moment in her life",
+        "event": "wrote blog post",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "received_letter",
+        "value": "from someone who found comfort in her story",
+        "event": "received letter",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "loves_writing",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:6": [],
+    "D18:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to make a difference with her writing",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "has_outlet",
+        "value": "writing to share stories",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:8": [
+      {
+        "entity": "Nate",
+        "attribute": "started_teaching",
+        "value": "how to make dairy-free desserts",
+        "event": "started teaching",
+        "time_expression": "Since we last spoke"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "enjoys_sharing",
+        "value": "love for dairy-free desserts",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "likes_food",
+        "value": "coconut milk icecream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:10": [
+      {
+        "entity": "Nate",
+        "attribute": "makes_recipe",
+        "value": "creamy, rich, dairy-free dessert",
+        "event": "making recipe",
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "offers_recipe",
+        "value": "to Joanna",
+        "event": "offered recipe",
+        "time_expression": null
+      }
+    ],
+    "D18:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to try the recipe",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:12": [
+      {
+        "entity": "Nate",
+        "attribute": "sent_recipe",
+        "value": "to Joanna",
+        "event": "sent recipe",
+        "time_expression": "now"
+      }
+    ],
+    "D18:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to surprise family with delicious food",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:14": [],
+    "D18:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "to keep Nate posted",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:16": [],
+    "D19:1": [
+      {
+        "entity": "Nate",
+        "attribute": "won_tournament",
+        "value": "international tournament",
+        "event": "won tournament",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "makes_living",
+        "value": "from gaming",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:2": [],
+    "D19:3": [
+      {
+        "entity": "Nate",
+        "attribute": "has_pets",
+        "value": "little dudes (likely fish)",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "got_new_tank",
+        "value": "for his pets",
+        "event": "got new tank",
+        "time_expression": null
+      }
+    ],
+    "D19:4": [
+      {
+        "entity": "Nate",
+        "attribute": "enjoys_spending_time_with",
+        "value": "pets",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_housing_status",
+        "value": "expanded tank with more room to swim",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:5": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_behavior",
+        "value": "calm and peaceful",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "daily_activity",
+        "value": "gaming",
+        "event": null,
+        "time_expression": "long day"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_housing_status",
+        "value": "tank expansion completed",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "professional_activity",
+        "value": "writing a book",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event_participation",
+        "value": "shared book with writers group",
+        "event": "shared book with writers group",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "feedback_received",
+        "value": "great feedback",
+        "event": "received feedback from writers group",
+        "time_expression": "last week"
+      }
+    ],
+    "D19:7": [],
+    "D19:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "celebration_activity",
+        "value": "made a delicious treat",
+        "event": "celebrated feedback",
+        "time_expression": null
+      }
+    ],
+    "D19:9": [
+      {
+        "entity": "Nate",
+        "attribute": "weekend_plan",
+        "value": "chill with pets",
+        "event": "planned weekend activity",
+        "time_expression": "this weekend"
+      }
+    ],
+    "D19:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "weekend_plan",
+        "value": "long walk and reading",
+        "event": "planned weekend activity",
+        "time_expression": "this weekend"
+      }
+    ],
+    "D19:11": [],
+    "D19:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "belief_about_wellbeing",
+        "value": "taking breaks and self-care are important for inspiration and mental health",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:13": [
+      {
+        "entity": "Nate",
+        "attribute": "reading_preference",
+        "value": "looking for something new to read",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "reading_recommendation",
+        "value": "fantasy book series",
+        "event": "recommended reading genre",
+        "time_expression": null
+      }
+    ],
+    "D19:15": [],
+    "D19:16": [],
+    "D19:17": [
+      {
+        "entity": "Nate",
+        "attribute": "reading_recommendation",
+        "value": "series with awesome battles and interesting characters",
+        "event": "recommended book series to Joanna",
+        "time_expression": null
+      }
+    ],
+    "D19:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "reading_intent",
+        "value": "check out the series recommended by Nate",
+        "event": null,
+        "time_expression": "sometime"
+      }
+    ],
+    "D19:19": [
+      {
+        "entity": "Nate",
+        "attribute": "favorite_status",
+        "value": "one of my favorites",
+        "event": "recommending a media title",
+        "time_expression": null
+      }
+    ],
+    "D19:20": [
+      {
+        "entity": "Joanna",
+        "attribute": "intention",
+        "value": "add recommended item to list",
+        "event": "accepting recommendation",
+        "time_expression": null
+      }
+    ],
+    "D19:21": [],
+    "D19:22": [],
+    "D20:1": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_ownership",
+        "value": "has turtles",
+        "event": "sharing photo of pets",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "event_outcome",
+        "value": "did not do well",
+        "event": "participated in video game tournament",
+        "time_expression": "just had"
+      }
+    ],
+    "D20:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "revised old recipe and made it",
+        "event": "cooking",
+        "time_expression": "just"
+      }
+    ],
+    "D20:3": [],
+    "D20:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "tinkering with recipes",
+        "event": "cooking for comfort",
+        "time_expression": "Just been"
+      }
+    ],
+    "D20:5": [],
+    "D20:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "tweaking a dessert recipe",
+        "event": "cooking",
+        "time_expression": "Been"
+      }
+    ],
+    "D20:7": [],
+    "D20:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "flavors_tested",
+        "value": "chocolate, raspberry, and coconut",
+        "event": "experimenting with flavors",
+        "time_expression": "has been"
+      }
+    ],
+    "D20:9": [],
+    "D20:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "medical_condition",
+        "value": "lactose intolerant",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "dietary_preference",
+        "value": "dairy-free options",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "created_item",
+        "value": "dairy-free chocolate coconut cupcakes with raspberry frosting",
+        "event": "baking",
+        "time_expression": "even made"
+      }
+    ],
+    "D20:11": [],
+    "D20:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "making desserts for various diets",
+        "event": "making cookies, pies, and cakes",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "share more recipes with Nate",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D20:13": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "join Joanna for baking/cooking",
+        "event": null,
+        "time_expression": "sometime"
+      }
+    ],
+    "D20:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "role",
+        "value": "Chef",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get tips for dairy-free baking",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:15": [
+      {
+        "entity": "Nate",
+        "attribute": "recommendation",
+        "value": "use dairy-free margarine or coconut oil instead of butter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:16": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "try Nate's dairy-free baking ideas",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:17": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "likes to help",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "see Nate",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D20:19": [],
+    "D21:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "role",
+        "value": "writer",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "laptop crashed and work was lost",
+        "event": "laptop crash",
+        "time_expression": "last week"
+      }
+    ],
+    "D21:2": [
+      {
+        "entity": "Nate",
+        "attribute": "recommendation",
+        "value": "back up work in the future",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "nothing was recoverable from laptop crash",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "possession",
+        "value": "external drive for backups",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:4": [
+      {
+        "entity": "Nate",
+        "attribute": "event",
+        "value": "taught vegan ice cream recipes on cooking show",
+        "event": "cooking show appearance",
+        "time_expression": "Last Monday"
+      }
+    ],
+    "D21:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "watch Nate's cooking show",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:6": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "favorite dish is coconut milk ice cream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get recipe for coconut milk ice cream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:8": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "share dairy-free options",
+        "event": "expressing willingness to share",
+        "time_expression": null
+      }
+    ],
+    "D21:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "dietary_preference",
+        "value": "dairy-free",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "made a dessert with almond milk",
+        "event": "prepared dessert",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D21:10": [
+      {
+        "entity": "Nate",
+        "attribute": "favorite_food",
+        "value": "coconut milk ice cream",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "favorite_food",
+        "value": "dairy-free chocolate mousse",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "favorite_food",
+        "value": "chocolate raspberry tart",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:12": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try baking chocolate raspberry tart",
+        "event": "expressing intent to bake",
+        "time_expression": null
+      }
+    ],
+    "D21:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "favorite_activity",
+        "value": "making dairy-free chocolate cake with raspberries",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:14": [],
+    "D21:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "recipe_ingredients",
+        "value": "almond flour, coconut oil, chocolate, raspberries",
+        "event": "describing chocolate cake recipe",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "usage_occasion",
+        "value": "birthdays and special days",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:16": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try making the chocolate cake",
+        "event": "expressing intent to try recipe",
+        "time_expression": null
+      }
+    ],
+    "D21:17": [
+      {
+        "entity": "Joanna",
+        "attribute": "recipe_ingredients",
+        "value": "blueberries, coconut milk, gluten-free crust",
+        "event": "sharing another recipe",
+        "time_expression": null
+      }
+    ],
+    "D21:18": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try the blueberry dessert",
+        "event": "expressing intent to try recipe",
+        "time_expression": null
+      }
+    ],
+    "D21:19": [],
+    "D21:20": [],
+    "D22:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "tried newest dairy-free recipe",
+        "event": "tested new recipe",
+        "time_expression": "Yesterday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "event_outcome",
+        "value": "recipe was a winner with family",
+        "event": "family reaction to recipe",
+        "time_expression": "Yesterday"
+      }
+    ],
+    "D22:2": [
+      {
+        "entity": "Nate",
+        "attribute": "event",
+        "value": "won a video game tournament",
+        "event": "won tournament",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "event_outcome",
+        "value": "made money from tournament",
+        "event": "received prize money",
+        "time_expression": "last week"
+      }
+    ],
+    "D22:3": [
+      {
+        "entity": "Nate",
+        "attribute": "achievement",
+        "value": "winning the tournament and earning cash",
+        "event": "winning tournament",
+        "time_expression": null
+      }
+    ],
+    "D22:4": [
+      {
+        "entity": "Nate",
+        "attribute": "financial_status",
+        "value": "saved some cash",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "plans",
+        "value": "no big plans",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:5": [],
+    "D22:6": [
+      {
+        "entity": "Nate",
+        "attribute": "hobbies",
+        "value": "enjoys movies and games",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:7": [],
+    "D22:8": [
+      {
+        "entity": "Nate",
+        "attribute": "viewing_history",
+        "value": "watched 'Little Women'",
+        "event": "watched movie",
+        "time_expression": "recently"
+      }
+    ],
+    "D22:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "recommended 'Little Women' to Nate",
+        "event": "recommended movie",
+        "time_expression": "a while back"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "viewing_history",
+        "value": "watched 'Little Women'",
+        "event": "watched movie",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "achievement",
+        "value": "finished writing her book",
+        "event": "finished book",
+        "time_expression": "last week"
+      }
+    ],
+    "D22:10": [],
+    "D22:11": [],
+    "D22:12": [],
+    "D22:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "not give up on goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:14": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "made something for Joanna",
+        "event": "created gift",
+        "time_expression": null
+      }
+    ],
+    "D22:15": [],
+    "D22:16": [
+      {
+        "entity": "Nate",
+        "attribute": "intent",
+        "value": "created item for Joanna's encouragement",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:17": [],
+    "D22:18": [
+      {
+        "entity": "Nate",
+        "attribute": "career_domain",
+        "value": "gaming",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "share encouragement",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:19": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "finished making a bookmark",
+        "event": "created a bookmark for a member of her writing club",
+        "time_expression": "just"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "group_membership",
+        "value": "writing club",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:20": [],
+    "D22:21": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "loves DIYs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:22": [],
+    "D22:23": [],
+    "D23:1": [
+      {
+        "entity": "Nate",
+        "attribute": "event_attendance",
+        "value": "attended a game convention",
+        "event": "went to a game convention",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "social_interaction",
+        "value": "met new people outside normal circle",
+        "event": "met new people at the convention",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D23:2": [],
+    "D23:3": [
+      {
+        "entity": "Nate",
+        "attribute": "social_connection",
+        "value": "made friends at the convention",
+        "event": "made friends who love games",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "plan",
+        "value": "planned a gaming session with new friends",
+        "event": "planned a gaming session",
+        "time_expression": null
+      }
+    ],
+    "D23:4": [],
+    "D23:5": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "played a boardgame with new acquaintances",
+        "event": "joined in playing a boardgame",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D23:6": [],
+    "D23:7": [
+      {
+        "entity": "Nate",
+        "attribute": "game_played",
+        "value": "Catan",
+        "event": "played Catan at the convention",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves Catan",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:8": [],
+    "D23:9": [
+      {
+        "entity": "Nate",
+        "attribute": "game_experience",
+        "value": "competed in Catan",
+        "event": "played Catan competitively",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D23:10": [],
+    "D23:11": [
+      {
+        "entity": "Nate",
+        "attribute": "purpose_of_activity",
+        "value": "escape from life struggles",
+        "event": "playing games",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "competitive_behavior",
+        "value": "generally don't get crazy competitive",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:12": [],
+    "D23:13": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "go to a writing convention",
+        "event": null,
+        "time_expression": "sometime"
+      }
+    ],
+    "D23:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "look into writing conventions",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:15": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "chilling at home",
+        "event": null,
+        "time_expression": "tonight"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "playing video games",
+        "event": null,
+        "time_expression": "tonight"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "watching movies",
+        "event": null,
+        "time_expression": "tonight"
+      }
+    ],
+    "D23:16": [],
+    "D23:17": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "watched movie",
+        "event": "watched movie",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "playing game",
+        "event": "playing game",
+        "time_expression": "recently"
+      }
+    ],
+    "D23:18": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "watched classic movie",
+        "event": "watched movie",
+        "time_expression": "the other day"
+      }
+    ],
+    "D23:19": [],
+    "D23:20": [
+      {
+        "entity": "Joanna",
+        "attribute": "rating",
+        "value": "9 or 10 out of 10",
+        "event": "rating movie",
+        "time_expression": null
+      }
+    ],
+    "D23:21": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "movies take me to new worlds and fill me with emotions",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "movies are great for chilling out after a day",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:22": [],
+    "D23:23": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "get a set up like Joanna's room",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:24": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "feels at peace watching movies on a nice comfy couch with a good blanket",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:25": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "make living room comfy",
+        "event": "asking for pointers",
+        "time_expression": null
+      }
+    ],
+    "D23:26": [
+      {
+        "entity": "Joanna",
+        "attribute": "recommendation",
+        "value": "get a couch that can sit multiple people, is fluffy, a weighted blanket, and dimmable lights",
+        "event": "advising Nate",
+        "time_expression": null
+      }
+    ],
+    "D23:27": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try making living room comfy",
+        "event": "accepting advice",
+        "time_expression": null
+      }
+    ],
+    "D23:28": [
+      {
+        "entity": "Joanna",
+        "attribute": "preference",
+        "value": "gets invested in random little things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:29": [],
+    "D23:30": [],
+    "D24:1": [],
+    "D24:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "revising and perfecting a recipe for family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:3": [
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "stressed due to tournament progress and tough competitors",
+        "event": null,
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "possession",
+        "value": "turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "possession",
+        "value": "stuffed animal dog named Tilly",
+        "event": "received from Nate",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "habit",
+        "value": "has Tilly with her while writing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:5": [],
+    "D24:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "past_possession",
+        "value": "dog named Tilly",
+        "event": "had dog in Michigan",
+        "time_expression": "back in Michigan"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "condition",
+        "value": "allergic to animals",
+        "event": "had to get rid of dog",
+        "time_expression": null
+      }
+    ],
+    "D24:7": [],
+    "D24:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "effect_of_possession",
+        "value": "Tilly helps stay focused and brings joy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:9": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "happy watching turtles slowly walk around",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:10": [],
+    "D24:11": [
+      {
+        "entity": "Nate",
+        "attribute": "current_activity",
+        "value": "practicing for next video game tournament",
+        "event": "practicing for tournament",
+        "time_expression": "recently"
+      }
+    ],
+    "D24:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "recent_event",
+        "value": "received rejection from production company",
+        "event": "rejection from production company",
+        "time_expression": "recently"
+      }
+    ],
+    "D24:13": [],
+    "D24:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "keep grinding and moving ahead",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:15": [],
+    "D24:16": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "keep pushing forward and believing in herself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:17": [],
+    "D24:18": [],
+    "D24:19": [],
+    "D25:1": [],
+    "D25:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "movie script contributed to was shown on big screen for first time",
+        "event": "movie script shown on big screen",
+        "time_expression": "last Sunday"
+      }
+    ],
+    "D25:3": [],
+    "D25:4": [
+      {
+        "entity": "Joanna",
+        "attribute": "experience_count",
+        "value": "third time seeing written work acted out",
+        "event": "seeing written work acted out",
+        "time_expression": null
+      }
+    ],
+    "D25:5": [],
+    "D25:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "favorite_part_of_process",
+        "value": "seeing characters come alive",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:7": [],
+    "D25:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "purpose_of_drawings",
+        "value": "to help bring characters alive in her head to write better",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:9": [],
+    "D25:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "source_of_character_ideas",
+        "value": "people she knows, things she saw, and imagination",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:11": [],
+    "D25:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "action",
+        "value": "refused to reveal character details",
+        "event": "declined to answer Nate's question about the character on the left",
+        "time_expression": null
+      }
+    ],
+    "D25:13": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "watch the movie",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:14": [],
+    "D25:15": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "took turtles out for a walk",
+        "event": "took turtles for a walk",
+        "time_expression": "today"
+      }
+    ],
+    "D25:16": [],
+    "D25:17": [
+      {
+        "entity": "Nate's turtles",
+        "attribute": "current_state",
+        "value": "relaxing in the tank",
+        "event": null,
+        "time_expression": "right now"
+      }
+    ],
+    "D25:18": [],
+    "D25:19": [
+      {
+        "entity": "Nate's turtles",
+        "attribute": "diet",
+        "value": "combination of vegetables, fruits, and insects",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:20": [],
+    "D25:21": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves seeing them eat fruit",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:22": [],
+    "D25:23": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "likes holding them",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:24": [],
+    "D25:25": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "finds it cute that one is adventurous and the other reserved",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "having them around brings joy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:26": [
+      {
+        "entity": "Joanna",
+        "attribute": "knowledge_state",
+        "value": "did not know turtles could be so interesting until meeting Nate's turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:27": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "has always liked turtles",
+        "event": null,
+        "time_expression": "since I was a boy"
+      }
+    ],
+    "D25:28": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "wants Nate to keep her posted on them",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:29": [],
+    "D26:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "set up meetings with movie producers",
+        "event": "set up meetings with movie producers",
+        "time_expression": "just"
+      }
+    ],
+    "D26:2": [],
+    "D26:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "meetings with producers went well",
+        "event": "meetings with producers went well",
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "felt confident discussing script and vision",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "feeling hopeful and inspired",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:4": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "feels awesome when winning a video game tournament",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "found old notebooks with early writings",
+        "event": "found old notebooks with early writings",
+        "time_expression": "Last week"
+      }
+    ],
+    "D26:6": [],
+    "D26:7": [
+      {
+        "entity": "Joanna",
+        "attribute": "writing_inspiration",
+        "value": "stories about finding courage and taking risks",
+        "event": "recalling a story from age 10",
+        "time_expression": "when I was 10"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "writing_style",
+        "value": "includes themes of courage and risk-taking",
+        "event": null,
+        "time_expression": "today"
+      }
+    ],
+    "D26:8": [
+      {
+        "entity": "Nate",
+        "attribute": "opinion_on_turtles",
+        "value": "finds their resilience inspiring",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:9": [
+      {
+        "entity": "Joanna",
+        "attribute": "association_with_turtles",
+        "value": "strength and perseverance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "motivation_source",
+        "value": "turtles",
+        "event": null,
+        "time_expression": "in tough times"
+      }
+    ],
+    "D26:10": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:11": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "working on a project",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "project_perception",
+        "value": "challenging but fulfilling",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:12": [
+      {
+        "entity": "Nate",
+        "attribute": "recent_activity",
+        "value": "helping friends reset high scores at international tournament",
+        "event": null,
+        "time_expression": "Just been"
+      }
+    ],
+    "D26:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "perception_of_Nate",
+        "value": "passionate about gaming",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:14": [
+      {
+        "entity": "Nate",
+        "attribute": "feeling",
+        "value": "feels good using skills to make a difference",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:15": [
+      {
+        "entity": "Joanna",
+        "attribute": "perception_of_meetings",
+        "value": "exciting",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:16": [
+      {
+        "entity": "Nate",
+        "attribute": "cooking_activity",
+        "value": "made food",
+        "event": "offering food to Joanna",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D26:17": [
+      {
+        "entity": "Joanna",
+        "attribute": "dietary_preference",
+        "value": "lactose-free",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:18": [
+      {
+        "entity": "Nate",
+        "attribute": "cooking_ingredient",
+        "value": "coconut milk",
+        "event": "making food",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "food_attribute",
+        "value": "lactose-free",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:19": [
+      {
+        "entity": "Joanna",
+        "attribute": "plan",
+        "value": "come over to Nate's place",
+        "event": "accepting invitation",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D26:20": [
+      {
+        "entity": "Nate",
+        "attribute": "availability",
+        "value": "not doing anything",
+        "event": null,
+        "time_expression": "then"
+      }
+    ],
+    "D26:21": [
+      {
+        "entity": "Joanna",
+        "attribute": "plan",
+        "value": "bring recipes",
+        "event": "preparing for visit",
+        "time_expression": null
+      }
+    ],
+    "D26:22": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "try Joanna's chocolate and raspberry cake",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:23": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "meeting Nate",
+        "event": "agreed to meet",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D26:24": [],
+    "D27:1": [
+      {
+        "entity": "Nate",
+        "attribute": "event",
+        "value": "won a Valorant tournament",
+        "event": "participated in final of a big Valorant tournament",
+        "time_expression": "last Saturday"
+      }
+    ],
+    "D27:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "finished presentation for producers",
+        "event": "completed work on presentation",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D27:3": [
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "preparing for other tournaments",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:4": [],
+    "D27:5": [
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "enjoys his job",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:6": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity",
+        "value": "writing a movie script",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "get the script on the big screen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:7": [],
+    "D27:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "source_of_idea",
+        "value": "a dream",
+        "event": "got idea for script",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "possession",
+        "value": "turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:9": [
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "fond of his turtles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:10": [
+      {
+        "entity": "Joanna",
+        "attribute": "source_of_happiness",
+        "value": "creating stories and watching them come alive",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:11": [],
+    "D27:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "submitted scripts",
+        "event": "submitted a few more scripts",
+        "time_expression": "last week"
+      }
+    ],
+    "D27:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "published_movies_count",
+        "value": "2",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:14": [
+      {
+        "entity": "Joanna",
+        "attribute": "goal",
+        "value": "not give up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:15": [
+      {
+        "entity": "Nate",
+        "attribute": "action",
+        "value": "upgraded home equipment",
+        "event": "equipment upgrade",
+        "time_expression": "just"
+      }
+    ],
+    "D27:16": [],
+    "D27:17": [
+      {
+        "entity": "Nate",
+        "attribute": "computer_usage",
+        "value": "practice and compete",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "computer_usage",
+        "value": "playing games with friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:18": [],
+    "D27:19": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "loves his gaming setup",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:20": [],
+    "D27:21": [
+      {
+        "entity": "Nate",
+        "attribute": "career_requirement",
+        "value": "needs gaming setup to beat competition",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:22": [],
+    "D27:23": [
+      {
+        "entity": "Nate",
+        "attribute": "current_game",
+        "value": "Xeonoblade Chronicles",
+        "event": null,
+        "time_expression": "currently"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "recommendation",
+        "value": "recommends Xeonoblade Chronicles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:24": [],
+    "D27:25": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "big fan of Nintendo games",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "motivation",
+        "value": "friends recommended Xeonoblade Chronicles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:26": [],
+    "D27:27": [
+      {
+        "entity": "Nate",
+        "attribute": "preference",
+        "value": "likes movie recommendations from Joanna",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:28": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity_completed",
+        "value": "finished intro to next movie script",
+        "event": "finished writing intro",
+        "time_expression": "just"
+      }
+    ],
+    "D27:29": [],
+    "D27:30": [
+      {
+        "entity": "Joanna's brother",
+        "attribute": "past_action",
+        "value": "wrote the letter",
+        "event": "wrote letter",
+        "time_expression": "when we were kids"
+      },
+      {
+        "entity": "Joanna's brother",
+        "attribute": "past_habit",
+        "value": "made cute notes for Joanna",
+        "event": "made notes",
+        "time_expression": "when we were kids"
+      }
+    ],
+    "D27:31": [],
+    "D27:32": [],
+    "D27:33": [
+      {
+        "entity": "Nate",
+        "attribute": "event_occurred",
+        "value": "took pets to the park",
+        "event": "took pets to park",
+        "time_expression": "had a special day"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_reaction",
+        "value": "amazed",
+        "event": "pets reacted to park",
+        "time_expression": "had a special day"
+      }
+    ],
+    "D27:34": [
+      {
+        "entity": "Joanna",
+        "attribute": "activity_started",
+        "value": "writing down favorite memories",
+        "event": "started writing memories",
+        "time_expression": "started"
+      }
+    ],
+    "D27:35": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "start writing down things animals like",
+        "event": "expressed intention to write",
+        "time_expression": "should start"
+      }
+    ],
+    "D27:36": [],
+    "D27:37": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "write down favorite memories with Joanna",
+        "event": "expressed intention to write",
+        "time_expression": "from now on"
+      }
+    ],
+    "D27:38": [],
+    "D28:1": [
+      {
+        "entity": "Nate",
+        "attribute": "event_status",
+        "value": "game tournament pushed back",
+        "event": "tournament rescheduled",
+        "time_expression": "this week"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "activity_completed",
+        "value": "made homemade coconut ice cream",
+        "event": "cooked ice cream",
+        "time_expression": "this week"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "observation",
+        "value": "sprinkles changed color of ice cream",
+        "event": "observed color change",
+        "time_expression": "this time around"
+      }
+    ],
+    "D28:2": [],
+    "D28:3": [
+      {
+        "entity": "Nate",
+        "attribute": "tournament_result",
+        "value": "did not make it to the finals",
+        "event": "participated in tournament",
+        "time_expression": "last game tournament"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "win next tournament",
+        "event": "expressed intention to win",
+        "time_expression": "next time"
+      }
+    ],
+    "D28:4": [],
+    "D28:5": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "joining a new gaming team",
+        "event": "considering joining a team after next tournament",
+        "time_expression": "after this next tourney"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "has received offers from gaming teams",
+        "event": "received offers",
+        "time_expression": null
+      }
+    ],
+    "D28:6": [],
+    "D28:7": [],
+    "D28:8": [
+      {
+        "entity": "Joanna",
+        "attribute": "event",
+        "value": "pitched script to producers",
+        "event": "pitched script",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "state",
+        "value": "producers liked the script",
+        "event": "received positive feedback",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Joanna",
+        "attribute": "attribute",
+        "value": "created a plan for getting script made into a movie",
+        "event": "created movie plan",
+        "time_expression": null
+      }
+    ],
+    "D28:9": [],
+    "D28:10": [],
+    "D28:11": [],
+    "D28:12": [
+      {
+        "entity": "Joanna",
+        "attribute": "project",
+        "value": "suspenseful thriller set in a small Midwestern town",
+        "event": "working on new project",
+        "time_expression": null
+      }
+    ],
+    "D28:13": [
+      {
+        "entity": "Nate",
+        "attribute": "activity",
+        "value": "creating gaming content for YouTube",
+        "event": "working on YouTube channel",
+        "time_expression": null
+      }
+    ],
+    "D28:14": [],
+    "D28:15": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "share love of gaming and connect with others",
+        "event": "starting YouTube channel",
+        "time_expression": null
+      }
+    ],
+    "D28:16": [],
+    "D28:17": [],
+    "D28:18": [],
+    "D28:19": [
+      {
+        "entity": "Nate",
+        "attribute": "state",
+        "value": "watching other people's videos",
+        "event": "researching audience preferences",
+        "time_expression": "already doing that"
+      }
+    ],
+    "D28:20": [],
+    "D28:21": [],
+    "D28:22": [
+      {
+        "entity": "Joanna",
+        "attribute": "photo_location",
+        "value": "near Fort Wayne",
+        "event": "took a photo on a hike",
+        "time_expression": "last summer"
+      }
+    ],
+    "D28:23": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_count_change",
+        "value": "got a new friend for the critters",
+        "event": "acquired a new pet",
+        "time_expression": null
+      }
+    ],
+    "D28:24": [],
+    "D28:25": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_type",
+        "value": "turtles",
+        "event": "bought a third turtle",
+        "time_expression": null
+      },
+      {
+        "entity": "Nate",
+        "attribute": "pet_housing_capacity",
+        "value": "tank is big enough for three",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:26": [],
+    "D28:27": [],
+    "D28:28": [
+      {
+        "entity": "Joanna",
+        "attribute": "allergy_status",
+        "value": "allergic",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:29": [],
+    "D28:30": [],
+    "D28:31": [],
+    "D28:32": [
+      {
+        "entity": "Joanna",
+        "attribute": "meeting_time",
+        "value": "tomorrow",
+        "event": "planned to meet Nate",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D28:33": [],
+    "D29:1": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "filming own movie",
+        "event": "started filming movie from road-trip script",
+        "time_expression": "finally"
+      }
+    ],
+    "D29:2": [
+      {
+        "entity": "Joanna",
+        "attribute": "script_status",
+        "value": "script came alive in a movie",
+        "event": "movie production success",
+        "time_expression": null
+      }
+    ],
+    "D29:3": [
+      {
+        "entity": "Joanna",
+        "attribute": "current_activity",
+        "value": "working on set",
+        "event": "filming movie",
+        "time_expression": "Every day on set"
+      }
+    ],
+    "D29:4": [],
+    "D29:5": [
+      {
+        "entity": "Joanna",
+        "attribute": "event_experience",
+        "value": "actor complimented her script",
+        "event": "actor approached Joanna to praise script",
+        "time_expression": null
+      }
+    ],
+    "D29:6": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_activity",
+        "value": "took turtles to the beach in Tampa",
+        "event": "beach trip with turtles",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D29:7": [],
+    "D29:8": [
+      {
+        "entity": "Nate",
+        "attribute": "pet_preference",
+        "value": "loves having turtles around",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:9": [],
+    "D29:10": [
+      {
+        "entity": "Nate",
+        "attribute": "current_activity",
+        "value": "experimenting with flavors",
+        "event": null,
+        "time_expression": "right now"
+      },
+      {
+        "entity": "Nate",
+        "attribute": "cooking_action",
+        "value": "made coconut milk ice cream",
+        "event": "prepared ice cream",
+        "time_expression": null
+      }
+    ],
+    "D29:11": [],
+    "D29:12": [
+      {
+        "entity": "Nate",
+        "attribute": "goal",
+        "value": "wants Joanna to try the recipe",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:13": [
+      {
+        "entity": "Joanna",
+        "attribute": "intent",
+        "value": "wants to try the ice cream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:14": [],
+    "D29:15": []
+  }
+}

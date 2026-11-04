@@ -1,0 +1,2989 @@
+{
+  "sample": "conv-26",
+  "model": "qwen3.8:27b-q4_K_M",
+  "turns": {
+    "D1:1": [],
+    "D1:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "state",
+        "value": "swamped with kids and work",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "event",
+        "value": "attended an LGBTQ support group",
+        "event": "attended LGBTQ support group",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D1:4": [],
+    "D1:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "sentiment",
+        "value": "happy and thankful for support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:6": [],
+    "D1:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "feels accepted and has courage to embrace herself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:8": [],
+    "D1:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "continue education and check out career options",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:10": [],
+    "D1:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_interest",
+        "value": "counseling or working in mental health",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:12": [],
+    "D1:13": [],
+    "D1:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "action",
+        "value": "painted a lake sunrise",
+        "event": "painted a lake sunrise",
+        "time_expression": "last year"
+      }
+    ],
+    "D1:15": [],
+    "D1:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "hobby",
+        "value": "painting",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "purpose_of_hobby",
+        "value": "express feelings, get creative, relax",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:17": [
+      {
+        "entity": "Caroline",
+        "attribute": "current_activity",
+        "value": "doing research",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:18": [
+      {
+        "entity": "Melanie",
+        "attribute": "current_activity",
+        "value": "swimming with the kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:1": [
+      {
+        "entity": "Melanie",
+        "attribute": "event_participation",
+        "value": "ran a charity race for mental health",
+        "event": "charity race",
+        "time_expression": "last Saturday"
+      }
+    ],
+    "D2:2": [],
+    "D2:3": [
+      {
+        "entity": "Melanie",
+        "attribute": "belief",
+        "value": "self-care is important",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "family_status",
+        "value": "has a family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:4": [],
+    "D2:5": [
+      {
+        "entity": "Melanie",
+        "attribute": "daily_routine",
+        "value": "carving out me-time each day",
+        "event": null,
+        "time_expression": "each day"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "hobbies",
+        "value": "running, reading, playing violin",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:6": [],
+    "D2:7": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_status",
+        "value": "has kids",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "planned_activity",
+        "value": "going camping",
+        "event": "camping trip",
+        "time_expression": "next month"
+      }
+    ],
+    "D2:8": [
+      {
+        "entity": "Caroline",
+        "attribute": "current_activity",
+        "value": "researching adoption agencies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "have a family and give a loving home to kids who need it",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:9": [],
+    "D2:10": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "give kids a loving home",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "support_system",
+        "value": "friends and mentors",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:11": [],
+    "D2:12": [
+      {
+        "entity": "Caroline",
+        "attribute": "adoption_preference",
+        "value": "agency that helps LGBTQ+ folks with adoption",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:13": [],
+    "D2:14": [
+      {
+        "entity": "Caroline",
+        "attribute": "family_status",
+        "value": "single parent",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "make a family for kids who need one",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:15": [],
+    "D2:16": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "make sure these kids have a safe and loving home",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:17": [],
+    "D3:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_participation",
+        "value": "talked about transgender journey and encouraged students to get involved in LGBTQ community",
+        "event": "school event",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "transition_duration",
+        "value": "three years",
+        "event": "started transitioning",
+        "time_expression": "three years ago"
+      }
+    ],
+    "D3:2": [],
+    "D3:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_content",
+        "value": "shared own journey, struggles, and development since coming out",
+        "event": "giving a talk",
+        "time_expression": null
+      }
+    ],
+    "D3:4": [],
+    "D3:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "promote understanding and acceptance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:6": [],
+    "D3:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "use voice to make a change and lift others up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:8": [],
+    "D3:9": [],
+    "D3:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "be courageous for my family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "support_system",
+        "value": "friends, family, and mentors",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "social_event",
+        "value": "met up with friends, family, and mentors",
+        "event": "social gathering",
+        "time_expression": "last week"
+      }
+    ],
+    "D3:12": [],
+    "D3:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "friendship_duration",
+        "value": "4 years",
+        "event": null,
+        "time_expression": "4 years"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "migration_history",
+        "value": "moved from home country",
+        "event": "relocation",
+        "time_expression": "4 years"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "past_relationship_status",
+        "value": "experienced a breakup",
+        "event": "breakup",
+        "time_expression": null
+      }
+    ],
+    "D3:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_members",
+        "value": "husband and kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:15": [],
+    "D3:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "marriage_duration",
+        "value": "5 years",
+        "event": "marriage",
+        "time_expression": "5 years"
+      }
+    ],
+    "D3:17": [],
+    "D3:18": [],
+    "D3:19": [],
+    "D3:20": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "played games, ate good food, hung out",
+        "event": "family gathering",
+        "time_expression": null
+      }
+    ],
+    "D3:21": [],
+    "D3:22": [],
+    "D3:23": [],
+    "D4:1": [],
+    "D4:2": [],
+    "D4:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "home_country",
+        "value": "Sweden",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "necklace_origin",
+        "value": "gift from grandma",
+        "event": "received necklace",
+        "time_expression": "when I was young"
+      }
+    ],
+    "D4:4": [],
+    "D4:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "possesses_item",
+        "value": "hand-painted bowl",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "bowl_creator",
+        "value": "a friend",
+        "event": "bowl made for 18th birthday",
+        "time_expression": "ten years ago"
+      }
+    ],
+    "D4:6": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "took family camping in the mountains",
+        "event": "camping trip",
+        "time_expression": "last week"
+      }
+    ],
+    "D4:7": [],
+    "D4:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_composition",
+        "value": "has 2 younger kids",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "camping_activities",
+        "value": "explored nature, roasted marshmallows, went on a hike",
+        "event": "camping trip",
+        "time_expression": null
+      }
+    ],
+    "D4:9": [],
+    "D4:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "value",
+        "value": "family time",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_goal",
+        "value": "counseling and mental health",
+        "event": "looking into career",
+        "time_expression": "Lately"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "help people who have gone through the same things as me",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:12": [],
+    "D4:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_focus",
+        "value": "working with trans people",
+        "event": "thinking of working",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "helping trans people accept themselves and supporting their mental health",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event_attended",
+        "value": "LGBTQ+ counseling workshop",
+        "event": "went to workshop",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D4:14": [],
+    "D4:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "motivation",
+        "value": "own journey and support received",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "help people go through it too",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "experience",
+        "value": "counseling and support groups improved life",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "creating a safe, inviting place for people to grow",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:16": [],
+    "D4:17": [],
+    "D4:18": [],
+    "D5:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_attended",
+        "value": "LGBTQ+ pride parade",
+        "event": "attended LGBTQ+ pride parade",
+        "time_expression": "Last week"
+      }
+    ],
+    "D5:2": [],
+    "D5:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_goal",
+        "value": "counseling and mental health",
+        "event": "decided to pursue counseling and mental health",
+        "time_expression": null
+      }
+    ],
+    "D5:4": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity_enrolled",
+        "value": "pottery class",
+        "event": "signed up for a pottery class",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D5:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "skill_learning",
+        "value": "piano",
+        "event": "learning the piano",
+        "time_expression": null
+      }
+    ],
+    "D5:6": [],
+    "D5:7": [],
+    "D5:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "artifact_created",
+        "value": "bowl",
+        "event": "made a bowl in pottery class",
+        "time_expression": null
+      }
+    ],
+    "D5:9": [],
+    "D5:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "hobby_significance",
+        "value": "huge part of life",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:11": [],
+    "D5:12": [],
+    "D5:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_attending",
+        "value": "transgender conference",
+        "event": "going to a transgender conference",
+        "time_expression": "this month"
+      }
+    ],
+    "D5:14": [],
+    "D5:15": [],
+    "D5:16": [],
+    "D6:1": [],
+    "D6:2": [],
+    "D6:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_interest",
+        "value": "counseling or mental health work",
+        "event": "looking into career options",
+        "time_expression": "Since our last chat"
+      }
+    ],
+    "D6:4": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "took the kids to the museum",
+        "event": "visited museum with children",
+        "time_expression": "Yesterday"
+      }
+    ],
+    "D6:5": [],
+    "D6:6": [
+      {
+        "entity": "Melanie's kids",
+        "attribute": "interest",
+        "value": "dinosaur exhibit",
+        "event": "visited museum",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "role",
+        "value": "mom",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "creating a library for future kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:8": [],
+    "D6:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "library_contents",
+        "value": "kids' books, classics, stories from different cultures, educational books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "childhood_favorite_book",
+        "value": "Charlotte's Web",
+        "event": null,
+        "time_expression": "as a kid"
+      }
+    ],
+    "D6:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "support_system",
+        "value": "friends and family",
+        "event": "helping with transition",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "social_activity",
+        "value": "had a picnic",
+        "event": "picnic with friends and family",
+        "time_expression": "last week"
+      }
+    ],
+    "D6:12": [],
+    "D6:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "transition_status",
+        "value": "supported by network",
+        "event": "transition process",
+        "time_expression": null
+      }
+    ],
+    "D6:14": [],
+    "D6:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "has_support_system",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "is_in_transition",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "camping at the beach",
+        "event": "family camping trip",
+        "time_expression": null
+      }
+    ],
+    "D7:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "attended_event",
+        "value": "LGBTQ conference",
+        "event": "attended LGBTQ conference",
+        "time_expression": "two days ago"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "fight for trans rights and spread awareness",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:2": [],
+    "D7:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "help make a difference",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:4": [],
+    "D7:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "career_interest",
+        "value": "counseling and mental health jobs",
+        "event": "looking into jobs",
+        "time_expression": null
+      }
+    ],
+    "D7:6": [],
+    "D7:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "past_experience",
+        "value": "struggled with mental health",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "career_goal",
+        "value": "help other people on their own journeys",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "reading_history",
+        "value": "read a book last year",
+        "event": "read a book",
+        "time_expression": "last year"
+      }
+    ],
+    "D7:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "interest",
+        "value": "reading",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:10": [],
+    "D7:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "favorite_book",
+        "value": "\"Becoming Nicole\" by Amy Ellis Nutt",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:12": [],
+    "D7:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "lesson_learned",
+        "value": "self-acceptance",
+        "event": "taught by experience",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "lesson_learned",
+        "value": "how to find support",
+        "event": "taught by experience",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "belief",
+        "value": "tough times don't last",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "opinion",
+        "value": "pets are awesome for joy and comfort",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:15": [],
+    "D7:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "pet_ownership",
+        "value": "dog and cat",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:17": [],
+    "D7:18": [
+      {
+        "entity": "Melanie",
+        "attribute": "pet_names",
+        "value": "Luna and Oliver",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "recent_purchase",
+        "value": "new shoes",
+        "event": "purchase",
+        "time_expression": "Just got"
+      }
+    ],
+    "D7:19": [
+      {
+        "entity": "Melanie",
+        "attribute": "shoe_color",
+        "value": "purple",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:20": [
+      {
+        "entity": "Melanie",
+        "attribute": "shoe_purpose",
+        "value": "running",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "running_duration",
+        "value": "longer since last chat",
+        "event": "increased running",
+        "time_expression": "since our last chat"
+      }
+    ],
+    "D7:21": [],
+    "D7:22": [
+      {
+        "entity": "Melanie",
+        "attribute": "running_distance",
+        "value": "farther",
+        "event": "increased distance",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "running_motive",
+        "value": "de-stress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:23": [],
+    "D7:24": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "keep running",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:25": [],
+    "D7:26": [
+      {
+        "entity": "Melanie",
+        "attribute": "mental_health_status",
+        "value": "improvement",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:27": [],
+    "D8:1": [],
+    "D8:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "took kids to a pottery workshop",
+        "event": "attended pottery workshop with children",
+        "time_expression": "Last Fri"
+      }
+    ],
+    "D8:3": [],
+    "D8:4": [
+      {
+        "entity": "Melanie's kids",
+        "attribute": "reaction",
+        "value": "loved the pottery workshop",
+        "event": "participated in pottery workshop",
+        "time_expression": null
+      }
+    ],
+    "D8:5": [],
+    "D8:6": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "painting with kids",
+        "event": "painted nature-inspired artwork",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D8:7": [],
+    "D8:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "collaborated on painting",
+        "event": "painted together",
+        "time_expression": null
+      }
+    ],
+    "D8:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "attended council meeting for adoption",
+        "event": "went to adoption council meeting",
+        "time_expression": "Last Friday"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "to adopt",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:10": [],
+    "D8:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "favorite_color",
+        "value": "blue",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:12": [
+      {
+        "entity": "Melanie",
+        "attribute": "wedding_detail",
+        "value": "flowers were important part of decor",
+        "event": "wedding",
+        "time_expression": null
+      }
+    ],
+    "D8:13": [],
+    "D8:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "event",
+        "value": "had a wedding",
+        "event": "wedding",
+        "time_expression": null
+      }
+    ],
+    "D8:15": [],
+    "D8:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "best_memory",
+        "value": "Marrying my partner and promising to be together forever",
+        "event": "marriage",
+        "time_expression": null
+      }
+    ],
+    "D8:17": [
+      {
+        "entity": "Caroline",
+        "attribute": "special_memory",
+        "value": "pride parade",
+        "event": "attended pride parade",
+        "time_expression": "a few weeks ago"
+      }
+    ],
+    "D8:18": [],
+    "D8:19": [
+      {
+        "entity": "Caroline",
+        "attribute": "participation",
+        "value": "joined in",
+        "event": "pride parade",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "feeling",
+        "value": "accepted and happy",
+        "event": "pride parade",
+        "time_expression": null
+      }
+    ],
+    "D8:20": [],
+    "D8:21": [
+      {
+        "entity": "Caroline",
+        "attribute": "feeling",
+        "value": "proud and grateful",
+        "event": "pride parade",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "community_status",
+        "value": "not alone and have a great community around me",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:22": [],
+    "D8:23": [
+      {
+        "entity": "Caroline",
+        "attribute": "feeling",
+        "value": "inspired",
+        "event": "being around people who embrace and back me up",
+        "time_expression": null
+      }
+    ],
+    "D8:24": [],
+    "D8:25": [
+      {
+        "entity": "Caroline",
+        "attribute": "best_part",
+        "value": "Realizing I can be me without fear and having the courage to transition",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:26": [],
+    "D8:27": [
+      {
+        "entity": "Caroline",
+        "attribute": "attitude",
+        "value": "proud of how far I've come",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:28": [
+      {
+        "entity": "Melanie",
+        "attribute": "source_of_peace",
+        "value": "Creativity and family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:29": [],
+    "D8:30": [
+      {
+        "entity": "Melanie's family",
+        "attribute": "support_level",
+        "value": "helped out and showed lots of love and support",
+        "event": "during Melanie's move",
+        "time_expression": null
+      }
+    ],
+    "D8:31": [],
+    "D8:32": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_support",
+        "value": "helped through tough times",
+        "event": "family support",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "went on a camping trip in the forest",
+        "event": "camping trip",
+        "time_expression": null
+      }
+    ],
+    "D8:33": [],
+    "D8:34": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "hiking in the mountains and exploring forests",
+        "event": "hiking and exploring",
+        "time_expression": null
+      }
+    ],
+    "D8:35": [],
+    "D8:36": [
+      {
+        "entity": "Melanie",
+        "attribute": "memory_preference",
+        "value": "family camping and hiking are favorite memories",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:37": [
+      {
+        "entity": "Caroline",
+        "attribute": "friendship",
+        "value": "considers Melanie a friend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:38": [
+      {
+        "entity": "Melanie",
+        "attribute": "friendship",
+        "value": "considers Caroline a friend and supporter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:39": [],
+    "D9:1": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "went camping with family",
+        "event": "camping trip",
+        "time_expression": "two weekends ago"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "family_composition",
+        "value": "has kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:2": [
+      {
+        "entity": "Caroline",
+        "attribute": "volunteer_activity",
+        "value": "joined a mentorship program for LGBTQ youth",
+        "event": "joined mentorship program",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D9:3": [],
+    "D9:4": [
+      {
+        "entity": "Caroline",
+        "attribute": "mentoring_status",
+        "value": "mentoring is going great",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:5": [],
+    "D9:6": [
+      {
+        "entity": "Caroline",
+        "attribute": "gender_identity",
+        "value": "transgender",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "mentee_identity",
+        "value": "transgender teen",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "mentoring_goal",
+        "value": "building confidence and finding positive strategies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event_attendance",
+        "value": "attended LGBT pride event",
+        "event": "LGBT pride event",
+        "time_expression": "last month"
+      }
+    ],
+    "D9:7": [],
+    "D9:8": [
+      {
+        "entity": "Caroline",
+        "attribute": "attended_event",
+        "value": "pride event",
+        "event": "attended pride event",
+        "time_expression": null
+      }
+    ],
+    "D9:9": [],
+    "D9:10": [
+      {
+        "entity": "Caroline",
+        "attribute": "has_mentee",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:11": [],
+    "D9:12": [
+      {
+        "entity": "Caroline",
+        "attribute": "planned_event",
+        "value": "LGBTQ art show",
+        "event": "planned LGBTQ art show",
+        "time_expression": "Next month"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "creates_art",
+        "value": "paintings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:13": [],
+    "D9:14": [
+      {
+        "entity": "Caroline",
+        "attribute": "created_artwork",
+        "value": "painting for art show",
+        "event": "created painting for art show",
+        "time_expression": null
+      }
+    ],
+    "D9:15": [],
+    "D9:16": [
+      {
+        "entity": "Caroline",
+        "attribute": "visited_location",
+        "value": "LGBTQ center",
+        "event": "visited LGBTQ center",
+        "time_expression": null
+      }
+    ],
+    "D9:17": [
+      {
+        "entity": "Melanie",
+        "attribute": "has_children",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "completed_activity",
+        "value": "painting",
+        "event": "finished painting",
+        "time_expression": "just"
+      }
+    ],
+    "D10:1": [],
+    "D10:2": [],
+    "D10:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "joined_group",
+        "value": "LGBTQ activist group",
+        "event": "joined LGBTQ activist group",
+        "time_expression": "last Tues"
+      }
+    ],
+    "D10:4": [],
+    "D10:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "group_membership",
+        "value": "Connected LGBTQ Activists",
+        "event": "participating in group",
+        "time_expression": null
+      },
+      {
+        "entity": "Connected LGBTQ Activists",
+        "attribute": "group_activity",
+        "value": "regular meetings, plan events and campaigns",
+        "event": "group operations",
+        "time_expression": null
+      }
+    ],
+    "D10:6": [],
+    "D10:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_attendance",
+        "value": "missed the pride parade",
+        "event": "city pride parade",
+        "time_expression": "Last weekend"
+      }
+    ],
+    "D10:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_activity",
+        "value": "went to the beach",
+        "event": "beach trip",
+        "time_expression": "recently"
+      }
+    ],
+    "D10:9": [],
+    "D10:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "beach_trip_frequency",
+        "value": "once or twice a year",
+        "event": "beach trips with kids",
+        "time_expression": null
+      }
+    ],
+    "D10:11": [],
+    "D10:12": [
+      {
+        "entity": "Melanie",
+        "attribute": "summer_tradition",
+        "value": "family camping trip",
+        "event": "annual summer activity",
+        "time_expression": "summer"
+      }
+    ],
+    "D10:13": [],
+    "D10:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "camping_experience",
+        "value": "saw the Perseid meteor shower",
+        "event": "camping trip",
+        "time_expression": "last year"
+      }
+    ],
+    "D10:15": [],
+    "D10:16": [],
+    "D10:17": [],
+    "D10:18": [],
+    "D10:19": [],
+    "D10:20": [
+      {
+        "entity": "Melanie",
+        "attribute": "has_youngest_child",
+        "value": "true",
+        "event": "youngest child took first steps",
+        "time_expression": "the day my youngest took her first steps"
+      }
+    ],
+    "D10:21": [],
+    "D10:22": [],
+    "D10:23": [],
+    "D10:24": [],
+    "D11:1": [
+      {
+        "entity": "Melanie",
+        "attribute": "has_daughter",
+        "value": "true",
+        "event": "celebrated daughter's birthday with a concert",
+        "time_expression": "Last night"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "has_kids",
+        "value": "true",
+        "event": "celebrated daughter's birthday with a concert",
+        "time_expression": "Last night"
+      }
+    ],
+    "D11:2": [
+      {
+        "entity": "Caroline",
+        "attribute": "attended_event",
+        "value": "advocacy event",
+        "event": "attended advocacy event",
+        "time_expression": null
+      }
+    ],
+    "D11:3": [
+      {
+        "entity": "Melanie",
+        "attribute": "attended_concert",
+        "value": "Matt Patterson concert",
+        "event": "attended concert",
+        "time_expression": "Last night"
+      }
+    ],
+    "D11:4": [
+      {
+        "entity": "Caroline",
+        "attribute": "attended_event",
+        "value": "pride parade",
+        "event": "attended pride parade",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D11:5": [],
+    "D11:6": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "fight for LGBTQ rights",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:7": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "cultivate a loving and accepting environment for kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:8": [
+      {
+        "entity": "Caroline",
+        "attribute": "occupation",
+        "value": "artist",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "speak up for the LGBTQ+ community and push for acceptance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:9": [],
+    "D11:10": [
+      {
+        "entity": "Caroline",
+        "attribute": "identity",
+        "value": "trans",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "art_style",
+        "value": "uses art to tell stories and teach people about trans folks",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "see another painting from Caroline",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:12": [
+      {
+        "entity": "Caroline",
+        "attribute": "artwork_title",
+        "value": "Embracing Identity",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "artwork_theme",
+        "value": "finding comfort and love in being yourself",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "artwork_symbolism",
+        "value": "the woman in the painting stands for the journey of acceptance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "art_goal",
+        "value": "show warmth, love and self-acceptance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:13": [],
+    "D11:14": [
+      {
+        "entity": "Caroline",
+        "attribute": "art_use",
+        "value": "explore transition and changing body",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "art_use",
+        "value": "work through personal issues",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "art_lesson",
+        "value": "accept the beauty of imperfections",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:15": [],
+    "D11:16": [],
+    "D11:17": [],
+    "D12:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "event",
+        "value": "had a negative experience on a hike with religious conservatives",
+        "event": "hike encounter",
+        "time_expression": "Recently"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "supported by people who accept and support her",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "event",
+        "value": "finished another pottery project",
+        "event": "completed pottery project",
+        "time_expression": null
+      }
+    ],
+    "D12:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "see Melanie's pottery project",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:4": [],
+    "D12:5": [],
+    "D12:6": [
+      {
+        "entity": "Melanie",
+        "attribute": "art_style",
+        "value": "uses colors and patterns to catch the eye and make people smile",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "art_use",
+        "value": "express feelings and be creative",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:7": [],
+    "D12:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "art_relationship",
+        "value": "art is a sanctuary and source of comfort",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "art_impact",
+        "value": "brings happiness and fulfillment",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:9": [],
+    "D12:10": [],
+    "D12:11": [],
+    "D12:12": [],
+    "D12:13": [],
+    "D12:14": [],
+    "D12:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_participation",
+        "value": "attended Pride fest",
+        "event": "attended Pride fest",
+        "time_expression": "last year"
+      }
+    ],
+    "D12:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "family outing this summer",
+        "event": null,
+        "time_expression": "this summer"
+      }
+    ],
+    "D12:17": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "plan something special for this summer, just us two",
+        "event": null,
+        "time_expression": "this summer"
+      }
+    ],
+    "D12:18": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "plan something special",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:19": [],
+    "D12:20": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "start thinking about what we can do",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:21": [],
+    "D13:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "applied to adoption agencies",
+        "event": "applied to adoption agencies",
+        "time_expression": "this week"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "becoming a mom",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event_participation",
+        "value": "attended adoption advice/assistance group",
+        "event": "attended adoption advice/assistance group",
+        "time_expression": null
+      }
+    ],
+    "D13:2": [],
+    "D13:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "pet_name",
+        "value": "Oscar",
+        "event": "identifies pet",
+        "time_expression": null
+      },
+      {
+        "entity": "Oscar",
+        "attribute": "species",
+        "value": "guinea pig",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:4": [
+      {
+        "entity": "Melanie",
+        "attribute": "pet_name",
+        "value": "Bailey",
+        "event": "acquired pet",
+        "time_expression": null
+      },
+      {
+        "entity": "Bailey",
+        "attribute": "species",
+        "value": "cat",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "pet_name",
+        "value": "Oliver",
+        "event": "references existing pet",
+        "time_expression": null
+      }
+    ],
+    "D13:5": [
+      {
+        "entity": "Oscar",
+        "attribute": "diet_preference",
+        "value": "parsley",
+        "event": "eating parsley",
+        "time_expression": null
+      }
+    ],
+    "D13:6": [
+      {
+        "entity": "Oliver",
+        "attribute": "behavior",
+        "value": "hid bone in slipper",
+        "event": "hid bone in slipper",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "past_experience",
+        "value": "fed a horse a carrot",
+        "event": "fed a horse a carrot",
+        "time_expression": null
+      }
+    ],
+    "D13:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "childhood_activity",
+        "value": "horseback riding",
+        "event": "went horseback riding with dad",
+        "time_expression": "when I was a kid"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "preference",
+        "value": "love for horses",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "creative_work",
+        "value": "horse painting",
+        "event": "painted a horse",
+        "time_expression": "recently"
+      }
+    ],
+    "D13:9": [],
+    "D13:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "preference",
+        "value": "loves painting animals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "creative_work",
+        "value": "self-portrait",
+        "event": "made a self-portrait",
+        "time_expression": "last week"
+      }
+    ],
+    "D13:12": [],
+    "D13:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "feeling",
+        "value": "liberated and empowered",
+        "event": "painting self-portrait",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "purpose_of_painting",
+        "value": "explore identity and be true to self",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:14": [],
+    "D13:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "live authentically and help others do the same",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "value",
+        "value": "promoting LGBTQ rights",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:16": [
+      {
+        "entity": "Caroline",
+        "attribute": "status",
+        "value": "on adoption journey",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:17": [],
+    "D13:18": [],
+    "D14:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "went hiking",
+        "event": "went hiking last week",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event",
+        "value": "got into a bad spot with some people",
+        "event": "got into a bad spot with some people",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "tried to apologize to them",
+        "event": "tried to apologize to them",
+        "time_expression": null
+      }
+    ],
+    "D14:2": [],
+    "D14:3": [],
+    "D14:4": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "made a plate in pottery class",
+        "event": "made a plate in pottery class",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D14:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "has been busy painting",
+        "event": "has been busy painting",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "artifact",
+        "value": "finished a painting",
+        "event": "finished a painting",
+        "time_expression": "just"
+      }
+    ],
+    "D14:6": [],
+    "D14:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "visited the beach",
+        "event": "visited the beach",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "painted a sunset",
+        "event": "painted a sunset",
+        "time_expression": null
+      }
+    ],
+    "D14:8": [],
+    "D14:9": [],
+    "D14:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "volunteered at a homeless shelter with family",
+        "event": "volunteered at a homeless shelter with family",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D14:11": [],
+    "D14:12": [],
+    "D14:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "found a community where she is accepted, loved and supported",
+        "event": "found a community where she is accepted, loved and supported",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "artifact",
+        "value": "mural",
+        "event": "mural is special to her",
+        "time_expression": null
+      }
+    ],
+    "D14:14": [],
+    "D14:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "identity",
+        "value": "trans person",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "preference",
+        "value": "finds rainbow flag mural important as it reflects courage and strength of trans community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:16": [],
+    "D14:17": [
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "made a stained glass window",
+        "event": "created stained glass window",
+        "time_expression": null
+      }
+    ],
+    "D14:18": [],
+    "D14:19": [
+      {
+        "entity": "Caroline",
+        "attribute": "identity",
+        "value": "transgender woman",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "made a stained glass window for a local church",
+        "event": "created stained glass window for local church",
+        "time_expression": null
+      }
+    ],
+    "D14:20": [],
+    "D14:21": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "make something like the stained glass window next",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:22": [],
+    "D14:23": [
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "took a picture of a rainbow sidewalk",
+        "event": "photographed rainbow sidewalk",
+        "time_expression": "Pride Month"
+      }
+    ],
+    "D14:24": [],
+    "D14:25": [
+      {
+        "entity": "Caroline",
+        "attribute": "action",
+        "value": "saw someone drawing on the ground",
+        "event": "observed person drawing on ground",
+        "time_expression": "the other day"
+      }
+    ],
+    "D14:26": [],
+    "D14:27": [
+      {
+        "entity": "Caroline",
+        "attribute": "preference",
+        "value": "finds joy in art",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:28": [],
+    "D14:29": [
+      {
+        "entity": "Caroline",
+        "attribute": "preference",
+        "value": "likes drawing flowers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:30": [
+      {
+        "entity": "Melanie",
+        "attribute": "favorite_painting_subjects",
+        "value": "landscapes and still life",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "recent_activity",
+        "value": "did a painting",
+        "event": null,
+        "time_expression": "recently"
+      }
+    ],
+    "D14:31": [],
+    "D14:32": [
+      {
+        "entity": "Melanie",
+        "attribute": "planned_activity",
+        "value": "planning a few paintings",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "inspiration_source",
+        "value": "autumn",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:33": [
+      {
+        "entity": "Caroline",
+        "attribute": "planned_event",
+        "value": "putting together an LGBTQ art show",
+        "event": null,
+        "time_expression": "next month"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "planned_activity",
+        "value": "show my paintings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:34": [],
+    "D14:35": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_goal",
+        "value": "spread understanding and acceptance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:1": [],
+    "D15:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "took my kids to a park",
+        "event": null,
+        "time_expression": "yesterday"
+      }
+    ],
+    "D15:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "volunteer at an LGBTQ+ youth center",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:4": [],
+    "D15:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "sharing my story",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:6": [],
+    "D15:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "past_experience",
+        "value": "struggles in the past",
+        "event": null,
+        "time_expression": "in the past"
+      }
+    ],
+    "D15:8": [],
+    "D15:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "carrying on volunteering at the youth center",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:10": [],
+    "D15:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "upcoming_event",
+        "value": "organizing a talent show for kids",
+        "event": "planning talent show",
+        "time_expression": "next month"
+      }
+    ],
+    "D15:12": [
+      {
+        "entity": "Melanie",
+        "attribute": "preference",
+        "value": "loves live music",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:13": [],
+    "D15:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "past_event",
+        "value": "attended a music show",
+        "event": "attended show",
+        "time_expression": null
+      }
+    ],
+    "D15:15": [],
+    "D15:16": [
+      {
+        "entity": "Summer Sounds",
+        "attribute": "genre",
+        "value": "pop",
+        "event": "performed at show",
+        "time_expression": null
+      }
+    ],
+    "D15:17": [],
+    "D15:18": [],
+    "D15:19": [
+      {
+        "entity": "Caroline",
+        "attribute": "instrument",
+        "value": "guitar",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:20": [],
+    "D15:21": [
+      {
+        "entity": "Caroline",
+        "attribute": "instrument_type",
+        "value": "acoustic guitar",
+        "event": "started playing",
+        "time_expression": "about five years ago"
+      }
+    ],
+    "D15:22": [],
+    "D15:23": [
+      {
+        "entity": "Caroline",
+        "attribute": "favorite_song",
+        "value": "\"Brave\" by Sara Bareilles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:24": [],
+    "D15:25": [],
+    "D15:26": [
+      {
+        "entity": "Melanie",
+        "attribute": "instrument_played",
+        "value": "clarinet",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "start_time_instrument",
+        "value": "when I was young",
+        "event": "started playing clarinet",
+        "time_expression": "when I was young"
+      }
+    ],
+    "D15:27": [],
+    "D15:28": [
+      {
+        "entity": "Melanie",
+        "attribute": "music_preference",
+        "value": "classical (Bach, Mozart) and modern (Ed Sheeran)",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "activity",
+        "value": "biking with friends",
+        "event": "went biking",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D16:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "camping with kids",
+        "event": "went camping",
+        "time_expression": "a few weeks ago"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "hiking in forest",
+        "event": "explored forest and hiked",
+        "time_expression": "a few weeks ago"
+      }
+    ],
+    "D16:3": [],
+    "D16:4": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "roasted marshmallows",
+        "event": "roasted marshmallows around campfire",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "shared stories",
+        "event": "shared stories around campfire",
+        "time_expression": null
+      }
+    ],
+    "D16:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "volunteering_focus",
+        "value": "LGBTQ+ community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:6": [],
+    "D16:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "art_start_age",
+        "value": "17",
+        "event": "started creating art",
+        "time_expression": "Since I was 17 or so"
+      }
+    ],
+    "D16:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "art_duration",
+        "value": "seven years",
+        "event": "creating art",
+        "time_expression": "Seven years now"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "art_mediums",
+        "value": "painting and pottery",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "art_role",
+        "value": "helped express feelings and explore gender identity",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "art_role",
+        "value": "helped understand and accept self during transition",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:10": [],
+    "D16:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "pottery_experience",
+        "value": "has not done pottery yet",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:12": [],
+    "D16:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "gender_identity",
+        "value": "trans woman",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "painting_intent",
+        "value": "show path as a trans woman",
+        "event": "created painting",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "painting_symbolism",
+        "value": "red and blue represent binary gender system; mix of colors means smashing rigid thinking",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "emotional_state",
+        "value": "proud of who she is",
+        "event": null,
+        "time_expression": "finally"
+      }
+    ],
+    "D16:14": [],
+    "D16:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "relationship_status",
+        "value": "some close friends supported; a few could not handle it",
+        "event": "changes in relationships",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "emotional_state",
+        "value": "much happier being around those who accept and love her",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "relationship_quality",
+        "value": "relationships feel more genuine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "event_participation",
+        "value": "had a good time at the café",
+        "event": "visited café",
+        "time_expression": "last weekend"
+      },
+      {
+        "entity": "café",
+        "attribute": "feature",
+        "value": "had thoughtful signs",
+        "event": null,
+        "time_expression": "last weekend"
+      }
+    ],
+    "D16:17": [],
+    "D16:18": [
+      {
+        "entity": "Melanie",
+        "attribute": "sign_interpretation",
+        "value": "sign was just a precaution",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "experience_quality",
+        "value": "had a great time",
+        "event": "visited café",
+        "time_expression": null
+      }
+    ],
+    "D16:19": [],
+    "D16:20": [],
+    "D17:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "action_taken",
+        "value": "contacted mentor for adoption advice",
+        "event": "contacted mentor",
+        "time_expression": "13 October, 2023"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "to be a mom and share love and family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:2": [],
+    "D17:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "to adopt and provide a safe, loving home for kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:4": [
+      {
+        "entity": "Melanie's friend",
+        "attribute": "action_taken",
+        "value": "adopted a child",
+        "event": "adoption",
+        "time_expression": "last year"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "to adopt",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:5": [],
+    "D17:6": [],
+    "D17:7": [],
+    "D17:8": [
+      {
+        "entity": "Melanie",
+        "attribute": "injury_status",
+        "value": "hurt",
+        "event": "got hurt",
+        "time_expression": "Last month"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "activity_pause",
+        "value": "took a break from pottery",
+        "event": "took a break from pottery",
+        "time_expression": "Last month"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "pottery_purpose",
+        "value": "self-expression and peace",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:9": [],
+    "D17:10": [
+      {
+        "entity": "Melanie",
+        "attribute": "current_activity",
+        "value": "reading a book recommended by Caroline",
+        "event": "reading",
+        "time_expression": "a while ago"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "current_activity",
+        "value": "painting",
+        "event": "painting to keep busy",
+        "time_expression": null
+      }
+    ],
+    "D17:11": [],
+    "D17:12": [
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_creation",
+        "value": "painted a sunset-inspired piece",
+        "event": "painted a piece",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_theme",
+        "value": "sunsets",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_effect",
+        "value": "colors make her feel calm",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "art_style",
+        "value": "abstract",
+        "event": "trying out abstract stuff",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "art_approach",
+        "value": "putting feelings on canvas without a plan",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:14": [
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_creation",
+        "value": "created an abstract painting",
+        "event": "done an abstract painting",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "art_motivation",
+        "value": "calming",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:15": [],
+    "D17:16": [
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_intent",
+        "value": "show tranquility",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "color_preference",
+        "value": "blue calms her",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "artwork_style",
+        "value": "serene vibe with vibrant colors",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:17": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_attendance",
+        "value": "attended a poetry reading",
+        "event": "went to a poetry reading",
+        "time_expression": "last Fri"
+      }
+    ],
+    "D17:18": [
+      {
+        "entity": "Melanie",
+        "attribute": "event_history",
+        "value": "never been to a poetry reading",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:19": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_type",
+        "value": "transgender poetry reading",
+        "event": "attended a transgender poetry reading",
+        "time_expression": "last Fri"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event_description",
+        "value": "transgender people shared stories through poetry",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:20": [],
+    "D17:21": [
+      {
+        "entity": "Caroline",
+        "attribute": "event_atmosphere",
+        "value": "electric with energy and support",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "event_visuals",
+        "value": "posters with pride and strength",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "make some art",
+        "event": "inspired to make art",
+        "time_expression": null
+      }
+    ],
+    "D17:22": [],
+    "D17:23": [
+      {
+        "entity": "Caroline",
+        "attribute": "created_artwork",
+        "value": "drew it",
+        "event": "created artwork",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "artwork_meaning",
+        "value": "freedom and being real",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "stay true to herself and embrace her womanhood",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:24": [],
+    "D17:25": [],
+    "D17:26": [],
+    "D18:1": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_member",
+        "value": "son",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie's son",
+        "attribute": "event",
+        "value": "got into an accident",
+        "event": "accident",
+        "time_expression": "this past weekend"
+      },
+      {
+        "entity": "Melanie's son",
+        "attribute": "status",
+        "value": "okay",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "experience",
+        "value": "scary experience",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:2": [],
+    "D18:3": [
+      {
+        "entity": "Melanie",
+        "attribute": "emotion",
+        "value": "scared",
+        "event": "accident",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie's son",
+        "attribute": "status",
+        "value": "ok",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "reflection",
+        "value": "life is precious and to cherish our family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:4": [],
+    "D18:5": [
+      {
+        "entity": "Melanie",
+        "attribute": "family_importance",
+        "value": "super important",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "family_enjoyment",
+        "value": "enjoyed the Grand Canyon a lot",
+        "event": "visited Grand Canyon",
+        "time_expression": null
+      }
+    ],
+    "D18:6": [],
+    "D18:7": [
+      {
+        "entity": "Melanie's children",
+        "attribute": "emotion",
+        "value": "scared",
+        "event": "accident",
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie's children",
+        "attribute": "trait",
+        "value": "tough",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:8": [],
+    "D18:9": [
+      {
+        "entity": "Melanie",
+        "attribute": "goal",
+        "value": "be resilient",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Melanie's children",
+        "attribute": "effect_on_melanie",
+        "value": "give me the strength to keep going",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:10": [],
+    "D18:11": [
+      {
+        "entity": "Melanie",
+        "attribute": "motivation_source",
+        "value": "family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:12": [],
+    "D18:13": [],
+    "D18:14": [],
+    "D18:15": [],
+    "D18:16": [],
+    "D18:17": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "went on a trip with family",
+        "event": "family trip",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Melanie",
+        "attribute": "context",
+        "value": "after a road trip",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:18": [],
+    "D18:19": [
+      {
+        "entity": "Melanie",
+        "attribute": "preference",
+        "value": "loves camping trips with family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:20": [],
+    "D18:21": [
+      {
+        "entity": "Melanie",
+        "attribute": "activity",
+        "value": "bonds with family over stories, campfires, and nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:22": [],
+    "D18:23": [],
+    "D18:24": [],
+    "D19:1": [
+      {
+        "entity": "Caroline",
+        "attribute": "event",
+        "value": "passed adoption agency interviews",
+        "event": "passed adoption agency interviews",
+        "time_expression": "last Friday"
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "having a family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:2": [
+      {
+        "entity": "Melanie",
+        "attribute": "purchase_event",
+        "value": "bought figurines",
+        "event": "bought figurines",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D19:3": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "build own family and adopt children",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "belief",
+        "value": "adoption is a way of giving back and showing love and acceptance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:4": [],
+    "D19:5": [
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "create a safe and loving home for children",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "belief",
+        "value": "love and acceptance should be everyone's right",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:6": [],
+    "D19:7": [
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "ready to offer love and support to those who need it",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "past_experience",
+        "value": "finding self-acceptance was a long process",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:8": [],
+    "D19:9": [
+      {
+        "entity": "Caroline",
+        "attribute": "past_experience",
+        "value": "transitioning and acceptance were not easy",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "support_source",
+        "value": "friends, family, and role models",
+        "event": "received help from friends, family, and role models",
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "goal",
+        "value": "pass support to anyone who needs it",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "source_of_joy",
+        "value": "bringing others comfort and helping them grow",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:10": [],
+    "D19:11": [
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "grateful to share journey and help others",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:12": [],
+    "D19:13": [
+      {
+        "entity": "Caroline",
+        "attribute": "state",
+        "value": "appreciates support of close ones",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Caroline",
+        "attribute": "influence",
+        "value": "encouragement from close ones made her who she is",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:14": [],
+    "D19:15": [
+      {
+        "entity": "Caroline",
+        "attribute": "belief",
+        "value": "being yourself and living honestly is freeing",
+        "event": null,
+        "time_expression": null
+      }
+    ]
+  }
+}

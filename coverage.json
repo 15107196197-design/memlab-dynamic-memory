@@ -1,0 +1,29 @@
+{
+  "complete": false,
+  "conversations": {
+    "conv-26": {
+      "extracted_turns": 419,
+      "total_turns": 419
+    },
+    "conv-30": {
+      "extracted_turns": 369,
+      "total_turns": 369
+    },
+    "conv-41": {
+      "extracted_turns": 663,
+      "total_turns": 663
+    },
+    "conv-42": {
+      "extracted_turns": 629,
+      "total_turns": 629
+    },
+    "conv-43": {
+      "extracted_turns": 680,
+      "total_turns": 680
+    },
+    "conv-44": {
+      "extracted_turns": 420,
+      "total_turns": 675
+    }
+  }
+}

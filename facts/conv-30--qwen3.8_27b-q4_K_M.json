@@ -1,0 +1,2824 @@
+{
+  "sample": "conv-30",
+  "model": "qwen3.8:27b-q4_K_M",
+  "turns": {
+    "D1:1": [],
+    "D1:2": [
+      {
+        "entity": "Jon",
+        "attribute": "job_status",
+        "value": "lost job as a banker",
+        "event": "lost job",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "start own business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:3": [
+      {
+        "entity": "Gina",
+        "attribute": "job_status",
+        "value": "lost job at Door Dash",
+        "event": "lost job",
+        "time_expression": "this month"
+      }
+    ],
+    "D1:4": [
+      {
+        "entity": "Jon",
+        "attribute": "business_plan",
+        "value": "start a dance studio",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "passion",
+        "value": "dancing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:5": [],
+    "D1:6": [
+      {
+        "entity": "Jon",
+        "attribute": "interest_duration",
+        "value": "into dancing since childhood",
+        "event": null,
+        "time_expression": "since I was a kid"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "teach others the joy of dancing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:7": [
+      {
+        "entity": "Gina",
+        "attribute": "stress_relief_method",
+        "value": "dance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:8": [
+      {
+        "entity": "Jon",
+        "attribute": "favorite_dance_style",
+        "value": "contemporary",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:9": [
+      {
+        "entity": "Gina",
+        "attribute": "favorite_dance_style",
+        "value": "contemporary",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:10": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "go to a dance class with Gina",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:11": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "plan a dance session soon",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D1:12": [
+      {
+        "entity": "Jon",
+        "attribute": "proposed_event_time",
+        "value": "next Friday",
+        "event": "show moves to Gina",
+        "time_expression": "next Fri"
+      }
+    ],
+    "D1:13": [
+      {
+        "entity": "Gina",
+        "attribute": "agreed_event_time",
+        "value": "next Friday",
+        "event": "dance session with Jon",
+        "time_expression": "Next Friday"
+      }
+    ],
+    "D1:14": [],
+    "D1:15": [],
+    "D1:16": [
+      {
+        "entity": "Jon",
+        "attribute": "competition_result",
+        "value": "first place",
+        "event": "dance crew won local competition",
+        "time_expression": "last year"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "spread intensity with other people",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:17": [
+      {
+        "entity": "Gina",
+        "attribute": "past_activity",
+        "value": "competed in dance competitions and shows",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "competition_result",
+        "value": "first place",
+        "event": "team won regionals",
+        "time_expression": "at age fifteen"
+      }
+    ],
+    "D1:18": [],
+    "D1:19": [
+      {
+        "entity": "Gina",
+        "attribute": "dance_style",
+        "value": "contemporary",
+        "event": "performed piece 'Finding Freedom'",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "performance_piece",
+        "value": "Finding Freedom",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:20": [
+      {
+        "entity": "Jon",
+        "attribute": "ideal_studio_location",
+        "value": "by the water",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:21": [],
+    "D1:22": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "find an inspiring place like the one shown",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:23": [],
+    "D1:24": [
+      {
+        "entity": "Jon",
+        "attribute": "rehearsal_schedule",
+        "value": "after work",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "dance_styles",
+        "value": "contemporary, hip-hop",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "upcoming_event",
+        "value": "perform at nearby festival",
+        "event": "finishing choreography",
+        "time_expression": "next month"
+      }
+    ],
+    "D1:25": [],
+    "D1:26": [
+      {
+        "entity": "Jon",
+        "attribute": "festival_participation",
+        "value": "performing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:27": [],
+    "D1:28": [
+      {
+        "entity": "Jon",
+        "attribute": "role",
+        "value": "part of the group",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:1": [
+      {
+        "entity": "Gina",
+        "attribute": "business_activity",
+        "value": "launched ad campaign",
+        "event": "for clothing store",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "business_status",
+        "value": "owns clothing store",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:2": [],
+    "D2:3": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "seeing her vision happen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:4": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "finding the ideal spot for his dance studio",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "visited Paris",
+        "event": "visited Paris",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D2:5": [
+      {
+        "entity": "Gina",
+        "attribute": "travel_history",
+        "value": "visited Rome once",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:6": [
+      {
+        "entity": "Jon",
+        "attribute": "location_preference",
+        "value": "downtown",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "requirement",
+        "value": "dance floor with enough bounce for safety",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:7": [],
+    "D2:8": [
+      {
+        "entity": "Jon",
+        "attribute": "flooring_preference",
+        "value": "Marley flooring",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:9": [],
+    "D2:10": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make it work",
+        "event": "determined to make it work",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "excited and nerve-wracking",
+        "event": "looking for the right place and getting everything ready",
+        "time_expression": null
+      }
+    ],
+    "D2:11": [
+      {
+        "entity": "Gina",
+        "attribute": "advice",
+        "value": "take breaks and dance it out when you need to destress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:12": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make time to dance and vent",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:13": [],
+    "D2:14": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "chase our dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:15": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "keep going after our goals and making them happen",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:16": [],
+    "D3:1": [
+      {
+        "entity": "Jon",
+        "attribute": "passion",
+        "value": "dance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "open my dance studio",
+        "event": "searching for a place",
+        "time_expression": null
+      }
+    ],
+    "D3:2": [
+      {
+        "entity": "Gina",
+        "attribute": "business_activity",
+        "value": "emailed wholesalers",
+        "event": "one wholesaler replied yes",
+        "time_expression": "today"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "business_goal",
+        "value": "expand clothing store",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:3": [],
+    "D3:4": [
+      {
+        "entity": "Gina",
+        "attribute": "store_design_status",
+        "value": "designed the space",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:5": [],
+    "D3:6": [
+      {
+        "entity": "Gina",
+        "attribute": "store_decor",
+        "value": "chandelier",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:7": [],
+    "D3:8": [
+      {
+        "entity": "Gina",
+        "attribute": "business_goal",
+        "value": "create comfortable and inviting experience for customers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:9": [],
+    "D3:10": [
+      {
+        "entity": "Gina",
+        "attribute": "business_goal",
+        "value": "create special shopping experience for customers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:11": [],
+    "D3:12": [
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:13": [
+      {
+        "entity": "Jon",
+        "attribute": "attitude",
+        "value": "staying positive",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:14": [],
+    "D4:1": [],
+    "D4:2": [
+      {
+        "entity": "Gina",
+        "attribute": "store_status",
+        "value": "doing great",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:3": [
+      {
+        "entity": "Jon",
+        "attribute": "business_status",
+        "value": "putting in a lot of work",
+        "event": "working on business",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_obstacles",
+        "value": "facing obstacles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:4": [],
+    "D4:5": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "reach dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:6": [
+      {
+        "entity": "Gina",
+        "attribute": "support_stance",
+        "value": "full support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:7": [],
+    "D4:8": [],
+    "D4:9": [
+      {
+        "entity": "Jon",
+        "attribute": "business_task",
+        "value": "searching for a dance studio location",
+        "event": "searching for location",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_challenge",
+        "value": "searching has been tricky",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:10": [],
+    "D4:11": [
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "working on business and new dance routines",
+        "event": "working on business and routines",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "rehearsal_status",
+        "value": "rehearsing hard for an upcoming show",
+        "event": "rehearsing",
+        "time_expression": "upcoming"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "preference",
+        "value": "passionate about dancing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:12": [],
+    "D4:13": [
+      {
+        "entity": "Jon",
+        "attribute": "upcoming_event",
+        "value": "dance competition",
+        "event": "preparing for dance competition",
+        "time_expression": "next month"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event_location",
+        "value": "near me",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:14": [],
+    "D4:15": [],
+    "D4:16": [],
+    "D4:17": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "going for dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:18": [],
+    "D4:19": [],
+    "D5:1": [
+      {
+        "entity": "Gina",
+        "attribute": "store_inventory",
+        "value": "found a cool new fashion piece",
+        "event": "found a new fashion piece for store",
+        "time_expression": "null"
+      }
+    ],
+    "D5:2": [
+      {
+        "entity": "Jon",
+        "attribute": "performance_event",
+        "value": "had a performance at a festival",
+        "event": "performed at a festival",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "performance_feedback",
+        "value": "received compliments on dance moves",
+        "event": "received compliments from audience",
+        "time_expression": "null"
+      }
+    ],
+    "D5:3": [],
+    "D5:4": [
+      {
+        "entity": "Jon",
+        "attribute": "business_activity",
+        "value": "runs his own studio",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "studio_mission",
+        "value": "help dancers of all ages and levels express themselves",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D5:5": [
+      {
+        "entity": "Gina",
+        "attribute": "business_collaboration",
+        "value": "teamed up with a local artist for designs",
+        "event": "partnered with local artist",
+        "time_expression": "null"
+      }
+    ],
+    "D5:6": [],
+    "D5:7": [
+      {
+        "entity": "Gina",
+        "attribute": "design_inspiration",
+        "value": "got idea from a fashion magazine",
+        "event": "found design idea in magazine",
+        "time_expression": "null"
+      }
+    ],
+    "D5:8": [],
+    "D5:9": [],
+    "D5:10": [
+      {
+        "entity": "Jon",
+        "attribute": "previous_occupation",
+        "value": "banker",
+        "event": "left 9-5 job as banker",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "current_goal",
+        "value": "turn dancing passion into a business",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D5:11": [],
+    "D5:12": [],
+    "D5:13": [
+      {
+        "entity": "Gina",
+        "attribute": "tattoo",
+        "value": "has a tattoo of a quote",
+        "event": "got a tattoo",
+        "time_expression": "null"
+      }
+    ],
+    "D5:14": [],
+    "D5:15": [
+      {
+        "entity": "Gina",
+        "attribute": "tattoo_timing",
+        "value": "a few years ago",
+        "event": "got tattoo",
+        "time_expression": "a few years ago"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "tattoo_meaning",
+        "value": "freedom - dancing without worrying what people think",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "tattoo_purpose",
+        "value": "reminder to follow passions and express myself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:16": [
+      {
+        "entity": "Jon",
+        "attribute": "dance_perception",
+        "value": "escape to be myself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:17": [
+      {
+        "entity": "Jon",
+        "attribute": "studio_dedication",
+        "value": "dedicated",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:18": [
+      {
+        "entity": "Jon",
+        "attribute": "passion",
+        "value": "dance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep chasing after dreams",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep working hard to make it a success",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:19": [],
+    "D5:20": [
+      {
+        "entity": "Jon",
+        "attribute": "business_activity",
+        "value": "running my biz",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "passion",
+        "value": "dancing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:21": [],
+    "D5:22": [
+      {
+        "entity": "Jon",
+        "attribute": "venture",
+        "value": "dance studio",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "venture",
+        "value": "biz ventures",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not gonna give up on my dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:23": [],
+    "D6:1": [
+      {
+        "entity": "Jon",
+        "attribute": "activity_start",
+        "value": "hitting the gym",
+        "event": "started hitting the gym",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "gym_purpose",
+        "value": "stay on track with the venture",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:2": [
+      {
+        "entity": "Gina",
+        "attribute": "current_state",
+        "value": "having some tough times",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D6:3": [],
+    "D6:4": [
+      {
+        "entity": "Gina",
+        "attribute": "employment_status",
+        "value": "lost job at Door Dash",
+        "event": "lost job",
+        "time_expression": null
+      }
+    ],
+    "D6:5": [],
+    "D6:6": [
+      {
+        "entity": "Gina",
+        "attribute": "business_status",
+        "value": "online clothes store is open",
+        "event": "opened online clothes store",
+        "time_expression": "16 March, 2023"
+      }
+    ],
+    "D6:7": [],
+    "D6:8": [
+      {
+        "entity": "Gina",
+        "attribute": "interests",
+        "value": "fashion trends, unique pieces, dance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:9": [],
+    "D6:10": [],
+    "D6:11": [
+      {
+        "entity": "Jon",
+        "attribute": "employment_history",
+        "value": "lost job",
+        "event": "lost job",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_status",
+        "value": "starting business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:12": [
+      {
+        "entity": "Gina",
+        "attribute": "business_status",
+        "value": "running own business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:13": [],
+    "D6:14": [],
+    "D6:15": [],
+    "D6:16": [],
+    "D6:17": [],
+    "D6:18": [],
+    "D6:19": [],
+    "D7:1": [],
+    "D7:2": [
+      {
+        "entity": "Gina",
+        "attribute": "business_type",
+        "value": "online clothing store",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:3": [],
+    "D7:4": [
+      {
+        "entity": "Gina",
+        "attribute": "business_activity",
+        "value": "keeping up with fashion trends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:5": [],
+    "D7:6": [
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance studio business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:7": [
+      {
+        "entity": "Jon",
+        "attribute": "motivation_source",
+        "value": "seeing students succeed",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:8": [],
+    "D7:9": [],
+    "D7:10": [],
+    "D7:11": [],
+    "D7:12": [],
+    "D7:13": [],
+    "D7:14": [],
+    "D7:15": [],
+    "D7:16": [],
+    "D7:17": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep on believing in myself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:1": [
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "shut down bank account",
+        "event": "shut down bank account",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "reason",
+        "value": "needed to do it for my biz",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:2": [],
+    "D8:3": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "help my biz grow",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "staying positive and looking ahead",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:4": [
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "running new offers and promotions on online store",
+        "event": "running new offers and promotions",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "bring in new customers",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "state",
+        "value": "not giving up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:5": [],
+    "D8:6": [
+      {
+        "entity": "Gina",
+        "attribute": "preference",
+        "value": "Dance is my stress relief",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "preference",
+        "value": "fashion fuels my creativity",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "finding new trends for my store",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "keep growing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:7": [],
+    "D8:8": [
+      {
+        "entity": "Gina",
+        "attribute": "preference",
+        "value": "passionate about dance and fashion",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "show my creativity and share my love with others",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "add dance-inspired items to my store",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:9": [],
+    "D8:10": [
+      {
+        "entity": "Gina",
+        "attribute": "state",
+        "value": "customers love the new offers and promotions",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "state",
+        "value": "seeing more sales",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "state",
+        "value": "People seem to really like my designs",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "on the hunt for unique, trendy pieces",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "Growing my customer base",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:11": [],
+    "D8:12": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "working with some fashion bloggers and influencers",
+        "event": null,
+        "time_expression": "in the next few months"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "do more ads",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "building my customer base and making my store a top destination for fashion fans",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:13": [
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "expanding my dance studio's social media presence",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "offering workshops and classes to local schools and centers",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "hosting a dance competition",
+        "event": "hosting a dance competition",
+        "time_expression": "next month"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "seeing progress and the dancers are so excited",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:14": [],
+    "D8:15": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make plan work",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:16": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "join event and show support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:17": [
+      {
+        "entity": "Jon",
+        "attribute": "affiliation",
+        "value": "dance studio",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "event",
+        "attribute": "description",
+        "value": "performances and judging by dance studio and other schools",
+        "event": "event next month",
+        "time_expression": "next month"
+      }
+    ],
+    "D8:18": [
+      {
+        "entity": "Gina",
+        "attribute": "commitment",
+        "value": "attend the show",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:19": [],
+    "D8:20": [],
+    "D8:21": [
+      {
+        "entity": "Gina",
+        "attribute": "possession",
+        "value": "store",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:22": [],
+    "D8:23": [],
+    "D8:24": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "pursue goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:25": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not quit on dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:26": [],
+    "D9:1": [
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "turning love of dance into a business",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "activity",
+        "value": "spending time in studio",
+        "event": null,
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "role",
+        "value": "student",
+        "event": "learning with students",
+        "time_expression": null
+      }
+    ],
+    "D9:2": [],
+    "D9:3": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make studio work",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "past_event",
+        "value": "lost job",
+        "event": "job loss",
+        "time_expression": null
+      }
+    ],
+    "D9:4": [],
+    "D9:5": [
+      {
+        "entity": "Jon",
+        "attribute": "occupation",
+        "value": "dance instructor",
+        "event": "teaching students",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "preference",
+        "value": "dancing makes him happy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:6": [],
+    "D9:7": [
+      {
+        "entity": "Jon",
+        "attribute": "past_state",
+        "value": "scared of what people would think",
+        "event": null,
+        "time_expression": "used to"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "belief",
+        "value": "own happiness is the most important thing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:8": [
+      {
+        "entity": "Gina",
+        "attribute": "past_activity",
+        "value": "attended dance classes",
+        "event": null,
+        "time_expression": "used to"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "preference",
+        "value": "loved spending time in the studio",
+        "event": null,
+        "time_expression": "used to"
+      }
+    ],
+    "D9:9": [
+      {
+        "entity": "Jon",
+        "attribute": "past_activity",
+        "value": "took dance lessons with friends",
+        "event": null,
+        "time_expression": "when I was younger"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_status",
+        "value": "has his own studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:10": [
+      {
+        "entity": "Gina",
+        "attribute": "possession",
+        "value": "trophy from a dance contest",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:11": [],
+    "D9:12": [],
+    "D9:13": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep pushing and working hard",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:14": [],
+    "D10:1": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "went to a fair to show off his studio",
+        "event": "attended fair",
+        "time_expression": "Yesterday"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "outcome",
+        "value": "got some possible leads",
+        "event": "attended fair",
+        "time_expression": "Yesterday"
+      }
+    ],
+    "D10:2": [
+      {
+        "entity": "Gina",
+        "attribute": "business_status",
+        "value": "started an online clothing store",
+        "event": "started business",
+        "time_expression": "not so long ago"
+      }
+    ],
+    "D10:3": [],
+    "D10:4": [
+      {
+        "entity": "Gina",
+        "attribute": "past_event",
+        "value": "lost her job",
+        "event": "job loss",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "motivation",
+        "value": "wanted to take control of her own destiny",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:5": [
+      {
+        "entity": "Jon",
+        "attribute": "current_state",
+        "value": "having trouble with business project",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "staying motivated",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:6": [
+      {
+        "entity": "Gina",
+        "attribute": "motivation_strategy",
+        "value": "thinking of big goal and why doing it",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "support_source",
+        "value": "people who support her",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "coping_mechanism",
+        "value": "dancing",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:7": [
+      {
+        "entity": "Jon",
+        "attribute": "current_state",
+        "value": "feeling low on confidence",
+        "event": null,
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "role",
+        "value": "business owner",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:8": [
+      {
+        "entity": "Gina",
+        "attribute": "confidence_strategy",
+        "value": "reminding herself of successes and progress",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "support_system",
+        "value": "good support system",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:9": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "focus on success and why he started",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "preference",
+        "value": "loves his business",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:10": [
+      {
+        "entity": "Jon",
+        "attribute": "attribute",
+        "value": "talented and passionate about dance",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:11": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "reach his dreams",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:12": [],
+    "D10:13": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "push each other on this path",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D10:14": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "keep each other going",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D11:1": [
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "working on dance studio",
+        "event": null,
+        "time_expression": "Since we last spoke"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_status",
+        "value": "things are looking up",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D11:2": [
+      {
+        "entity": "Jon",
+        "attribute": "business_action",
+        "value": "opening own studio",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D11:3": [
+      {
+        "entity": "Jon",
+        "attribute": "past_event",
+        "value": "lost job",
+        "event": "Losing job",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance studio",
+        "event": "starting dream business",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "start own dance studio",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D11:4": [
+      {
+        "entity": "Jon",
+        "attribute": "attribute",
+        "value": "determination and drive",
+        "event": null,
+        "time_expression": "null"
+      }
+    ],
+    "D11:5": [
+      {
+        "entity": "Jon",
+        "attribute": "preference",
+        "value": "love for dance",
+        "event": null,
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "habit",
+        "value": "dance as stress-buster",
+        "event": null,
+        "time_expression": "since childhood"
+      }
+    ],
+    "D11:6": [
+      {
+        "entity": "Gina",
+        "attribute": "stress_relief_method",
+        "value": "dance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:7": [
+      {
+        "entity": "Jon",
+        "attribute": "stress_relief_method",
+        "value": "dancing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:8": [
+      {
+        "entity": "Gina",
+        "attribute": "life_preference",
+        "value": "cannot picture life without dance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:9": [
+      {
+        "entity": "Jon",
+        "attribute": "occupation",
+        "value": "owns a dance studio and teaches others",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:10": [],
+    "D11:11": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "create a place for people to dance and express themselves",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:12": [],
+    "D11:13": [
+      {
+        "entity": "Jon",
+        "attribute": "commitment",
+        "value": "keep Gina posted on dance studio progress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:14": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "had an interview for a design internship",
+        "event": "interview for design internship",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D11:15": [],
+    "D11:16": [
+      {
+        "entity": "Gina",
+        "attribute": "interview_outcome",
+        "value": "great",
+        "event": "design internship interview",
+        "time_expression": null
+      }
+    ],
+    "D11:17": [
+      {
+        "entity": "Jon",
+        "attribute": "activity",
+        "value": "practicing dance routines",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D11:18": [
+      {
+        "entity": "Gina",
+        "attribute": "request",
+        "value": "wants Jon to show her a routine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:19": [
+      {
+        "entity": "Jon",
+        "attribute": "commitment",
+        "value": "send Gina a video of a routine when she has time",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:20": [
+      {
+        "entity": "Gina",
+        "attribute": "commitment",
+        "value": "will watch Jon's routine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:21": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "send video to Gina",
+        "event": "expressing intent to send video",
+        "time_expression": "soon"
+      }
+    ],
+    "D11:22": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "see the video",
+        "event": "expressing anticipation",
+        "time_expression": null
+      }
+    ],
+    "D12:1": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "accepted for a fashion internship",
+        "event": "accepted for a fashion internship",
+        "time_expression": "just"
+      }
+    ],
+    "D12:2": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "accepted for a fashion internship",
+        "event": "accepted for a fashion internship",
+        "time_expression": null
+      }
+    ],
+    "D12:3": [
+      {
+        "entity": "Gina",
+        "attribute": "internship_type",
+        "value": "part-time",
+        "event": "accepted for a fashion internship",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "internship_department",
+        "value": "fashion department",
+        "event": "accepted for a fashion internship",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "internship_company_type",
+        "value": "international company",
+        "event": "accepted for a fashion internship",
+        "time_expression": null
+      }
+    ],
+    "D12:4": [],
+    "D12:5": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "learn as much as possible in fashion",
+        "event": "expressing intent to learn",
+        "time_expression": null
+      }
+    ],
+    "D12:6": [
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "reading \"The Lean Startup\"",
+        "event": "reading a book",
+        "time_expression": "currently"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "get tips for business from \"The Lean Startup\"",
+        "event": "hoping to gain business tips",
+        "time_expression": null
+      }
+    ],
+    "D12:7": [
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:8": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "build a focused and efficient business",
+        "event": "thinking about business strategy",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "adapt and tweak based on customer feedback",
+        "event": "planning to implement feedback loop",
+        "time_expression": null
+      }
+    ],
+    "D12:9": [
+      {
+        "entity": "Jon",
+        "attribute": "tool",
+        "value": "whiteboard",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:10": [
+      {
+        "entity": "Jon",
+        "attribute": "tool_usage",
+        "value": "whiteboard for tracking ideas and milestones",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:11": [],
+    "D12:12": [
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "wrapping up business plan",
+        "event": "working on business plan",
+        "time_expression": "currently"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "looking for investors",
+        "event": "seeking investment",
+        "time_expression": "currently"
+      }
+    ],
+    "D12:13": [],
+    "D12:14": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "staying hopeful while searching for investors",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:15": [],
+    "D12:16": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep on going and never quit",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:17": [],
+    "D12:18": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not let anything get him down",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:19": [],
+    "D13:1": [],
+    "D13:2": [],
+    "D13:3": [
+      {
+        "entity": "Jon",
+        "attribute": "activity",
+        "value": "prepping for his dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:4": [
+      {
+        "entity": "Gina",
+        "attribute": "artifact",
+        "value": "video presentation to teach how to style her fashion pieces",
+        "event": "developed a video presentation",
+        "time_expression": null
+      }
+    ],
+    "D13:5": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make the dance studio a place of support and encouragement for all dancers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:6": [
+      {
+        "entity": "Gina",
+        "attribute": "commitment",
+        "value": "send the presentation to Jon later",
+        "event": null,
+        "time_expression": "later"
+      }
+    ],
+    "D13:7": [
+      {
+        "entity": "Jon",
+        "attribute": "service_offered",
+        "value": "one-on-one mentoring and training",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:8": [
+      {
+        "entity": "Gina",
+        "attribute": "past_experience",
+        "value": "had a mentor when learning how to dance",
+        "event": null,
+        "time_expression": "when I was learning how to dance"
+      }
+    ],
+    "D13:9": [],
+    "D13:10": [],
+    "D13:11": [
+      {
+        "entity": "Jon",
+        "attribute": "tool_usage",
+        "value": "uses a system to stay organized and motivated",
+        "event": "describes current usage",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "tool_functionality",
+        "value": "sets goals, tracks achievements, helps find areas to improve",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:12": [],
+    "D13:13": [
+      {
+        "entity": "Jon",
+        "attribute": "tool_usage",
+        "value": "uses whiteboard to stay on track, visualize goals, and tokenize successes",
+        "event": "describes current usage",
+        "time_expression": null
+      }
+    ],
+    "D13:14": [],
+    "D13:15": [
+      {
+        "entity": "Jon",
+        "attribute": "tracking_method",
+        "value": "color-codes achievements",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:16": [],
+    "D13:17": [],
+    "D13:18": [],
+    "D13:19": [],
+    "D13:20": [],
+    "D13:21": [],
+    "D13:22": [],
+    "D13:23": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "will not give up and will keep pushing to make dreams happen",
+        "event": "expresses determination",
+        "time_expression": null
+      }
+    ],
+    "D14:1": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "was mentored by a business person",
+        "event": "received mentorship",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D14:2": [
+      {
+        "entity": "Gina",
+        "attribute": "current_project",
+        "value": "working on online store",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "growing customer base",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:3": [
+      {
+        "entity": "Jon",
+        "attribute": "current_activity",
+        "value": "doing promotion for business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:4": [],
+    "D14:5": [
+      {
+        "entity": "Jon",
+        "attribute": "marketing_action",
+        "value": "posted dance videos on social media",
+        "event": "started social media promotion",
+        "time_expression": null
+      }
+    ],
+    "D14:6": [],
+    "D14:7": [],
+    "D14:8": [
+      {
+        "entity": "Gina",
+        "attribute": "employment_status",
+        "value": "lost job",
+        "event": "job loss",
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "business_type",
+        "value": "online clothing store",
+        "event": "opened business",
+        "time_expression": null
+      }
+    ],
+    "D14:9": [],
+    "D14:10": [],
+    "D14:11": [],
+    "D14:12": [],
+    "D14:13": [],
+    "D14:14": [
+      {
+        "entity": "Gina",
+        "attribute": "past_activity",
+        "value": "dancing",
+        "event": "shared photo of dancing",
+        "time_expression": null
+      }
+    ],
+    "D14:15": [
+      {
+        "entity": "Jon",
+        "attribute": "preference",
+        "value": "loves performing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:16": [],
+    "D14:17": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not giving up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:18": [],
+    "D14:19": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not letting Gina down",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:20": [
+      {
+        "entity": "Jon",
+        "attribute": "attribute",
+        "value": "determination and passion for dance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:1": [
+      {
+        "entity": "Jon",
+        "attribute": "activity",
+        "value": "working on his business",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "took a short trip to Rome",
+        "event": "trip to Rome",
+        "time_expression": "last week"
+      }
+    ],
+    "D15:2": [],
+    "D15:3": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "opening a dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:4": [],
+    "D15:5": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "official opening night of dance studio",
+        "event": "studio opening",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:6": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "studio launch",
+        "event": "studio launch",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:7": [],
+    "D15:8": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "studio opening",
+        "event": "studio opening",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:9": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "studio opening night",
+        "event": "studio opening",
+        "time_expression": "Tomorrow"
+      }
+    ],
+    "D15:10": [
+      {
+        "entity": "Jon",
+        "attribute": "event",
+        "value": "studio opening",
+        "event": "studio opening",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:11": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "enjoying the moment with Gina",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:12": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "make memories with Jon",
+        "event": "planning for tomorrow",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:13": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make memories at the grand opening",
+        "event": "planning for tomorrow",
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:14": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "make memories at Jon's dance studio",
+        "event": "planning for tomorrow",
+        "time_expression": null
+      }
+    ],
+    "D15:15": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make cool memories",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:16": [
+      {
+        "entity": "Gina",
+        "attribute": "preference",
+        "value": "loves being around friends and having a great time",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "have fun at Jon's dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:17": [],
+    "D15:18": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "attend the grand opening",
+        "event": null,
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:19": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "attend the opening with Gina",
+        "event": null,
+        "time_expression": "Tomorrow"
+      }
+    ],
+    "D15:20": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "attend the event",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:21": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make tomorrow unforgettable with Gina",
+        "event": null,
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D15:22": [
+      {
+        "entity": "Gina",
+        "attribute": "goal",
+        "value": "meet Jon",
+        "event": null,
+        "time_expression": "tomorrow"
+      }
+    ],
+    "D16:1": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "acquired new unique pieces for her store",
+        "event": "acquiring inventory",
+        "time_expression": "since we talked"
+      }
+    ],
+    "D16:2": [],
+    "D16:3": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "made a limited edition line",
+        "event": "creating clothing line",
+        "time_expression": "last week"
+      }
+    ],
+    "D16:4": [],
+    "D16:5": [],
+    "D16:6": [
+      {
+        "entity": "Jon",
+        "attribute": "action_taken",
+        "value": "attended networking events",
+        "event": "chose to go to networking events",
+        "time_expression": "Yesterday"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "determined and focused",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:7": [],
+    "D16:8": [
+      {
+        "entity": "Jon",
+        "attribute": "employment_status",
+        "value": "lost job",
+        "event": "lost job",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "invest time in business",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:9": [],
+    "D16:10": [
+      {
+        "entity": "Jon",
+        "attribute": "action_taken",
+        "value": "writing plans down",
+        "event": "writing all plans down",
+        "time_expression": null
+      }
+    ],
+    "D16:11": [],
+    "D16:12": [
+      {
+        "entity": "Jon",
+        "attribute": "motivation_source",
+        "value": "seeing goals written down on paper",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "stay motivated and focused",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:13": [
+      {
+        "entity": "Gina",
+        "attribute": "advice",
+        "value": "keep persevering and working hard",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:14": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "never give up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:15": [
+      {
+        "entity": "Gina",
+        "attribute": "advice",
+        "value": "believe in yourself and keep going",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:16": [
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "feeling confident",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "not give up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:1": [
+      {
+        "entity": "Gina",
+        "attribute": "event",
+        "value": "noticed by fashion editors",
+        "event": "noticed by fashion editors",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "state",
+        "value": "feeling pressure to keep going up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:2": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "go full-time with biz idea",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "determined",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:3": [
+      {
+        "entity": "Gina",
+        "attribute": "advice",
+        "value": "keep going",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:4": [
+      {
+        "entity": "Jon",
+        "attribute": "past_event",
+        "value": "lost job",
+        "event": "job loss",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "pursue business dreams",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "learning marketing and analytics tools",
+        "event": "started learning tools",
+        "time_expression": "today"
+      }
+    ],
+    "D17:5": [],
+    "D17:6": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "guide and mentor aspiring dancers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:7": [
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:8": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "chase dream",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:9": [],
+    "D17:10": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "chase dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:11": [],
+    "D17:12": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make dreams come true",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:13": [],
+    "D17:14": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make it",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:15": [],
+    "D17:16": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "make dreams come true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Gina",
+        "attribute": "relationship",
+        "value": "friend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:17": [],
+    "D17:18": [],
+    "D17:19": [],
+    "D17:20": [],
+    "D17:21": [],
+    "D18:1": [
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "built a new website for customers to make orders",
+        "event": "built a new website",
+        "time_expression": "Last week"
+      }
+    ],
+    "D18:2": [
+      {
+        "entity": "Jon",
+        "attribute": "business_status",
+        "value": "on tenuous grounds",
+        "event": null,
+        "time_expression": "right now"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "employment",
+        "value": "got a temp job",
+        "event": "got a temp job",
+        "time_expression": null
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "look for investors",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:3": [],
+    "D18:4": [
+      {
+        "entity": "Jon",
+        "attribute": "state",
+        "value": "determined to make it work",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:5": [
+      {
+        "entity": "Gina",
+        "attribute": "business_challenge",
+        "value": "sourcing_trendy_pieces",
+        "event": "overcoming_sourcing_hurdle",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "advice",
+        "value": "reach_out_to_people_in_field",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D18:6": [
+      {
+        "entity": "Jon",
+        "attribute": "recent_activity",
+        "value": "networking",
+        "event": "null",
+        "time_expression": "Lately"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "outcome_of_networking",
+        "value": "got_good_stuff",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "action",
+        "value": "shared_picture",
+        "event": "shared_pic_from_last_networking_event",
+        "time_expression": "last networking event"
+      }
+    ],
+    "D18:7": [
+      {
+        "entity": "Gina",
+        "attribute": "opinion",
+        "value": "networking_pays_off",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "opinion",
+        "value": "connecting_with_like_minded_people_is_key",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D18:8": [
+      {
+        "entity": "Jon",
+        "attribute": "event_experience",
+        "value": "met_investors",
+        "event": "attended_networking_event",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event_experience",
+        "value": "got_good_advice",
+        "event": "attended_networking_event",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "event_impact",
+        "value": "motivated_to_pursue_goals",
+        "event": "attended_networking_event",
+        "time_expression": "null"
+      }
+    ],
+    "D18:9": [
+      {
+        "entity": "Gina",
+        "attribute": "action",
+        "value": "congratulated_Jon",
+        "event": "responded_to_Jon_success",
+        "time_expression": "null"
+      }
+    ],
+    "D18:10": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "spruce_up_biz_plan",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "tweak_pitch_to_investors",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "work_on_online_platform",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "business_type",
+        "value": "dance_studio",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D18:11": [
+      {
+        "entity": "Gina",
+        "attribute": "opinion",
+        "value": "online_platform_can_show_off_studio",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "opinion",
+        "value": "online_platform_can_get_investors",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Gina",
+        "attribute": "offer",
+        "value": "offer_help",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D18:12": [
+      {
+        "entity": "Jon",
+        "attribute": "need",
+        "value": "help_with_marketing_strategies",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "reach_target_audience",
+        "event": "null",
+        "time_expression": "null"
+      },
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "raise_awareness_for_dance_studio",
+        "event": "null",
+        "time_expression": "null"
+      }
+    ],
+    "D18:13": [
+      {
+        "entity": "Gina",
+        "attribute": "offered_service",
+        "value": "making content or managing social media accounts",
+        "event": "offered to help Jon with dance studio marketing",
+        "time_expression": null
+      }
+    ],
+    "D18:14": [
+      {
+        "entity": "Jon",
+        "attribute": "accepted_offer",
+        "value": "help with making content and managing social media",
+        "event": "accepted Gina's offer to help with social media",
+        "time_expression": null
+      }
+    ],
+    "D18:15": [
+      {
+        "entity": "Gina",
+        "attribute": "agreed_to_task",
+        "value": "create content and manage social media accounts",
+        "event": "agreed to create content and manage accounts for Jon",
+        "time_expression": null
+      }
+    ],
+    "D18:16": [],
+    "D18:17": [],
+    "D18:18": [],
+    "D18:19": [],
+    "D18:20": [],
+    "D18:21": [],
+    "D18:22": [],
+    "D19:1": [
+      {
+        "entity": "Jon",
+        "attribute": "activity",
+        "value": "rehearsing and working on business plans",
+        "event": "rehearsing and working on business plans",
+        "time_expression": "a few days"
+      }
+    ],
+    "D19:2": [],
+    "D19:3": [],
+    "D19:4": [
+      {
+        "entity": "Gina",
+        "attribute": "attributed_quote_to",
+        "value": "Shia Labeouf",
+        "event": "identified the source of the 'Just do it' quote",
+        "time_expression": null
+      }
+    ],
+    "D19:5": [],
+    "D19:6": [
+      {
+        "entity": "Gina",
+        "attribute": "attended_event",
+        "value": "dance class with a group of friends",
+        "event": "attended dance class",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D19:7": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "studio starts welcoming dancers of all ages and backgrounds",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:8": [],
+    "D19:9": [],
+    "D19:10": [],
+    "D19:11": [
+      {
+        "entity": "Jon",
+        "attribute": "goal",
+        "value": "keep going, whatever comes my way",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:12": [],
+    "D19:13": [],
+    "D19:14": []
+  }
+}

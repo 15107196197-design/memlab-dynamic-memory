@@ -1,0 +1,3875 @@
+{
+  "sample": "conv-41",
+  "model": "qwen3.8:27b-q4_K_M",
+  "turns": {
+    "D1:1": [],
+    "D1:2": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "family road trip",
+        "event": "returned from trip",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D1:3": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering at homeless shelter",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "aerial yoga",
+        "event": "started doing",
+        "time_expression": "Just started"
+      }
+    ],
+    "D1:4": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "kickboxing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:5": [],
+    "D1:6": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "get into local politics",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:7": [],
+    "D1:8": [
+      {
+        "entity": "John",
+        "attribute": "focus_area",
+        "value": "improving education",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "focus_area",
+        "value": "improving infrastructure",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:9": [],
+    "D1:10": [
+      {
+        "entity": "John",
+        "attribute": "background_experience",
+        "value": "saw lack of education and crumbling infrastructure in neighborhood",
+        "event": "growing up",
+        "time_expression": "Growing up"
+      },
+      {
+        "entity": "John",
+        "attribute": "opinion",
+        "value": "schools and infrastructure should be funded properly",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:11": [],
+    "D1:12": [
+      {
+        "entity": "school",
+        "attribute": "outcome_of_funding",
+        "value": "needed repairs and renovations",
+        "event": "enabled by funding",
+        "time_expression": null
+      }
+    ],
+    "D1:13": [],
+    "D1:14": [
+      {
+        "entity": "John",
+        "attribute": "plan",
+        "value": "chat with local leaders and organizations",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:15": [],
+    "D1:16": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "will follow up on previous advice",
+        "event": "commitment to action",
+        "time_expression": null
+      }
+    ],
+    "D2:1": [
+      {
+        "entity": "Maria",
+        "attribute": "action",
+        "value": "donated old car to homeless shelter",
+        "event": "donation",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "role",
+        "value": "volunteer at homeless shelter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:2": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "networking with people to get input",
+        "event": "networking",
+        "time_expression": "so far"
+      }
+    ],
+    "D2:3": [],
+    "D2:4": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "talked to someone who shared stories",
+        "event": "conversation",
+        "time_expression": "just"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make education better in our area",
+        "event": "motivation increase",
+        "time_expression": null
+      }
+    ],
+    "D2:5": [],
+    "D2:6": [
+      {
+        "entity": "John",
+        "attribute": "belief",
+        "value": "investing in future generations is key",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:7": [],
+    "D2:8": [],
+    "D2:9": [],
+    "D2:10": [
+      {
+        "entity": "John",
+        "attribute": "motivation_source",
+        "value": "family",
+        "event": "sharing family photo",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "family_relationship",
+        "value": "family is reason for not giving up",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:11": [],
+    "D2:12": [
+      {
+        "entity": "John",
+        "attribute": "family_role",
+        "value": "helps stay centered",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "passion_driver",
+        "value": "making a positive impact",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:13": [],
+    "D2:14": [
+      {
+        "entity": "John",
+        "attribute": "family_role",
+        "value": "rock in tough times",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "family_role",
+        "value": "cheers him on",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "value",
+        "value": "family time means a lot",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:15": [],
+    "D2:16": [
+      {
+        "entity": "John",
+        "attribute": "family_activities",
+        "value": "climbing, sliding, and playing games",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:17": [
+      {
+        "entity": "Maria",
+        "attribute": "family_size",
+        "value": "small",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "social_activities",
+        "value": "watch movies, hike, and have game nights",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "location_of_game_nights",
+        "value": "my place",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "priority",
+        "value": "quality connections",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:18": [],
+    "D2:19": [],
+    "D2:20": [
+      {
+        "entity": "John",
+        "attribute": "shared_media",
+        "value": "pic of us at dinner",
+        "event": "sharing a photo",
+        "time_expression": null
+      }
+    ],
+    "D2:21": [],
+    "D2:22": [],
+    "D2:23": [],
+    "D2:24": [
+      {
+        "entity": "John",
+        "attribute": "meal_prepared",
+        "value": "pizza",
+        "event": "making pizza with family",
+        "time_expression": null
+      }
+    ],
+    "D2:25": [
+      {
+        "entity": "Maria",
+        "attribute": "meal_prepared",
+        "value": "peach cobbler",
+        "event": "making peach cobbler",
+        "time_expression": "recently"
+      }
+    ],
+    "D2:26": [],
+    "D2:27": [],
+    "D2:28": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "taekwondo",
+        "event": "going to do taekwondo",
+        "time_expression": null
+      }
+    ],
+    "D3:1": [
+      {
+        "entity": "John",
+        "attribute": "group_membership",
+        "value": "service-focused online group",
+        "event": "joined a group",
+        "time_expression": "last week"
+      }
+    ],
+    "D3:2": [],
+    "D3:3": [
+      {
+        "entity": "John",
+        "attribute": "community_activity",
+        "value": "shares stories, advice, and encouragement with a group of people with the same passion for serving",
+        "event": "participating in a supportive community",
+        "time_expression": null
+      }
+    ],
+    "D3:4": [],
+    "D3:5": [
+      {
+        "entity": "John",
+        "attribute": "volunteer_activity",
+        "value": "gave out food and supplies at a homeless shelter",
+        "event": "volunteering at a homeless shelter",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "volunteer_activity",
+        "value": "organized a toy drive for kids in need",
+        "event": "organizing a toy drive",
+        "time_expression": null
+      }
+    ],
+    "D3:6": [],
+    "D3:7": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "help underserved communities get access to education, mentorship, job training, and resume building",
+        "event": "brainstorming future projects",
+        "time_expression": null
+      }
+    ],
+    "D3:8": [],
+    "D3:9": [],
+    "D3:10": [],
+    "D3:11": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "failed the military aptitude test",
+        "event": "taking the military aptitude test",
+        "time_expression": "recently"
+      }
+    ],
+    "D3:12": [],
+    "D3:13": [],
+    "D3:14": [
+      {
+        "entity": "Maria",
+        "attribute": "location_of_photo",
+        "value": "the beach",
+        "event": "taking a photo",
+        "time_expression": "last month"
+      }
+    ],
+    "D3:15": [
+      {
+        "entity": "John",
+        "attribute": "past_possession",
+        "value": "a film camera",
+        "event": "owning a film camera",
+        "time_expression": "as a kid"
+      }
+    ],
+    "D3:16": [],
+    "D3:17": [],
+    "D4:1": [
+      {
+        "entity": "Maria",
+        "attribute": "social_connection",
+        "value": "friends with a fellow volunteer",
+        "event": "became friends with a fellow volunteer",
+        "time_expression": "now"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "loves helping others",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:2": [
+      {
+        "entity": "John",
+        "attribute": "activity_status",
+        "value": "busy with work and family",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event_experience",
+        "value": "unexpected incident on way home",
+        "event": "had an unexpected incident on the way home",
+        "time_expression": "last week"
+      }
+    ],
+    "D4:3": [],
+    "D4:4": [],
+    "D4:5": [],
+    "D4:6": [
+      {
+        "entity": "John",
+        "attribute": "action_taken",
+        "value": "stayed calm and asked for assistance",
+        "event": "handled the situation and made it back safely",
+        "time_expression": null
+      }
+    ],
+    "D4:7": [],
+    "D4:8": [
+      {
+        "entity": "John",
+        "attribute": "emotional_state",
+        "value": "relieved and grateful",
+        "event": "made it through without incident",
+        "time_expression": null
+      }
+    ],
+    "D4:9": [],
+    "D4:10": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "likes to look at the sunset",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:11": [],
+    "D4:12": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "looking into local politics",
+        "event": "looking into local politics, talking to community leaders, and getting to know neighborhood needs",
+        "time_expression": "since we last talked"
+      },
+      {
+        "entity": "John",
+        "attribute": "emotional_state",
+        "value": "optimistic",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:13": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "taking notes about local politics",
+        "event": "taking notes about local politics in her notebook",
+        "time_expression": null
+      }
+    ],
+    "D4:14": [],
+    "D4:15": [],
+    "D4:16": [
+      {
+        "entity": "John",
+        "attribute": "upcoming_event",
+        "value": "community meeting",
+        "event": "attending community meeting",
+        "time_expression": "Next week"
+      },
+      {
+        "entity": "community meeting",
+        "attribute": "agenda",
+        "value": "education and infrastructure upgrades",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:17": [],
+    "D4:18": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "stick up for community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:19": [],
+    "D4:20": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make change in community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:21": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "bring positive changes to neighborhood",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:22": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "achieve great things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:23": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "tackle problems and build great community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:24": [
+      {
+        "entity": "John",
+        "attribute": "relationship",
+        "value": "friend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:25": [
+      {
+        "entity": "Maria",
+        "attribute": "relationship",
+        "value": "friend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:26": [
+      {
+        "entity": "John",
+        "attribute": "relationship",
+        "value": "friend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:1": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "attended community meeting",
+        "event": "attended community meeting",
+        "time_expression": "since we last spoke"
+      },
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "upset about state of education",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:2": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "fight for more money and resources for schools",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:3": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "fight for more money and resources for schools",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:4": [],
+    "D5:5": [
+      {
+        "entity": "John",
+        "attribute": "has_children",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:6": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteered_at_shelter",
+        "value": "true",
+        "event": "volunteered at a shelter during an event for kids",
+        "time_expression": "Last week"
+      }
+    ],
+    "D5:7": [],
+    "D5:8": [
+      {
+        "entity": "Maria",
+        "attribute": "has_aunt",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria's_aunt",
+        "attribute": "volunteered",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria's_aunt",
+        "attribute": "helped_family",
+        "value": "true",
+        "event": "helped Maria's family when they were struggling",
+        "time_expression": null
+      }
+    ],
+    "D5:9": [],
+    "D5:10": [
+      {
+        "entity": "Maria",
+        "attribute": "interacted_with_girl",
+        "value": "true",
+        "event": "sat with and talked to a little girl around 8 years old",
+        "time_expression": null
+      },
+      {
+        "entity": "little_girl",
+        "attribute": "age",
+        "value": "around 8",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "little_girl",
+        "attribute": "family_status",
+        "value": "no other family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:11": [],
+    "D5:12": [],
+    "D5:13": [
+      {
+        "entity": "John",
+        "attribute": "had_doll",
+        "value": "true",
+        "event": "had a little doll in childhood",
+        "time_expression": "childhood"
+      }
+    ],
+    "D5:14": [],
+    "D5:15": [],
+    "D5:16": [],
+    "D6:1": [
+      {
+        "entity": "Maria",
+        "attribute": "participated_in_charity_event",
+        "value": "true",
+        "event": "did a charity event",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D6:2": [],
+    "D6:3": [
+      {
+        "entity": "Maria",
+        "attribute": "experience",
+        "value": "served meals",
+        "event": "participated in a rewarding experience",
+        "time_expression": null
+      }
+    ],
+    "D6:4": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "serve country and community",
+        "event": "running for office",
+        "time_expression": null
+      }
+    ],
+    "D6:5": [
+      {
+        "entity": "Maria",
+        "attribute": "interaction",
+        "value": "conversed with David",
+        "event": "attended charity event",
+        "time_expression": null
+      },
+      {
+        "entity": "David",
+        "attribute": "circumstance",
+        "value": "hardship and difficult circumstances",
+        "event": "shared story with Maria",
+        "time_expression": null
+      }
+    ],
+    "D6:6": [],
+    "D6:7": [
+      {
+        "entity": "Maria",
+        "attribute": "action",
+        "value": "linked David with organization",
+        "event": "provided referral for housing and support",
+        "time_expression": null
+      }
+    ],
+    "D6:8": [],
+    "D6:9": [
+      {
+        "entity": "Maria",
+        "attribute": "past_experience",
+        "value": "money problems",
+        "event": "relied on help from auntie",
+        "time_expression": "When I was younger"
+      }
+    ],
+    "D6:10": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "helping with food drive",
+        "event": "started helping out",
+        "time_expression": "just started"
+      }
+    ],
+    "D6:11": [],
+    "D6:12": [
+      {
+        "entity": "John",
+        "attribute": "motivation",
+        "value": "effect of unemployment on neighbors",
+        "event": "decided to act",
+        "time_expression": null
+      }
+    ],
+    "D6:13": [],
+    "D6:14": [
+      {
+        "entity": "John",
+        "attribute": "initiative_reason",
+        "value": "unemployment in community",
+        "event": "started initiative",
+        "time_expression": null
+      }
+    ],
+    "D6:15": [],
+    "D6:16": [
+      {
+        "entity": "John",
+        "attribute": "event_status",
+        "value": "overwhelmed by response and volunteers",
+        "event": "held recent event",
+        "time_expression": "recent"
+      }
+    ],
+    "D6:17": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "lend a hand with networking or helping out",
+        "event": "expressed desire to assist",
+        "time_expression": "future events"
+      }
+    ],
+    "D6:18": [],
+    "D6:19": [],
+    "D6:20": [],
+    "D6:21": [],
+    "D6:22": [],
+    "D7:1": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "took a creative writing class",
+        "event": "took a creative writing class",
+        "time_expression": "recently"
+      }
+    ],
+    "D7:2": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "running for office again",
+        "event": "running for office again",
+        "time_expression": null
+      }
+    ],
+    "D7:3": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering at a homeless shelter",
+        "event": "volunteering at a homeless shelter",
+        "time_expression": null
+      }
+    ],
+    "D7:4": [
+      {
+        "entity": "John",
+        "attribute": "motivation",
+        "value": "saw the impact he could make in the community through politics",
+        "event": null,
+        "time_expression": "After my last run"
+      }
+    ],
+    "D7:5": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering",
+        "event": "volunteering",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "met Jean",
+        "event": "met Jean",
+        "time_expression": "yesterday"
+      },
+      {
+        "entity": "Jean",
+        "attribute": "state",
+        "value": "optimistic and resilient",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:6": [],
+    "D7:7": [
+      {
+        "entity": "Jean",
+        "attribute": "event",
+        "value": "going through a divorce",
+        "event": "going through a divorce",
+        "time_expression": null
+      },
+      {
+        "entity": "Jean",
+        "attribute": "event",
+        "value": "losing her job",
+        "event": "losing her job",
+        "time_expression": null
+      },
+      {
+        "entity": "Jean",
+        "attribute": "state",
+        "value": "homeless",
+        "event": "ending up homeless",
+        "time_expression": null
+      }
+    ],
+    "D7:8": [],
+    "D7:9": [],
+    "D7:10": [],
+    "D7:11": [],
+    "D7:12": [],
+    "D7:13": [],
+    "D7:14": [],
+    "D7:15": [],
+    "D7:16": [
+      {
+        "entity": "Rob",
+        "attribute": "relationship_to_john",
+        "value": "colleague",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "upcoming_event",
+        "value": "beginner's yoga class",
+        "event": "invited by Rob",
+        "time_expression": "nothing too soon"
+      }
+    ],
+    "D7:17": [],
+    "D8:1": [
+      {
+        "entity": "Maria's grandma",
+        "attribute": "status",
+        "value": "deceased",
+        "event": "passed away",
+        "time_expression": "Last week"
+      }
+    ],
+    "D8:2": [
+      {
+        "entity": "John",
+        "attribute": "recent_activity",
+        "value": "had a picnic",
+        "event": "picnic with wife and kids",
+        "time_expression": null
+      }
+    ],
+    "D8:3": [],
+    "D8:4": [
+      {
+        "entity": "Kyle",
+        "attribute": "age",
+        "value": "one-year-old",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Kyle",
+        "attribute": "relationship_to_john",
+        "value": "son",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:5": [],
+    "D8:6": [],
+    "D8:7": [],
+    "D8:8": [
+      {
+        "entity": "John",
+        "attribute": "routine_activity",
+        "value": "goes to the park with kid",
+        "event": null,
+        "time_expression": "a few times a week"
+      },
+      {
+        "entity": "John",
+        "attribute": "recent_activity",
+        "value": "went to the park",
+        "event": "family outing",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D8:9": [],
+    "D8:10": [
+      {
+        "entity": "John",
+        "attribute": "activity_preference",
+        "value": "coming up with activities for family to enjoy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:11": [],
+    "D8:12": [
+      {
+        "entity": "John",
+        "attribute": "activity_examples",
+        "value": "walk or picnic in the park, finding events in town and beyond",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "family_activity",
+        "value": "attended a violin concert",
+        "event": "attended a violin concert",
+        "time_expression": "last week"
+      }
+    ],
+    "D8:13": [
+      {
+        "entity": "Maria",
+        "attribute": "past_experience",
+        "value": "did activities with siblings",
+        "event": "did activities with siblings",
+        "time_expression": "when I was young"
+      }
+    ],
+    "D8:14": [],
+    "D8:15": [
+      {
+        "entity": "Maria",
+        "attribute": "travel_history",
+        "value": "trip to England",
+        "event": "traveled to England",
+        "time_expression": "a few years ago"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "creative_output",
+        "value": "made a painting",
+        "event": "made a painting",
+        "time_expression": null
+      }
+    ],
+    "D8:16": [],
+    "D8:17": [
+      {
+        "entity": "Maria",
+        "attribute": "travel_location",
+        "value": "London",
+        "event": "traveled to London",
+        "time_expression": null
+      }
+    ],
+    "D8:18": [
+      {
+        "entity": "John",
+        "attribute": "test_result",
+        "value": "great results on aptitude test",
+        "event": "retook the aptitude test",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "serving his country",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:19": [],
+    "D8:20": [
+      {
+        "entity": "John",
+        "attribute": "social_support",
+        "value": "family and friends are supportive",
+        "event": "chatted with family and friends",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "volunteer",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:21": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteer_role",
+        "value": "volunteering at homeless shelter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:22": [],
+    "D8:23": [
+      {
+        "entity": "Maria",
+        "attribute": "methodology",
+        "value": "listening and showing compassion to build trust",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:24": [],
+    "D8:25": [],
+    "D8:26": [],
+    "D9:1": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "taking a poetry class",
+        "event": "enrolled in poetry class",
+        "time_expression": "lately"
+      }
+    ],
+    "D9:2": [],
+    "D9:3": [],
+    "D9:4": [
+      {
+        "entity": "John",
+        "attribute": "education_status",
+        "value": "graduated",
+        "event": "graduated",
+        "time_expression": "last week"
+      }
+    ],
+    "D9:5": [],
+    "D9:6": [
+      {
+        "entity": "John",
+        "attribute": "career_goal",
+        "value": "going into policymaking",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "motivation",
+        "value": "passion for making a positive impact",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:7": [],
+    "D9:8": [
+      {
+        "entity": "John",
+        "attribute": "interest_area",
+        "value": "improving education and infrastructure",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:9": [],
+    "D9:10": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "attending community meetings and getting involved in community",
+        "event": "participated in community activities",
+        "time_expression": null
+      }
+    ],
+    "D9:11": [],
+    "D9:12": [],
+    "D9:13": [],
+    "D9:14": [],
+    "D9:15": [],
+    "D9:16": [],
+    "D9:17": [
+      {
+        "entity": "Maria and John",
+        "attribute": "past_activity",
+        "value": "volunteered together",
+        "event": "volunteering",
+        "time_expression": "last year"
+      }
+    ],
+    "D9:18": [],
+    "D10:1": [
+      {
+        "entity": "John",
+        "attribute": "activity_started",
+        "value": "weekend yoga class",
+        "event": "started yoga class",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "activity_context",
+        "value": "with a colleague",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:2": [],
+    "D10:3": [
+      {
+        "entity": "yoga instructor",
+        "attribute": "teaching_style",
+        "value": "ensures proper poses and encourages listening to bodies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "yoga instructor",
+        "attribute": "environment_created",
+        "value": "relaxed and welcoming",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:4": [],
+    "D10:5": [
+      {
+        "entity": "John's yoga class",
+        "attribute": "level",
+        "value": "beginner",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John's yoga class",
+        "attribute": "focus",
+        "value": "fundamentals like poses and breathing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:6": [],
+    "D10:7": [],
+    "D10:8": [],
+    "D10:9": [
+      {
+        "entity": "John",
+        "attribute": "routine_status",
+        "value": "yoga is part of daily routine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:10": [
+      {
+        "entity": "Maria",
+        "attribute": "event_participation",
+        "value": "participated in a 5K charity run for a homeless shelter",
+        "event": "participated in a 5K charity run",
+        "time_expression": "Last weekend"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "passionate about charity work",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:11": [],
+    "D10:12": [
+      {
+        "entity": "Maria",
+        "attribute": "action",
+        "value": "shared a picture from the event",
+        "event": "shared a picture",
+        "time_expression": null
+      }
+    ],
+    "D10:13": [
+      {
+        "entity": "John",
+        "attribute": "event_participation",
+        "value": "volunteered at a career fair at a local school",
+        "event": "volunteered at a career fair",
+        "time_expression": "Last weekend"
+      }
+    ],
+    "D10:14": [],
+    "D10:15": [
+      {
+        "entity": "sign",
+        "attribute": "text_content",
+        "value": "\"Always look on the bright side of life\"",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:16": [],
+    "D10:17": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep pushing for the kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:18": [],
+    "D11:1": [
+      {
+        "entity": "John",
+        "attribute": "event_occurrence",
+        "value": "car broke down on the way to work",
+        "event": "car broke down",
+        "time_expression": "last Fri"
+      },
+      {
+        "entity": "John",
+        "attribute": "financial_state",
+        "value": "car repair is putting a strain on his wallet",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:2": [],
+    "D11:3": [
+      {
+        "entity": "John",
+        "attribute": "past_event",
+        "value": "took a road trip",
+        "event": "took a road trip",
+        "time_expression": "last year"
+      }
+    ],
+    "D11:4": [],
+    "D11:5": [
+      {
+        "entity": "John",
+        "attribute": "travel_destination",
+        "value": "explored the coast in the Pacific Northwest and visited national parks",
+        "event": "explored the coast and national parks",
+        "time_expression": "last year"
+      }
+    ],
+    "D11:6": [],
+    "D11:7": [],
+    "D11:8": [],
+    "D11:9": [],
+    "D11:10": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteer_activity",
+        "value": "gave talks at homeless shelter",
+        "event": "gave talks at homeless shelter",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "purchase",
+        "value": "cross necklace",
+        "event": "bought cross necklace",
+        "time_expression": null
+      }
+    ],
+    "D11:11": [],
+    "D11:12": [],
+    "D11:13": [],
+    "D11:14": [],
+    "D11:15": [],
+    "D11:16": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "helped organize meal for shelter residents",
+        "event": "organized meal for shelter residents",
+        "time_expression": null
+      }
+    ],
+    "D11:17": [],
+    "D11:18": [],
+    "D11:19": [],
+    "D11:20": [],
+    "D11:21": [],
+    "D12:1": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "blogging about politics and the government",
+        "event": "started blogging",
+        "time_expression": "Since we chatted last"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "making a real impact",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "better education and infrastructure",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:2": [
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "education and infrastructure are key to community growth",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:3": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "researching policies and writing about thoughts and ideas",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "raise awareness and start conversations to create positive change",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:4": [],
+    "D12:5": [
+      {
+        "entity": "John",
+        "attribute": "focus_area",
+        "value": "education reform and infrastructure development",
+        "event": null,
+        "time_expression": "Recently"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "get conversations going and get people involved by sharing ideas and taking action",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:6": [],
+    "D12:7": [
+      {
+        "entity": "John",
+        "attribute": "status",
+        "value": "received good feedback on blog posts",
+        "event": "received feedback",
+        "time_expression": "so far"
+      }
+    ],
+    "D12:8": [],
+    "D12:9": [
+      {
+        "entity": "John",
+        "attribute": "event_participation",
+        "value": "went to a convention with colleagues",
+        "event": "attended convention",
+        "time_expression": "last month"
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "using tech for good in community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:10": [],
+    "D12:11": [
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "felt awesome talking with people stoked on tech for change",
+        "event": "talked with group",
+        "time_expression": null
+      }
+    ],
+    "D12:12": [],
+    "D12:13": [
+      {
+        "entity": "John",
+        "attribute": "experience",
+        "value": "brainstormed together and stayed motivated",
+        "event": "attended convention",
+        "time_expression": null
+      }
+    ],
+    "D12:14": [],
+    "D12:15": [
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "inspired to make a bigger difference",
+        "event": "interacted with motivated people",
+        "time_expression": null
+      }
+    ],
+    "D12:16": [],
+    "D12:17": [
+      {
+        "entity": "John",
+        "attribute": "planned_trip_destination",
+        "value": "East Coast",
+        "event": "planning a trip",
+        "time_expression": null
+      }
+    ],
+    "D12:18": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteering_location",
+        "value": "homeless shelter",
+        "event": "volunteering",
+        "time_expression": null
+      }
+    ],
+    "D12:19": [],
+    "D12:20": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteering_experience",
+        "value": "rewarding and tough",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:21": [],
+    "D12:22": [],
+    "D12:23": [],
+    "D13:1": [],
+    "D13:2": [],
+    "D13:3": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "going to boot camps with family",
+        "event": "started going to boot camps",
+        "time_expression": "last month"
+      }
+    ],
+    "D13:4": [],
+    "D13:5": [
+      {
+        "entity": "John",
+        "attribute": "fitness_change",
+        "value": "more energy, gains in strength and endurance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John's kids",
+        "attribute": "attitude_toward_activity",
+        "value": "excited about staying active",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:6": [],
+    "D13:7": [
+      {
+        "entity": "John",
+        "attribute": "workout_frequency",
+        "value": "three times a week",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:8": [
+      {
+        "entity": "John",
+        "attribute": "family_behavior",
+        "value": "staying consistent and motivated to create healthy habits",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:9": [
+      {
+        "entity": "John",
+        "attribute": "family_participation",
+        "value": "all in it together",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:10": [],
+    "D13:11": [
+      {
+        "entity": "John",
+        "attribute": "family_goal",
+        "value": "keep pushing each other and staying motivated",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:12": [
+      {
+        "entity": "Maria",
+        "attribute": "family_size",
+        "value": "small",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "family_reliance",
+        "value": "relies on them for strength during tough times",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:13": [
+      {
+        "entity": "John",
+        "attribute": "family_priority",
+        "value": "most important thing",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "family_role",
+        "value": "biggest support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:14": [],
+    "D13:15": [
+      {
+        "entity": "John",
+        "attribute": "family_activity",
+        "value": "helping and supporting each other during boot camp",
+        "event": "cheering each other on during workouts and providing emotional support",
+        "time_expression": null
+      }
+    ],
+    "D13:16": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "made dinner with mom",
+        "event": "made dinner together",
+        "time_expression": "last night"
+      }
+    ],
+    "D13:17": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "made apple pie for the kids",
+        "event": "made apple pie",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D13:18": [
+      {
+        "entity": "Maria",
+        "attribute": "dinner_items",
+        "value": "salads, sandwiches, and homemade desserts",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "favorite_food",
+        "value": "banana split sundae",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:19": [],
+    "D13:20": [
+      {
+        "entity": "Maria",
+        "attribute": "self_care_activities",
+        "value": "exercise, music, and spending time with loved ones",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:21": [],
+    "D13:22": [
+      {
+        "entity": "Maria",
+        "attribute": "learning_experience",
+        "value": "learned that taking care of yourself helps be strong for life's tough times the hard way",
+        "event": null,
+        "time_expression": "last year"
+      }
+    ],
+    "D13:23": [],
+    "D13:24": [
+      {
+        "entity": "Maria",
+        "attribute": "travel_event",
+        "value": "solo trip",
+        "event": "took a solo trip",
+        "time_expression": "Last year"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "photo_location",
+        "value": "Spain",
+        "event": "took a picture",
+        "time_expression": "Last year"
+      }
+    ],
+    "D13:25": [],
+    "D13:26": [],
+    "D13:27": [],
+    "D13:28": [],
+    "D13:29": [],
+    "D13:30": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "surfing",
+        "event": "tried surfing for the first time",
+        "time_expression": null
+      }
+    ],
+    "D13:31": [],
+    "D13:32": [],
+    "D13:33": [],
+    "D13:34": [],
+    "D13:35": [],
+    "D13:36": [],
+    "D13:37": [],
+    "D14:1": [
+      {
+        "entity": "John",
+        "attribute": "political_action",
+        "value": "decided to run for office again",
+        "event": "decision to run for office",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "past_election_history",
+        "value": "not successful before",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make a difference in my community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:2": [
+      {
+        "entity": "Maria",
+        "attribute": "support_stance",
+        "value": "100% behind John",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:3": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make a difference",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:4": [],
+    "D14:5": [],
+    "D14:6": [],
+    "D14:7": [],
+    "D14:8": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "involved in charity work",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D14:9": [],
+    "D14:10": [
+      {
+        "entity": "Maria",
+        "attribute": "membership_action",
+        "value": "joined a nearby church",
+        "event": "joined church",
+        "time_expression": "Just yesterday"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "feel closer to a community and my faith",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:11": [],
+    "D14:12": [
+      {
+        "entity": "Maria",
+        "attribute": "life_state",
+        "value": "a bit rough",
+        "event": null,
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "reflect and find some balance",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:13": [
+      {
+        "entity": "John's area",
+        "attribute": "event",
+        "value": "power cut",
+        "event": "power cut occurred",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "upgrading infrastructure for stable services",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:14": [],
+    "D14:15": [
+      {
+        "entity": "John's area roadways",
+        "attribute": "condition",
+        "value": "full of potholes",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "improvements to roadways",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:16": [],
+    "D14:17": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "start a community project regarding infrastructure",
+        "event": "planning to start project",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "work with Maria to get neighborhood backing",
+        "event": "proposing collaboration",
+        "time_expression": null
+      }
+    ],
+    "D14:18": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "work with John to get community involved",
+        "event": "agreeing to collaborate",
+        "time_expression": null
+      }
+    ],
+    "D14:19": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "fight for better housing and living conditions in neighborhood",
+        "event": "expressing intent to advocate",
+        "time_expression": null
+      }
+    ],
+    "D14:20": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "get community on board to fight for better living standards",
+        "event": "agreeing to advocate",
+        "time_expression": null
+      }
+    ],
+    "D14:21": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "improve West County",
+        "event": "expressing intent to improve area",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "location",
+        "value": "West County",
+        "event": "identifying old area",
+        "time_expression": null
+      }
+    ],
+    "D14:22": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "create a safe and bustling environment for community",
+        "event": "expressing intent to improve environment",
+        "time_expression": null
+      }
+    ],
+    "D14:23": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make neighborhood something to be proud of",
+        "event": "expressing intent to improve neighborhood",
+        "time_expression": null
+      }
+    ],
+    "D15:1": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "tackling a project to support military veterans",
+        "event": "working on veteran support project",
+        "time_expression": "Been real busy"
+      },
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "trying to get a petition going",
+        "event": "initiating petition",
+        "time_expression": null
+      }
+    ],
+    "D15:2": [],
+    "D15:3": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "passionate about veterans and their rights",
+        "event": "stating personal passion",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "realized how much veterans have done for us",
+        "event": "reflection on veterans' contributions",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "show appreciation to veterans",
+        "event": "motivation for project",
+        "time_expression": null
+      }
+    ],
+    "D15:4": [],
+    "D15:5": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "let veterans know their hard work is appreciated",
+        "event": "stating purpose of project",
+        "time_expression": null
+      }
+    ],
+    "D15:6": [],
+    "D15:7": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "help make veterans' lives better",
+        "event": "stating intent to improve veteran lives",
+        "time_expression": null
+      }
+    ],
+    "D15:8": [],
+    "D15:9": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "support and value veterans in the community",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:10": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "help with John's veteran support initiative",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:11": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "met with veterans who are excited about the initiative",
+        "event": "meeting with veterans",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D15:12": [],
+    "D15:13": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "held a small party for veterans to share stories",
+        "event": "veteran party",
+        "time_expression": null
+      }
+    ],
+    "D15:14": [],
+    "D15:15": [
+      {
+        "entity": "John",
+        "attribute": "realization",
+        "value": "importance of helping veterans",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:16": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "support John's project",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:17": [],
+    "D15:18": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "plan a ring-toss tournament for homeless shelter fundraiser",
+        "event": null,
+        "time_expression": "later this month"
+      }
+    ],
+    "D15:19": [],
+    "D16:1": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "working on a petition",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "went on a hiking trip with workmates",
+        "event": "hiking trip",
+        "time_expression": null
+      }
+    ],
+    "D16:2": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "raise money for basic needs for the homeless",
+        "event": "fundraiser",
+        "time_expression": "next week"
+      }
+    ],
+    "D16:3": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "help with Maria's fundraiser",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:4": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "spread the word about the chili cook-off at the fundraiser",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:5": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "spread the word about the chili cook-off at the fundraiser",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:6": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "find volunteers for the event",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:7": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "ask around to see if anyone he knows wants to help volunteer",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D16:8": [],
+    "D16:9": [],
+    "D16:10": [],
+    "D16:11": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "shared a picture of his family at the beach",
+        "event": "sharing photo",
+        "time_expression": null
+      }
+    ],
+    "D16:12": [],
+    "D16:13": [],
+    "D16:14": [],
+    "D16:15": [],
+    "D16:16": [],
+    "D16:17": [],
+    "D16:18": [],
+    "D16:19": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "making a positive impact",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:1": [
+      {
+        "entity": "Max",
+        "attribute": "status",
+        "value": "deceased",
+        "event": "John and family said goodbye to Max",
+        "time_expression": "lately"
+      },
+      {
+        "entity": "Max",
+        "attribute": "duration_in_family",
+        "value": "10 years",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:2": [],
+    "D17:3": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "sad",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:4": [],
+    "D17:5": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make progress to honor memories of loved ones",
+        "event": null,
+        "time_expression": "in the coming weeks"
+      }
+    ],
+    "D17:6": [
+      {
+        "entity": "Max",
+        "attribute": "location_in_photo",
+        "value": "backyard",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:7": [
+      {
+        "entity": "Max",
+        "attribute": "trait",
+        "value": "brought joy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:8": [],
+    "D17:9": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "teach kids about unconditional love and loyalty",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:10": [],
+    "D17:11": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "adopt a rescue dog",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:12": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering at a local dog shelter",
+        "event": "started volunteering",
+        "time_expression": "once a month"
+      }
+    ],
+    "D17:13": [],
+    "D17:14": [],
+    "D17:15": [],
+    "D17:16": [],
+    "D18:1": [
+      {
+        "entity": "John",
+        "attribute": "pet_loss",
+        "value": "lost a pet named Max",
+        "event": "loss of pet",
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "went camping with friends from church",
+        "event": "camping trip",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D18:2": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "went on a mountaineering trip with workmates",
+        "event": "mountaineering trip",
+        "time_expression": "last week"
+      }
+    ],
+    "D18:3": [
+      {
+        "entity": "Maria",
+        "attribute": "past_activity",
+        "value": "went on a road trip to Oregon with family",
+        "event": "road trip",
+        "time_expression": "When I was younger"
+      }
+    ],
+    "D18:4": [
+      {
+        "entity": "John",
+        "attribute": "trip_outcome",
+        "value": "reached the summit",
+        "event": "mountaineering trip",
+        "time_expression": null
+      }
+    ],
+    "D18:5": [],
+    "D18:6": [],
+    "D18:7": [],
+    "D18:8": [],
+    "D18:9": [],
+    "D18:10": [],
+    "D18:11": [
+      {
+        "entity": "Maria",
+        "attribute": "experience",
+        "value": "has gone camping a few times",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "experience",
+        "value": "has never tried mountain climbing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:12": [
+      {
+        "entity": "John",
+        "attribute": "experience",
+        "value": "has gone camping plenty of times",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:13": [],
+    "D18:14": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "appreciates small things and finds peace in nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:15": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "enjoys aerial yoga",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "finds peace with a moment to herself and favorite tunes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:16": [],
+    "D18:17": [
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "enjoys upside-down yoga poses",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:18": [],
+    "D18:19": [
+      {
+        "entity": "Maria",
+        "attribute": "preference",
+        "value": "loves the freedom and connection brought by aerial yoga",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:20": [],
+    "D18:21": [],
+    "D18:22": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "spent a day at the park with family",
+        "event": "family outing at the park",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "family_status",
+        "value": "has kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:23": [],
+    "D19:1": [
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "joined a gym",
+        "event": "joined a gym",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "state",
+        "value": "sticking to workout routine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:2": [],
+    "D19:3": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "get stronger and improve endurance",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "trying kundalini yoga",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:4": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "trying out different workout regimes",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "push limits via rock climbing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:5": [
+      {
+        "entity": "Maria",
+        "attribute": "experience",
+        "value": "has not tried rock climbing",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:6": [
+      {
+        "entity": "John",
+        "attribute": "career_event",
+        "value": "got promoted at work",
+        "event": "promotion",
+        "time_expression": "since we last spoke"
+      }
+    ],
+    "D19:7": [],
+    "D19:8": [
+      {
+        "entity": "John",
+        "attribute": "job_title",
+        "value": "assistant manager",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:9": [],
+    "D19:10": [
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "a trophy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:11": [],
+    "D19:12": [
+      {
+        "entity": "John",
+        "attribute": "challenge_faced",
+        "value": "self-doubt",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "support_source",
+        "value": "support at home",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:13": [],
+    "D19:14": [],
+    "D19:15": [],
+    "D19:16": [
+      {
+        "entity": "John",
+        "attribute": "family_involvement",
+        "value": "family on this journey with me",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:17": [],
+    "D19:18": [
+      {
+        "entity": "John",
+        "attribute": "work_schedule",
+        "value": "usually work during regular work hours",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "work_location_habit",
+        "value": "sometimes bring work home",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:19": [],
+    "D19:20": [
+      {
+        "entity": "John",
+        "attribute": "time_management_strategy",
+        "value": "try to organize my time",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:21": [],
+    "D19:22": [
+      {
+        "entity": "John",
+        "attribute": "past_event",
+        "value": "took a vacation to California",
+        "event": "vacation to California",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "past_event_detail",
+        "value": "saw a gorgeous sunset and strolled the shore",
+        "event": "vacation to California",
+        "time_expression": null
+      }
+    ],
+    "D19:23": [
+      {
+        "entity": "Maria",
+        "attribute": "past_event",
+        "value": "took a vacation in Florida",
+        "event": "vacation in Florida",
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "past_event_detail",
+        "value": "sat with family and felt gratitude",
+        "event": "vacation in Florida",
+        "time_expression": null
+      }
+    ],
+    "D19:24": [],
+    "D19:25": [],
+    "D19:26": [],
+    "D20:1": [
+      {
+        "entity": "Maria",
+        "attribute": "current_state",
+        "value": "struggling",
+        "event": null,
+        "time_expression": "since then"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "current_action",
+        "value": "focusing on the positive",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "current_action",
+        "value": "relying on friends and family for support",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:2": [],
+    "D20:3": [
+      {
+        "entity": "Maria's family",
+        "attribute": "action",
+        "value": "provided support and encouragement",
+        "event": "supporting Maria",
+        "time_expression": "all the way"
+      }
+    ],
+    "D20:4": [
+      {
+        "entity": "John",
+        "attribute": "past_event",
+        "value": "attended a live music event with family",
+        "event": "live music event",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John's family",
+        "attribute": "past_event_detail",
+        "value": "danced and had fun",
+        "event": "live music event",
+        "time_expression": "Last week"
+      }
+    ],
+    "D20:5": [],
+    "D20:6": [],
+    "D20:7": [
+      {
+        "entity": "Maria",
+        "attribute": "past_event",
+        "value": "volunteered at a shelter",
+        "event": "volunteering at the shelter",
+        "time_expression": null
+      }
+    ],
+    "D20:8": [],
+    "D20:9": [
+      {
+        "entity": "Maria",
+        "attribute": "past_event",
+        "value": "met someone special at the shelter",
+        "event": "volunteering at the shelter",
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "past_event_detail",
+        "value": "played with kids and observed a person laugh",
+        "event": "volunteering at the shelter",
+        "time_expression": null
+      }
+    ],
+    "D20:10": [],
+    "D20:11": [
+      {
+        "entity": "Maria",
+        "attribute": "feeling",
+        "value": "joy",
+        "event": "making a difference",
+        "time_expression": null
+      }
+    ],
+    "D20:12": [],
+    "D20:13": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "continue spreading kindness and positivity",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:14": [],
+    "D20:15": [],
+    "D20:16": [],
+    "D20:17": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "continue current actions",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:18": [],
+    "D21:1": [
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "met kids at the shelter",
+        "event": "meeting kids",
+        "time_expression": null
+      }
+    ],
+    "D21:2": [],
+    "D21:3": [
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "negative incident occurred",
+        "event": "something not so great happened",
+        "time_expression": "yesterday"
+      }
+    ],
+    "D21:4": [],
+    "D21:5": [
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "car ran a red light and hit Maria",
+        "event": "car accident",
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "status",
+        "value": "okay",
+        "event": "after car accident",
+        "time_expression": null
+      },
+      {
+        "entity": "Maria's cousin",
+        "attribute": "status",
+        "value": "having a tough time",
+        "event": null,
+        "time_expression": "recently"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "help cousin find a new place",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:6": [],
+    "D21:7": [
+      {
+        "entity": "her",
+        "attribute": "residence_status",
+        "value": "had to leave and find a new place in a hurry",
+        "event": "relocation",
+        "time_expression": "lately"
+      },
+      {
+        "entity": "her",
+        "attribute": "progress_status",
+        "value": "making progress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:8": [],
+    "D21:9": [],
+    "D21:10": [
+      {
+        "entity": "John",
+        "attribute": "support_status",
+        "value": "offered to assist",
+        "event": "offer_to_help",
+        "time_expression": null
+      }
+    ],
+    "D21:11": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "find resources or organizations to help her",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:12": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "find resources that might be able to assist",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:13": [],
+    "D21:14": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "find some resources",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:15": [],
+    "D21:16": [],
+    "D21:17": [],
+    "D21:18": [],
+    "D21:19": [
+      {
+        "entity": "Laura",
+        "attribute": "role",
+        "value": "shelter resident",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Laura",
+        "attribute": "action",
+        "value": "wrote a letter expressing gratitude",
+        "event": "wrote_letter",
+        "time_expression": null
+      }
+    ],
+    "D21:20": [],
+    "D21:21": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:22": [
+      {
+        "entity": "John",
+        "attribute": "participated_in_event",
+        "value": "marching event for veterans' rights",
+        "event": "participated in a marching event for veterans' rights",
+        "time_expression": null
+      }
+    ],
+    "D21:23": [],
+    "D21:24": [
+      {
+        "entity": "John",
+        "attribute": "has_respect_for",
+        "value": "military",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:25": [],
+    "D21:26": [],
+    "D21:27": [],
+    "D21:28": [],
+    "D21:29": [],
+    "D22:1": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make communities better regarding education and infrastructure",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:2": [],
+    "D22:3": [],
+    "D22:4": [],
+    "D22:5": [
+      {
+        "entity": "John",
+        "attribute": "has_family",
+        "value": "family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:6": [],
+    "D22:7": [
+      {
+        "entity": "John",
+        "attribute": "has_daughter",
+        "value": "Sara",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "took_trip",
+        "value": "trip for daughter Sara's birthday",
+        "event": "took a trip for daughter Sara's birthday",
+        "time_expression": "last year"
+      }
+    ],
+    "D22:8": [],
+    "D22:9": [
+      {
+        "entity": "John",
+        "attribute": "motivation_source",
+        "value": "family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:10": [
+      {
+        "entity": "Maria",
+        "attribute": "inspiration_sources",
+        "value": "chatting to people, volunteering, listening to music",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:11": [
+      {
+        "entity": "John",
+        "attribute": "inspiration_sources",
+        "value": "family, exercise, spending time with friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:12": [],
+    "D22:13": [],
+    "D22:14": [],
+    "D22:15": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "took a walk",
+        "event": "took a walk",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "artifact_created",
+        "value": "picture from walk",
+        "event": "took picture",
+        "time_expression": "last week"
+      }
+    ],
+    "D22:16": [],
+    "D22:17": [
+      {
+        "entity": "John",
+        "attribute": "frequency_of_sunset_views",
+        "value": "at least once a week",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:18": [
+      {
+        "entity": "Maria",
+        "attribute": "habit",
+        "value": "taking regular 'me-time' walks at the park nearby",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:19": [],
+    "D22:20": [],
+    "D22:21": [],
+    "D23:1": [
+      {
+        "entity": "John's old area",
+        "attribute": "event",
+        "value": "hit by a flood",
+        "event": "flood occurred",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "John's old area",
+        "attribute": "infrastructure_state",
+        "value": "not great",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John's old area",
+        "attribute": "damage",
+        "value": "lots of homes were ruined",
+        "event": "homes ruined",
+        "time_expression": "last week"
+      }
+    ],
+    "D23:2": [
+      {
+        "entity": "John",
+        "attribute": "experience",
+        "value": "tough situation in his area",
+        "event": "negative event in John's area",
+        "time_expression": null
+      }
+    ],
+    "D23:3": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "organizing a meeting to discuss solutions",
+        "event": "organizing community meeting",
+        "time_expression": null
+      }
+    ],
+    "D23:4": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "join the meeting and contribute to community improvement",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:5": [],
+    "D23:6": [
+      {
+        "entity": "Maria",
+        "attribute": "relationship_status",
+        "value": "friend of John",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:7": [],
+    "D23:8": [],
+    "D23:9": [],
+    "D23:10": [],
+    "D23:11": [],
+    "D23:12": [],
+    "D23:13": [],
+    "D23:14": [
+      {
+        "entity": "Maria",
+        "attribute": "plan",
+        "value": "dinner with friends from the gym",
+        "event": "planned dinner",
+        "time_expression": null
+      }
+    ],
+    "D24:1": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "visited a veteran's hospital",
+        "event": "hospital visit",
+        "time_expression": "last week"
+      }
+    ],
+    "D24:2": [],
+    "D24:3": [
+      {
+        "entity": "Samuel",
+        "attribute": "age_group",
+        "value": "elderly",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Samuel",
+        "attribute": "occupation",
+        "value": "veteran",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "join the military",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:4": [],
+    "D24:5": [
+      {
+        "entity": "John",
+        "attribute": "affiliation",
+        "value": "organization",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D24:6": [
+      {
+        "entity": "Maria",
+        "attribute": "event_participation",
+        "value": "picnic with friends from church",
+        "event": "had a picnic",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D24:7": [],
+    "D24:8": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "played charades and a scavenger hunt",
+        "event": "played games",
+        "time_expression": null
+      }
+    ],
+    "D24:9": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "set up a game event for kids",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D24:10": [],
+    "D24:11": [
+      {
+        "entity": "John",
+        "attribute": "event_attendance",
+        "value": "community event with arts and crafts",
+        "event": "attended community event",
+        "time_expression": "last month"
+      }
+    ],
+    "D24:12": [],
+    "D24:13": [],
+    "D24:14": [],
+    "D24:15": [],
+    "D24:16": [],
+    "D24:17": [],
+    "D25:1": [
+      {
+        "entity": "John",
+        "attribute": "employment_status",
+        "value": "has a new job",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "job_sentiment",
+        "value": "enjoying",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John's team",
+        "attribute": "behavior",
+        "value": "encouraging and inspiring",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:2": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "hiking with church friends",
+        "event": "hike",
+        "time_expression": "last weekend"
+      }
+    ],
+    "D25:3": [],
+    "D25:4": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "make connections, laugh together, take in nature's beauty",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:5": [],
+    "D25:6": [
+      {
+        "entity": "Maria",
+        "attribute": "experience",
+        "value": "reached the top and saw a breathtaking view",
+        "event": "hike",
+        "time_expression": null
+      }
+    ],
+    "D25:7": [],
+    "D25:8": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "explore more and volunteer at shelters",
+        "event": null,
+        "time_expression": "next month"
+      }
+    ],
+    "D25:9": [],
+    "D25:10": [],
+    "D25:11": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "goes to a yoga studio",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:12": [],
+    "D25:13": [
+      {
+        "entity": "John's yoga studio",
+        "attribute": "classes_offered",
+        "value": "yoga, kickboxing, and circuit training",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:14": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "try new classes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:15": [],
+    "D25:16": [],
+    "D25:17": [
+      {
+        "entity": "John",
+        "attribute": "activity_participated_in",
+        "value": "weight training",
+        "event": "participated in weight training",
+        "time_expression": "so far"
+      }
+    ],
+    "D25:18": [],
+    "D25:19": [],
+    "D25:20": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "bake some cakes",
+        "event": "planned to bake cakes",
+        "time_expression": "off to"
+      }
+    ],
+    "D26:1": [
+      {
+        "entity": "Maria",
+        "attribute": "action_completed",
+        "value": "dropped off baked goods at homeless shelter",
+        "event": "dropped off baked goods at homeless shelter",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "state",
+        "value": "motivated to help people",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:2": [
+      {
+        "entity": "John",
+        "attribute": "membership",
+        "value": "fire-fighting brigade",
+        "event": "joined fire-fighting brigade",
+        "time_expression": "just"
+      }
+    ],
+    "D26:3": [],
+    "D26:4": [
+      {
+        "entity": "John",
+        "attribute": "event_participated_in",
+        "value": "first call-out",
+        "event": "participated in first call-out",
+        "time_expression": "Last Sunday"
+      }
+    ],
+    "D26:5": [],
+    "D26:6": [
+      {
+        "entity": "John",
+        "attribute": "event_outcome",
+        "value": "saved a family from a burning building",
+        "event": "saved a family from a burning building",
+        "time_expression": null
+      }
+    ],
+    "D26:7": [],
+    "D26:8": [
+      {
+        "entity": "John",
+        "attribute": "relationship_perception",
+        "value": "team members are like family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:9": [],
+    "D26:10": [
+      {
+        "entity": "John",
+        "attribute": "past_experience",
+        "value": "served in the military",
+        "event": "served in the military",
+        "time_expression": "since my time in the military"
+      }
+    ],
+    "D26:11": [],
+    "D26:12": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep community safe",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:13": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering",
+        "event": "took a photo while volunteering",
+        "time_expression": null
+      }
+    ],
+    "D26:14": [],
+    "D26:15": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "continue volunteering",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:16": [],
+    "D26:17": [
+      {
+        "entity": "Maria",
+        "attribute": "goal",
+        "value": "continue volunteering",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:1": [
+      {
+        "entity": "John",
+        "attribute": "membership",
+        "value": "virtual support group",
+        "event": "asked family and friends to join the group and be advocates for the military",
+        "time_expression": null
+      }
+    ],
+    "D27:2": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteering at a homeless shelter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:3": [],
+    "D27:4": [
+      {
+        "entity": "Maria",
+        "attribute": "start_date",
+        "value": "about a year ago",
+        "event": "started volunteering at the shelter",
+        "time_expression": "about a year ago"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "motivation",
+        "value": "witnessing a family struggling on the streets",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:5": [],
+    "D27:6": [],
+    "D27:7": [],
+    "D27:8": [
+      {
+        "entity": "Cindy",
+        "attribute": "role",
+        "value": "resident at the shelter",
+        "event": "wrote a note of gratitude",
+        "time_expression": null
+      }
+    ],
+    "D27:9": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "visited a military memorial with his kids",
+        "event": "visited a military memorial",
+        "time_expression": "Last week"
+      }
+    ],
+    "D27:10": [],
+    "D27:11": [
+      {
+        "entity": "John's kids",
+        "attribute": "reaction",
+        "value": "awestruck and humbled",
+        "event": "visited a military memorial",
+        "time_expression": null
+      }
+    ],
+    "D27:12": [
+      {
+        "entity": "Maria",
+        "attribute": "opinion",
+        "value": "it is important for younger generations to remember and appreciate those who served",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:13": [
+      {
+        "entity": "John",
+        "attribute": "opinion",
+        "value": "showing kids how to respect and appreciate those who served is important",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:14": [
+      {
+        "entity": "Maria",
+        "attribute": "opinion",
+        "value": "it is important to teach kids about veterans",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:15": [],
+    "D27:16": [],
+    "D28:1": [
+      {
+        "entity": "John",
+        "attribute": "employment_status",
+        "value": "lost his job at a mechanical engineering company",
+        "event": "lost job",
+        "time_expression": "since we last talked"
+      }
+    ],
+    "D28:2": [],
+    "D28:3": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "looking for opportunities in the tech industry",
+        "event": null,
+        "time_expression": "for a while now"
+      }
+    ],
+    "D28:4": [],
+    "D28:5": [
+      {
+        "entity": "John",
+        "attribute": "job_opportunity",
+        "value": "found a job at a tech company hardware team",
+        "event": "found a job opportunity",
+        "time_expression": null
+      }
+    ],
+    "D28:6": [],
+    "D28:7": [],
+    "D28:8": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "took up community work with friends from church",
+        "event": "participated in community work",
+        "time_expression": "Yesterday"
+      }
+    ],
+    "D28:9": [],
+    "D28:10": [],
+    "D28:11": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "helped renovate a rundown community center",
+        "event": "renovated community center",
+        "time_expression": "Last year"
+      }
+    ],
+    "D28:12": [],
+    "D28:13": [],
+    "D28:14": [],
+    "D28:15": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep pushing forward and doing his best",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D28:16": [],
+    "D28:17": [],
+    "D28:18": [],
+    "D28:19": [],
+    "D29:1": [
+      {
+        "entity": "Maria",
+        "attribute": "activity",
+        "value": "volunteered at the homeless shelter",
+        "event": "volunteered at homeless shelter",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Maria",
+        "attribute": "award",
+        "value": "received a medal",
+        "event": "received medal for volunteering",
+        "time_expression": "Last week"
+      }
+    ],
+    "D29:2": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "participated in a community event to raise money for a good cause",
+        "event": "participated in fundraising event",
+        "time_expression": "Last weekend"
+      }
+    ],
+    "D29:3": [],
+    "D29:4": [
+      {
+        "entity": "John",
+        "attribute": "event_organized",
+        "value": "5K charity run",
+        "event": "set up a 5K charity run in neighborhood",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "charity_cause",
+        "value": "veterans and their families",
+        "event": "raised funds for veterans and their families",
+        "time_expression": null
+      }
+    ],
+    "D29:5": [],
+    "D29:6": [
+      {
+        "entity": "John",
+        "attribute": "organizational_tasks",
+        "value": "getting sponsors, coordinating with the city, spreading the word",
+        "event": "organized the run",
+        "time_expression": null
+      }
+    ],
+    "D29:7": [],
+    "D29:8": [
+      {
+        "entity": "John",
+        "attribute": "challenge",
+        "value": "getting sponsors was difficult",
+        "event": "reached out to several businesses",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event_outcome",
+        "value": "event was a hit",
+        "event": "secured awesome sponsors",
+        "time_expression": null
+      }
+    ],
+    "D29:9": [],
+    "D29:10": [
+      {
+        "entity": "John",
+        "attribute": "collaboration",
+        "value": "worked with a local organization that helps victims of domestic abuse",
+        "event": "raised awareness and funds",
+        "time_expression": null
+      }
+    ],
+    "D29:11": [],
+    "D29:12": [],
+    "D29:13": [],
+    "D29:14": [],
+    "D29:15": [],
+    "D29:16": [],
+    "D29:17": [],
+    "D29:18": [],
+    "D30:1": [
+      {
+        "entity": "Maria",
+        "attribute": "pet_ownership",
+        "value": "got a puppy",
+        "event": "acquired a puppy",
+        "time_expression": "two weeks ago"
+      },
+      {
+        "entity": "Coco",
+        "attribute": "name",
+        "value": "Coco",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Coco",
+        "attribute": "species",
+        "value": "puppy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:2": [],
+    "D30:3": [
+      {
+        "entity": "Maria",
+        "attribute": "sentiment",
+        "value": "Coco brings joy to her life",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:4": [
+      {
+        "entity": "John",
+        "attribute": "pet_ownership_history",
+        "value": "had a pet named Max",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:5": [],
+    "D30:6": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "went on a camping trip with Max",
+        "event": "camping trip",
+        "time_expression": "last summer"
+      }
+    ],
+    "D30:7": [],
+    "D30:8": [],
+    "D30:9": [],
+    "D30:10": [],
+    "D30:11": [],
+    "D30:12": [
+      {
+        "entity": "John",
+        "attribute": "life_state",
+        "value": "experiencing tough times",
+        "event": null,
+        "time_expression": "lately"
+      }
+    ],
+    "D30:13": [],
+    "D30:14": [
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "feels he is not making much of an impact",
+        "event": null,
+        "time_expression": "lately"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal_status",
+        "value": "questioning his decisions and goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:15": [],
+    "D30:16": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "positively affect people and the world",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "feels stuck",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:17": [],
+    "D30:18": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "exploring options",
+        "event": null,
+        "time_expression": "Lately"
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "join local organizations or volunteering programs",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:19": [],
+    "D30:20": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "make a list of organizations that suit his beliefs and reach out for more info",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D30:21": [],
+    "D30:22": [],
+    "D30:23": [],
+    "D31:1": [
+      {
+        "entity": "John",
+        "attribute": "role",
+        "value": "volunteer mentor for a local school",
+        "event": null,
+        "time_expression": "since we last chatted"
+      }
+    ],
+    "D31:2": [
+      {
+        "entity": "Maria",
+        "attribute": "event",
+        "value": "adopted a dog from a shelter",
+        "event": "adoption of a dog",
+        "time_expression": "last week"
+      }
+    ],
+    "D31:3": [],
+    "D31:4": [
+      {
+        "entity": "Shadow",
+        "attribute": "name",
+        "value": "Shadow",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Shadow",
+        "attribute": "owner",
+        "value": "Maria",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Maria",
+        "attribute": "pet_relationship",
+        "value": "Shadow and Maria's other dog get along great",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D31:5": [],
+    "D31:6": [
+      {
+        "entity": "Maria",
+        "attribute": "past_experience",
+        "value": "did not have pets growing up",
+        "event": null,
+        "time_expression": "growing up"
+      }
+    ],
+    "D31:7": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "look into shelters near him to adopt a new pup",
+        "event": null,
+        "time_expression": "soon"
+      }
+    ],
+    "D31:8": [],
+    "D31:9": [
+      {
+        "entity": "John",
+        "attribute": "mentoring_program_status",
+        "value": "students showing improvement in confidence and skills",
+        "event": "mentoring program update",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "student_interaction",
+        "value": "student showed John their essay",
+        "event": "student showed essay",
+        "time_expression": "last week"
+      }
+    ],
+    "D31:10": [
+      {
+        "entity": "Maria",
+        "attribute": "pet_status",
+        "value": "learning commands and house training",
+        "event": "pet training",
+        "time_expression": null
+      }
+    ],
+    "D31:11": [],
+    "D31:12": [
+      {
+        "entity": "Maria",
+        "attribute": "pet_learning_ability",
+        "value": "amazing learner",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D31:13": [],
+    "D31:14": [],
+    "D31:15": [],
+    "D31:16": [],
+    "D31:17": [
+      {
+        "entity": "John",
+        "attribute": "family_composition",
+        "value": "John, wife, and kids",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D31:18": [],
+    "D31:19": [
+      {
+        "entity": "John",
+        "attribute": "family_activities",
+        "value": "hiking, park visits, picnics, board games, movie nights",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D31:20": [],
+    "D31:21": [
+      {
+        "entity": "John",
+        "attribute": "current_activity",
+        "value": "spending time with family",
+        "event": "leaving to spend time with family",
+        "time_expression": "now"
+      }
+    ],
+    "D31:22": [],
+    "D31:23": [],
+    "D32:1": [
+      {
+        "entity": "John",
+        "attribute": "membership",
+        "value": "fire-fighting brigade",
+        "event": "joined fire-fighting brigade",
+        "time_expression": "now"
+      }
+    ],
+    "D32:2": [],
+    "D32:3": [],
+    "D32:4": [],
+    "D32:5": [
+      {
+        "entity": "John's group",
+        "attribute": "task_duration",
+        "value": "two hours",
+        "event": "completed task",
+        "time_expression": "two hours"
+      }
+    ],
+    "D32:6": [],
+    "D32:7": [
+      {
+        "entity": "John's group",
+        "attribute": "donations_collected",
+        "value": "canned food, toiletries, and clothes",
+        "event": "raised donations",
+        "time_expression": null
+      }
+    ],
+    "D32:8": [],
+    "D32:9": [],
+    "D32:10": [],
+    "D32:11": [
+      {
+        "entity": "donations",
+        "attribute": "outcome",
+        "value": "purchase of brand new fire truck",
+        "event": "donations used to acquire fire truck",
+        "time_expression": null
+      }
+    ],
+    "D32:12": [
+      {
+        "entity": "Maria",
+        "attribute": "action",
+        "value": "donated for fire truck",
+        "event": "donated for fire truck",
+        "time_expression": null
+      }
+    ],
+    "D32:13": [],
+    "D32:14": [
+      {
+        "entity": "Maria",
+        "attribute": "volunteer_activity",
+        "value": "front desk volunteering at shelter",
+        "event": "volunteered at shelter front desk",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D32:15": [],
+    "D32:16": [],
+    "D32:17": []
+  }
+}

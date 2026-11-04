@@ -1,0 +1,4606 @@
+{
+  "sample": "conv-43",
+  "model": "qwen3.8:27b-q4_K_M",
+  "turns": {
+    "D1:1": [],
+    "D1:2": [
+      {
+        "entity": "Tim",
+        "attribute": "project_topic",
+        "value": "Harry Potter fan project",
+        "event": "working on project",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "discussing collaborations",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:3": [
+      {
+        "entity": "John",
+        "attribute": "team_affiliation",
+        "value": "new team",
+        "event": "signed with team",
+        "time_expression": null
+      }
+    ],
+    "D1:4": [],
+    "D1:5": [
+      {
+        "entity": "John",
+        "attribute": "team_affiliation",
+        "value": "Minnesota Wolves",
+        "event": "signed with team",
+        "time_expression": null
+      }
+    ],
+    "D1:6": [],
+    "D1:7": [
+      {
+        "entity": "John",
+        "attribute": "position",
+        "value": "shooting guard",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "season_opener_time",
+        "value": "next week",
+        "event": "season opener",
+        "time_expression": "next week"
+      }
+    ],
+    "D1:8": [],
+    "D1:9": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "improve shooting percentage",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:10": [],
+    "D1:11": [
+      {
+        "entity": "John",
+        "attribute": "challenge",
+        "value": "fitting into new team's style of play",
+        "event": "pre-season training",
+        "time_expression": null
+      }
+    ],
+    "D1:12": [],
+    "D1:13": [
+      {
+        "entity": "John",
+        "attribute": "team_experience",
+        "value": "going well",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:14": [
+      {
+        "entity": "Tim",
+        "attribute": "project_status",
+        "value": "going well",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "collaborator",
+        "value": "friend who is a fan of Harry Potter",
+        "event": "talked to friend",
+        "time_expression": "Last week"
+      }
+    ],
+    "D1:15": [
+      {
+        "entity": "John",
+        "attribute": "interest",
+        "value": "sneaker collection",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:16": [
+      {
+        "entity": "Tim",
+        "attribute": "planned_discussion_topics",
+        "value": "characters, spells, and magical creatures of the Harry Potter universe",
+        "event": "planning to discuss Harry Potter aspects",
+        "time_expression": null
+      }
+    ],
+    "D1:17": [],
+    "D1:18": [
+      {
+        "entity": "Tim",
+        "attribute": "travel_history",
+        "value": "visited a place in London and went on a tour",
+        "event": "visited London and took a tour",
+        "time_expression": "a few years ago"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "explore real Potter places",
+        "event": null,
+        "time_expression": "someday"
+      }
+    ],
+    "D1:19": [
+      {
+        "entity": "John",
+        "attribute": "travel_history",
+        "value": "has not visited Harry Potter related places",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "visit Harry Potter related places",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D1:20": [],
+    "D2:1": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "joined a fantasy literature forum and discussed favorite books",
+        "event": "joined forum and had a talk",
+        "time_expression": "Last night"
+      }
+    ],
+    "D2:2": [
+      {
+        "entity": "John",
+        "attribute": "current_activity",
+        "value": "exploring endorsement opportunities",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "work with brands",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:3": [],
+    "D2:4": [
+      {
+        "entity": "John",
+        "attribute": "potential_partners",
+        "value": "Nike and Under Armour",
+        "event": "considering sports brands",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "collaborate with brands related to sports or aligned with values and interests",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:5": [],
+    "D2:6": [
+      {
+        "entity": "John",
+        "attribute": "commitment",
+        "value": "will update Tim on brand choices",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:7": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "book collection",
+        "event": "shared picture of book collection",
+        "time_expression": null
+      }
+    ],
+    "D2:8": [],
+    "D2:9": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "picture from MinaLima",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "MinaLima",
+        "attribute": "role",
+        "value": "created props for Harry Potter films",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:10": [],
+    "D2:11": [
+      {
+        "entity": "Tim",
+        "attribute": "purpose_of_reminders",
+        "value": "escape reality",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:12": [],
+    "D2:13": [
+      {
+        "entity": "Tim",
+        "attribute": "intent_to_visit_hp_spots",
+        "value": "yes",
+        "event": null,
+        "time_expression": "in the future"
+      }
+    ],
+    "D2:14": [
+      {
+        "entity": "John",
+        "attribute": "shared_media",
+        "value": "pic from a recent game",
+        "event": null,
+        "time_expression": "recent"
+      }
+    ],
+    "D2:15": [],
+    "D2:16": [
+      {
+        "entity": "John",
+        "attribute": "participation_in_game",
+        "value": "played",
+        "event": null,
+        "time_expression": "just"
+      }
+    ],
+    "D2:17": [],
+    "D2:18": [
+      {
+        "entity": "John",
+        "attribute": "playing_context",
+        "value": "on the court",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D2:19": [],
+    "D3:1": [
+      {
+        "entity": "John",
+        "attribute": "points_scored",
+        "value": "40",
+        "event": "scored points",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "career_high_points",
+        "value": "40",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:2": [
+      {
+        "entity": "Tim",
+        "attribute": "interaction_with_fan",
+        "value": "chat",
+        "event": "had a chat",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "fan_location",
+        "value": "California",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:3": [
+      {
+        "entity": "John",
+        "attribute": "game_result",
+        "value": "win",
+        "event": "pulled off a win",
+        "time_expression": null
+      }
+    ],
+    "D3:4": [],
+    "D3:5": [
+      {
+        "entity": "John",
+        "attribute": "post_game_activity",
+        "value": "celebrated at a restaurant",
+        "event": "celebrated",
+        "time_expression": "After that"
+      }
+    ],
+    "D3:6": [],
+    "D3:7": [
+      {
+        "entity": "John",
+        "attribute": "perception_of_team_bond",
+        "value": "strong bond",
+        "event": "describing team dynamic",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "perception_of_team_relationship",
+        "value": "second family",
+        "event": "describing team dynamic",
+        "time_expression": null
+      }
+    ],
+    "D3:8": [],
+    "D3:9": [
+      {
+        "entity": "John",
+        "attribute": "endorsement_status",
+        "value": "getting somewhere",
+        "event": "reporting progress on endorsements",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "endorsement_interactions",
+        "value": "talked to some big names",
+        "event": "discussing endorsement prospects",
+        "time_expression": null
+      }
+    ],
+    "D3:10": [],
+    "D3:11": [
+      {
+        "entity": "John",
+        "attribute": "endorsement_strategy",
+        "value": "used contacts in basketball industry and marketing skills",
+        "event": "explaining how he connected with companies",
+        "time_expression": null
+      }
+    ],
+    "D3:12": [],
+    "D3:13": [
+      {
+        "entity": "John",
+        "attribute": "endorsement_deal",
+        "value": "signed up Nike for a basketball shoe and gear deal",
+        "event": "signing endorsement deal",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "endorsement_status",
+        "value": "in talks with Gatorade about a potential sponsorship",
+        "event": "discussing sponsorship prospects",
+        "time_expression": null
+      }
+    ],
+    "D3:14": [],
+    "D3:15": [
+      {
+        "entity": "John",
+        "attribute": "brand_preference",
+        "value": "always liked Under Armour",
+        "event": "expressing preference for brand",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "endorsement_goal",
+        "value": "working with Under Armour",
+        "event": "stating goal",
+        "time_expression": null
+      }
+    ],
+    "D3:16": [],
+    "D3:17": [],
+    "D3:18": [],
+    "D3:19": [
+      {
+        "entity": "John",
+        "attribute": "upcoming_event_location",
+        "value": "Seattle",
+        "event": "planning game",
+        "time_expression": "next month"
+      },
+      {
+        "entity": "John",
+        "attribute": "city_preference",
+        "value": "one of my favorite cities to explore",
+        "event": "describing Seattle",
+        "time_expression": null
+      }
+    ],
+    "D3:20": [],
+    "D3:21": [
+      {
+        "entity": "John",
+        "attribute": "city_attributes_appreciated",
+        "value": "energy, diversity, and awesome food",
+        "event": "describing Seattle",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "food_preference",
+        "value": "trying local seafood is a must",
+        "event": "stating food preference",
+        "time_expression": null
+      }
+    ],
+    "D3:22": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "try seafood in Seattle",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:23": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves the ocean",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:24": [],
+    "D3:25": [
+      {
+        "entity": "John",
+        "attribute": "past_activity",
+        "value": "surfing and riding waves with friends",
+        "event": "had an awesome summer",
+        "time_expression": "summer"
+      }
+    ],
+    "D3:26": [],
+    "D3:27": [
+      {
+        "entity": "John",
+        "attribute": "start_date",
+        "value": "five years ago",
+        "event": "started surfing",
+        "time_expression": "five years ago"
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves the connection to nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:28": [],
+    "D3:29": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "finds being out in the water exciting and free-feeling",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:30": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "does not surf",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "reads fantasy books to escape and feel free",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:31": [],
+    "D3:32": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "enjoys reading in a comfy spot",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D3:33": [],
+    "D3:34": [],
+    "D3:35": [],
+    "D4:1": [
+      {
+        "entity": "Tim",
+        "attribute": "current_activity",
+        "value": "writing articles about fantasy novels for an online magazine",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:2": [],
+    "D4:3": [
+      {
+        "entity": "Tim",
+        "attribute": "interest",
+        "value": "fantasy",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "found opportunity on fantasy lit forum",
+        "event": "found writing opportunity",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "shared ideas with magazine",
+        "event": "shared ideas",
+        "time_expression": null
+      },
+      {
+        "entity": "magazine",
+        "attribute": "action",
+        "value": "liked Tim's ideas",
+        "event": "accepted ideas",
+        "time_expression": null
+      }
+    ],
+    "D4:4": [],
+    "D4:5": [
+      {
+        "entity": "Tim",
+        "attribute": "writing_topics",
+        "value": "fantasy novels, characters, themes, book recommendations",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:6": [],
+    "D4:7": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_books",
+        "value": "Harry Potter, Game of Thrones",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:8": [
+      {
+        "entity": "John",
+        "attribute": "event_participation",
+        "value": "Harry Potter trivia contest at charity event",
+        "event": "attended charity event and trivia contest",
+        "time_expression": null
+      },
+      {
+        "entity": "Anthony",
+        "attribute": "event_participation",
+        "value": "Harry Potter trivia contest at charity event",
+        "event": "attended charity event and trivia contest",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "contest_result",
+        "value": "did alright",
+        "event": "participated in trivia contest",
+        "time_expression": null
+      },
+      {
+        "entity": "super-nerd",
+        "attribute": "contest_result",
+        "value": "took home prize",
+        "event": "won trivia contest prize",
+        "time_expression": null
+      }
+    ],
+    "D4:9": [],
+    "D4:10": [
+      {
+        "entity": "John",
+        "attribute": "current_reading",
+        "value": "inspiring book",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:11": [],
+    "D4:12": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep reaching for new goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:13": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "keep reaching for new goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D4:14": [],
+    "D4:15": [],
+    "D5:1": [
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "skyped with Harry Potter fan",
+        "event": "had Skype call",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "acquaintance_location",
+        "value": "met in CA",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "discussion_topic",
+        "value": "characters",
+        "event": "talked with Harry Potter fan",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "potential_action",
+        "value": "collaborating",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:2": [
+      {
+        "entity": "John",
+        "attribute": "sport_event_outcome",
+        "value": "won a game by a tight score",
+        "event": "played a game",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "scored the last basket",
+        "event": "played a game",
+        "time_expression": "Last week"
+      }
+    ],
+    "D5:3": [],
+    "D5:4": [
+      {
+        "entity": "John",
+        "attribute": "photo_count",
+        "value": "one",
+        "event": "showed a photo",
+        "time_expression": null
+      }
+    ],
+    "D5:5": [],
+    "D5:6": [
+      {
+        "entity": "John",
+        "attribute": "team_bond_state",
+        "value": "awesome",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:7": [],
+    "D5:8": [
+      {
+        "entity": "John",
+        "attribute": "team_perception",
+        "value": "like a family away from home",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "thankful for team",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:9": [],
+    "D5:10": [
+      {
+        "entity": "John",
+        "attribute": "team_support_scope",
+        "value": "in sport and other aspects of life",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "social_activity",
+        "value": "hangs out with team",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:11": [],
+    "D5:12": [
+      {
+        "entity": "Tim",
+        "attribute": "hobby",
+        "value": "reading fantasy books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:13": [
+      {
+        "entity": "Tim",
+        "attribute": "current_activity",
+        "value": "reading a fantasy book",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:14": [],
+    "D5:15": [
+      {
+        "entity": "Tim",
+        "attribute": "current_book_author",
+        "value": "Patrick Rothfuss",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:16": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "check out the book",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:17": [],
+    "D5:18": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "let Tim know once done reading",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D5:19": [],
+    "D5:20": [],
+    "D6:1": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "took a trip to a new place",
+        "event": "trip to a new place",
+        "time_expression": "a crazy few days"
+      }
+    ],
+    "D6:2": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "went to an event",
+        "event": "went to an event",
+        "time_expression": "recently"
+      }
+    ],
+    "D6:3": [
+      {
+        "entity": "John",
+        "attribute": "location",
+        "value": "Chicago",
+        "event": "was in Chicago",
+        "time_expression": null
+      }
+    ],
+    "D6:4": [],
+    "D6:5": [],
+    "D6:6": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "writing more articles",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "love for reading and joy of sharing great stories",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:7": [],
+    "D6:8": [
+      {
+        "entity": "The Name of the Wind",
+        "attribute": "genre",
+        "value": "fantasy novel",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "The Name of the Wind",
+        "attribute": "protagonist_description",
+        "value": "magician and musician",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:9": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "add The Name of the Wind to reading list",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "lucky basketball shoes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:10": [],
+    "D6:11": [
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "basketball shoes",
+        "event": null,
+        "time_expression": "since the beginning"
+      }
+    ],
+    "D6:12": [],
+    "D6:13": [
+      {
+        "entity": "John",
+        "attribute": "basketball_start_age",
+        "value": "10",
+        "event": "signed up for a local league",
+        "time_expression": "When I turned ten"
+      },
+      {
+        "entity": "John",
+        "attribute": "basketball_history",
+        "value": "played through middle and high school",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "college_admission_method",
+        "value": "scholarship",
+        "event": "earned a college scholarship",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "professional_status",
+        "value": "drafted by a team",
+        "event": "drafted by a team",
+        "time_expression": "after college"
+      }
+    ],
+    "D6:14": [],
+    "D6:15": [
+      {
+        "entity": "John",
+        "attribute": "primary_career_goal",
+        "value": "winning a championship",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "secondary_goal",
+        "value": "make a difference away from the court through charity or inspiring people",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:16": [],
+    "D6:17": [
+      {
+        "entity": "John",
+        "attribute": "charity_partnership",
+        "value": "teaming up with a local organization that helps disadvantaged kids with sports and school",
+        "event": "teaming up with a local organization",
+        "time_expression": null
+      }
+    ],
+    "D6:18": [],
+    "D6:19": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "work hard and make a positive impact",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:20": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "support John",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:21": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "do his best",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D6:22": [],
+    "D6:23": [],
+    "D7:1": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "met back up with teammates",
+        "event": "reunion with team",
+        "time_expression": "on the 15th"
+      },
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "was on a trip",
+        "event": null,
+        "time_expression": "since we talked"
+      }
+    ],
+    "D7:2": [],
+    "D7:3": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "love for basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:4": [
+      {
+        "entity": "Tim",
+        "attribute": "preferred_event",
+        "value": "event last month",
+        "event": "attended event",
+        "time_expression": "last month"
+      }
+    ],
+    "D7:5": [],
+    "D7:6": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "attend a book conference",
+        "event": null,
+        "time_expression": "next month"
+      }
+    ],
+    "D7:7": [
+      {
+        "entity": "John",
+        "attribute": "received_item",
+        "value": "photo",
+        "event": "received photo from teammates",
+        "time_expression": null
+      }
+    ],
+    "D7:8": [],
+    "D7:9": [
+      {
+        "entity": "John's teammates",
+        "attribute": "action",
+        "value": "signed the item",
+        "event": "signed item to show friendship and appreciation",
+        "time_expression": null
+      }
+    ],
+    "D7:10": [],
+    "D7:11": [
+      {
+        "entity": "John",
+        "attribute": "sport",
+        "value": "basketball",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "memorial_item",
+        "value": "ball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D7:12": [],
+    "D7:13": [],
+    "D7:14": [],
+    "D7:15": [],
+    "D7:16": [],
+    "D8:1": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "found a new gym",
+        "event": "found new gym to stay fit for pro basketball",
+        "time_expression": "Just the other day"
+      },
+      {
+        "entity": "John",
+        "attribute": "occupation",
+        "value": "professional basketball player",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:2": [],
+    "D8:3": [
+      {
+        "entity": "John",
+        "attribute": "training_status",
+        "value": "adapted and tweaked routine",
+        "event": "overcame hurdle of adapting",
+        "time_expression": null
+      }
+    ],
+    "D8:4": [],
+    "D8:5": [
+      {
+        "entity": "John",
+        "attribute": "workout_schedule",
+        "value": "includes basketball and strength training",
+        "event": "figured out schedule",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "training_method",
+        "value": "listening to body and giving enough rest",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:6": [],
+    "D8:7": [
+      {
+        "entity": "John",
+        "attribute": "reason_for_strength_training",
+        "value": "builds muscle, increases power, prevents injuries, increases explosiveness, boosts athleticism",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:8": [],
+    "D8:9": [
+      {
+        "entity": "John",
+        "attribute": "strength_training_impact",
+        "value": "improved shooting accuracy, agility, and speed",
+        "event": "incorporated strength training",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "confidence_level",
+        "value": "increased confidence to take on challenges",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:10": [],
+    "D8:11": [
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "happy with progress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:12": [
+      {
+        "entity": "Tim",
+        "attribute": "current_focus",
+        "value": "school and reading fantasy books",
+        "event": null,
+        "time_expression": "since we last talked"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "new_skill",
+        "value": "learning to play piano",
+        "event": "started learning",
+        "time_expression": null
+      }
+    ],
+    "D8:13": [],
+    "D8:14": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_piano_song",
+        "value": "theme from a movie he enjoys",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:15": [],
+    "D8:16": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_movie",
+        "value": "Harry Potter and the Philosopher's Stone",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "movie_memory",
+        "value": "watched with family",
+        "event": "watching movie",
+        "time_expression": null
+      }
+    ],
+    "D8:17": [
+      {
+        "entity": "John",
+        "attribute": "movie_collection",
+        "value": "owns the whole Harry Potter collection",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:18": [
+      {
+        "entity": "Tim",
+        "attribute": "past_event",
+        "value": "watched a movie with family",
+        "event": "watched a movie with family",
+        "time_expression": null
+      }
+    ],
+    "D8:19": [
+      {
+        "entity": "John",
+        "attribute": "family_habit",
+        "value": "family gets together all the time",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:20": [
+      {
+        "entity": "Tim",
+        "attribute": "past_event",
+        "value": "family got together to eat",
+        "event": "family got together to eat",
+        "time_expression": null
+      }
+    ],
+    "D8:21": [],
+    "D8:22": [
+      {
+        "entity": "Tim",
+        "attribute": "tradition",
+        "value": "prep Thanksgiving feast and discuss gratitude",
+        "event": null,
+        "time_expression": "Thanksgiving"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "tradition",
+        "value": "watch movies after Thanksgiving dinner",
+        "event": null,
+        "time_expression": "Thanksgiving"
+      }
+    ],
+    "D8:23": [],
+    "D8:24": [
+      {
+        "entity": "Tim",
+        "attribute": "tradition",
+        "value": "watch movie 'Home Alone'",
+        "event": null,
+        "time_expression": "During Thanksgiving"
+      }
+    ],
+    "D8:25": [],
+    "D8:26": [
+      {
+        "entity": "Tim",
+        "attribute": "tradition",
+        "value": "watch movie 'Elf'",
+        "event": null,
+        "time_expression": "during the holidays"
+      }
+    ],
+    "D8:27": [],
+    "D8:28": [
+      {
+        "entity": "Tim",
+        "attribute": "tradition",
+        "value": "watch movie 'The Santa Clause'",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:29": [
+      {
+        "entity": "John",
+        "attribute": "past_event",
+        "value": "had a Christmas tree",
+        "event": "had a Christmas tree",
+        "time_expression": "last year"
+      }
+    ],
+    "D8:30": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "has a Christmas tree",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D8:31": [],
+    "D8:32": [
+      {
+        "entity": "Tim",
+        "attribute": "past_action",
+        "value": "decorated Christmas tree with Harry Potter theme",
+        "event": "decorated Christmas tree",
+        "time_expression": null
+      }
+    ],
+    "D8:33": [],
+    "D8:34": [
+      {
+        "entity": "Tim",
+        "attribute": "project_sentiment",
+        "value": "happy with outcome",
+        "event": "completed themed tree project",
+        "time_expression": null
+      }
+    ],
+    "D8:35": [],
+    "D8:36": [],
+    "D8:37": [],
+    "D9:1": [
+      {
+        "entity": "Tim",
+        "attribute": "academic_status",
+        "value": "busy with assignments and exams",
+        "event": null,
+        "time_expression": "this week"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "hobby",
+        "value": "fantasy reading",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "juggle studying with fantasy reading hobby",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:2": [
+      {
+        "entity": "John",
+        "attribute": "recent_activity",
+        "value": "visited home and caught up with family and old friends",
+        "event": "visited home",
+        "time_expression": "Last week"
+      }
+    ],
+    "D9:3": [],
+    "D9:4": [
+      {
+        "entity": "John",
+        "attribute": "sports_experience",
+        "value": "teammates for four years in high school",
+        "event": "played on sports team",
+        "time_expression": "in high school"
+      }
+    ],
+    "D9:5": [
+      {
+        "entity": "Tim",
+        "attribute": "sports_experience",
+        "value": "never been on a sports team",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "hobby_preference",
+        "value": "reading and fantasy novels",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "travel_motivation",
+        "value": "experience a different kind of magic",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:6": [
+      {
+        "entity": "John",
+        "attribute": "hobby",
+        "value": "discovering new cities",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "travel_history",
+        "value": "trips to New York City",
+        "event": "visited New York City",
+        "time_expression": null
+      }
+    ],
+    "D9:7": [
+      {
+        "entity": "Tim",
+        "attribute": "travel_goal",
+        "value": "visit NYC",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D9:8": [
+      {
+        "entity": "John",
+        "attribute": "travel_sentiment",
+        "value": "amazing experience in NYC",
+        "event": "visited New York City",
+        "time_expression": null
+      }
+    ],
+    "D9:9": [
+      {
+        "entity": "Tim",
+        "attribute": "travel_goal",
+        "value": "visit NYC",
+        "event": "added NYC to travel list",
+        "time_expression": null
+      }
+    ],
+    "D9:10": [],
+    "D9:11": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "experience a specific place",
+        "event": "expressing anticipation to visit a place",
+        "time_expression": null
+      }
+    ],
+    "D9:12": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "assist Tim with planning a trip",
+        "event": "offering help to Tim",
+        "time_expression": null
+      }
+    ],
+    "D9:13": [
+      {
+        "entity": "Tim",
+        "attribute": "commitment",
+        "value": "inform John about trip plans",
+        "event": "agreeing to let John know when going",
+        "time_expression": null
+      }
+    ],
+    "D9:14": [],
+    "D9:15": [],
+    "D10:1": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "rejected for a summer job",
+        "event": "received a no for a summer job",
+        "time_expression": "a few days"
+      }
+    ],
+    "D10:2": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "took a trip to NYC",
+        "event": "went on a trip to NYC",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "had trouble figuring out the subway",
+        "event": "struggled with subway navigation initially",
+        "time_expression": "at first"
+      }
+    ],
+    "D10:3": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "gave a presentation in class",
+        "event": "delivered a class presentation",
+        "time_expression": "Yesterday"
+      }
+    ],
+    "D10:4": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "trying out cooking recipes",
+        "event": "cooking recipes",
+        "time_expression": "recently"
+      },
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "made a soup",
+        "event": "cooked a soup",
+        "time_expression": "recently"
+      }
+    ],
+    "D10:5": [],
+    "D10:6": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "does not have a recipe for the soup",
+        "event": "admitting lack of written recipe",
+        "time_expression": null
+      }
+    ],
+    "D10:7": [],
+    "D10:8": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "added sage to the soup",
+        "event": "used sage as an ingredient",
+        "time_expression": null
+      }
+    ],
+    "D10:9": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "visit Universal Studios",
+        "event": "planning a trip to Universal Studios",
+        "time_expression": "next month"
+      }
+    ],
+    "D10:10": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "has not been to Universal Studios",
+        "event": "stating he has not visited Universal Studios",
+        "time_expression": null
+      }
+    ],
+    "D10:11": [
+      {
+        "entity": "Tim",
+        "attribute": "experience_status",
+        "value": "first time going",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "stoked for Harry Potter stuff",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:12": [],
+    "D10:13": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "let John know how it goes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:14": [],
+    "D10:15": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "have a safe trip",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D10:16": [],
+    "D10:17": [],
+    "D11:1": [],
+    "D11:2": [
+      {
+        "entity": "Tim",
+        "attribute": "state",
+        "value": "busy with things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:3": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "attended a local restaurant with new teammates",
+        "event": "attended a local restaurant with new teammates",
+        "time_expression": "last week"
+      }
+    ],
+    "D11:4": [],
+    "D11:5": [
+      {
+        "entity": "John",
+        "attribute": "relationship",
+        "value": "great friends with new teammates",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "shared_interest",
+        "value": "basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:6": [],
+    "D11:7": [
+      {
+        "entity": "John",
+        "attribute": "plan",
+        "value": "take a team trip to explore a new city",
+        "event": "planning a team trip",
+        "time_expression": "next month"
+      }
+    ],
+    "D11:8": [],
+    "D11:9": [
+      {
+        "entity": "John",
+        "attribute": "trip_destination_status",
+        "value": "undecided",
+        "event": "deciding on destination",
+        "time_expression": null
+      }
+    ],
+    "D11:10": [
+      {
+        "entity": "Tim",
+        "attribute": "trip_suggestion",
+        "value": "Edinburgh, Scotland",
+        "event": "suggesting destination",
+        "time_expression": null
+      }
+    ],
+    "D11:11": [
+      {
+        "entity": "John",
+        "attribute": "visit_history_edinburgh",
+        "value": "has not been to Edinburgh",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:12": [],
+    "D11:13": [
+      {
+        "entity": "John",
+        "attribute": "career",
+        "value": "basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:14": [],
+    "D11:15": [
+      {
+        "entity": "John",
+        "attribute": "career_level",
+        "value": "professional",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:16": [],
+    "D11:17": [
+      {
+        "entity": "John",
+        "attribute": "goal_shooting",
+        "value": "improve shooting",
+        "event": "setting performance goal",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal_branding",
+        "value": "build brand and secure endorsements",
+        "event": "planning career extension",
+        "time_expression": null
+      }
+    ],
+    "D11:18": [],
+    "D11:19": [
+      {
+        "entity": "John",
+        "attribute": "goal_charity",
+        "value": "start a foundation and do charity work",
+        "event": "planning post-career legacy",
+        "time_expression": null
+      }
+    ],
+    "D11:20": [],
+    "D11:21": [
+      {
+        "entity": "John",
+        "attribute": "goal_endorsements",
+        "value": "select appropriate endorsements",
+        "event": "seeking advice on endorsements",
+        "time_expression": null
+      }
+    ],
+    "D11:22": [],
+    "D11:23": [
+      {
+        "entity": "John",
+        "attribute": "request_book_recommendations",
+        "value": "seeking book recommendations for trip",
+        "event": "asking for suggestions",
+        "time_expression": null
+      }
+    ],
+    "D11:24": [
+      {
+        "entity": "Tim",
+        "attribute": "recommended_book",
+        "value": "fantasy novel by Patrick Rothfuss",
+        "event": "recommendation",
+        "time_expression": null
+      }
+    ],
+    "D11:25": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "check out the recommended book",
+        "event": "intent to read",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "bookshelf",
+        "event": "displaying photo",
+        "time_expression": null
+      }
+    ],
+    "D11:26": [
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "book titled 'The Alchemist'",
+        "event": "observed on bookshelf",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "favorite book is 'The Alchemist'",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:27": [
+      {
+        "entity": "John",
+        "attribute": "reading_history",
+        "value": "read 'The Alchemist'",
+        "event": "reading completion",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "opinion",
+        "value": "loved 'The Alchemist'",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:28": [
+      {
+        "entity": "Tim",
+        "attribute": "opinion",
+        "value": "'The Alchemist' is worth it",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D11:29": [],
+    "D11:30": [],
+    "D12:1": [],
+    "D12:2": [
+      {
+        "entity": "John",
+        "attribute": "relationship_status",
+        "value": "married",
+        "event": "wedding ceremony",
+        "time_expression": "last week"
+      }
+    ],
+    "D12:3": [],
+    "D12:4": [
+      {
+        "entity": "John",
+        "attribute": "wedding_venue",
+        "value": "greenhouse",
+        "event": "wedding ceremony",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "wedding_scale",
+        "value": "smaller, more intimate gathering",
+        "event": "wedding ceremony",
+        "time_expression": null
+      }
+    ],
+    "D12:5": [],
+    "D12:6": [
+      {
+        "entity": "John",
+        "attribute": "membership",
+        "value": "hiking club",
+        "event": "recently joined",
+        "time_expression": null
+      }
+    ],
+    "D12:7": [],
+    "D12:8": [
+      {
+        "entity": "John",
+        "attribute": "wedding_memory",
+        "value": "seeing his partner walk down the aisle",
+        "event": "wedding ceremony",
+        "time_expression": null
+      }
+    ],
+    "D12:9": [
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "viewed a photo of John and his partner dancing",
+        "event": "Tim viewed a photo of John and his partner dancing",
+        "time_expression": null
+      }
+    ],
+    "D12:10": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "had his first dance at a cozy restaurant",
+        "event": "John and his partner had their first dance at a cozy restaurant",
+        "time_expression": null
+      }
+    ],
+    "D12:11": [],
+    "D12:12": [],
+    "D12:13": [
+      {
+        "entity": "John",
+        "attribute": "marital_status",
+        "value": "married",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:14": [],
+    "D12:15": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "a bookshelf filled with favorite fantasy novels",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:16": [],
+    "D12:17": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "reads fantasy novels as an escape from reality",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:18": [
+      {
+        "entity": "John",
+        "attribute": "hobby",
+        "value": "collects jerseys",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:19": [],
+    "D12:20": [
+      {
+        "entity": "John",
+        "attribute": "favorite_team",
+        "value": "The Wolves",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "favorite_player",
+        "value": "LeBron",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:21": [],
+    "D12:22": [
+      {
+        "entity": "John",
+        "attribute": "opinion",
+        "value": "admires LeBron's work ethic and dedication",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:23": [],
+    "D12:24": [
+      {
+        "entity": "John",
+        "attribute": "met_person",
+        "value": "a top player",
+        "event": "met him a few times",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "watched_live_performance",
+        "value": "a top player",
+        "event": "saw him play live",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "learning_outcome",
+        "value": "learned a lot",
+        "event": "watching a top player",
+        "time_expression": null
+      }
+    ],
+    "D12:25": [],
+    "D12:26": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "work even harder",
+        "event": "motivated by seeing top players",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "shared_media",
+        "value": "pic from the game",
+        "event": "shared a picture",
+        "time_expression": null
+      }
+    ],
+    "D12:27": [],
+    "D12:28": [
+      {
+        "entity": "John",
+        "attribute": "job_sentiment",
+        "value": "love my job",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D12:29": [],
+    "D13:1": [
+      {
+        "entity": "Tim",
+        "attribute": "attended_event",
+        "value": "Harry Potter conference",
+        "event": "went to a conference",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "event_location",
+        "value": "UK",
+        "event": "went to a conference",
+        "time_expression": "Last week"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "passion",
+        "value": "fantasy stuff",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:2": [
+      {
+        "entity": "John",
+        "attribute": "team_sentiment",
+        "value": "feels the same way with my team",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:3": [],
+    "D13:4": [
+      {
+        "entity": "John's team",
+        "attribute": "season_performance",
+        "value": "intense season with both tough losses and great wins",
+        "event": "completed a season",
+        "time_expression": null
+      }
+    ],
+    "D13:5": [],
+    "D13:6": [
+      {
+        "entity": "John's team",
+        "attribute": "team_dynamics",
+        "value": "back each other up and won't quit",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:7": [],
+    "D13:8": [
+      {
+        "entity": "John's team",
+        "attribute": "achievement",
+        "value": "won a trophy",
+        "event": "won a trophy",
+        "time_expression": null
+      }
+    ],
+    "D13:9": [],
+    "D13:10": [
+      {
+        "entity": "John",
+        "attribute": "emotional_state",
+        "value": "elated",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep working hard",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:11": [
+      {
+        "entity": "Tim",
+        "attribute": "availability",
+        "value": "here for John anytime",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:12": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "staying filled with self-belief",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:13": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "encourage John to stay motivated and push for goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:14": [
+      {
+        "entity": "John",
+        "attribute": "emotional_state",
+        "value": "motivated",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "need",
+        "value": "new shoes",
+        "event": "after all these games",
+        "time_expression": null
+      }
+    ],
+    "D13:15": [
+      {
+        "entity": "Tim",
+        "attribute": "opinion",
+        "value": "shoes are amazing and like walking on clouds",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:16": [
+      {
+        "entity": "John",
+        "attribute": "perception",
+        "value": "shoes look comfortable",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:17": [
+      {
+        "entity": "Tim",
+        "attribute": "purchase_channel",
+        "value": "online",
+        "event": "got shoes",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "recommendation",
+        "value": "definitely recommend",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:18": [
+      {
+        "entity": "John",
+        "attribute": "intent",
+        "value": "check out the shoes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:19": [
+      {
+        "entity": "Tim",
+        "attribute": "availability",
+        "value": "always here to help",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:20": [
+      {
+        "entity": "John",
+        "attribute": "intent",
+        "value": "reach out if needed",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:21": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "encourage John to stay motivated and chase dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D13:22": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "stay motivated and keep chasing dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:1": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "a lot has been going on",
+        "event": null,
+        "time_expression": "since then"
+      }
+    ],
+    "D14:2": [
+      {
+        "entity": "Tim",
+        "attribute": "intent",
+        "value": "catch up and hear about John's activities",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:3": [
+      {
+        "entity": "John",
+        "attribute": "role",
+        "value": "mentoring younger players on his team",
+        "event": null,
+        "time_expression": "now"
+      },
+      {
+        "entity": "John",
+        "attribute": "purpose",
+        "value": "stay involved in the game during the off-season",
+        "event": null,
+        "time_expression": "during the off-season"
+      }
+    ],
+    "D14:4": [],
+    "D14:5": [
+      {
+        "entity": "John",
+        "attribute": "experience",
+        "value": "gaining experience and adapting, motivating and encouraging everyone",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "younger players",
+        "attribute": "status",
+        "value": "developing and reaching their goals",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:6": [],
+    "D14:7": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "shared a picture of himself and some younger players",
+        "event": "shared a picture",
+        "time_expression": "recent practice"
+      }
+    ],
+    "D14:8": [],
+    "D14:9": [
+      {
+        "entity": "John",
+        "attribute": "role",
+        "value": "mentor to some younger players",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "provides advice and support on and off the court",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:10": [],
+    "D14:11": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "help shape the future of young athletes and inspire them to go after their dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:12": [],
+    "D14:13": [],
+    "D14:14": [
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "took a picture",
+        "event": "took a picture",
+        "time_expression": "last summer"
+      }
+    ],
+    "D14:15": [],
+    "D14:16": [
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "took a picture in the Smoky Mountains",
+        "event": "trip to the Smoky Mountains",
+        "time_expression": "last year"
+      }
+    ],
+    "D14:17": [],
+    "D14:18": [
+      {
+        "entity": "Tim",
+        "attribute": "status",
+        "value": "on break from school",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:19": [],
+    "D14:20": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "busy with studies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "relaxation_method",
+        "value": "reading books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:21": [],
+    "D14:22": [
+      {
+        "entity": "Tim",
+        "attribute": "current_activity",
+        "value": "reading a book",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D14:23": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "picked up a book",
+        "event": "started reading",
+        "time_expression": "after we talked"
+      }
+    ],
+    "D15:1": [
+      {
+        "entity": "Tim",
+        "attribute": "recent_reading",
+        "value": "book about castles in the UK",
+        "event": "read a book",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "visit castles in the UK",
+        "event": null,
+        "time_expression": "one day"
+      }
+    ],
+    "D15:2": [
+      {
+        "entity": "John",
+        "attribute": "interest",
+        "value": "historical architecture",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "visit castles",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:3": [
+      {
+        "entity": "Tim",
+        "attribute": "current_project",
+        "value": "writing a fantasy novel",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:4": [],
+    "D15:5": [
+      {
+        "entity": "Tim",
+        "attribute": "inspiration_sources",
+        "value": "books, movies, and real-life experiences",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "creative_influence",
+        "value": "reading about castles in the UK",
+        "event": "generated ideas",
+        "time_expression": null
+      }
+    ],
+    "D15:6": [],
+    "D15:7": [
+      {
+        "entity": "Tim",
+        "attribute": "inspiring_author",
+        "value": "J.K. Rowling",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "writing_habit",
+        "value": "taking notes on J.K. Rowling's style",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:8": [],
+    "D15:9": [
+      {
+        "entity": "Tim",
+        "attribute": "reading_history",
+        "value": "reading J.K. Rowling's works for a long time",
+        "event": null,
+        "time_expression": "for a long time"
+      }
+    ],
+    "D15:10": [],
+    "D15:11": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_quote",
+        "value": "\"Turn on the light - happiness hides in the darkest of times.\"",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "keep hope alive during tough times",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:12": [],
+    "D15:13": [],
+    "D15:14": [
+      {
+        "entity": "John",
+        "attribute": "whiteboard_content",
+        "value": "motivational quotes and strategies to help stay focused and push through tough workouts",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:15": [],
+    "D15:16": [
+      {
+        "entity": "John",
+        "attribute": "desk_item",
+        "value": "a plaque",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "plaque_purpose",
+        "value": "constant reminder to believe in myself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:17": [],
+    "D15:18": [
+      {
+        "entity": "John",
+        "attribute": "motivation_sources",
+        "value": "teammates believing in him and love for improving skills",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "not let teammates down",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:19": [],
+    "D15:20": [
+      {
+        "entity": "John's teammates",
+        "attribute": "behavior",
+        "value": "support John even when he makes mistakes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:21": [],
+    "D15:22": [
+      {
+        "entity": "John",
+        "attribute": "support_network",
+        "value": "has people who are super supportive and always there for him",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:23": [
+      {
+        "entity": "Tim",
+        "attribute": "support_network",
+        "value": "has friends and family who support him",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:24": [
+      {
+        "entity": "John",
+        "attribute": "family_support",
+        "value": "family is always there for him",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:25": [],
+    "D15:26": [
+      {
+        "entity": "John",
+        "attribute": "relationship_to_group",
+        "value": "family",
+        "event": "hanging out",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "relationship_to_team",
+        "value": "second family",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:27": [],
+    "D15:28": [
+      {
+        "entity": "John",
+        "attribute": "activities_with_friends_and_family",
+        "value": "movies, dinner out",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:29": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_activities",
+        "value": "road trips, exploring, hiking, playing board games, reading books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:30": [
+      {
+        "entity": "John",
+        "attribute": "hobby",
+        "value": "reading books",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "hobby",
+        "value": "cooking",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "location_reference",
+        "value": "court",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:31": [
+      {
+        "entity": "Tim",
+        "attribute": "opinion_on_cooking",
+        "value": "great way to chill and be creative",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:32": [
+      {
+        "entity": "John",
+        "attribute": "favorite_recipe",
+        "value": "honey garlic chicken with roasted veg",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:33": [],
+    "D15:34": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "write down recipe and mail it to Tim",
+        "event": "offering to share recipe",
+        "time_expression": null
+      }
+    ],
+    "D15:35": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "try the recipe",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D15:36": [],
+    "D15:37": [],
+    "D15:38": [],
+    "D16:1": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "got stuck on a plot twist",
+        "event": "writing issue",
+        "time_expression": "Last week"
+      }
+    ],
+    "D16:2": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "playing on the court",
+        "event": "John mentions sticking it out on the court",
+        "time_expression": null
+      }
+    ],
+    "D16:3": [],
+    "D16:4": [],
+    "D16:5": [],
+    "D16:6": [
+      {
+        "entity": "John",
+        "attribute": "sport",
+        "value": "basketball",
+        "event": "John participated in a basketball game",
+        "time_expression": "last year"
+      },
+      {
+        "entity": "John's team",
+        "attribute": "game_status",
+        "value": "trailing big time in the 4th quarter",
+        "event": "John's team was trailing in the 4th quarter",
+        "time_expression": "last year"
+      },
+      {
+        "entity": "John's team",
+        "attribute": "game_outcome",
+        "value": "overturned the deficit",
+        "event": "John's team won the game",
+        "time_expression": "last year"
+      }
+    ],
+    "D16:7": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "a basketball signed by his favorite player",
+        "event": "Tim reveals he has a signed basketball",
+        "time_expression": null
+      }
+    ],
+    "D16:8": [],
+    "D16:9": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_player",
+        "value": "LeBron",
+        "event": "Tim identifies LeBron as his favorite player",
+        "time_expression": null
+      },
+      {
+        "entity": "LeBron",
+        "attribute": "notable_action",
+        "value": "made an epic block in a Finals game",
+        "event": "LeBron made a block that changed the game",
+        "time_expression": "a few years back"
+      }
+    ],
+    "D16:10": [
+      {
+        "entity": "LeBron",
+        "attribute": "specific_action",
+        "value": "chased down Iguodala and pinned the ball against the backboard",
+        "event": "LeBron made a block in Game 7 of the '16 Finals",
+        "time_expression": "'16 Finals"
+      }
+    ],
+    "D16:11": [],
+    "D16:12": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "playing basketball",
+        "event": "John states he enjoys playing and pushing himself",
+        "time_expression": null
+      }
+    ],
+    "D16:13": [],
+    "D16:14": [
+      {
+        "entity": "John",
+        "attribute": "travel_status",
+        "value": "left for a European vacation",
+        "event": "John and his wife departed for Europe",
+        "time_expression": "just"
+      },
+      {
+        "entity": "John",
+        "attribute": "travel_companion",
+        "value": "his wife",
+        "event": "John is traveling with his wife",
+        "time_expression": null
+      }
+    ],
+    "D16:15": [
+      {
+        "entity": "Tim",
+        "attribute": "recommendation",
+        "value": "visiting castles",
+        "event": "Tim recommends visiting castles in Europe",
+        "time_expression": null
+      }
+    ],
+    "D16:16": [],
+    "D16:17": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "stay in touch with John",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:1": [],
+    "D17:2": [
+      {
+        "entity": "Tim",
+        "attribute": "habit",
+        "value": "reading",
+        "event": null,
+        "time_expression": "as usual"
+      }
+    ],
+    "D17:3": [
+      {
+        "entity": "John",
+        "attribute": "has_wife",
+        "value": "true",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "road tripping on the European coastline",
+        "event": "road trip with wife",
+        "time_expression": null
+      }
+    ],
+    "D17:4": [],
+    "D17:5": [],
+    "D17:6": [],
+    "D17:7": [],
+    "D17:8": [],
+    "D17:9": [
+      {
+        "entity": "John",
+        "attribute": "recent_activity",
+        "value": "finished reading a fantasy series",
+        "event": "finished reading",
+        "time_expression": "just"
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves getting lost in fantasy worlds",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:10": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "favorite fantasy show is \"That\"",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D17:11": [
+      {
+        "entity": "John",
+        "attribute": "media_consumption",
+        "value": "watched the show \"That\"",
+        "event": "watched show",
+        "time_expression": null
+      }
+    ],
+    "D17:12": [],
+    "D17:13": [],
+    "D17:14": [],
+    "D17:15": [],
+    "D17:16": [],
+    "D17:17": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "finding the right balance",
+        "event": "continuing his journey",
+        "time_expression": null
+      }
+    ],
+    "D17:18": [],
+    "D17:19": [],
+    "D18:1": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "went to a castle",
+        "event": "trip to the UK",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D18:2": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "injury",
+        "event": null,
+        "time_expression": "this week"
+      }
+    ],
+    "D18:3": [
+      {
+        "entity": "Tim",
+        "attribute": "state",
+        "value": "swamped with exams",
+        "event": null,
+        "time_expression": "this week"
+      }
+    ],
+    "D18:4": [],
+    "D18:5": [],
+    "D18:6": [
+      {
+        "entity": "John",
+        "attribute": "study_method",
+        "value": "visualize my goals and success",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:7": [
+      {
+        "entity": "Tim",
+        "attribute": "study_method",
+        "value": "breaking up my studying into smaller parts. 25 minutes on, then 5 minutes off",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:8": [],
+    "D18:9": [],
+    "D18:10": [
+      {
+        "entity": "John",
+        "attribute": "injury_severity",
+        "value": "not too serious",
+        "event": "doctor's assessment",
+        "time_expression": null
+      }
+    ],
+    "D18:11": [],
+    "D18:12": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "hates not being on the court",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:13": [],
+    "D18:14": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "pushing on",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D18:15": [],
+    "D19:1": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "has an injury",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:2": [
+      {
+        "entity": "John",
+        "attribute": "state",
+        "value": "staying positive and taking it slow",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:3": [
+      {
+        "entity": "Tim",
+        "attribute": "state",
+        "value": "swamped with studies and projects",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "tried writing a story based on experiences in the UK",
+        "event": "writing a story",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "event_outcome",
+        "value": "story did not go the way he wanted",
+        "event": "writing a story",
+        "time_expression": "last week"
+      }
+    ],
+    "D19:4": [
+      {
+        "entity": "John",
+        "attribute": "strategy",
+        "value": "reflects on what went wrong and finds ways to improve when facing challenges",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:5": [],
+    "D19:6": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "hurt his ankle",
+        "event": "injury",
+        "time_expression": "Last season"
+      },
+      {
+        "entity": "John",
+        "attribute": "event_consequence",
+        "value": "required time off and physical therapy",
+        "event": "injury",
+        "time_expression": "Last season"
+      },
+      {
+        "entity": "John",
+        "attribute": "event_outcome",
+        "value": "overcame the challenge",
+        "event": "injury recovery",
+        "time_expression": null
+      }
+    ],
+    "D19:7": [],
+    "D19:8": [
+      {
+        "entity": "John",
+        "attribute": "motivation",
+        "value": "passion for basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:9": [
+      {
+        "entity": "Tim",
+        "attribute": "motivation",
+        "value": "writing and reading",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:10": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "messed up during a big game",
+        "event": "game performance",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event_response",
+        "value": "worked hard to get better",
+        "event": "game performance",
+        "time_expression": null
+      }
+    ],
+    "D19:11": [],
+    "D19:12": [],
+    "D19:13": [],
+    "D19:14": [
+      {
+        "entity": "John",
+        "attribute": "creative_inspiration_source",
+        "value": "fantasy books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:15": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_books",
+        "value": "Harry Potter and GoT",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:16": [
+      {
+        "entity": "John",
+        "attribute": "preferred_book_genre",
+        "value": "non-fiction books about personal development and mindset",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:17": [
+      {
+        "entity": "Tim",
+        "attribute": "reading_interests",
+        "value": "fantasy stories, growth, psychology, and self-improvement books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D19:18": [],
+    "D19:19": [
+      {
+        "entity": "Tim",
+        "attribute": "recent_reading_impact",
+        "value": "read a book about small changes making big differences which changed his way of doing things",
+        "event": "reading a book",
+        "time_expression": "recently"
+      }
+    ],
+    "D19:20": [
+      {
+        "entity": "John",
+        "attribute": "recent_reading_activity",
+        "value": "reread \"The Alchemist\"",
+        "event": "rereading a book",
+        "time_expression": "recently"
+      }
+    ],
+    "D19:21": [
+      {
+        "entity": "Tim",
+        "attribute": "past_reading_experience",
+        "value": "read \"The Alchemist\" which changed his perspective on goals",
+        "event": "reading a book",
+        "time_expression": "a while back"
+      }
+    ],
+    "D19:22": [],
+    "D19:23": [],
+    "D20:1": [
+      {
+        "entity": "Tim",
+        "attribute": "recent_event",
+        "value": "took a tough exam and studied hard",
+        "event": "taking an exam",
+        "time_expression": "last week"
+      }
+    ],
+    "D20:2": [
+      {
+        "entity": "John",
+        "attribute": "current_activity",
+        "value": "trying out yoga",
+        "event": "practicing yoga",
+        "time_expression": null
+      }
+    ],
+    "D20:3": [],
+    "D20:4": [
+      {
+        "entity": "John",
+        "attribute": "yoga_benefits",
+        "value": "improved strength, flexibility, focus, and balance",
+        "event": "practicing yoga",
+        "time_expression": null
+      }
+    ],
+    "D20:5": [],
+    "D20:6": [
+      {
+        "entity": "John",
+        "attribute": "preferred_yoga_pose",
+        "value": "Warrior II",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:7": [],
+    "D20:8": [
+      {
+        "entity": "John",
+        "attribute": "action",
+        "value": "shared a photo of himself in a yoga pose",
+        "event": "sharing photo",
+        "time_expression": null
+      }
+    ],
+    "D20:9": [],
+    "D20:10": [
+      {
+        "entity": "John",
+        "attribute": "pose_hold_duration",
+        "value": "30-60 seconds",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:11": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "try the yoga pose",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:12": [],
+    "D20:13": [],
+    "D20:14": [],
+    "D20:15": [],
+    "D20:16": [],
+    "D20:17": [
+      {
+        "entity": "Tim",
+        "attribute": "interest",
+        "value": "fantasy books and movies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "interest",
+        "value": "fantasy books and movies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "reorganized book shelf",
+        "event": "reorganizing book shelf",
+        "time_expression": null
+      }
+    ],
+    "D20:18": [],
+    "D20:19": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "bookshelf",
+        "event": "showing bookshelf",
+        "time_expression": null
+      }
+    ],
+    "D20:20": [
+      {
+        "entity": "John",
+        "attribute": "favorite_book",
+        "value": "The Hobbit",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:21": [],
+    "D20:22": [
+      {
+        "entity": "John",
+        "attribute": "reading_history",
+        "value": "read an unnamed popular fantasy series",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "favorite_book",
+        "value": "an unnamed popular fantasy series",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:23": [],
+    "D20:24": [],
+    "D20:25": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "loves books that allow escape from reality",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:26": [],
+    "D20:27": [],
+    "D20:28": [
+      {
+        "entity": "John",
+        "attribute": "photo_location",
+        "value": "a forest near his hometown",
+        "event": "taking photo",
+        "time_expression": null
+      }
+    ],
+    "D20:29": [],
+    "D20:30": [],
+    "D20:31": [],
+    "D20:32": [],
+    "D20:33": [
+      {
+        "entity": "Tim",
+        "attribute": "past_event",
+        "value": "took a trip",
+        "event": "took a trip",
+        "time_expression": "last summer"
+      }
+    ],
+    "D20:34": [
+      {
+        "entity": "John",
+        "attribute": "past_event",
+        "value": "went camping",
+        "event": "went camping",
+        "time_expression": null
+      }
+    ],
+    "D20:35": [],
+    "D20:36": [
+      {
+        "entity": "John",
+        "attribute": "past_event_location",
+        "value": "camped in the mountains",
+        "event": "went camping in the mountains",
+        "time_expression": null
+      }
+    ],
+    "D20:37": [],
+    "D20:38": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loved chilling and taking in the beauty of nature",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:39": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "nature has a resetting effect on his soul",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D20:40": [
+      {
+        "entity": "John",
+        "attribute": "past_event_location",
+        "value": "Rocky Mountains",
+        "event": "took a trip to the Rocky Mountains",
+        "time_expression": "last year"
+      }
+    ],
+    "D20:41": [],
+    "D20:42": [],
+    "D20:43": [],
+    "D21:1": [
+      {
+        "entity": "Tim",
+        "attribute": "current_state",
+        "value": "joined a travel club",
+        "event": "joined a travel club",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "interested in different cultures and countries",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:2": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves learning about different cultures",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "team_composition",
+        "value": "teammates come from all over",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:3": [],
+    "D21:4": [
+      {
+        "entity": "John",
+        "attribute": "professional_experience_duration",
+        "value": "just under a year",
+        "event": "playing professionally",
+        "time_expression": "just under a year now"
+      }
+    ],
+    "D21:5": [],
+    "D21:6": [
+      {
+        "entity": "John",
+        "attribute": "career_status",
+        "value": "pro basketball player",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:7": [],
+    "D21:8": [
+      {
+        "entity": "John",
+        "attribute": "skill_progress",
+        "value": "improving overall game on the court",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "financial_status",
+        "value": "has endorsement deals",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "skill_progress",
+        "value": "learning to market self and boost brand",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:9": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "joined a travel club",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "working on studies",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "started learning an instrument",
+        "event": null,
+        "time_expression": "Recently"
+      }
+    ],
+    "D21:10": [],
+    "D21:11": [
+      {
+        "entity": "Tim",
+        "attribute": "instrument_learning",
+        "value": "violin",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "music_preference",
+        "value": "classical music",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "music_goal",
+        "value": "try out jazz and film scores",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:12": [],
+    "D21:13": [
+      {
+        "entity": "Tim",
+        "attribute": "instrument_duration",
+        "value": "about four months",
+        "event": null,
+        "time_expression": "about four months"
+      }
+    ],
+    "D21:14": [],
+    "D21:15": [
+      {
+        "entity": "John",
+        "attribute": "achievement",
+        "value": "won a trophy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:16": [
+      {
+        "entity": "John",
+        "attribute": "motivation_strategy",
+        "value": "show care for teammates, celebrate achievements, provide constructive feedback, remind of bigger goal, create positive environment, give pep talk",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D21:17": [],
+    "D21:18": [],
+    "D21:19": [],
+    "D22:1": [
+      {
+        "entity": "Tim",
+        "attribute": "event_attended",
+        "value": "Harry Potter party",
+        "event": "attended party",
+        "time_expression": "just got back"
+      }
+    ],
+    "D22:2": [
+      {
+        "entity": "John",
+        "attribute": "event_attended",
+        "value": "charity event with Harry Potter trivia",
+        "event": "attended charity event",
+        "time_expression": "Last August"
+      }
+    ],
+    "D22:3": [
+      {
+        "entity": "Tim",
+        "attribute": "clothing_worn",
+        "value": "Gryffindor scarf",
+        "event": "wore scarf at party",
+        "time_expression": null
+      }
+    ],
+    "D22:4": [
+      {
+        "entity": "John's team",
+        "attribute": "game_result",
+        "value": "win against a top team",
+        "event": "played game",
+        "time_expression": "lately"
+      }
+    ],
+    "D22:5": [],
+    "D22:6": [],
+    "D22:7": [
+      {
+        "entity": "Tim",
+        "attribute": "current_reading",
+        "value": "series about the power of friendship and loyalty",
+        "event": "reading",
+        "time_expression": null
+      }
+    ],
+    "D22:8": [
+      {
+        "entity": "John's team",
+        "attribute": "team_activities",
+        "value": "team dinners, outings, and basketball games",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:9": [],
+    "D22:10": [],
+    "D22:11": [],
+    "D22:12": [
+      {
+        "entity": "John",
+        "attribute": "current_reading",
+        "value": "\"Dune\" by Frank Herbert",
+        "event": "reading",
+        "time_expression": "currently"
+      }
+    ],
+    "D22:13": [
+      {
+        "entity": "Tim",
+        "attribute": "recently_finished_reading",
+        "value": "\"A Dance with Dragons\"",
+        "event": "finished reading",
+        "time_expression": "Just finished"
+      }
+    ],
+    "D22:14": [],
+    "D22:15": [
+      {
+        "entity": "Tim",
+        "attribute": "reading_history",
+        "value": "GoT series",
+        "event": "read",
+        "time_expression": null
+      }
+    ],
+    "D22:16": [
+      {
+        "entity": "John",
+        "attribute": "reading_status",
+        "value": "has not read them yet",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "check them out",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D22:17": [],
+    "D22:18": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "let Tim know",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:1": [],
+    "D23:2": [
+      {
+        "entity": "Tim",
+        "attribute": "academic_experience",
+        "value": "had a tough time with English lit class",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "academic_task",
+        "value": "did an analysis on a series",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:3": [
+      {
+        "entity": "John",
+        "attribute": "sports_achievement",
+        "value": "career-high in assists",
+        "event": "big game against rival",
+        "time_expression": "last Friday"
+      }
+    ],
+    "D23:4": [],
+    "D23:5": [
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "felt great making plays for team",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves seeing teammates succeed due to opportunities created",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:6": [],
+    "D23:7": [
+      {
+        "entity": "John",
+        "attribute": "favorite_game",
+        "value": "hit buzzer-beater shot to win when down 10 in 4th",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "sentiment",
+        "value": "loves basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:8": [
+      {
+        "entity": "John",
+        "attribute": "past_action",
+        "value": "sent a picture to Tim",
+        "event": null,
+        "time_expression": "a while back"
+      }
+    ],
+    "D23:9": [
+      {
+        "entity": "John",
+        "attribute": "past_habit",
+        "value": "practiced basketball outside for hours when younger",
+        "event": null,
+        "time_expression": "when I was younger"
+      },
+      {
+        "entity": "John",
+        "attribute": "coping_mechanism",
+        "value": "used basketball to deal with doubts and stress",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:10": [],
+    "D23:11": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep chasing dreams",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D23:12": [],
+    "D23:13": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "keep pushing and following dreams",
+        "event": "expressing intent to continue pursuing goals",
+        "time_expression": null
+      }
+    ],
+    "D23:14": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "support each other on journey towards dreams",
+        "event": "expressing intent to continue mutual support",
+        "time_expression": null
+      }
+    ],
+    "D23:15": [],
+    "D23:16": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "keep each other motivated",
+        "event": "expressing intent to maintain motivation",
+        "time_expression": null
+      }
+    ],
+    "D24:1": [],
+    "D24:2": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "won a close basketball game against another team",
+        "event": "team victory in basketball game",
+        "time_expression": "last week"
+      }
+    ],
+    "D24:3": [],
+    "D24:4": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "won a close basketball game",
+        "event": "team victory in basketball game",
+        "time_expression": null
+      }
+    ],
+    "D24:5": [],
+    "D24:6": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves the game",
+        "event": "expressing love for basketball due to winning experience",
+        "time_expression": null
+      }
+    ],
+    "D24:7": [],
+    "D24:8": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "took a picture during a morning workout",
+        "event": "photographing morning workout",
+        "time_expression": "during a morning workout"
+      }
+    ],
+    "D24:9": [],
+    "D24:10": [
+      {
+        "entity": "John",
+        "attribute": "event",
+        "value": "injured himself and missed games",
+        "event": "sustained injury leading to missed games",
+        "time_expression": "not too long ago"
+      }
+    ],
+    "D24:11": [],
+    "D24:12": [
+      {
+        "entity": "John",
+        "attribute": "routine",
+        "value": "does physical therapy exercises every day",
+        "event": null,
+        "time_expression": "every day"
+      }
+    ],
+    "D24:13": [],
+    "D24:14": [
+      {
+        "entity": "John",
+        "attribute": "achievement",
+        "value": "jogged a bit with no pain",
+        "event": "milestone moment at the gym",
+        "time_expression": "Last Friday"
+      }
+    ],
+    "D24:15": [],
+    "D24:16": [
+      {
+        "entity": "John",
+        "attribute": "event_host",
+        "value": "hosted a small get-together with friends and family",
+        "event": "celebration of jogging milestone",
+        "time_expression": null
+      }
+    ],
+    "D24:17": [],
+    "D24:18": [],
+    "D24:19": [],
+    "D24:20": [],
+    "D25:1": [],
+    "D25:2": [
+      {
+        "entity": "John",
+        "attribute": "business_deal",
+        "value": "got a deal with a renowned outdoor gear company",
+        "event": null,
+        "time_expression": "Last week"
+      }
+    ],
+    "D25:3": [],
+    "D25:4": [
+      {
+        "entity": "John",
+        "attribute": "acquisition",
+        "value": "got hiking stuff and outdoor gear",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "event_location",
+        "value": "photoshoot in a forest",
+        "event": "photoshoot",
+        "time_expression": null
+      }
+    ],
+    "D25:5": [],
+    "D25:6": [],
+    "D25:7": [],
+    "D25:8": [
+      {
+        "entity": "John",
+        "attribute": "discovery_method",
+        "value": "stumbled across spot while hiking",
+        "event": "discovered hiking spot",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "emotional_state",
+        "value": "at peace",
+        "event": "felt at peace surrounded by rocks",
+        "time_expression": null
+      }
+    ],
+    "D25:9": [],
+    "D25:10": [
+      {
+        "entity": "John",
+        "attribute": "team_performance",
+        "value": "achieving goals",
+        "event": "team achieving goals",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "work_ethic",
+        "value": "putting in a lot of work",
+        "event": "working hard",
+        "time_expression": null
+      }
+    ],
+    "D25:11": [],
+    "D25:12": [
+      {
+        "entity": "John's team",
+        "attribute": "effort_level",
+        "value": "gave it our all",
+        "event": "participated in scrimmage",
+        "time_expression": "last week"
+      },
+      {
+        "entity": "John's team",
+        "attribute": "growth_status",
+        "value": "amazing growth",
+        "event": "observed team growth",
+        "time_expression": null
+      }
+    ],
+    "D25:13": [],
+    "D25:14": [
+      {
+        "entity": "John's team",
+        "attribute": "area_of_growth",
+        "value": "communication and bonding",
+        "event": "experienced growth in communication and bonding",
+        "time_expression": null
+      },
+      {
+        "entity": "John's team",
+        "attribute": "performance_impact",
+        "value": "helped performances by understanding strengths and weaknesses",
+        "event": "improved performance through understanding",
+        "time_expression": null
+      }
+    ],
+    "D25:15": [],
+    "D25:16": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "continue supporting each other",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D25:17": [],
+    "D26:1": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "started doing seminars",
+        "event": "started seminars",
+        "time_expression": "My week's been busy"
+      },
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "helping people with sports and marketing",
+        "event": "helping people",
+        "time_expression": "My week's been busy"
+      }
+    ],
+    "D26:2": [],
+    "D26:3": [
+      {
+        "entity": "John",
+        "attribute": "seminar_outcome",
+        "value": "went really well",
+        "event": "conducted seminars",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "audience_reaction",
+        "value": "aspiring profs were eager and motivated",
+        "event": "interacted with aspiring profs",
+        "time_expression": null
+      }
+    ],
+    "D26:4": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "starting some big new things",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:5": [],
+    "D26:6": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "reading stories from travelers",
+        "event": "reading book",
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "plan next adventure",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:7": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "looking for travel ideas",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:8": [
+      {
+        "entity": "Tim",
+        "attribute": "activity",
+        "value": "read stories about hikers trekking through Himalayas",
+        "event": "reading book",
+        "time_expression": null
+      }
+    ],
+    "D26:9": [],
+    "D26:10": [
+      {
+        "entity": "Tim",
+        "attribute": "state",
+        "value": "motivated by story of hikers",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:11": [],
+    "D26:12": [
+      {
+        "entity": "Tim",
+        "attribute": "event",
+        "value": "visited travel agency",
+        "event": "visited travel agency",
+        "time_expression": null
+      }
+    ],
+    "D26:13": [],
+    "D26:14": [],
+    "D26:15": [],
+    "D26:16": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "fan of Emma Watson",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:17": [],
+    "D26:18": [
+      {
+        "entity": "Tim",
+        "attribute": "state",
+        "value": "inspired by Emma Watson's advocacy",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:19": [
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "speaking at charity event",
+        "event": "speaking at charity event",
+        "time_expression": null
+      }
+    ],
+    "D26:20": [],
+    "D26:21": [
+      {
+        "entity": "John",
+        "attribute": "work_focus",
+        "value": "supporting youth sports and fighting for fair chances in sports for underserved communities",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "ensure every kid has access to good sports programs",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "activity",
+        "value": "collaborating with organizations to create more opportunities for young athletes",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:22": [],
+    "D26:23": [
+      {
+        "entity": "John",
+        "attribute": "event_participation",
+        "value": "organized a basketball camp for kids in his hometown",
+        "event": "organized basketball camp",
+        "time_expression": "last summer"
+      }
+    ],
+    "D26:24": [],
+    "D26:25": [],
+    "D26:26": [
+      {
+        "entity": "Tim",
+        "attribute": "hobby",
+        "value": "reading books",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "favorite book series is a magical world",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:27": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "fan of Harry Potter movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:28": [
+      {
+        "entity": "Tim",
+        "attribute": "media_consumption",
+        "value": "has seen all the Harry Potter movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:29": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "total movie fan",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "relaxation_method",
+        "value": "watching movies",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:30": [
+      {
+        "entity": "Tim",
+        "attribute": "social_activity",
+        "value": "having movie marathons with friends",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:31": [],
+    "D26:32": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_genre",
+        "value": "epic adventures and magical worlds",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "Tim",
+        "attribute": "favorite_media",
+        "value": "Lord of the Rings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D26:33": [],
+    "D26:34": [
+      {
+        "entity": "Tim",
+        "attribute": "anticipation",
+        "value": "excited about a new fantasy TV series",
+        "event": null,
+        "time_expression": "next month"
+      }
+    ],
+    "D26:35": [],
+    "D26:36": [
+      {
+        "entity": "Tim",
+        "attribute": "excited_about_show",
+        "value": "The Wheel of Time",
+        "event": "expressing excitement about a new show",
+        "time_expression": "coming out"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "loves_book_series",
+        "value": "The Wheel of Time",
+        "event": "stating preference for book series",
+        "time_expression": null
+      }
+    ],
+    "D26:37": [],
+    "D26:38": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "check out the series",
+        "event": "stating intention to watch",
+        "time_expression": null
+      }
+    ],
+    "D27:1": [
+      {
+        "entity": "Tim",
+        "attribute": "joined_group",
+        "value": "group of globetrotters",
+        "event": "joining a group",
+        "time_expression": "since we last talked"
+      }
+    ],
+    "D27:2": [
+      {
+        "entity": "John",
+        "attribute": "visited_location",
+        "value": "Italy",
+        "event": "traveling to Italy",
+        "time_expression": "last month"
+      }
+    ],
+    "D27:3": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "visit Italy",
+        "event": "listing Italy as a place to visit",
+        "time_expression": null
+      }
+    ],
+    "D27:4": [
+      {
+        "entity": "John",
+        "attribute": "acquired_item",
+        "value": "book",
+        "event": "buying a book in Italy",
+        "time_expression": "while I was there"
+      }
+    ],
+    "D27:5": [
+      {
+        "entity": "Tim",
+        "attribute": "learning_language",
+        "value": "German",
+        "event": "learning a language",
+        "time_expression": "now"
+      }
+    ],
+    "D27:6": [
+      {
+        "entity": "John",
+        "attribute": "knows_language",
+        "value": "German",
+        "event": "stating language knowledge",
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "knows_language",
+        "value": "Spanish",
+        "event": "stating language knowledge",
+        "time_expression": null
+      }
+    ],
+    "D27:7": [
+      {
+        "entity": "Tim",
+        "attribute": "studied_language",
+        "value": "French",
+        "event": "taking French class",
+        "time_expression": "in high school"
+      }
+    ],
+    "D27:8": [
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "learn Spanish",
+        "event": "stating desire to learn",
+        "time_expression": "always"
+      },
+      {
+        "entity": "John",
+        "attribute": "started_learning",
+        "value": "Spanish",
+        "event": "starting language study",
+        "time_expression": null
+      }
+    ],
+    "D27:9": [
+      {
+        "entity": "Tim",
+        "attribute": "uses_resource",
+        "value": "app",
+        "event": "using an app for learning",
+        "time_expression": null
+      }
+    ],
+    "D27:10": [
+      {
+        "entity": "John",
+        "attribute": "uses_resource",
+        "value": "app",
+        "event": "using an app to practice",
+        "time_expression": null
+      }
+    ],
+    "D27:11": [],
+    "D27:12": [
+      {
+        "entity": "Tim",
+        "attribute": "language_learning_goal",
+        "value": "continue learning German",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:13": [
+      {
+        "entity": "Tim",
+        "attribute": "language_learning_goal",
+        "value": "continue German lessons",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:14": [
+      {
+        "entity": "John",
+        "attribute": "routine",
+        "value": "practices and trains basketball every day",
+        "event": null,
+        "time_expression": "every day"
+      },
+      {
+        "entity": "John",
+        "attribute": "passion",
+        "value": "basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:15": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "loves reading",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:16": [
+      {
+        "entity": "John",
+        "attribute": "commitment",
+        "value": "will not give up on basketball",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:17": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "has a collection of books",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:18": [],
+    "D27:19": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_book",
+        "value": "Harry Potter",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:20": [],
+    "D27:21": [
+      {
+        "entity": "Tim",
+        "attribute": "favorite_fantasy_movie",
+        "value": "Star Wars",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:22": [
+      {
+        "entity": "John",
+        "attribute": "favorite_fantasy_movie",
+        "value": "Lord of the Rings",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:23": [],
+    "D27:24": [
+      {
+        "entity": "John",
+        "attribute": "favorite_character",
+        "value": "Aragorn",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:25": [],
+    "D27:26": [
+      {
+        "entity": "Aragorn",
+        "attribute": "role",
+        "value": "king",
+        "event": "becomes king",
+        "time_expression": null
+      }
+    ],
+    "D27:27": [],
+    "D27:28": [
+      {
+        "entity": "John",
+        "attribute": "possession",
+        "value": "painting in his room",
+        "event": null,
+        "time_expression": null
+      },
+      {
+        "entity": "John",
+        "attribute": "goal",
+        "value": "stay true and be a leader in everything he does",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:29": [],
+    "D27:30": [
+      {
+        "entity": "John",
+        "attribute": "inspiration_source",
+        "value": "Aragorn's brave, selfless, down-to-earth attitude",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:31": [],
+    "D27:32": [],
+    "D27:33": [
+      {
+        "entity": "Tim",
+        "attribute": "possession",
+        "value": "map of Middle-earth from LOTR",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:34": [],
+    "D27:35": [],
+    "D27:36": [
+      {
+        "entity": "John",
+        "attribute": "preference",
+        "value": "loves traveling",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:37": [
+      {
+        "entity": "Tim",
+        "attribute": "preference",
+        "value": "loves traveling",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:38": [
+      {
+        "entity": "John",
+        "attribute": "travel_history",
+        "value": "been to Paris",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:39": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "see Paris for himself",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D27:40": [],
+    "D28:1": [
+      {
+        "entity": "Tim",
+        "attribute": "status",
+        "value": "accepted into study abroad program",
+        "event": "received news of acceptance",
+        "time_expression": "On Friday"
+      },
+      {
+        "entity": "Tim",
+        "attribute": "plan",
+        "value": "go to Ireland for a semester",
+        "event": null,
+        "time_expression": "Next month"
+      }
+    ],
+    "D28:2": [],
+    "D28:3": [
+      {
+        "entity": "Tim",
+        "attribute": "planned_accommodation_location",
+        "value": "Galway",
+        "event": "planning to stay in Galway",
+        "time_expression": null
+      }
+    ],
+    "D28:4": [],
+    "D28:5": [
+      {
+        "entity": "Tim",
+        "attribute": "travel_goal",
+        "value": "explore nature",
+        "event": "expressing excitement to explore nature",
+        "time_expression": null
+      }
+    ],
+    "D28:6": [],
+    "D28:7": [
+      {
+        "entity": "Tim",
+        "attribute": "travel_goal",
+        "value": "visit The Cliffs of Moher",
+        "event": "expressing desire to visit The Cliffs of Moher",
+        "time_expression": null
+      }
+    ],
+    "D28:8": [
+      {
+        "entity": "John",
+        "attribute": "travel_goal",
+        "value": "visit The Cliffs of Moher",
+        "event": "expressing intention to visit The Cliffs of Moher",
+        "time_expression": "after my season"
+      }
+    ],
+    "D28:9": [],
+    "D28:10": [
+      {
+        "entity": "John",
+        "attribute": "event_participation",
+        "value": "held a benefit basketball game",
+        "event": "held a benefit basketball game",
+        "time_expression": "last week"
+      }
+    ],
+    "D28:11": [],
+    "D28:12": [
+      {
+        "entity": "John",
+        "attribute": "event_outcome",
+        "value": "raised money for charity",
+        "event": "benefit basketball game raised money for charity",
+        "time_expression": null
+      }
+    ],
+    "D28:13": [],
+    "D28:14": [],
+    "D28:15": [],
+    "D28:16": [],
+    "D28:17": [
+      {
+        "entity": "Tim",
+        "attribute": "current_reading",
+        "value": "The Name of the Wind",
+        "event": "reading",
+        "time_expression": "currently"
+      }
+    ],
+    "D28:18": [
+      {
+        "entity": "John",
+        "attribute": "reading_list_action",
+        "value": "added The Name of the Wind to list",
+        "event": "added book to list",
+        "time_expression": null
+      }
+    ],
+    "D28:19": [],
+    "D28:20": [],
+    "D28:21": [],
+    "D29:1": [],
+    "D29:2": [],
+    "D29:3": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "research visa requirements for places he wants to visit",
+        "event": "researching visa requirements",
+        "time_expression": null
+      }
+    ],
+    "D29:4": [
+      {
+        "entity": "John",
+        "attribute": "endorsement",
+        "value": "popular beverage company",
+        "event": "got an endorsement",
+        "time_expression": "Last week"
+      }
+    ],
+    "D29:5": [],
+    "D29:6": [],
+    "D29:7": [],
+    "D29:8": [],
+    "D29:9": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "visit countries he wants to visit",
+        "event": "researching visa requirements",
+        "time_expression": null
+      }
+    ],
+    "D29:10": [],
+    "D29:11": [
+      {
+        "entity": "Tim",
+        "attribute": "goal",
+        "value": "ask for travel recommendations",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:12": [
+      {
+        "entity": "John",
+        "attribute": "recommendation",
+        "value": "Barcelona is a must-visit city",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:13": [
+      {
+        "entity": "Tim",
+        "attribute": "action",
+        "value": "adding Barcelona to travel list",
+        "event": null,
+        "time_expression": null
+      }
+    ],
+    "D29:14": [],
+    "D29:15": []
+  }
+}

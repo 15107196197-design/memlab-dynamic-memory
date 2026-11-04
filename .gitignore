@@ -1,0 +1,13 @@
+cache/
+__pycache__/
+slide-build/
+*.log
+report-page-*.png
+revised-report-*.png
+latest-report-*.png
+report-new-*.png
+split-report-*.png
+ui-check.png
+*.tmp
+examples/graphiti-demo.kuzu
+imported/
