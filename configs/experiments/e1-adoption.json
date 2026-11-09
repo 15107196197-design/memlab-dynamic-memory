@@ -50,6 +50,15 @@
     "derived_rules": [
       {
         "when": {
+          "graph.repr.impl": "state_slot"
+        },
+        "set": {
+          "graph.retrieval.impl": "slot_expand"
+        },
+        "reason": "State-slot graph only supports same-slot expansion."
+      },
+      {
+        "when": {
           "graph.repr.impl": "none"
         },
         "set": {
@@ -99,7 +108,8 @@
         "graph.repr.impl": "state_slot"
       },
       "on": {
-        "graph.repr.impl": "entity_triple"
+        "graph.repr.impl": "entity_triple",
+        "graph.retrieval.impl": "entity_subgraph"
       },
       "min_prereq": [
         "entity extraction"
