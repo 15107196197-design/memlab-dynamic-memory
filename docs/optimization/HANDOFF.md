@@ -3,6 +3,8 @@
 > 用途：当对话被压缩、切换到新会话、或隔几天继续时，**先读这份文件**，再读指定的章节，不要从零重读全部聊天记录。
 >
 > 一句话：**文件是真相，聊天只是工作台。**
+>
+> **读法（很重要）：** 本文件是“项目状态 + 契约 + 交接协议”；[SESSION-PROMPTS.md](SESSION-PROMPTS.md) 是“每个会话的任务剧本”。新会话先读 HANDOFF 的 §1、§1.3、§2、§5，再读 SESSION-PROMPTS 的对应会话。**只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、先读哪些文件、验收标准是什么”。**
 
 ---
 
@@ -198,6 +200,62 @@ artifacts/
 
 ---
 
+## 1.3 API key / 外部模型检查点
+
+> 这一节是给**每个新会话**看的：任务跑到需要外部模型时，必须主动停下来问用户，而不是猜一个模型、静默降级，或把 key 写进配置。
+
+### 当前状态
+
+| 项 | 状态 |
+|---|---|
+| 本地 Ollama | 需要时启动；S0 时 `127.0.0.1:11434` 未运行；主模型 `qwen3.8:27b-q4_K_M`，embedding `bge-m3` |
+| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） |
+| API provider adapter | **未实现**：当前 `memlab.llm` 只走 Ollama；S9 前需要 `memlab/providers.py`（Ollama + OpenAI-compatible） |
+| 当前是否需要 key | **不需要**：S1–S8 的模块开发/本地实验都可以用 Ollama；S9 的 L3 强模型才需要 |
+
+### 各阶段 key 需求
+
+| 阶段 | 是否需要 key | 用途 | 缺失时的 fallback |
+|---|---|---|---|
+| S0 仓库/基线 | 否 | 只跑测试/归档 | — |
+| S1 契约/骨架 | 否 | 本地测试/mock | — |
+| S2 模型/缓存 | 否 | 本地迁移测试 | — |
+| S3 W/S/R | 否 | 本地 Ollama 或 fake embedding | 可以离线跑固定输入 |
+| S4 M/U/K | 否 | 本地 Ollama | 可以离线跑固定输入 |
+| S5 实验控制面 | 否 | dry-run/小样本 | fake/mock |
+| S6 E1 模块实验 | 否 | L1/L2 本地模型 | 只跑本地两档 |
+| S7 E2 耦合 | **可选** | 强模型归因（L3） | 先做 L1/L2，L3 标记待补 |
+| S8 E3 组合 | **可选** | 强模型组合 | 先做本地组合 |
+| S9 E4 环境 | **是（完整网格）** | L3 强模型 × 规模 × 场景 | 只跑 L1/L2 的 2×3 子集，并在报告写“L3 未验证” |
+| S10 E5 确认 | **可选/建议** | 第二 Judge、跨家族复核 | 本地 Judge + 人工；没有第二 Judge 就明确写限制 |
+
+### 硬规则
+
+1. **每个会话开头先判断**：本会话是否需要 API key；不要等到跑了一半才发现。
+2. **需要 key 且环境变量缺失**：停止 API 调用，向用户询问；不要猜 provider/model，不要硬编码 key，不要静默换成另一个模型。
+3. **询问必须包含**：provider、model、base_url、环境变量名、用途、预计调用次数/token、粗略成本、fallback。
+4. **key 只从环境变量读**：配置里只写 `api_key_env`（例如 `DEEPSEEK_API_KEY`），绝不写 key 本身。
+5. **manifest 只记身份**：provider / model / base_url / api_key_env / 调用日期；绝不记 key。
+6. **API 模型会漂移**：`deepseek-chat` 这类别名可能指向新版本；优先用带日期的 snapshot；没有 snapshot 就记录调用日期，并在短时间内跑完同一批实验。
+7. **未确认前不要跑 API**：可以先跑本地子集，并在 HANDOFF 标记 `blocked_on_key`；不要把“没跑”写成“无差异”。
+
+### 询问模板（会话可直接用）
+
+```text
+本会话进行到 <阶段/实验>，需要 <provider> 的 <model> 做 <用途>。
+预计 <N> 次调用 / 约 <tokens>，粗略成本 <range>。
+请提供环境变量 <ENV_NAME>（不要把 key 发在聊天里，建议在本机 export）。
+如果没有 key，我建议 fallback：<本地模型/子集>。
+在你确认前，我不会调用 API。
+```
+
+### 相关文档
+
+- [SESSION-PROMPTS.md](SESSION-PROMPTS.md) §0.1 有每个会话的 key 检查清单与提示词。
+- S9/S10 的提示词已内置“先问 key，再跑 API”。
+
+---
+
 ## 2. 不可丢的架构不变量
 
 新会话如果只能记住 10 件事，记这些：
@@ -376,6 +434,8 @@ artifacts/
 - [ ] E1 六模块实验
 - [ ] E2/E3/E4/E5
 - [ ] Lab UI / 报告自动化
+- [ ] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；S9 前必须）
+- [ ] API key / 预算确认（S9 L3 与 S10 第二 Judge；当前未配置）
 
 ### 5.3 实验记录模板
 
@@ -391,10 +451,14 @@ artifacts/
 
 ```text
 请先读：
-1. docs/optimization/HANDOFF.md（本文件）
-2. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
-3. docs/optimization/04-experiments.md 的对应模块章节
-4. 相关 configs/experiments/*.json
+1. docs/optimization/HANDOFF.md（本文件，先读 §1、§1.3、§2、§5）
+2. docs/optimization/SESSION-PROMPTS.md 的对应会话（Sx）
+3. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
+4. docs/optimization/04-experiments.md 的对应模块章节
+5. 相关 configs/experiments/*.json
+
+0. 先判断本会话是否需要 API key（见 HANDOFF §1.3）。
+   需要且环境变量缺失：先向用户询问 provider/model/env/预算/fallback，未确认前不跑 API。
 
 当前任务：<写清楚>
 验收标准：<写清楚>
@@ -413,6 +477,7 @@ artifacts/
 - 改动文件：
 - 测试：通过/失败/未跑
 - 新增 run_id / 指标：
+- Key 状态：未使用 / 本地 Ollama / API（provider/model/env，未记录 key）/ blocked_on_key
 - 关键决策（新增/变更）：
 - 未解决问题：
 - 下一步 3 件事：

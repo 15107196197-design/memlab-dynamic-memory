@@ -2,6 +2,10 @@
 
 > 用途：每个会话新开时，先读 [HANDOFF.md](HANDOFF.md)，再复制对应会话的提示词。
 >
+> **读法（很重要）：** [HANDOFF.md](HANDOFF.md) 是“项目状态 + 契约 + 交接协议”；本文件是“每个会话的任务剧本”。**两个都要读**：只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、先读哪些文件、验收标准是什么”；只读本文件会知道任务，但不知道当前状态、分支、key/模型状态和未解决问题。
+>
+> **推荐顺序：** HANDOFF §1/§1.3/§2/§5 → 本文件 §0 会话地图 + §0.1 Key 检查 → 本会话的具体提示词 → 提示词里列出的文件。
+>
 > **不要把 S0–S10 塞进同一个会话。** 每个会话结束时更新 HANDOFF；下一个会话只读 HANDOFF + 本会话指定文件。
 >
 > 路径约定：本文所有相对路径以 **repo/** 为根；新会话先 `cd repo`（或把路径前缀改成 `repo/`）。
@@ -35,6 +39,63 @@
 
 ---
 
+## 0.1 Key 检查（每个会话开头）
+
+**权威规则在 [HANDOFF.md](HANDOFF.md) §1.3。** 每个会话开始前先判断：本会话要不要外部 API key？需要且环境变量缺失时，**先问用户，不要跑 API**。
+
+| 会话 | Key 需求 | 说明 | 缺失时 fallback |
+|---|---|---|---|
+| S0 | 不需要 | 仓库/基线 | — |
+| S1 | 不需要 | 本地测试/mock | — |
+| S2 | 不需要 | 本地迁移测试 | — |
+| S3 | 不需要 | 本地 Ollama / fake embedding | 可离线固定输入 |
+| S4 | 不需要 | 本地 Ollama | 可离线固定输入 |
+| S5 | 不需要 | dry-run/小样本 | fake/mock |
+| S6 | 不需要 | E1 用 L1/L2 本地 | 只跑本地两档 |
+| S7 | **可选** | 强模型归因（L3） | 先做 L1/L2；L3 标 `blocked_on_key` |
+| S8 | **可选** | 强模型组合 | 先做本地组合 |
+| S9 | **需要（完整网格）** | L3 强模型 × 规模 × 场景 | 只跑 L1/L2 的 2×3 子集，报告写“L3 未验证” |
+| S10 | **建议** | 第二 Judge / 跨家族复核 | 本地 Judge + 人工；明确写限制 |
+
+> **代码前提：** 当前 `memlab.llm` 只走 Ollama；API 需要 `memlab/providers.py`（Ollama + OpenAI-compatible）。没有 adapter 时，即使有 key 也不能跑 API。
+
+### 通用 key 检查块（每个会话开头执行）
+
+```text
+先判断本会话是否需要 API key：
+- 不需要：继续本地开发/测试。
+- 需要：检查对应环境变量是否存在；不要读取或打印 key 内容，只检查是否为空。
+- 缺失：停止 API 调用，向用户询问 provider/model/base_url/env 变量名/用途/预计调用量/成本/fallback。
+- 未确认前：不要跑 API，不要静默换成另一个模型，不要硬编码 key。
+```
+
+### 询问模板
+
+```text
+本会话进行到 <阶段/实验>，需要 <provider> 的 <model> 做 <用途>。
+预计 <N> 次调用 / 约 <tokens>，粗略成本 <range>。
+请在本机 export <ENV_NAME>（不要把 key 发在聊天里）。
+如果没有 key，我建议 fallback：<本地模型/子集>。
+在你确认前，我不会调用 API。
+```
+
+### Provider 配置契约
+
+```json
+{
+  "provider": "ollama | openai_compatible",
+  "base_url": "https://.../v1",
+  "model": "model-name",
+  "api_key_env": "DEEPSEEK_API_KEY"
+}
+```
+
+- 配置里只写 `api_key_env`，不写 key。
+- manifest 只记 provider/model/base_url/api_key_env/调用日期，不记 key。
+- API 模型可能漂移；优先用带日期的 snapshot，并记录调用日期。
+
+---
+
 ## 1. 通用前缀（每个提示词已包含，可单独复用）
 
 ```text
@@ -46,7 +107,8 @@
 - 不改与本次任务无关的模块；不删除既有指标/配置。
 - 大输出写文件，不塞聊天；只读汇总/失败样本。
 - 不 push 到 upstream；不提交 runs/、日志、模型权重、API key。
-- 结束前更新 HANDOFF §5 与 §7。
+- 每个会话开头先做 §0.1 的 Key 检查；需要 key 且缺失时先问用户，未确认前不跑 API。
+- 结束前更新 HANDOFF §5 与 §7（含 Key 状态）。
 ```
 
 ---
@@ -394,6 +456,9 @@ K：
 ```text
 执行 S7：E2 模块耦合。
 
+0. Key 检查：默认用本地 L1/L2；只有要做 L3 强模型归因时才需要 API。
+   需要时先按 §0.1 询问用户；缺 key 就把 L3 标为 blocked_on_key，不要静默换模型。
+
 实现/运行：
 1. 质量传播：对每个 run 记录 q=[write,store_ceiling,retrieval_recall,merge_ndcg,state,answer]；
    计算 P(A|R=1)、P(A|R=1,C=1)、P(A|R=1,S=1)。
@@ -432,6 +497,9 @@ K：
 ```text
 执行 S8：E3 模块组合。
 
+0. Key 检查：默认本地；只有要把 L3 作为组合因子时才需要 API。
+   需要时先按 §0.1 询问用户；缺 key 就跑本地组合，并在报告写“L3 未验证”。
+
 运行：
 1. 主设计：5 模块 on/off 的 2^(5-1)=16 + 4 中心点；
 2. E3b：参数对 2×2（k_hop×granularity、fields×rerank、rrf_k×top_n、decay×query type）；
@@ -465,6 +533,12 @@ K：
 
 ```text
 执行 S9：E4 环境网格。
+
+0. Key 检查（本会话通常需要）：
+   - 完整 3×3 网格的 L3 档需要强模型 API；先检查对应环境变量。
+   - 缺 key：不要跑 API，先按 §0.1 询问用户 provider/model/base_url/env/预算/fallback。
+   - 用户暂时不给 key：只跑 L1/L2 的 2×3 子集，把 L3 标为 blocked_on_key，报告里写“L3 未验证”。
+   - 不要静默用本地 27B 冒充 L3，也不要把不同家族当同一档。
 
 运行：
 1. 3 LLM × 3 数据规模；每格 4–6 个候选（B0/R0/cheap/quality/E3 冠军）；
@@ -500,6 +574,11 @@ K：
 
 ```text
 执行 S10：E5 确认与最终报告。
+
+0. Key 检查：
+   - 第二 Judge 建议用不同家族 API；先按 §0.1 询问用户。
+   - 没有第二 Judge key：用本地 Judge + 人工抽检，并在限制里明确写“未做跨家族 Judge 复核”。
+   - 不要把 answer 模型同时当唯一 Judge；不要静默省略。
 
 运行/整理：
 1. 留出集：test split 或 10 段中未调参部分；3 seeds；
