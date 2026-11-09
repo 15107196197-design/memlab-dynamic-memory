@@ -69,8 +69,10 @@ Web 必须让用户**看见**这条链路，而不只是看到最终答案。
 
 ### 3.2 记忆库 `#/memories`
 
+> **2026-11-09 修复：** 默认列表从 turn 改为 **fact**；新增 `kind=event`（fact 的 event 投影）、结构化字段 `value/event/time_expression/resolved_date`、`GET /api/v2/graph` 与 SVG 关系图（facts + 一跳邻居，最多 240 节点）。
+
 - **左栏**：对话选择（6 段 + extension）、split 过滤、kind（turn/fact/event）、entity、state、时间范围、关键词。
-- **中栏**：Memory 列表（虚拟滚动/分页），列：`memory_id / kind / entity / content 摘要 / t_event / state / source turn`。
+- **中栏**：Memory 列表（虚拟滚动/分页）。默认 **结构化事实 Fact**，可切 `事件 Event` / `对话轮次 Turn`；列：`memory_id / kind / entity / attribute=value / event / t_event / state / source turn`。`event` 是 fact 的视图别名，不是独立 unit kind；没有 event 字段的 fact 不会进 Event 筛选。
 - **右栏详情**：
   - 原始内容与 source session/turn；
   - `structured`（entity/attribute/value/slot/state）；

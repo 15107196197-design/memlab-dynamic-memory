@@ -56,7 +56,7 @@
         <span class="muted">（顶部下拉也可切换）</span></div>
       <div class="toolbar">
         <input id="v2-q" class="field" placeholder="搜索 content / entity / id…">
-        <select id="v2-kind" class="field"><option value="">全部类型</option><option value="turn">turn</option><option value="fact">fact</option><option value="event">event</option></select>
+        <select id="v2-kind" class="field"><option value="fact" selected>结构化事实 Fact</option><option value="event">事件 Event</option><option value="turn">对话轮次 Turn</option><option value="">全部类型 All</option></select>
         <select id="v2-state" class="field"><option value="">全部状态</option><option value="ACTIVE">active</option><option value="HISTORICAL">historical</option><option value="CONFLICT">conflict</option><option value="UNRESOLVED">unresolved</option></select>
         <button id="v2-filter" class="btn primary">筛选</button>
         <button id="v2-export-v2" class="btn">导出 v2 JSON</button>
@@ -66,6 +66,10 @@
       <div class="v2-split">
         <div class="v2-list card" id="v2-mem-list"></div>
         <div class="v2-detail card" id="v2-mem-detail"><div class="empty">选择左侧一条 Memory 查看结构化字段与原始证据。</div></div>
+      </div>
+      <div class="card pad" id="v2-graph-card" style="margin-top:16px">
+        <div class="row" style="justify-content:space-between;align-items:baseline"><h3>关系图 · Memory graph</h3><span class="muted small" id="v2-graph-meta"></span></div>
+        <div class="v2-graph" id="v2-graph"></div>
       </div>`;
 
     $$("[data-sample]").forEach((b) => (b.onclick = () => switchSample(b.dataset.sample)));
@@ -81,13 +85,19 @@
       list.innerHTML = `<div class="empty">加载中…</div>`;
       try {
         const data = await api(`/api/v2/memories?${p}`);
-        meta.textContent = `共 ${data.total} 条，显示前 ${data.memories.length} 条；v2 schema`;
-        list.innerHTML = data.memories.length ? data.memories.map((m) => `
-          <button class="v2-item" data-id="${esc(m.memory_id)}">
-            <div class="row" style="gap:8px"><span class="mono">${esc(m.memory_id)}</span>${statePill(m.state)}<span class="muted small">${esc(m.kind)}</span></div>
+        const counts = data.counts || {};
+        meta.textContent = `共 ${data.total} 条（事实 ${counts.fact ?? "—"} / 事件 ${counts.event ?? "—"} / 轮次 ${counts.turn ?? "—"}），显示前 ${data.memories.length} 条；v2 schema`;
+        list.innerHTML = data.memories.length ? data.memories.map((m) => {
+          const structured = m.kind === "fact"
+            ? `<div class="v2-structured"><b>${esc(m.entity || "—")}</b> · ${esc(m.attribute || "—")} = ${esc(m.value || "—")}${m.event ? ` · 事件：${esc(m.event)}` : ""}</div>`
+            : `<div class="v2-structured muted">对话轮次 · ${esc(m.source_turn || "—")}</div>`;
+          return `<button class="v2-item" data-id="${esc(m.memory_id)}">
+            <div class="row" style="gap:8px"><span class="mono">${esc(m.memory_id)}</span>${statePill(m.state)}<span class="v2-kind-badge">${esc(m.display_kind || m.kind)}</span></div>
             <div class="v2-text">${esc(m.text)}</div>
-            <div class="muted small">${esc(m.entity || "—")} · ${esc(interval(m.t_event))} · ${esc(m.source_turn || "—")}</div>
-          </button>`).join("") : `<div class="empty">没有匹配的 Memory。</div>`;
+            ${structured}
+            <div class="muted small">${esc(interval(m.t_event))} · 来源 ${esc(m.source_turn || "—")} · 证据 ${esc(m.evidence_count ?? 0)}</div>
+          </button>`;
+        }).join("") : `<div class="empty">没有匹配的 Memory。切换「结构化事实 / 事件 / 对话轮次」查看。</div>`;
         $$(".v2-item", list).forEach((b) => (b.onclick = () => loadDetail(b.dataset.id)));
       } catch (err) {
         list.innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
@@ -106,9 +116,13 @@
             <h3 style="margin:14px 0 8px">原始内容</h3><p>${esc(m.text)}</p>
             <h3 style="margin:14px 0 8px">结构化字段</h3>
             <table class="v2-table"><tbody>
-              <tr><th>entity / event</th><td>${esc(st.entity || "—")}</td></tr>
-              <tr><th>attribute / slot</th><td>${esc(st.attribute || "—")}</td></tr>
-              <tr><th>event time</th><td>${esc(interval(st.t_event))}</td></tr>
+              <tr><th>entity 实体</th><td>${esc(st.entity || "—")}</td></tr>
+              <tr><th>attribute / slot 属性</th><td>${esc(st.attribute || "—")}</td></tr>
+              <tr><th>value 值</th><td>${esc(st.value || "—")}</td></tr>
+              <tr><th>event 事件</th><td>${esc(st.event || "—")}</td></tr>
+              <tr><th>time expression 时间表达</th><td>${esc(st.time_expression || "—")}</td></tr>
+              <tr><th>resolved date 解析日期</th><td>${esc(st.resolved_date || "—")}</td></tr>
+              <tr><th>event time 事件时间</th><td>${esc(interval(st.t_event))}</td></tr>
               <tr><th>ingest time</th><td>${esc(interval(st.t_ingest))}</td></tr>
               <tr><th>valid interval</th><td>${esc(interval(st.valid_interval))}</td></tr>
               <tr><th>source turn</th><td>${esc(st.source_turn || "—")}</td></tr>
@@ -124,6 +138,37 @@
       }
     };
 
+    const loadGraph = async () => {
+      const wrap = $("#v2-graph");
+      try {
+        const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&limit=90`);
+        const nodes = data.nodes || [];
+        const edges = data.edges || [];
+        $("#v2-graph-meta").textContent = `${nodes.length} 个节点 / ${edges.length} 条关系（总 ${data.total_units} units, ${data.total_relations} relations${data.truncated ? "，已截断" : ""}）`;
+        if (!nodes.length) { wrap.innerHTML = `<div class="empty">该对话没有可展示的关系图。</div>`; return; }
+        const W = 900, H = 420, cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 42;
+        const pos = new Map();
+        nodes.forEach((n, i) => {
+          const angle = (2 * Math.PI * i) / nodes.length - Math.PI / 2;
+          pos.set(n.id, { x: cx + R * Math.cos(angle), y: cy + R * Math.sin(angle) });
+        });
+        const edgeHtml = edges.map((e) => {
+          const a = pos.get(e.source), b = pos.get(e.target);
+          if (!a || !b) return "";
+          return `<line class="graph-edge" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"><title>${esc(e.type)} ${esc(e.reason || "")}</title></line>`;
+        }).join("");
+        const nodeHtml = nodes.map((n) => {
+          const p = pos.get(n.id);
+          const fill = n.state === "CONFLICT" ? "#fdf6f6" : n.kind === "event" ? "#fdf8ec" : n.kind === "turn" ? "#f5f5f5" : "#f3faf5";
+          return `<g class="graph-node" data-id="${esc(n.id)}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})"><title>${esc(n.id)} · ${esc(n.kind)} · ${esc(n.label)}</title><circle r="6" fill="${fill}" stroke="${n.state === "CONFLICT" ? "#e6c5c5" : "#b9d7c2"}"/><text x="9" y="4">${esc((n.label || n.id).slice(0, 34))}</text></g>`;
+        }).join("");
+        wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Memory relation graph">${edgeHtml}${nodeHtml}</svg>`;
+        $$(".graph-node", wrap).forEach((node) => (node.onclick = () => loadDetail(node.dataset.id)));
+      } catch (err) {
+        wrap.innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
+      }
+    };
+
     $("#v2-filter").onclick = load;
     $("#v2-q").onkeydown = (e) => { if (e.key === "Enter") load(); };
     $("#v2-export-v2").onclick = async () => {
@@ -135,6 +180,7 @@
       download(`memory-${app.sampleId}-v1.json`, data);
     };
     await load();
+    await loadGraph();
   }
 
   function renderRun(out) {

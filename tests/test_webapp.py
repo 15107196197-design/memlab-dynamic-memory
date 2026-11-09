@@ -89,6 +89,26 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("GPU", modules["M"]["hardware_note"])
         self.assertIn("hardware_blocked", data["status_legend"])
 
+    def test_memory_kind_filter_and_structured_fields(self):
+        facts = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "kind": ["fact"], "page_size": ["5"]})
+        self.assertGreater(facts["total"], 0)
+        self.assertGreater(facts["counts"]["event"], 0)
+        first = facts["memories"][0]
+        for key in ("entity", "attribute", "value", "event", "time_expression", "display_kind"):
+            self.assertIn(key, first)
+        events = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "kind": ["event"], "page_size": ["5"]})
+        self.assertGreater(events["total"], 0)
+        self.assertTrue(all(m["event"] for m in events["memories"]))
+
+    def test_graph_endpoint_returns_nodes_and_fact_edges(self):
+        graph = webapp.get("/api/v2/graph", {"sample": ["conv-26"], "limit": ["60"]})
+        self.assertGreater(len(graph["nodes"]), 0)
+        self.assertGreater(len(graph["edges"]), 0)
+        ids = {node["id"] for node in graph["nodes"]}
+        self.assertTrue(all(edge["source"] in ids and edge["target"] in ids for edge in graph["edges"]))
+        self.assertGreater(graph["total_relations"], 0)
+        self.assertTrue(any(node["kind"] in ("fact", "event") for node in graph["nodes"]))
+
     def test_system_reports_hardware_boundary(self):
         data = webapp.get("/api/v2/system")
         self.assertEqual(data["hardware"]["machine"], "MacBook Air M2 (2022)")

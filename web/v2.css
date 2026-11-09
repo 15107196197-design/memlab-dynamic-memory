@@ -79,3 +79,15 @@
 .hardware-banner .small { line-height: 1.6; }
 .hw-note { color: #7a4d12 !important; background: #fdf8ec; border-left: 2px solid #e2c48d; padding: 4px 8px; margin-top: 4px; }
 .lab-axis > span .badge { margin-left: 4px; }
+
+/* Structured memory list + relation graph (no external graph library). */
+.v2-structured { margin-top: 4px; font-size: 12px; color: var(--ink-2); background: #f7faf8; border-left: 2px solid #b9d7c2; padding: 3px 7px; border-radius: 0 4px 4px 0; }
+.v2-structured.muted { background: #fafafa; border-left-color: var(--line); color: var(--muted); }
+.v2-kind-badge { font-size: 10.5px; border: 1px solid var(--line); border-radius: 999px; padding: 0 6px; color: var(--muted); background: #fafafa; }
+.v2-graph { margin-top: 10px; border: 1px solid var(--line-2); border-radius: 8px; background: #fcfcfb; overflow: auto; }
+.v2-graph svg { display: block; width: 100%; min-width: 620px; height: auto; }
+.graph-edge { stroke: #d8d2c6; stroke-width: 0.8; opacity: .75; }
+.graph-node { cursor: pointer; }
+.graph-node circle { stroke-width: 1; }
+.graph-node text { font-family: var(--mono); font-size: 8px; fill: #4a4a4a; pointer-events: none; }
+.graph-node:hover circle { stroke: var(--ink); stroke-width: 2; }

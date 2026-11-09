@@ -222,13 +222,20 @@ def _unit_summary(unit) -> dict[str, Any]:
     structured = unit.structured or {}
     entity = structured.get("entity") or structured.get("speaker") or ""
     turn = unit.evidence[0].turn_id if unit.evidence else structured.get("turn")
+    event = structured.get("event") or ""
+    display_kind = "event" if unit.kind == "fact" and event else unit.kind
     return {
         "memory_id": unit.memory_id,
         "kind": unit.kind,
+        "display_kind": display_kind,
         "text": unit.text,
         "entity": entity,
         "state": structured.get("state") or "",
         "attribute": structured.get("attribute") or structured.get("slot") or "",
+        "value": structured.get("value") or "",
+        "event": event,
+        "time_expression": structured.get("time_expression") or "",
+        "resolved_date": structured.get("resolved_date") or "",
         "t_event": _interval(unit.t_event),
         "t_ingest": _interval(unit.t_ingest),
         "valid_interval": _interval(unit.valid_interval),
@@ -269,6 +276,63 @@ def _detail(sample_id: str, memory_id: str) -> dict[str, Any]:
         "summary": _unit_summary(unit),
         "source_turns": source_turns,
         "relations": relations,
+    }
+
+
+def _graph(sample_id: str, limit: int = 120) -> dict[str, Any]:
+    """Small, deterministic relation graph for the memory page.
+
+    Facts (and event-bearing facts) are selected first because they are the
+    structured memory users need to see; turns are only added as relation
+    neighbours.  The UI renders this as SVG without a JS graph library.
+    """
+    view = _view(sample_id)
+    limit = max(10, min(240, int(limit)))
+    facts = [unit for unit in view.units if unit.kind == "fact"]
+    selected = facts[:limit]
+    ids = {unit.memory_id for unit in selected}
+    # Add one-hop neighbours (often turns) up to the limit.
+    for relation in view.relations:
+        if len(selected) >= limit:
+            break
+        if relation.head_id in ids or relation.tail_id in ids:
+            for candidate in (relation.head_id, relation.tail_id):
+                if candidate not in ids and len(selected) < limit:
+                    unit = view.by_id().get(candidate)
+                    if unit is not None:
+                        selected.append(unit)
+                        ids.add(candidate)
+    nodes = []
+    for unit in selected:
+        summary = _unit_summary(unit)
+        label = (f"{summary['entity']} · {summary['attribute']} = {summary['value']}"
+                 if summary["kind"] == "fact" and summary["attribute"] else
+                 (summary["event"] or summary["text"])[:80])
+        nodes.append({
+            "id": unit.memory_id,
+            "label": label,
+            "kind": summary["display_kind"],
+            "state": summary["state"],
+            "entity": summary["entity"],
+            "t_event": summary["t_event"],
+        })
+    edges = []
+    for relation in view.relations:
+        if relation.head_id in ids and relation.tail_id in ids:
+            edges.append({
+                "id": relation.relation_id,
+                "source": relation.head_id,
+                "target": relation.tail_id,
+                "type": relation.type,
+                "reason": str((relation.provenance or {}).get("reason", ""))[:200],
+            })
+    return {
+        "sample": sample_id,
+        "nodes": nodes,
+        "edges": edges,
+        "total_units": len(view.units),
+        "total_relations": len(view.relations),
+        "truncated": len(nodes) >= limit,
     }
 
 
@@ -835,6 +899,11 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         schema = str(_one(args, "schema", "2"))
         return lab_export.export(_sample(sample_id), schema)
 
+    if route == "/graph":
+        sample_id = str(_one(args, "sample", ""))
+        limit = int(_one(args, "limit", 120) or 120)
+        return _graph(sample_id, limit)
+
     match = re.fullmatch(r"/memories/([^/]+)", route)
     if match:
         sample_id = str(_one(args, "sample", ""))
@@ -850,10 +919,20 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         page = max(1, int(_one(args, "page", 1) or 1))
         size = min(100, max(1, int(_one(args, "page_size", 50) or 50)))
         units = []
+        counts = {"turn": 0, "fact": 0, "event": 0}
         for unit in view.units:
-            if kind and unit.kind != kind:
-                continue
             summary = _unit_summary(unit)
+            if summary["kind"] == "turn":
+                counts["turn"] += 1
+            else:
+                counts["fact"] += 1
+                if summary["event"]:
+                    counts["event"] += 1
+            if kind == "event":
+                if not (unit.kind == "fact" and summary["event"]):
+                    continue
+            elif kind and unit.kind != kind:
+                continue
             if state and summary["state"].upper() != state.upper():
                 continue
             haystack = f"{unit.memory_id} {unit.text} {summary['entity']} {unit.structured}".lower()
@@ -864,6 +943,7 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         return {
             "sample": sample_id, "split": legacy_config.split_of(sample_id),
             "total": len(units), "page": page, "page_size": size,
+            "counts": counts,
             "memories": units[start:start + size],
         }
 
