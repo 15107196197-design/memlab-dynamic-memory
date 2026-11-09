@@ -29,7 +29,7 @@
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
 | 测试 | `python -m unittest discover -s tests -t .` → **237 passed**（234 + API tier 3） |
 | 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight**；**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`） |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；**本地 7B/27B/72B 规模实验：硬件受限（Intel Arc 集显），设计保留但不可执行**；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；**本地 7B/27B/72B 规模实验：硬件受限（MacBook Air M2，8GB 内存/磁盘不足），设计保留但不可执行**；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
 | 当前阶段 | **W2b 已完成（Web 侧）**；**API 档位实验已接入控制面**（E1 12 格 / E4 36 格，compiler + 测试）。下一步：有 API key 先跑 API 档位；W3 最终评测/复现包。本地 LLM 规模实验标记 `blocked_on_local_gpu`。见 [RUNBOOK.md](RUNBOOK.md)、[04-experiments.md](04-experiments.md) §4.13.1–4.13.2。 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
@@ -243,7 +243,7 @@ artifacts/
 |---|---|---|
 | Python / 测试 | Python 3.14 下 **237 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
 | 本地 Ollama | **未安装/未运行**（S0 时 `127.0.0.1:11434` 连接失败；后续会话未见恢复） | 装/启动/`ollama pull`；磁盘/网络不够→给远程 endpoint / API / offline 选项 |
-| 本地模型 | **不可用路线**：Windows + Intel Arc 130V 集显（共享内存，无独立显存），本地 27B/72B 不能做规模实验；`bge-m3`/cross-encoder 可 CPU 但不适合大规模 | 用 API 档位；有 ≥24GB 独显/远程 GPU 再恢复本地规模实验 |
+| 本地模型 | **不可用路线**：MacBook Air M2（8GB 统一内存，磁盘约 6GB），本地 27B/72B 不能做规模实验，7B q4 也不稳定；Windows ThinkBook 不再使用 | 用 API 档位；有 ≥24GB 独显/远程 GPU 再恢复本地规模实验 |
 | 可选包 | `repo/.venv-memlab` 已装 torch/sentence-transformers；系统 Python 没有；reranker 权重未下载 | 用 `.venv-memlab/bin/python`；设 `HF_ENDPOINT=https://hf-mirror.com` + `HF_HOME` 到 U 盘；回退必须标“未真实重排” |
 | API keys | 用户可获取 DeepSeek/Qwen 等 key；当前环境变量仍未配置 | 用 `scripts/preflight.py`；key 只从 env 读，不写进配置 |
 | API provider adapter | **已实现**：`memlab/providers.py`（Ollama + OpenAI-compatible），`LLMClient/EmbeddingClient` 已路由；`scripts/preflight.py` 可检查 | 仍需真实 endpoint/key 验证；key 只从 env 读 |

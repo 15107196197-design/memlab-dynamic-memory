@@ -61,8 +61,8 @@
 
 ## 0.5 当前硬件边界（2026-11-09 起）
 
-- 目标机器：Windows 11 + **Intel Arc 130V 集成显卡（共享内存，无独立显存）**。
-- **本地 7B/27B/72B 规模实验不可执行**；相关 spec 标记 `blocked_on_local_gpu`，设计/评测方法保留。
+- 目标机器：**MacBook Air M2，8GB 统一内存，磁盘约 6GB 可用**；Windows ThinkBook 不再使用。
+- **本地 7B/27B/72B 规模实验不可执行**（8GB 内存/磁盘不足）；相关 spec 标记 `blocked_on_local_gpu`，设计/评测方法保留。
 - 可执行替代：**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`）。
 - 不要用“本地 GPU 延迟/吞吐/显存”解释 API 结果；不要把 API tier 写成 7B/27B/72B。
 - 需要真实本地规模实验时：换 ≥24GB 独显机器，或接远程 GPU Ollama endpoint。

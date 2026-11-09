@@ -531,7 +531,7 @@ K：
 
 **环境前置：**
 
-- 当前机器是 Windows + Intel Arc 集显，**本地 7B/27B/72B 规模实验不可执行**，标记 `blocked_on_local_gpu`，设计/评测方法保留。
+- 当前机器是 **MacBook Air M2（8GB 统一内存）**，**本地 7B/27B/72B 规模实验不可执行**，标记 `blocked_on_local_gpu`，设计/评测方法保留。Windows 机器不再使用。
 - 可执行路线：API key（DeepSeek/Qwen/SiliconFlow 等）+ `bge-m3` API/CPU embedding；先 `scripts/preflight.py`。
 - 缺 key：给 provider/model/预算选项；没有 key 只跑 offline A 级，不能把 offline extractive 写成 LLM F1。
 - M2/M3 的真实 rerank 需要 `sentence-transformers` + 模型；CPU 大规模不现实，缺则标回退或补 API rerank adapter。
