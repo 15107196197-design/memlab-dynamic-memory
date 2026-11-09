@@ -24,7 +24,7 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `git log -1 --oneline`；S7b-A 提交见 git log；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
+| 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
 | 测试 | `python -m unittest discover -s tests -t .` → **212 passed**（209 + 3 S7b-A screen 测试） |
@@ -718,7 +718,7 @@ artifacts/
 ### 7.1 交接记录（最新在上）
 
 ### 2026-11-09 / S7b-A 离线耦合 / 会话
-- commit：S7b-A 提交（`git log -1`）。
+- commit：`4fc1571`（代码/数据/文档）；后续只允许 docs pin 提交。
 - 本次完成：新增 `coupling.screen` / `run_screen` / `aggregate_screens` / `gate_availability`；新增 `scripts/s7b_a.py` 只读跑 `runs/s6/e1.sqlite`（36 runs）；产出 `eval/archive/s7b-a-offline.json` 与 [S7B-A-REPORT.md](S7B-A-REPORT.md)；3 个新测试。
 - 改动文件：`memlab/experiments/coupling.py`、`scripts/s7b_a.py`、`tests/test_memlab_s7.py`、`docs/optimization/{S7B-A-REPORT,S7B-DECISION,HANDOFF}.md`、`eval/archive/s7b-a-offline.json`。未改 `memwb/`、`server.py`、`web/`、S6/评测标准。
 - 测试：`python -m unittest discover -s tests -t .` → **212 passed**；未 push upstream。
