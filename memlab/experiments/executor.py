@@ -27,6 +27,10 @@ from memlab import e2e, ingest, legacy, maintenance, merge
 from memlab.llm import EmbeddingClient, LLMClient
 
 OFFLINE_MODEL = "offline-extractive"
+OFFLINE_FINGERPRINT_VERSIONS = {
+    lab_config.OFFLINE_ANSWERER_EXTRACTIVE: "offline-extractive-v1",
+    lab_config.OFFLINE_ANSWERER_OFFLINE_QA: "offline-extractive-v2",
+}
 _CONTEXT_LINE = re.compile(r"^\[([^\]]+)\] \(([^)]*turns=([^)]*))\) (.+)$", re.MULTILINE)
 _AUDIT_INDEX = re.compile(r'"index":\s*(\d+)')
 
@@ -37,7 +41,13 @@ class OfflineLLM:
     model = OFFLINE_MODEL
     is_offline = True
 
-    def __init__(self):
+    def __init__(self, answerer: str = lab_config.DEFAULT_OFFLINE_ANSWERER):
+        if answerer not in lab_config.OFFLINE_ANSWERERS:
+            raise ValueError(
+                f"unknown offline answerer {answerer!r}; "
+                f"available={list(lab_config.OFFLINE_ANSWERERS)}"
+            )
+        self.offline_answerer = answerer
         self.calls = 0
 
     @property
@@ -45,7 +55,8 @@ class OfflineLLM:
         return OFFLINE_MODEL
 
     def fingerprint(self) -> str:
-        return "sha256:" + hashlib.sha256(b"offline-extractive-v1").hexdigest()
+        version = OFFLINE_FINGERPRINT_VERSIONS[self.offline_answerer]
+        return "sha256:" + hashlib.sha256(version.encode("utf-8")).hexdigest()
 
     def generate(self, prompt: str, json_mode: bool = False, max_tokens: int | None = None):
         self.calls += 1
@@ -109,7 +120,8 @@ def build_context(plan: Any, sample_id: str, *, offline: bool = False,
     shared_cache = cache if cache is not None else lab_cache.ArtifactCache()
     ctx = E2EContext(
         config=config,
-        llm=OfflineLLM() if offline else LLMClient.from_environment(environment.get("llm") or {}),
+        llm=OfflineLLM(config.offline_answerer) if offline else LLMClient.from_environment(
+            environment.get("llm") or {}),
         embedding=HashingEmbedding() if offline else EmbeddingClient.from_environment(
             environment.get("embedding") or {}),
         cache=shared_cache,
@@ -189,6 +201,8 @@ def make_e2e_executor(*, offline: bool = False, cache: Any | None = None,
                 "offline": offline,
                 "llm": OFFLINE_MODEL if offline else getattr(ctx.llm, "effective_model", None),
                 "embedding": "offline-hash" if offline else getattr(ctx.embedding, "effective_model", None),
+                "model_fingerprint": ctx.llm.fingerprint(),
+                "offline_answerer": getattr(ctx.llm, "offline_answerer", None),
                 "store_units": len(ctx.store),
                 "fallbacks": list(result.merge.fallbacks),
             },

@@ -1169,6 +1169,14 @@ if web.get("system"):
 # ---------------------------------------------------------------------------
 # G. cross-file consistency
 # ---------------------------------------------------------------------------
+e2_report_path = ROOT / "reports" / "experiments" / "E2-2-online.json"
+e2_report_status = None
+if e2_report_path.exists():
+    e2_report_status = read_json(e2_report_path).get("conclusion", {}).get("status")
+e2_archive_status = None
+if e2_new_path.exists():
+    e2_archive_status = read_json(e2_new_path).get("conclusion", {}).get("status")
+
 METRIC_CONSISTENCY.extend([
     {
         "metric": "B0 offline answer_f1 (test 80 q)",
@@ -1232,13 +1240,13 @@ METRIC_CONSISTENCY.extend([
     },
     {
         "metric": "E2-2 oracle conclusion status",
-        "values": {"report E2-2-online": "partial (no delta)", "archive e2-oracle-retrieval-report": "inconclusive"},
+        "values": {"report E2-2-online": f"{e2_report_status} (no delta)", "archive e2-oracle-retrieval-report": e2_archive_status},
         "source": "eval/archive/e2-oracle-retrieval-report.json#conclusion",
-        "status": "inconsistent_status",
+        "status": "consistent" if e2_report_status == e2_archive_status else "inconsistent_status",
     },
     {
         "metric": "catalog row count",
-        "values": {"catalog": len(catalog_items), "HANDOFF": len(catalog_items), "web plan": len(catalog_items), "report": 48, "deck slide 7": 31, "web system provenance": 24},
+        "values": {"catalog": len(catalog_items), "HANDOFF": len(catalog_items), "web plan": len(catalog_items), "report": 50, "deck slide 7": 50, "web system provenance": 24},
         "source": "configs/experiment-catalog.json",
         "status": "inconsistent",
     },
@@ -1319,9 +1327,9 @@ if comp["answer_f1"]["ci95"] == [-0.0575, -0.0104]:
 # A12–A16 are pooled dev+test, not test-only; the ledger's own label is the
 # problem, so record the exact test-only numbers for the fix owner.
 state_test = legacy["state"]["by_split"]["test"]
-verify("docs/report/numbers.md A12–A16 pooled values are real but NOT test-only",
+verify("docs/report/numbers.md A12–A16 report 17-item pooled and 12-item test-only values",
        "eval/archive/legacy-b0-results.json#state.by_split.test",
-       "test-only: dynamic state 0.8261, vector 0.4783, hybrid 0.5217, dynamic valid-set 0.7500, relation 0.5455")
+       "pooled 17 = 5 dev + 12 test; test-only: dynamic state 0.8261, vector 0.4783, hybrid 0.5217, dynamic valid-set 0.7500, relation 0.5455")
 
 PLACEHOLDER_SCAN = []
 for path in sorted((ROOT / "docs" / "report").rglob("*.md")) if (ROOT / "docs" / "report").exists() else []:
@@ -1391,14 +1399,20 @@ md.append("")
 if p0:
     main_p0 = [f for f in p0 if not f["file"].startswith("repo-g2/")]
     g2_p0 = [f for f in p0 if f["file"].startswith("repo-g2/")]
-    md.append(f"**不能直接交。** 本轮发现 **{len(p0)} 个 P0**：主交付物内 **{len(main_p0)} 个**，repo-g2 旧 catalog 内 **{len(g2_p0)} 个**。")
+    if main_p0:
+        md.append(f"**不能直接交。** 本轮发现 **{len(p0)} 个 P0**：主交付物内 **{len(main_p0)} 个**，repo-g2 旧 catalog 内 **{len(g2_p0)} 个**。")
+    else:
+        md.append(f"**主交付物 P0 = 0。** 本轮共发现 **{len(p0)} 个 P0**，全部在 repo-g2 旧 catalog 内（**{len(g2_p0)} 个**）；主仓库不阻塞。")
     md.append("")
     for finding in main_p0:
         md.append(f"- 主交付物：`{finding['file']}` · {finding['loc']} — {finding['claim']}")
     for finding in g2_p0:
         md.append(f"- repo-g2：`{finding['file']}` · {finding['loc']} — {finding['claim']}")
     md.append("")
-    md.append(f"主仓库的 {inventory['catalog_rows']} 行 catalog 本身没有 `done` 状态，所以 `done_without_evidence` 在主 catalog 上为 0；g2 的 4 个 P0 属于**不能原样合并的旧 catalog**。即使只交主仓库 + 当前 deck，也必须先修 slide 7、E2-2-online 的结论、numbers.md A12–A16 的 test 标签；否则不能交。")
+    if main_p0:
+        md.append(f"主仓库的 {inventory['catalog_rows']} 行 catalog 本身没有 `done` 状态，所以 `done_without_evidence` 在主 catalog 上为 0；g2 的 {len(g2_p0)} 个 P0 属于**不能原样合并的旧 catalog**。主交付物仍有 {len(main_p0)} 个 P0，必须先修；否则不能交。")
+    else:
+        md.append(f"主仓库的 {inventory['catalog_rows']} 行 catalog 本身没有 `done` 状态，所以 `done_without_evidence` 在主 catalog 上为 0；g2 的 {len(g2_p0)} 个 P0 属于**不能原样合并的旧 catalog**，不影响主仓库交付。")
 else:
     md.append("**可以提交（数据层）。** 未发现 P0；仍需清理 P1 的 stale 值/占位符。")
 md.append("")
@@ -1471,11 +1485,11 @@ md.append("`e1-adoption-offline.json`、`e3-offline.json`、`order-offline.json`
 md.append("")
 md.append("## 5. 提交前必须完成的 5 件事")
 md.append("")
-md.append("1. **D（deck owner）**：删掉/重做 slide 7 的 `31 行实验：19 行有数据，3 行受限，7 行缺实现`；填标题页 `姓名 / 学号`；把 `19:50 回填` 改成已经存在的 online 表（或删除该句）。")
-md.append(f"2. **D/B（报告层）**：报告是在 48 行 catalog 上写的，catalog 已增至 {inventory['catalog_rows']} 行。重算 06-design/A-appendix/README/numbers/coverage.png 的 48/19/9/8/12 为当前口径（partial 21 + no_op 1 + not_wired 1 = 23 有数据；hardware 9；code 7；pending 11），修正 A-appendix 的 E1-R2/E1-M2/E2-2 状态，并把 numbers.md A12–A16 的“17 条 test 子集”改成“17 条混合（5 dev + 12 test）”或换成 test-only 值。")
-md.append("3. **B（catalog/报告结论）**：修仍残留的 4 条 stale reason（E1-W1、E1-R1、E2-1、E5-1）；把 E3-1-online/M2-online 的 partial 改成与 `e3-online-2x2-report.json` / `m2-online-rerank-report.json` 一致的 inconclusive（或补 CI 并说明点估计口径）；把 E2-2-online 降为 inconclusive；catalog 改引 `*-report.json` 而不是 raw run；同步 HANDOFF 794 与 830 的 max_neighbors 矛盾。")
+md.append("1. **D（deck owner）**：slide 7 已按 50 行 catalog 重画（partial 21 / pending 11 / hw 9 / code 7 / no_op 1 / not_wired 1）；剩余填标题页 `姓名 / 学号`，并把 `19:50 回填` 改成已存在的 online 表（或删除该句）。")
+md.append(f"2. **D/B（报告层）**：A12–A16 已改为 17 条混合（5 dev + 12 test）并加 test-only 列；报告层已切到 {inventory['catalog_rows']} 行口径，继续核对 06-design/A-appendix/README/numbers/coverage.png 的 partial 21 + no_op 1 + not_wired 1 = 23 有数据；hardware 9；code 7；pending 11。")
+md.append("3. **B（catalog/报告结论）**：修仍残留的 4 条 stale reason（E1-W1、E1-R1、E2-1、E5-1）；把 E3-1-online/M2-online 的 partial 改成与 `e3-online-2x2-report.json` / `m2-online-rerank-report.json` 一致的 inconclusive（或补 CI 并说明点估计口径）；E2-2-online 已是 inconclusive，保持；catalog 改引 `*-report.json` 而不是 raw run；同步 HANDOFF 794 与 830 的 max_neighbors 矛盾。")
 md.append("4. **G2/B（旧 catalog）**：`graph-completion.json` 已在 2103023 合并，主 catalog 也已引用；不要把 `repo-g2/configs/experiment-catalog.json` 原样合并（旧 24 行、4 个 done、6 个裸 blocked）。如果合并，先把 4 个 done 降级并删掉裸 blocked 状态。")
-md.append("5. **A/C（archive/结论）**：给 archive 补 `experiment_id` / `dataset.split` / `question_count` / `error_count`（P2 清单见 JSON）；E2-2 的单臂 Oracle 报告必须用 `inconclusive`，不能写 `partial`；如果以后还要写 `supported`，必须带非空 delta 和不过 0 的 CI。")
+md.append("5. **A/C（archive/结论）**：给 archive 补 `experiment_id` / `dataset.split` / `question_count` / `error_count`（P2 清单见 JSON）；E2-2 的单臂 Oracle 报告保持 `inconclusive`，不能写 `partial`；如果以后还要写 `supported`，必须带非空 delta 和不过 0 的 CI。")
 md.append("")
 md.append("## 6. 附录：库存与范围")
 md.append("")

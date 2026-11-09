@@ -1,10 +1,10 @@
 # 附录 A 实验清单、假因子与复现
 
-## A.1 catalog 48 行摘要
+## A.1 catalog 50 行摘要
 
-下表按 `configs/experiment-catalog.json`（2026-11-09）逐行摘录；状态与 grade 保留原字段，证据列只写“有没有可追溯产物”，不把计划写成结果。`partial` = 跑了但关键指标缺或只有 offline；`blocked_*` = 当前环境/代码不可执行；`pending` = 设计存在但未跑；`no_op` / `not_wired` = 配置未消费或未接线。
+下表按 `configs/experiment-catalog.json`（2026-11-09）逐行摘录；状态与 grade 保留原字段，证据列只写“有没有可追溯产物”，不把计划写成结果。`partial` = 跑了但关键指标缺或只有单侧数据（offline / online）；`blocked_*` = 当前环境/代码不可执行；`pending` = 设计存在但未跑；`no_op` / `not_wired` = 配置未消费或未接线。
 
-**表 A-1 catalog 48 行摘要**
+**表 A-1 catalog 50 行摘要**
 
 | ID | 状态 | grade | 证据摘要 |
 |---|---|---|---|
@@ -16,17 +16,17 @@
 | E1-W5 | blocked_on_code | not_run | `memlab/write.py` 没有切分因子，S6 固定 turn/fact |
 | E1-W-LLM | blocked_on_hardware | blocked | 需 7B/27B/72B 抽取；8GB M2 不可执行 |
 | E1-S1 | blocked_on_code | not_run | 没有 turn/fact/event/summary 存储单元因子，也没有检索上限指标 |
-| E1-S2 | partial | offline+online | S6 三表示 Recall 全 0.5053；R3 13 格；online S1/S2/S3 全 0.1837（online 为 `not_wired`） |
+| E1-S2 | partial | offline | S6 三表示 Recall 全 0.5053；R3 13 格；online S1/S2/S3 全 0.1837（online 为 `not_wired`） |
 | E1-S3 | blocked_on_code | not_run | 无 L0–L3 分层；three_layer 是图表示，不是摘要层级 |
 | E1-S4 | blocked_on_code | not_run | 有 index_hash，但无增量 vs 重建实验、无长期 F1 |
 | E1-S-LLM | blocked_on_hardware | blocked | 图由缓存 facts/states 确定性构建，无 LLM 图抽取 |
 | E1-R1 | partial | offline+online | S6 R1/R2/R3；online R2 F1 0.1540 最高；adoption planner remove +0.0333 |
-| E1-R2 | pending | not_run | 通道存在，但无 6 路线 × 4 类别消融 |
+| E1-R2 | partial | offline | 4 个单通道已跑（bm25/dense/graph_khop/temporal，61 题）；不是 6 路线 × 4 类，channels 未被 planner 消费 |
 | E1-R3 | partial | offline | 13 格 × 61 题；所有图实现 Recall 0.2372；图新增候选进入最终 0 |
 | E1-R4 | not_wired | offline | k 修正后 10/15/25 有真实权衡；旧 k 曲线作废 |
 | E1-R-LLM | blocked_on_hardware | blocked | planner_model 未接线；当前 analyzer/planner 是规则 |
-| E1-M1 | partial | offline+online | S6 M1/M2/M3；online M1 F1 0.3064 最高；adoption fusion remove +0.0333 |
-| E1-M2 | blocked_on_hardware | blocked | offline 全部回退；A 的 GPU 40 题对照见 `m2-rerank.json`，catalog 未更新 |
+| E1-M1 | partial | offline | S6 M1/M2/M3；online M1 F1 0.3064 最高；adoption fusion remove +0.0333 |
+| E1-M2 | partial | online | A 的 GPU 40 题 cross-encoder 对照：nDCG 0.4315→0.5123，Recall/F1 下降；1 seed、无 CI |
 | E1-M3 | blocked_on_code | not_run | 4-order 只在 repo-c2；main 拒绝 `post.order`，`blocked_on_config` |
 | E1-M4 | partial | offline | decay=off 下 MMR λ=0.9 vs 0.5 nDCG +0.00236；MMR×decay 未测 |
 | E1-M5 | partial | offline | M3 query_adaptive 与 R0 post 混淆，无隔离 on/off |
@@ -40,10 +40,12 @@
 | E1-K2 | partial | offline | dedupe 移除 8.5，三指标基本不变 |
 | E1-K3 | pending | not_run | 有一致性扫描动作，但无频率×矛盾率实验、无检测 F1 |
 | E2-1 | partial | offline+online | offline P(A\|R)=0.1866 vs P(A)=0.2342；online 0.5657 vs 0.5200 |
-| E2-2 | blocked_on_code | not_run | catalog 仍标 blocked；A 回传 retrieval oracle 80 题（F1 0.2437），write/store/merge/state/answer oracle 未做 |
+| E2-WR | partial | offline | schema×graph 2×2，61 题/格；DoD +0.0033 Recall / +0.0078 nDCG，仅 1 题变化 |
+| E2-SM | blocked_on_hardware | blocked | graph repr×rerank 2×2 已设计未跑；缺 GPU/sentence-transformers |
+| E2-2 | partial | online | retrieval oracle 80 题（F1 0.2437，Recall 0.6611 constructed）；write/store/merge/state/answer oracle 未做 |
 | E2-3 | blocked_on_hardware | blocked | 需 ≥2 LLM 档位；只有单环境 |
 | E2-4 | pending | not_run | 6 对 2×2 已设计，未跑 |
-| E3-1 | partial | offline | 16 run 半因子；Recall 4 个主效应 0.000；A 另补 online 2×2（60 题/格，无 CI） |
+| E3-1 | partial | offline+online | 16 run 半因子；Recall 4 个主效应 0.000；A 另补 online 2×2（60 题/格，无 CI） |
 | E3-2 | pending | not_run | 无组合矩阵/Pareto |
 | E3-3 | pending | not_run | 4 对参数 2×2 已设计，未跑 |
 | E3-4 | blocked_on_code | not_run | `bitemporal_invalidate` resolver 未实现 |
@@ -57,7 +59,7 @@
 | E4-8 | pending | not_run | update_rate 固定 static，未扫流式 |
 | E5-1 | partial | offline+online | W3 offline/online test；2 seeds；无第二 Judge/人工 κ |
 
-> catalog 更新时间早于 A 的第二批回传。A 在 19:17 另回传了 `e2-oracle-retrieval.json`、`e3-2x2.json`、`m2-rerank.json`；本表保留 catalog 原状态，正文第 7 章把这些产物标为 **online 补充**，不据此改写 48 行的状态计数。
+> A 在 19:17 回传的 `e2-oracle-retrieval.json`、`e3-2x2.json`、`m2-rerank.json` 已并入 2026-11-09 catalog（E2-2、E1-M2 转 `partial`，E3-1 含 online 2×2 证据）；本表逐行对应 catalog 的 50 行，不做归并。
 
 ## A.2 假因子与受限清单
 

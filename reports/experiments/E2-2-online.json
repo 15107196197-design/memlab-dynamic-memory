@@ -115,7 +115,9 @@
     }
   },
   "conclusion": {
-    "status": "partial",
+    "status": "inconclusive",
+    "primary_metric": "answer_f1",
+    "status_reason": "只有一个 run（80 题），没有配对/对照对象，按规则记为 inconclusive。",
     "three_piece": {
       "quality": {
         "metric": "answer_f1",
@@ -127,10 +129,28 @@
     "claims": [
       "E2-2 retrieval oracle: F1 0.2437, Recall 0.6611 (constructed, not comparable to system recall); quality=F1 0.2437. | quality F1=0.2437; Tokens=232.2; P95=2217.1 ms."
     ],
+    "per_metric_status": {
+      "answer_f1": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      },
+      "evidence_recall": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      },
+      "tokens": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      }
+    },
     "conditions": [
       "Online qwen3.8:27b, bge-m3; 4 dev conversations, 80 q, seed 13; retrieval only oracle."
     ],
     "limitations": [
+      "Single run, n=80; no matched non-oracle run, so no delta and no significance test.",
       "Oracle recall is constructed from gold evidence; do not compare it with system recall.",
       "Only retrieval oracle; other oracles not run.",
       "No Judge."

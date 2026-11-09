@@ -28,10 +28,10 @@
 3. 系统架构：六模块职责、接口契约、registry/config_hash/runnable gate、B0/R0、图是内存索引。
 4. 动态状态解析：RETAIN/UPDATE/SUPERSEDE/CONFLICT、双时间与 as-of、17 条状态基准、CONFLICT/t_event 限制。
 5. 检索、合并与后处理：四通道、三种规划器、融合/重排/后处理、4 种图表示/5 种实现、R3 前后差异、旧版关系图。
-6. 实验设计与评测协议：E0–E5、四层插拔、A/B/C、三件套、统计、数据纪律、48 行覆盖。
+6. 实验设计与评测协议：E0–E5、四层插拔、A/B/C、三件套、统计、数据纪律、50 行覆盖。
 7. 结果与对照：归档 27B、offline test B0/R0、online 27B 单因素、adoption、E3、R3、参数层、K、检索→使用。
 8. 讨论、局限与复现：三条结论、七项局限、复现命令、三条未来工作、还差什么。
-附录 A：catalog 48 行、假因子/受限清单、复现命令、诊断树、图表索引。
+附录 A：catalog 50 行、假因子/受限清单、复现命令、诊断树、图表索引。
 
 ## 3. 图表清单
 
@@ -40,14 +40,14 @@
 | 图 1 | `figures/hex-contract-ring.png` | 第 3 章 §3.2 | 六模块契约环：W→S→R→M→U→K 与六个接口契约 | 整栏 |
 | 图 2 | `figures/records.png` | 第 2 章 §2.4 | 记忆记录视图：结构化字段、双时间、原文证据与失效链 | 整栏 |
 | 图 3 | `figures/old-graph.png` | 第 5 章 §5.4 | 关系图：力导向布局 + 语义边，实心当前有效、空心已过时 | 整栏 |
-| 图 4 | `figures/coverage.png` | 第 6 章 §6.6 | 实验覆盖：48 行 catalog 中 19 行有数据、9 行受限、8 行缺实现、12 行待跑 | 整栏 |
+| 图 4 | `figures/coverage.png` | 第 6 章 §6.6 | 实验覆盖：50 行 catalog 中 23 行有数据、9 行受限、7 行缺实现、11 行待跑 | 整栏 |
 | 图 5 | `figures/diagnosis-tree.png` | 附录 A.4 | 瓶颈诊断树：上限→召回→使用→LLM 归因 | 整栏 |
 
 图号按“图表清单”固定，不按正文出现顺序（图 2 在第 2 章，图 1 在第 3 章）。这样与 deck 第 3 页、附录索引可以一一对应；转换 docx 时不要重编号。
 
 **格式例外：** 任务书要求“一章最多一张图 + 两张表”。第 7 章是结果章，按实验分表（归档 27B、offline B0/R0、online 单因素、adoption、R3），共 5 张表；这是为保持“每个实验一张可追溯表”而做的必要例外。其余章均 ≤1 图、≤2 表。
 
-表清单：表 2-1（字段）、表 2-2（conv-26 规模）、表 3-1（模块职责）、表 3-2（B0/R0）、表 4-1（四种状态）、表 4-2（状态基准）、表 6-1（E0–E5）、表 6-2（A/B/C）、表 7-1（归档 27B）、表 7-2（offline B0/R0）、表 7-3（online 单因素）、表 7-4（adoption）、表 7-5（R3 13 格）、表 A-1（catalog 48 行）、表 A-2（假因子）。
+表清单：表 2-1（字段）、表 2-2（conv-26 规模）、表 3-1（模块职责）、表 3-2（B0/R0）、表 4-1（四种状态）、表 4-2（状态基准）、表 6-1（E0–E5）、表 6-2（A/B/C）、表 7-1（归档 27B）、表 7-2（offline B0/R0）、表 7-3（online 单因素）、表 7-4（adoption）、表 7-5（R3 13 格）、表 A-1（catalog 50 行）、表 A-2（假因子）。
 
 ## 4. 占位符清单
 
@@ -65,11 +65,11 @@
 | event_sparse / community_summary / hybrid_graph / bitemporal_invalidate | 未实现或未进矩阵 | 附录 A.2 标未实现 |
 | `scripts/repro.sh` | D 的文件，骨架写作时仓库中不存在 | 第 8.3 节给等价命令，不猜内容 |
 
-**A 的第二批补充（19:17）。** 除 S6 40 题与 W3 test 外，A 还回传了 `e2-oracle-retrieval.json`（retrieval oracle，80 题）、`e3-2x2.json` / `e3-online-2x2.json`（fusion×answer，60 题/格）、`m2-rerank.json`（cross-encoder，40 题/配置）。这些产物不在 catalog 48 行的状态计数里（catalog 仍是旧状态）；第 7 章引用时标“online 补充”，不改变图 4 与附录 A 的 19/9/8/12。
+**A 的第二批补充（19:17）。** 除 S6 40 题与 W3 test 外，A 还回传了 `e2-oracle-retrieval.json`（retrieval oracle，80 题）、`e3-2x2.json` / `e3-online-2x2.json`（fusion×answer，60 题/格）、`m2-rerank.json`（cross-encoder，40 题/配置）。catalog 已把这批产物并入既有行：E2-2 与 E1-M2 转 `partial`，E3-1 含 online 2×2 证据；图 4 与附录 A 的 23/9/7/11 已是并入后的口径，第 7 章引用时仍标“online 补充”。
 
 ## 5. 口径差异（必须保留）
 
-1. **31 行 vs 48 行。** deck 第 7 页的 19/3/7/2 是旧 31 行快照；当前 `configs/experiment-catalog.json` 是 48 行：partial 17、no_op 1、not_wired 1、blocked_on_code 8、blocked_on_hardware 9、pending 12。归并后 19 有数据 / 9 受限 / 8 缺实现 / 12 待跑。正文、图 4、附录 A 一律用 48 行；本文件与 `numbers.md` 记录差异。
+1. **50 行口径。** deck 第 7 页已按当前 catalog 重画；`configs/experiment-catalog.json` 是 50 行：partial 21、no_op 1、not_wired 1、blocked_on_code 7、blocked_on_hardware 9、pending 11。归并后 23 有数据 / 9 受限 / 7 缺实现 / 11 待跑。正文、图 4、附录 A 一律用 50 行；本文件与 `numbers.md` 记录差异。
 2. **teacher 示例。** deck 第 4 页的 `Caroline · job = teacher` 是版式示意，`exports/conv-26.json` 中没有该记录。第 2.3 节改用真实记录 `conv26_D19_1_f0`（adoption agency interviews），并明确说明。
 3. **8k vs 32k。** offline 配置是 `context=32768`（`configs/reference-r0.json`）；A 的 online 运行（S6/W3/E2/E3/M2）是 `context=8192`（`docs/optimization/RUNLOG-online.md` §0）。第 7 章 online 表写 8k，offline 写 32k；两者是不同 harness，不合并。
 4. **tokens 两种口径。** W3 offline/online 的 tokens 是上下文预算口径（921/991/924.6/319.3）；S6 的 `tokens` 字段是生成 token（45.9/44.65/…）。两者不能相减；`numbers.md` §0 与 §5 有注。

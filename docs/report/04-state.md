@@ -4,7 +4,7 @@
 
 - 四种关系（RETAIN / UPDATE / SUPERSEDE / CONFLICT）把“新信息”与“旧值”分开；真正决定答案的是 `StateView` 里的 valid / superseded / conflicts 三分，而不是单条记录的 state 标签。（来源：`docs/optimization/02-architecture.md` §2.6.5；`memlab/use.py`）
 - 双时间（t_event / t_ingest）让 as-of 查询可解释，但六段导出中只有 93/2602 条记录有可解析的 t_event（3.6%），多数查询只能用写入时间近似；这是当前状态解析的硬边界。（来源：`exports/conv-26/30/41/42/43/44.json`）
-- 在 17 条自定义状态基准上，U2/U3 的 item mean 为 0.3627、valid-set exact 仅 0.2353、evidence recall 0.5294；状态解析仍然是弱环节，不能因为归档 27B 的 0.7647 就认为它已经解决。（来源：`eval/archive/state-accuracy.json`；`eval/archive/legacy-b0-results.json`）
+- 在 17 条自定义状态基准上，U2/U3 的 item mean 为 0.3627、valid-set exact 仅 0.2353、evidence recall 0.5294；状态解析仍然是弱环节，不能因为归档 27B 在 17 条混合基准上的 0.7647（test-only 12 条为 0.8261）就认为它已经解决。（来源：`eval/archive/state-accuracy.json`；`eval/archive/legacy-b0-results.json`）
 
 ## 4.1 四种判断
 
@@ -50,7 +50,7 @@
 
 表 4-2 的来源是 `eval/archive/state-accuracy.json`。基准是 17 条人工标注、6 条 as_of、34 条记忆，跨 conv-26/30/41/42（来源：同上）。读法要克制：offline_slot 把 ACTIVE 准确率从 0.4762 降到 0.3333，但把 HISTORICAL 从 0 提到 0.3846；它不是“更准”，而是“在两类错误之间换了一个平衡”。valid-set exact 只有 0.2353，说明大多数题的有效集不完全正确；evidence recall 0.5294，说明近一半标注轮次根本没有进入上下文。
 
-归档 27B 的 Dynamic 状态准确率是 0.7647，Vector 是 0.3529（来源：`eval/archive/legacy-b0-results.json`）。这组数字与表 4-2 不是同一 harness：前者是 27B 回答 + 旧 dynamic 流水线，后者是 offline 抽取式 + 17 条固定基准；不能把 0.7647 当成 U2 的上界，也不能把 0.3627 当成 27B 的状态能力。
+归档 27B 的 Dynamic 状态准确率是 0.7647，Vector 是 0.3529；这是 17 条混合基准（5 dev + 12 test）的 pooled 值，不能直接当作 test 结论。同一归档的 12 条 test-only 子集为 Dynamic 0.8261、Vector 0.4783、Hybrid 0.5217，valid-set exact 0.7500，relation 0.5455（来源：`eval/archive/legacy-b0-results.json#state.by_split.test`）。这组数字与表 4-2 不是同一 harness：前者是 27B 回答 + 旧 dynamic 流水线，后者是 offline 抽取式 + 17 条固定基准；不能把 0.7647 当成 U2 的上界，也不能把 0.3627 当成 27B 的状态能力。
 
 ## 4.5 现状与限制
 

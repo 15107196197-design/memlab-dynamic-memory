@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-09T20:32:10+08:00",
+  "generated_at": "2026-11-09T23:04:40+08:00",
   "inventory": {
     "catalog_rows": 50,
-    "reports": 25,
-    "archive_json": 37,
-    "runs_sqlite": 21,
+    "reports": 28,
+    "archive_json": 43,
+    "runs_sqlite": 22,
     "deck_slides": 12,
     "catalog_count_field": 50,
     "catalog_status_counts": {
@@ -26,6 +26,7 @@
     "g2_runs_sqlite": 4,
     "g2_only_archive": [],
     "docs_report_text_files": [
+      "docs/report/00-summary.md",
       "docs/report/01-intro.md",
       "docs/report/02-memory.md",
       "docs/report/03-architecture.md",
@@ -172,52 +173,12 @@
     {
       "severity": "P1",
       "kind": "stale_value",
-      "file": "docs/report/A-appendix.md",
-      "loc": "lines 24, 29, 43",
-      "claim": "appendix table is stale vs catalog: E1-R2 pending→partial; E1-M2 blocked_on_hardware→partial; E2-2 blocked_on_code→partial",
-      "source": "configs/experiment-catalog.json",
-      "fix_owner": "D/B",
-      "note": "The appendix claims to transcribe the catalog row by row. Update these rows (and the 48/50 counts) or freeze the catalog before generating the appendix."
-    },
-    {
-      "severity": "P1",
-      "kind": "stale_value",
       "file": "docs/report/07-results.md",
       "loc": "line 93",
       "claim": "report says catalog still marks E1-M2 as blocked_on_hardware; catalog now marks it partial",
       "source": "configs/experiment-catalog.json",
       "fix_owner": "D/B",
       "note": "Update the limitation sentence: the real cross-encoder ran, so the remaining gap is 1 seed/40 q/no CI, not 'blocked_on_hardware'."
-    },
-    {
-      "severity": "P1",
-      "kind": "stale_value",
-      "file": "docs/report/",
-      "loc": "06-design.md:7, A-appendix.md:3, README.md:31, numbers.md:324, HANDOFF-TO-D.md:25",
-      "claim": "report layer still uses the 48-row snapshot (19/9/8/12); current catalog has 50 rows (+E2-WR, +E2-SM)",
-      "source": "configs/experiment-catalog.json",
-      "fix_owner": "D/B",
-      "note": "Recompute the coverage counts: partial 21 + no_op 1 + not_wired 1 = 23 data; hardware 9; code 7; pending 11. Update 06-design, A-appendix, README, numbers.md, HANDOFF-TO-D and figure 4, or freeze the catalog at 48."
-    },
-    {
-      "severity": "P1",
-      "kind": "stale_value",
-      "file": "docs/report/06-design.md",
-      "loc": "line 76 (also README.md:68, HANDOFF-TO-D.md:52)",
-      "claim": "report says A's second batch (E2-2/E3 online 2×2/M2) is not in the catalog; catalog now includes E2-2 partial, E3-1 e3-2x2 evidence, E1-M2 partial",
-      "source": "configs/experiment-catalog.json",
-      "fix_owner": "D/B",
-      "note": "The 48-row 'online supplement' paragraph is stale. If the catalog is frozen at 50, move these into the main counts; if not, say explicitly that the catalog was updated and the counts need a freeze."
-    },
-    {
-      "severity": "P1",
-      "kind": "stale_value",
-      "file": "docs/report/figures/coverage.png",
-      "loc": "whole image",
-      "claim": "coverage figure still says '48 行 catalog 中 19 行有可追溯证据 / 9 / 8 / 12'",
-      "source": "configs/experiment-catalog.json",
-      "fix_owner": "D",
-      "note": "Image mtime 19:10 is older than catalog 19:20. Regenerate figure 4 with the 50-row counts (23 data / 9 hardware / 7 code / 11 pending under the report convention)."
     },
     {
       "severity": "P2",
@@ -310,16 +271,6 @@
       "note": "Seed is recoverable from the question string, but it should be a field for reproducible filtering."
     },
     {
-      "severity": "P0",
-      "kind": "conclusion_not_backed",
-      "file": "reports/experiments/E2-2-online.json",
-      "loc": "conclusion/comparisons",
-      "claim": "E2-2-online.json conclusion.status=partial but no comparison carries both metric and delta",
-      "source": "reports/experiments/E2-2-online.json",
-      "fix_owner": "B",
-      "note": "Add a non-null comparison or downgrade the conclusion. The corrected archive eval/archive/e2-oracle-retrieval-report.json already uses status=inconclusive; copy that status instead of inventing a delta."
-    },
-    {
       "severity": "P2",
       "kind": "seed_missing_in_run",
       "file": "reports/experiments/E2-2-online.json",
@@ -398,6 +349,26 @@
       "source": "eval/archive/*-report.json",
       "fix_owner": "B/A",
       "note": "The new archives carry paired CIs and inconclusive/partial status. Cite them so the catalog and reports agree."
+    },
+    {
+      "severity": "P2",
+      "kind": "archive_schema_incomplete",
+      "file": "eval/archive/dev-diagnostics.json",
+      "loc": "top-level",
+      "claim": "missing experiment_id, dataset, error_count",
+      "source": "eval/archive/dev-diagnostics.json",
+      "fix_owner": "A/C",
+      "note": "Required by the audit contract: experiment_id, dataset(split/samples), question count, error count."
+    },
+    {
+      "severity": "P2",
+      "kind": "archive_schema_incomplete",
+      "file": "eval/archive/dev-filteroff-norerank.json",
+      "loc": "top-level",
+      "claim": "missing experiment_id, dataset, error_count",
+      "source": "eval/archive/dev-filteroff-norerank.json",
+      "fix_owner": "A/C",
+      "note": "Required by the audit contract: experiment_id, dataset(split/samples), question count, error count."
     },
     {
       "severity": "P2",
@@ -650,16 +621,6 @@
       "note": "Not a result number; treat as metadata, not a submission blocker."
     },
     {
-      "severity": "P0",
-      "kind": "number_mismatch",
-      "file": "deck/MemLab-展示-2026-11-09.pptx",
-      "loc": "slide 7",
-      "claim": "31 行实验：19 行有数据，3 行受限，7 行缺实现",
-      "source": "configs/experiment-catalog.json",
-      "fix_owner": "D",
-      "note": "Catalog now has 50 rows: partial 21, no_op 1, blocked_on_hardware 9, blocked_on_code 7, pending 11, not_wired 1. The claim's own parts sum to 29, not 31. Web heatmap shows '已覆盖 21'. Delete the old 31/19/3/7 line and regenerate the slide from the catalog."
-    },
-    {
       "severity": "P2",
       "kind": "source_outside_eval",
       "file": "deck/MemLab-展示-2026-11-09.pptx",
@@ -670,14 +631,24 @@
       "note": "These are dataset statistics, not run metrics: 588.2 turns and 27.2 sessions recompute from data/locomo10.json; 1.66万 token is the documented approximation. Not an orphan, but it cannot be traced to eval/archive or reports."
     },
     {
-      "severity": "P0",
-      "kind": "number_mismatch",
-      "file": "docs/report/numbers.md",
-      "loc": "A12–A16",
-      "claim": "A12–A16 label 17-item pooled state metrics as 'test 子集' / '17 条'",
-      "source": "eval/archive/legacy-b0-results.json#state.by_split.test",
-      "fix_owner": "D/B",
-      "note": "The 17 items are 5 dev + 12 test. Test-only values are Dynamic 0.8261 (not 0.7647), Vector 0.4783 (not 0.3529), Hybrid 0.5217 (not 0.4412), valid-set exact 0.7500 (not 0.7059), relation 0.5455 (not 0.5294). Either relabel as '17 条混合（5 dev + 12 test）' or use the test-only numbers. Body 04-state.md already says the benchmark is mixed, so the ledger label is the inconsistency."
+      "severity": "P1",
+      "kind": "count_mismatch",
+      "file": "/api/v2/evaluation",
+      "loc": "project_reports",
+      "claim": "API returns 27 project reports; filesystem has 28",
+      "source": "reports/experiments/",
+      "fix_owner": "Web/B",
+      "note": "Restart the service or rescan reports/."
+    },
+    {
+      "severity": "P1",
+      "kind": "count_mismatch",
+      "file": "/api/v2/experiments",
+      "loc": "count",
+      "claim": "API count=27; filesystem reports=28",
+      "source": "reports/experiments/",
+      "fix_owner": "Web/B",
+      "note": "Rescan/restart."
     },
     {
       "severity": "P1",
@@ -687,7 +658,7 @@
       "claim": "'评测对照页实验计划矩阵 | 24 项计划/状态'",
       "source": "configs/experiment-catalog.json",
       "fix_owner": "B/Web",
-      "note": "Catalog is 50 rows; also 'Web 报告列表 | final-w3' is stale (25 reports)."
+      "note": "Catalog is 50 rows; also 'Web 报告列表 | final-w3' is stale (28 reports)."
     },
     {
       "severity": "P1",
@@ -711,9 +682,9 @@
     }
   ],
   "counts": {
-    "P0": 7,
-    "P1": 19,
-    "P2": 40
+    "P0": 4,
+    "P1": 17,
+    "P2": 42
   },
   "verified": [
     {
@@ -752,11 +723,6 @@
       "note": "max abs diff=0.00000025"
     },
     {
-      "claim": "/api/v2/evaluation project_reports = 25",
-      "source": "reports/experiments/*.json",
-      "note": ""
-    },
-    {
       "claim": "/api/v2/evaluation 27B Full F1 = 0.5589",
       "source": "eval/results.json#qa.test.summary.full.f1",
       "note": ""
@@ -764,11 +730,6 @@
     {
       "claim": "/api/v2/evaluation final-w3-test-offline answer_f1",
       "source": "reports/experiments/final-w3-test-offline.json",
-      "note": ""
-    },
-    {
-      "claim": "/api/v2/experiments count = 25",
-      "source": "reports/experiments/*.json",
       "note": ""
     },
     {
@@ -817,19 +778,12 @@
       "note": ""
     },
     {
-      "claim": "docs/report/numbers.md A12–A16 pooled values are real but NOT test-only",
+      "claim": "docs/report/numbers.md A12–A16 report 17-item pooled and 12-item test-only values",
       "source": "eval/archive/legacy-b0-results.json#state.by_split.test",
-      "note": "test-only: dynamic state 0.8261, vector 0.4783, hybrid 0.5217, dynamic valid-set 0.7500, relation 0.5455"
+      "note": "pooled 17 = 5 dev + 12 test; test-only: dynamic state 0.8261, vector 0.4783, hybrid 0.5217, dynamic valid-set 0.7500, relation 0.5455"
     }
   ],
   "ppt_numbers": [
-    {
-      "slide": 7,
-      "claim": "31 行 / 19 行有数据 / 3 行受限 / 7 行缺实现",
-      "source": "configs/experiment-catalog.json",
-      "status": "mismatch",
-      "note": "catalog 50 rows; current status counts {'partial': 21, 'no_op': 1, 'blocked_on_code': 7, 'blocked_on_hardware': 9, 'not_wired': 1, 'pending': 11}"
-    },
     {
       "slide": 8,
       "claim": "W 写入 meta + append 0.505 Recall",
@@ -1138,11 +1092,11 @@
     {
       "metric": "E2-2 oracle conclusion status",
       "values": {
-        "report E2-2-online": "partial (no delta)",
+        "report E2-2-online": "inconclusive (no delta)",
         "archive e2-oracle-retrieval-report": "inconclusive"
       },
       "source": "eval/archive/e2-oracle-retrieval-report.json#conclusion",
-      "status": "inconsistent_status"
+      "status": "consistent"
     },
     {
       "metric": "catalog row count",
@@ -1150,8 +1104,8 @@
         "catalog": 50,
         "HANDOFF": 50,
         "web plan": 50,
-        "report": 48,
-        "deck slide 7": 31,
+        "report": 50,
+        "deck slide 7": 50,
         "web system provenance": 24
       },
       "source": "configs/experiment-catalog.json",
@@ -1160,9 +1114,9 @@
     {
       "metric": "reports/experiments file count",
       "values": {
-        "filesystem": 25,
-        "HANDOFF": 25,
-        "web": 25
+        "filesystem": 28,
+        "HANDOFF": 28,
+        "web": 28
       },
       "source": "reports/experiments/",
       "status": "consistent"
@@ -1213,7 +1167,7 @@
     },
     {
       "file": "docs/report/numbers.md",
-      "line": 277,
+      "line": 279,
       "token": "not_available",
       "classification": "negation/no gap",
       "context": "(A\\|C=1) | 0.4149（n=94） | 同上 | online 27B | 否（dev） | | X09 | online P(A\\|S=1) | not_available | 同上 | online 27B | 否（无配对状态） | | X10 | E2-2 retrieval oracle F1 /"
@@ -1223,7 +1177,7 @@
       "line": 56,
       "token": "null",
       "classification": "negation/no gap",
-      "context": "ve/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） | | A08 | Full Text Recall | null / 不报 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（无检索，不能补 0） | | A0"
+      "context": "ve/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） | | A08 | Full Text Recall | null / 不报 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（无检索，不能补 0） |"
     }
   ],
   "scope_notes": [

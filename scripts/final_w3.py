@@ -1,8 +1,10 @@
 """W3 final evaluation on the two held-out test conversations.
 
 Frozen configs: reference-b0 vs reference-r0. No test-time tuning.
-Offline clients (hashing embedding + extractive answer) unless --online is given.
-Outputs a committed archive and the Web-visible report.
+Offline clients (hashing embedding + extractive-v1 answer) unless --online is given;
+the offline run uses ``reference-r0-original.json``, the config behind the archived
+report hash, while --online uses the current R0 preset.  Outputs a committed archive
+and the Web-visible report.
 """
 from __future__ import annotations
 
@@ -24,6 +26,13 @@ from memwb import config as legacy_config
 ROOT = lab_config.ROOT
 TEST_SAMPLES = list(legacy_config.SPLIT["test"])
 CONFIGS = ("B0", "R0")
+# The archived offline report was produced with the original R0 config
+# (sha256:b86df9...); configs/reference-r0.json was later frozen as R0-fixed for
+# the online report.  Keeping the report config separate preserves both.
+OFFLINE_CONFIGS = {
+    "B0": ROOT / "configs" / "reference-b0.json",
+    "R0": ROOT / "configs" / "reference-r0-original.json",
+}
 
 
 def p95(values):
@@ -83,19 +92,20 @@ def main() -> int:
     started = time.time()
     batches, rows_by_run = {}, {}
     for preset in CONFIGS:
+        config_data = (lab_config.RunConfig.load(OFFLINE_CONFIGS[preset]).to_dict()
+                       if offline else webapp._preset(preset).to_dict())
+        if args.context:
+            environment = config_data.setdefault("environment", {})
+            environment["context_budget"] = int(args.context)
+            environment.setdefault("llm", {})["context"] = int(args.context)
         for sample_id in TEST_SAMPLES:
             for seed in args.seeds:
+                # Passing an explicit config keeps the frozen/default extractive_v1
+                # semantics; the Web demo preset path opts into offline_qa.
                 body = {
-                    "sample": sample_id, "preset": preset, "batch": True,
+                    "sample": sample_id, "config": config_data, "batch": True,
                     "questions": args.questions, "seed": seed, "offline": offline,
                 }
-                if args.context:
-                    config_data = webapp._preset(preset).to_dict()
-                    environment = config_data.setdefault("environment", {})
-                    environment["context_budget"] = int(args.context)
-                    environment.setdefault("llm", {})["context"] = int(args.context)
-                    body["config"] = config_data
-                    body.pop("preset", None)
                 out = webapp.post("/api/v2/runs", body)
                 key = (preset, sample_id, seed)
                 batches[key] = out

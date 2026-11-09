@@ -4,7 +4,7 @@
 
 - E0–E5 是一条链：先锁评测与基线，再做模块内选型，然后解释耦合、组合、环境与确认；每一级只回答一个问题，不把全局消融当作模块设计的替代。（来源：`docs/optimization/04-experiments.md` §4.3–4.4）
 - A/B/C 三级评测用题量与指标换成本：A 级 60–120 题看接口与成本，B 级 120–351 题加 F1/Judge，C 级用留出集、多 seed、第二 Judge 与人工；A 级能筛，但不能替代 B 级。（来源：`docs/optimization/04-experiments.md` §4.3）
-- 当前 catalog 48 行中 19 行有可追溯证据、9 行硬件/依赖受限、8 行缺实现、12 行待跑；受限与未实现单列，不混进“已完成”。（来源：`configs/experiment-catalog.json`）
+- 当前 catalog 50 行中 23 行有可追溯证据、9 行硬件/依赖受限、7 行缺实现、11 行待跑；受限与未实现单列，不混进“已完成”。（来源：`configs/experiment-catalog.json`）
 
 ## 6.1 E0–E5：每一级只回答一个问题
 
@@ -63,17 +63,17 @@
 
 **数据纪律。** development 四段用于选型与调参；test 两段只在配置冻结后跑。W3 在 test 前冻结 B0/R0，两个 seed 只换题目子集，不换配置（来源：`docs/optimization/W3-REPORT.md`）。归档 27B 是 test 2 段、120 题；它和 W3 的 80 题不是同一题集，不能逐题配对。
 
-## 6.6 覆盖：48 行，不是 31 行
+## 6.6 覆盖：50 行 catalog
 
-![图 4 实验覆盖：48 行 catalog 中 19 行有可追溯证据，9 行硬件/依赖受限，8 行缺实现，12 行待跑。](figures/coverage.png)
+![图 4 实验覆盖：50 行 catalog 中 23 行有可追溯证据，9 行硬件/依赖受限，7 行缺实现，11 行待跑。](figures/coverage.png)
 
-*图 4 实验覆盖：48 行 catalog 中 19 有数据 / 9 受限 / 8 缺实现 / 12 待跑（来源：`configs/experiment-catalog.json`）。*
+*图 4 实验覆盖：50 行 catalog 中 23 有数据 / 9 受限 / 7 缺实现 / 11 待跑（来源：`configs/experiment-catalog.json`）。*
 
-图 4 按 `configs/experiment-catalog.json` 的当前状态归并：partial 17 + no_op 1 + not_wired 1 = 19 行有数据；blocked_on_hardware 9；blocked_on_code 8；pending 12（来源：`configs/experiment-catalog.json`）。deck 第 7 页的 19/3/7/2 是旧 31 行快照，与当前 catalog 不同；本报告以 48 行为准，差异在 README 与 `numbers.md` 中登记。
+图 4 按 `configs/experiment-catalog.json` 的当前状态归并：partial 21 + no_op 1 + not_wired 1 = 23 行有数据；blocked_on_hardware 9；blocked_on_code 7；pending 11（来源：`configs/experiment-catalog.json`）。deck 第 7 页已按当前 catalog 重画；本报告以 50 行为准，差异在 README 与 `numbers.md` 中登记。
 
-“有数据”不等于“已完成”。19 行里有 8 行有 online 报告（grade=offline+online），其余多数是 offline A 级；`partial` 的原意就是“跑了，但关键指标或缺、或只有 offline”。附录 A 逐行给出 ID、状态与证据，避免用一张堆叠条掩盖细节。
+“有数据”不等于“已完成”。23 行里有 9 行有 online 报告（7 行 grade=offline+online、2 行 grade=online），其余多数是 offline A 级；`partial` 的原意就是“跑了，但关键指标或缺、或只有单侧数据”。附录 A 逐行给出 ID、状态与证据，避免用一张堆叠条掩盖细节。
 
-A 在 19:17 另回传了 E2-2 retrieval oracle、E3 online 2×2、M2 cross-encoder 三个补充产物；它们不在 catalog 48 行的状态计数里，因此图 4 仍是 19/9/8/12。正文第 7 章引用时标“online 补充”，不把它们算成“已完成”的新行。
+A 在 19:17 另回传了 E2-2 retrieval oracle、E3 online 2×2、M2 cross-encoder 三个补充产物；catalog 已把它们并入既有行（E2-2 与 E1-M2 转 `partial`，E3-1 含 online 2×2 证据），图 4 的 23/9/7/11 已是并入后的口径。正文第 7 章引用时仍标“online 补充”，不把它们算成“已完成”的新行。
 
 ## 6.7 本章边界
 

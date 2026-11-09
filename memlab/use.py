@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Mapping, Sequence
 
+from . import config as lab_config
 from . import model
 from .contracts import MemoryUnit, StateView
 from .registry import build as build_impl
@@ -208,10 +209,13 @@ class Answerer(Parametrised):
         llm = getattr(ctx, "llm", None)
         if llm is None or not hasattr(llm, "generate"):
             return DraftAnswer("unknown", [], True, {"error": "no LLM client", "tokens": estimate_tokens(prompt)})
-        if getattr(llm, "is_offline", False) and query:
-            # The offline client is a deterministic extractive baseline.  It needs
-            # the structured units (temporal provenance, fact attributes), not the
-            # flattened prompt, so route it through the local extractor.
+        if (getattr(llm, "is_offline", False) and query
+                and lab_config.offline_answerer(getattr(ctx, "config", None))
+                == lab_config.OFFLINE_ANSWERER_OFFLINE_QA):
+            # Opt-in demo path: the deterministic extractor needs the structured
+            # units (temporal provenance, fact attributes), not the flattened
+            # prompt.  The default offline path stays on OfflineLLM.generate so
+            # archived extractive-v1 numbers remain reproducible.
             from .offline_qa import answer as extractive_answer
             text, citations, refused, meta = extractive_answer(query, list(answer_units or units))
             allowed = [citation for citation in citations if citation in allowed_turns]

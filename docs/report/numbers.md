@@ -10,7 +10,7 @@
 
 | 标签 | 含义 | 不能写成 |
 |---|---|---|
-| 归档 27B | 2026-11-04 的 27B 归档，test `conv-41/42`，QA 120 题、检索 351 题 | 不能写成“本次重跑”；不能与 W3 offline 混表 |
+| 归档 27B | 2026-11-04 的 27B 归档，test `conv-41/42`，QA 120 题、检索 351 题 | 不能写成“本次重跑”；不能与 W3 offline 混表；与 online 27B 也不可直接比较（见 §4 注） |
 | offline | hashing embedding（非语义）+ 抽取式回答；A 级接口指标 | **不能写成 LLM F1**；不能外推为 27B 质量 |
 | online 27B | 本地 Ollama `qwen3.8:27b-q4_K_M`，B 级答案，无 Judge | 不能写成有 Judge 的 C 级结论；不能忽略单 seed |
 | 数据/覆盖 | 数据统计、导出统计、catalog 状态 | 不能当作模型效果 |
@@ -42,27 +42,31 @@
 | D21 | conv-26 t_event 覆盖率 | 13/335 = 3.9% | `exports/conv-26.json` | 数据 | 是（单段） |
 | D22 | as-of 示例边界 | 2023-10-19 / 2023-10-21 | `exports/conv-26.json`（D20 的区间比较） | 数据 | 是（单段） |
 
-## 2. 归档 27B（test 2 段，2026-11-04）
+## 2. 归档 27B（test 2 段，2026-11-04；A12–A16 为 17 条混合状态基准）
 
-| ID | 数字 | 值 | 来源文件 | 口径 | 可否外推到 test |
-|---|---|---|---|---|---|
-| A01 | Full Text F1 | 0.5589 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A02 | Vector RAG F1 | 0.3623 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A03 | Hybrid F1 | 0.3986 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A04 | Dynamic F1 | 0.4157 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A05 | Vector Recall | 0.5201 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A06 | Hybrid Recall | 0.6222 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A07 | Dynamic Recall | 0.6631 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
-| A08 | Full Text Recall | null / 不报 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（无检索，不能补 0） |
-| A09 | Dynamic 错误数 / 成功-only F1 | 1 / 0.4192 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
-| A10 | QA 题量 | 120 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
-| A11 | 检索题量 | 351 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
-| A12 | Dynamic 状态准确率 | 0.7647 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（17 条 test 子集） |
-| A13 | Vector 状态准确率 | 0.3529 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（17 条） |
-| A14 | Hybrid 状态准确率 | 0.4412 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（17 条） |
-| A15 | Dynamic valid-set exact | 0.7059 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（17 条） |
-| A16 | Dynamic relation accuracy | 0.5294 | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（17 条） |
-| A17 | 平均秒/题（Full / Vector / Hybrid / Dynamic） | 23.23 / 12.56 / 12.72 / 56.96 | `eval/archive/legacy-b0-results.json` | 归档 27B | 仅同环境相对比较 |
+| ID | 数字 | 值 | test-only 值（12 条） | 来源文件 | 口径 | 可否外推到 test |
+|---|---|---|---|---|---|---|
+| A01 | Full Text F1 | 0.5589 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A02 | Vector RAG F1 | 0.3623 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A03 | Hybrid F1 | 0.3986 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A04 | Dynamic F1 | 0.4157 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A05 | Vector Recall | 0.5201 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A06 | Hybrid Recall | 0.6222 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A07 | Dynamic Recall | 0.6631 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test，归档协议） |
+| A08 | Full Text Recall | null / 不报 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（无检索，不能补 0） |
+| A09 | Dynamic 错误数 / 成功-only F1 | 1 / 0.4192 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
+| A10 | QA 题量 | 120 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
+| A11 | 检索题量 | 351 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 是（test） |
+| A12 | Dynamic 状态准确率 | 0.7647 | 0.8261 | `eval/archive/legacy-b0-results.json` | 归档 27B · 17 条混合（5 dev + 12 test） | 否（混合；test-only 见前列） |
+| A13 | Vector 状态准确率 | 0.3529 | 0.4783 | `eval/archive/legacy-b0-results.json` | 归档 27B · 17 条混合（5 dev + 12 test） | 否（混合；test-only 见前列） |
+| A14 | Hybrid 状态准确率 | 0.4412 | 0.5217 | `eval/archive/legacy-b0-results.json` | 归档 27B · 17 条混合（5 dev + 12 test） | 否（混合；test-only 见前列） |
+| A15 | Dynamic valid-set exact | 0.7059 | 0.7500 | `eval/archive/legacy-b0-results.json` | 归档 27B · 17 条混合（5 dev + 12 test） | 否（混合；test-only 见前列） |
+| A16 | Dynamic relation accuracy | 0.5294 | 0.5455 | `eval/archive/legacy-b0-results.json` | 归档 27B · 17 条混合（5 dev + 12 test） | 否（混合；test-only 见前列） |
+| A17 | 平均秒/题（Full / Vector / Hybrid / Dynamic） | 23.23 / 12.56 / 12.72 / 56.96 | — | `eval/archive/legacy-b0-results.json` | 归档 27B | 仅同环境相对比较 |
+| A18 | Dynamic QA 题量 / 每段题数 | 120 / 60 | — | `eval/qa-test-dynamic-41.json`、`eval/qa-test-dynamic-42.json` | 归档 27B | 是（test，归档协议） |
+| A19 | Dynamic k / 深度 / 图扩展 | 15 / 30 / 8 | — | 同上（`k` 字段）；`memwb/retrieval.py` hybrid 默认 `depth=max(k,30)`；`memwb/pipeline.py` 默认 `expand=8` | 归档 27B | 是（test，归档协议） |
+
+> A12–A16 的 `值` 是 17 条混合（5 dev + 12 test）的 pooled 值，不能直接当 test 结论；`test-only 值` 只取其中 12 条 test 子集，来源同为 `eval/archive/legacy-b0-results.json#state.by_split.test`。其余 A01–A11、A17–A19 本身即 test 2 段，故 `test-only 值` 记为 `—`。A18–A19 来自同一批 QA 行文件的元数据；`legacy-b0-results.json` 的 summary 本身未记录 k/limit。
 
 ## 3. 冻结 B0 vs R0（offline，test 2 段）
 
@@ -101,7 +105,12 @@
 | O09 | ΔF1（R0−B0） | −0.0363，CI [−0.1351, +0.0575] | `eval/archive/final-w3-test-online.json` | online 27B | 是（CI 跨 0，不显著） |
 | O10 | ΔRecall（R0−B0） | −0.2032，CI [−0.3509, −0.048] | `eval/archive/final-w3-test-online.json` | online 27B | 是（显著为负） |
 | O11 | online 上下文 | 8192（8k） | `docs/optimization/RUNLOG-online.md` §0/§3 | online 27B | 是（本轮协议） |
+| O12 | B0 答题行 / 唯一 qid | 80 / 69（seeds 13/17；每段每 seed 20；11 题跨 seed 重复） | `eval/archive/final-w3-test-online.json`（`bootstrap.pairs_f1=69`）；`_select_questions` 复算 | online 27B | 是（test，2 seeds；69 个 qid 有重复） |
+| O13 | B0 与归档 Dynamic 题集重叠 | 35（conv-41 17 / conv-42 18） | 同上（复算） | online 27B | 不适用（题集统计） |
+| O14 | B0 refused / answered / answered F1 | 0.3875（31/80） / 49 / 0.2728；error_rate 0.0 只统计空 prediction，不含 refusal | `eval/archive/final-w3-test-online.json` | online 27B | 是（test，2 seeds；含 refusal） |
 
+> **O01 与 A04 不可直接比较。** A04 的 0.4157 是归档 Dynamic 的 120 题均值（每段 60，k=15，1 条 error 按 0 计，success-only 0.4192）；O01 的 0.1883 是 online B0 的 80 行均值（每段每 seed 20，2 seeds，去重 69 个 qid，与归档题集仅重叠 35 个；31 条 refusal 仍计入总均值，prediction 为 `unknown`，不单独剔除；answered_f1 0.2728）。两者题集、提示词、答题器与失败计分不同；上下文只知 B0 是 8192，归档未记录（代码默认 32768），不能相减，也不能写成“B0 从 0.4157 退到 0.1883”。
+>
 > 注意：T03/T07 与 O05/O06 是不同口径。offline 的 921/991 是离线链路的总 token 估计；online 的 924.6/319.3 是上下文预算口径。两者不能直接相减。
 
 ## 5. S6 在线 27B 单因素（development 4 段，40 题，seed 13）
@@ -281,16 +290,16 @@
 
 | ID | 数字 | 值 | 来源文件 | 口径 | 可否外推到 test |
 |---|---|---|---|---|---|
-| V01 | catalog 行数 | 48 | `configs/experiment-catalog.json` | 覆盖 | 不适用 |
-| V02 | partial | 17 | 同上 | 覆盖 | 不适用 |
+| V01 | catalog 行数 | 50 | `configs/experiment-catalog.json` | 覆盖 | 不适用 |
+| V02 | partial | 21 | 同上 | 覆盖 | 不适用 |
 | V03 | no_op | 1 | 同上 | 覆盖 | 不适用 |
 | V04 | not_wired | 1 | 同上 | 覆盖 | 不适用 |
-| V05 | blocked_on_code | 8 | 同上 | 覆盖 | 不适用 |
+| V05 | blocked_on_code | 7 | 同上 | 覆盖 | 不适用 |
 | V06 | blocked_on_hardware | 9 | 同上 | 覆盖 | 不适用 |
-| V07 | pending | 12 | 同上 | 覆盖 | 不适用 |
-| V08 | 有数据（partial+no_op+not_wired） | 19 | 同上（计算） | 覆盖 | 不适用 |
-| V09 | 有 online 报告（grade=offline+online） | 8 | 同上 | 覆盖 | 不适用 |
-| V10 | deck 旧口径 | 31 行：19/3/7/2 | `deck/build_deck.py` | 覆盖（旧快照） | 不适用；正文以 V01 为准 |
+| V07 | pending | 11 | 同上 | 覆盖 | 不适用 |
+| V08 | 有数据（partial+no_op+not_wired） | 23 | 同上（计算） | 覆盖 | 不适用 |
+| V09 | 有 online 报告（grade=offline+online 或 online） | 9 | 同上 | 覆盖 | 不适用 |
+| V10 | deck 当前口径 | 50 行：partial 21 / pending 11 / blocked_on_hardware 9 / blocked_on_code 7 / no_op 1 / not_wired 1 | `deck/build_deck.py`、`configs/experiment-catalog.json` | 覆盖（与 catalog 一致） | 不适用；正文以 V01 为准 |
 
 ## 14. 协议与配置常量
 
@@ -319,13 +328,16 @@
 | G21 | 本地 LLM 规模档 | 7B / 27B / 72B | `docs/optimization/04-experiments.md` §4.13.1 | 协议 | 不适用 |
 | G22 | online 服务器 | L20 48GB（44.4GiB 可用） | `docs/optimization/RUNLOG-online.md` §0 | online | 不适用 |
 | G23 | online 27B 模型大小 | 17.7GB | 同上 | online | 不适用 |
+| G24 | B0/R0 retrieval.k / depth | 15 / 30 | `configs/reference-b0.json`、`reference-r0.json` | 配置 | 不适用 |
+| G25 | 归档 27B 上下文 | 未记录（代码默认 32768） | `memwb/config.py` | 归档 27B | 不适用 |
 
 ## 15. 口径差异与禁用清单
-1. **31 行 vs 48 行**：deck 第 7 页仍是旧 31 行快照（19/3/7/2）；当前 catalog 是 48 行（19/9/8/12）。正文、附录、图 4 一律用 48 行，README 记录差异。
+1. **catalog 口径**：deck 第 7 页已按当前 catalog 重画（50 行，status_counts 见 §13 V01–V09）；正文、附录、图 4 一律用 50 行，README 记录差异。
 2. **teacher 示例**：deck 第 4 页的 `Caroline · job = teacher` 是版式示意，`exports/conv-26.json` 中没有该记录；正文改用真实记录 `conv26_D19_1_f0`（adoption agency interviews），并在第 2 章说明。
-3. **8k vs 32k**：任务书写“8k”，实际配置 `configs/reference-r0.json` 与 manifest 都是 `context=32768`；正文写 32k，不写 8k。
+3. **8k vs 32k**：offline 配置 `configs/reference-r0.json` 与 offline manifest 是 `context=32768`，正文写 32k；online W3/S6/E2/E3/M2 是 `context=8192`（O11），正文写 8k。两者是不同 harness，不能合并。
 4. **tokens 两种口径**：W3 offline/online 的 tokens 是上下文预算口径；S6 的 tokens 字段是生成 token。两者不能相减。
 5. **CONFLICT=0**：只在 conv-26 导出成立；六段导出合计 13/2602（0.5%）。正文写“默认 R0 路径 CONFLICT=0；v1 导出有 13 条历史标注”，不写“全数据 0 冲突”。
 6. **图检索结论**：R3 的 0.2372 是 offline hashing + category=1 的最终 Recall；不能写成“图检索提升 multi-hop”。
 7. **W3 的 CI 方法**：按题重采样，不是按对话 cluster；正式版应按 cluster。正文把它标为限制。
 8. **不能写的数字**：任何未在台账出现的 F1/Judge/人工 κ；任何把 offline 抽取式 F1 写成 LLM F1 的句子；任何把 dev 结果直接外推到 test 的结论。
+9. **归档 27B 与 online 27B 不可直接比较**：A04=0.4157（120 题，Dynamic）与 O01=0.1883（80 行/69 qid，B0）的题集、提示词、答题器与失败计分都不同；上下文只知 B0 是 8192，归档未记录（代码默认 32768）。不能相减，也不能写成“B0 从 0.4157 退到 0.1883”。详见 O12–O14。

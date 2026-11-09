@@ -37,11 +37,21 @@ CONFIG_SCHEMA = "memlab/run-config@1"
 
 DEFAULT_METHOD = "legacy_dynamic"
 
+# Offline answerer selection.  The default keeps the original prompt-driven
+# extractive path (OfflineLLM.generate) so archived offline numbers stay
+# reproducible; offline_qa is the richer deterministic demo extractor and has
+# its own model fingerprint.
+OFFLINE_ANSWERER_PATH = "use.offline_answerer"
+OFFLINE_ANSWERER_EXTRACTIVE = "extractive_v1"
+OFFLINE_ANSWERER_OFFLINE_QA = "offline_qa"
+OFFLINE_ANSWERERS = (OFFLINE_ANSWERER_EXTRACTIVE, OFFLINE_ANSWERER_OFFLINE_QA)
+DEFAULT_OFFLINE_ANSWERER = OFFLINE_ANSWERER_EXTRACTIVE
+
 # Top-level blocks that must be objects when present.
 MODULE_BLOCKS = (
     "schema", "write", "graph", "planner", "retrieval", "fusion", "rerank",
-    "post", "temporal", "logic", "answer", "forgetting", "environment", "dataset",
-    "evaluation", "method", "pipeline",
+    "post", "temporal", "logic", "answer", "use", "forgetting", "environment",
+    "dataset", "evaluation", "method", "pipeline",
 )
 
 
@@ -74,6 +84,21 @@ def get_path(data: Mapping[str, Any], path: str, default: Any = None) -> Any:
             return default
         current = current[part]
     return current
+
+
+def offline_answerer(config: Any = None) -> str:
+    """Selected offline answerer; absent config keeps the v1 extractive path.
+
+    Accepts a ``RunConfig``, a raw config mapping, or ``None``.  An invalid value
+    is rejected by :func:`problems`; this accessor deliberately falls back to the
+    default so a partially built context never silently changes the answer path.
+    """
+    if isinstance(config, Mapping):
+        value = get_path(config, OFFLINE_ANSWERER_PATH)
+    else:
+        getter = getattr(config, "get", None)
+        value = getter(OFFLINE_ANSWERER_PATH) if callable(getter) else None
+    return value if value in OFFLINE_ANSWERERS else DEFAULT_OFFLINE_ANSWERER
 
 
 @dataclass(frozen=True)
@@ -137,6 +162,14 @@ def _structure_problems(data: Mapping[str, Any]) -> list[str]:
             for sub, item in value.items():
                 if not isinstance(item, Mapping):
                     problems.append(f"{block}.{sub} must be an object, got {type(item).__name__}")
+    use = data.get("use")
+    if isinstance(use, Mapping):
+        answerer = use.get("offline_answerer")
+        if answerer is not None and answerer not in OFFLINE_ANSWERERS:
+            problems.append(
+                f"{OFFLINE_ANSWERER_PATH} must be one of {list(OFFLINE_ANSWERERS)}, "
+                f"got {answerer!r}"
+            )
     environment = data.get("environment")
     if isinstance(environment, Mapping):
         for sub in ("llm", "embedding", "judge"):
@@ -339,6 +372,11 @@ class RunConfig:
     def seed(self) -> int | None:
         seed = self.get("environment.seed")
         return seed if isinstance(seed, int) and not isinstance(seed, bool) else None
+
+    @property
+    def offline_answerer(self) -> str:
+        """Offline answerer selected by this config (defaults to extractive_v1)."""
+        return offline_answerer(self)
 
     def _method_root(self) -> str:
         for root in ("method", "pipeline"):

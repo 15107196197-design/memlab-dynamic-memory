@@ -8,7 +8,36 @@
 
 ## 7.0 读表规则
 
-本章有五张表，全部按口径分表：表 7-1 是归档 27B，表 7-2 是 offline test，表 7-3 是 online 27B，表 7-4 是 offline adoption，表 7-5 是 offline R3。**offline 的 F1 不是 LLM F1**；online 的单 seed、40 题结果不是 test 结论；归档 27B 不与 W3 混算。表中“—”表示该指标未记录或该配置不适用，不表示 0。
+本章有五张结果表，全部按口径分表：表 7-1 是归档 27B，表 7-2 是 offline test，表 7-3 是 online 27B，表 7-4 是 offline adoption，表 7-5 是 offline R3；§7.0.1 的协议对照表只列差异，不参与排名。**offline 的 F1 不是 LLM F1**；online 的单 seed、40 题结果不是 test 结论；归档 27B 不与 W3 混算。表中“—”表示该指标未记录或该配置不适用，不表示 0。
+
+### 7.0.1 为何两组 B0 不同
+
+表 7-1 的 0.4157 是归档 27B 的 Dynamic 方法（120 题），§7.3.1 的 0.1883 是 W3 冻结 B0（80 行、2 seeds）；两者常被一起称作“旧系统”，但不是同一套评测协议。相同的主要只有 test 2 段、模型名和 k；题集、提示词、答题器与失败计分都不同，上下文则是 B0 记 8192、归档未记录（代码默认 32768）。按两侧能核对的字段：
+
+先说明记录边界：`legacy-b0-results.json` 没有 manifest，只有 `generated_at`、`answer_model`、`embedding_model`、`split` 和汇总；`final-w3-test-online.json` 的 manifest 也只有 `git_commit`、`config_hashes`、`model`、`offline`，没有 prompt hash。因此下表的 k、题集细节来自同一批行文件与代码，不能从两个 JSON 直接读出；没有记录的字段写“未记录”。
+
+| 维度 | 归档 27B（表 7-1） | online B0（§7.3.1） | 是否同一口径 |
+|---|---|---|---|
+| 题目抽样 | conv-41/42；每段 60 题，按 category 分层后在源顺序上轮转取满，共 120 题；无 seed（确定性） | conv-41/42；每段每 seed 20 题，先按 category 分层、再用 seed 打乱；seeds 13/17，共 80 行；去重后 69 个 qid（11 题跨 seed 重复） | 否 |
+| 题集重叠 | 120 个 qid | 69 个 qid；与归档题集只重叠 35 个（conv-41 17、conv-42 18） | 否 |
+| k | 15（`eval/qa-test-dynamic-41/42.json` 的 `k` 字段）；hybrid 深度 30；图扩展 8 | 15（`configs/reference-b0.json` 的 `retrieval.k`；batch 固定 `k=15`）；深度 30；图扩展 8 | k 相同；但检索实现是两套（`memwb/retrieval.py` vs `memlab/retrieve.py`），不能只凭 k 判断检索等价 |
+| 提示词 | `memwb/pipeline.py`：Dynamic 用含 ACTIVE/HISTORICAL/CONFLICT/IRRELEVANT 与 RETAIN/UPDATE/SUPERSEDE/CONFLICT 的 `STATE_PROMPT`、`REVIEW_PROMPT`、只要求 `{"answer": ...}` 的 `ANSWER_PROMPT`；prompt hash 未记录 | `memlab/use.py`：`query_llm` 的状态提示只列 ACTIVE/HISTORICAL/CONFLICT、不产出关系；`valid_history` 用要求 `answer/citations/refused` 的 `_valid_history_prompt`；manifest 未记录 prompt hash | 否 |
+| 模型 / provider | `qwen3.8:27b-q4_K_M` + `bge-m3`；权重 digest 未记录；provider 未记录（代码默认本地 Ollama；context 默认 32768，运行时是否覆盖未记录） | 同名模型；权重 digest 未记录（config 的 `digest` 为 null）；config 的 provider 为 `ollama`；context 8192（RUNLOG §0/§3；numbers.md O11；文件默认 32768，本轮被覆盖） | 模型名相同；provider 未见差异；上下文：B0 8192，归档未记录 |
+| 答题器 | `memwb.pipeline.answer(method="dynamic")`：hybrid 检索 → 图扩展 → LLM 状态/关系判定 + 关系复核 → 从 valid/superseded 回答 | `memlab` E2E：`legacy_flat + append + state_slot`；`query_llm` 状态解析 → `valid_history` 回答（带 citations/refused）；无关系复核 | 否 |
+| 评分公式 | `memwb.evaluation.answer_f1`（token F1；多跳按逗号拆、开放域取 `;` 前段） | 同一个 `answer_f1` 函数 | 公式相同 |
+| 汇总 / 失败口径 | 120 题均值；1 条 error 按 0 计；success-only 0.4192 | 80 行均值（69 个 qid，重复题加权）；31 条 refusal 仍计入总均值（prediction 为 `unknown`，不单独剔除）；`refused_rate=0.3875`；去掉 refusal 的 `answered_f1=0.2728`（49 题）；`error_rate=0.0` 只统计 prediction 为空的行，不含这 31 条 refusal | 否 |
+
+> B0 的 qid 由 `memlab/webapp/__init__.py:_select_questions` 按 seeds 13/17 复算；69 个唯一 qid 与归档的 `bootstrap.pairs_f1=69` 一致。归档只保留聚合指标，没有 B0 的逐题预测，因此不能补做共同题配对。B0 的 8192 是 RUNLOG 记录的运行值，也与 manifest 的 config_hash 复算一致；`reference-b0.json` 里的 32768 是默认值，不是本轮 online 的运行值。
+
+**结论先说：两组数字不可直接比较；0.4157 与 0.1883 只能各自作为协议内参照。**
+
+三点读法：
+
+第一，**最容易被忽略的是分母**。0.1883 是 80 行、含 31 条 refusal 的均值；0.2728 才是 49 条实际作答的均值。0.4157 是 120 题、含 1 条 error 的均值，success-only 是 0.4192。两边的“失败”定义不同（error vs refusal），不能用一个差值概括；即使按 `answered_f1` 0.2728 看，online B0 仍低于 0.4157，所以 refusal 不是唯一原因。
+
+第二，**题集不是同一批**。120 个 qid 与 69 个 qid 只有 35 个重叠，两组没有做共同题配对。题集、提示词和答题链路同时变化（context 只知 B0 是 8192），因此只能列差异，不能把这个差距归因到某一个因子；归档也没有保留 B0 的逐题预测，无法补做共同题比较。
+
+第三，**k 与模型名相同，不能解释差异**。k 都是 15（深度 30、图扩展 8），模型都是 `qwen3.8:27b-q4_K_M` + `bge-m3`；这两项不能解释差异。真正的差异在题集、提示词/答题器、refusal 计分；context 只知 B0 是 8192，归档未记录（代码默认 32768）。因此本报告只把 0.4157 与 0.1883 当作两个协议下的参照值，不能相减，不能写成“B0 从 0.4157 退到 0.1883”，也不能用这组数字判断系统是否退步；同轮可比的只有 §7.3.1 内的 B0 vs R0。
 
 ## 7.1 归档 27B：全文仍是最强的答案基线
 
