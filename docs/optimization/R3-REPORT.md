@@ -29,7 +29,7 @@
 - candidate provenance 记录 `retrieval_impl`（以及 representation、distance、seeds、alpha 等），可事后审计。
 - 图通道缓存键加入 `graph_impl` 与 `graph_params`；否则不同 impl 会复用同一份候选。
 - 同时修正了两个实验基础设施假设：`compiler.NO_OP_AXES` 删除已接线的 `graph.retrieval.impl`；`_factorial` 支持 level 级 `applies_when`，因此 `slot_expand × entity_triple/three_layer` 被**跳过**而不是被改标签；`runner.load_questions` 支持 `dataset.categories`，E1-R3 才能只取 LoCoMo category=1。
-- 测试：新增 9 条 `tests/test_r3_graph.py`；全量 `python -m unittest discover -s tests -t .` **261 tests OK**（10.8 s）。其中缓存隔离测试专门防止“换 impl 仍复用上一 impl 候选”的回归，DAG planner 的 `vector_only` 关门也单独断言。
+- 测试：新增 9 条 `tests/test_r3_graph.py`；全量 `python -m unittest discover -s tests -t .` **262 tests OK**（10.8 s，当前 HEAD 含其它会话新增的 web 测试）。其中缓存隔离测试专门防止“换 impl 仍复用上一 impl 候选”的回归，DAG planner 的 `vector_only` 关门也单独断言。
 
 dispatch 行为核对（`tests/test_r3_graph.py` 的 fixture，state_slot / entity_triple）：
 
