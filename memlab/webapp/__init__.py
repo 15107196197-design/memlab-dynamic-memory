@@ -878,122 +878,102 @@ def _catalog() -> dict[str, Any]:
     return {**data, "items": items, "count": len(items), "status_counts": dict(counts)}
 
 
-def _graph_view(sample_id: str, representation: str, query: str, limit: int = 180, focus: str = "") -> dict[str, Any]:
+def _graph_view(sample_id: str, mode: str = "changed", limit: int = 400) -> dict[str, Any]:
+    """Semantic entity -> slot -> fact graph used by the legacy-style force view.
+
+    Nodes: entity / slot / fact.  Edges: member plus the real relation types from
+    ``store.relations``.  ``mode=changed`` keeps entity/slot groups with more than
+    one fact or any relation endpoint; ``mode=all`` keeps every fact.
+    """
     _sample(sample_id)
-    impls = registry.list_implementations().get("graph.repr", [])
-    repr_name = representation or "state_slot"
-    if repr_name not in impls:
-        raise WebError(f"unknown graph.repr: {repr_name}; available={impls}", 422)
-    cfg = _preset("B0").to_dict()
-    cfg.setdefault("graph", {}).setdefault("repr", {})["impl"] = repr_name
-    cfg.setdefault("graph", {})["retrieval"] = {"impl": "vector_only"}
-    cfg = lab_config.RunConfig.from_dict(cfg)
+    cfg = _preset("B0")
     plan = _plan(cfg)
     ctx, _ = _context(plan, sample_id, True)
-    graph = ctx.store.ensure_graph(repr_name)
-    by_id = {unit.memory_id: unit for unit in ctx.store.units}
-    seeds: list[str] = []
-    if query:
-        from memlab.retrieve import RetrievalRunner
-        retrieval = RetrievalRunner().run(query, ctx, 15)
-        seeds = retrieval.memory_ids()
-    entity_nodes = sorted((node for node in graph.nodes if node.startswith("entity:")), key=lambda node: (-len(graph.adj.get(node, ())), node))
-    if not seeds and not focus and entity_nodes:
-        focus = entity_nodes[0].split(":", 1)[1]
-    if focus:
-        target = f"entity:{focus.casefold()}"
-        if target in graph.nodes:
-            seeds = [target]
-    limit = max(20, min(300, int(limit)))
-    if seeds:
-        expanded = dict(graph.expand(seeds, 2))
-        selected = sorted(expanded, key=lambda node: (expanded[node], node))[:limit]
+    facts = [unit for unit in ctx.store.units if unit.kind == "fact"]
+    fact_by_id = {unit.memory_id: unit for unit in facts}
+    groups: dict[tuple[str, str], list[Any]] = {}
+    for unit in facts:
+        s = _unit_summary(unit)
+        groups.setdefault((s["entity"] or "未知人物", s["attribute"] or "event"), []).append(unit)
+    relation_types = {"RETAIN", "UPDATE", "SUPERSEDE", "CONFLICT"}
+    source_relations = list(ctx.store.relations) or list(_view(sample_id).relations)
+    relations = [r for r in source_relations if r.head_id in fact_by_id and r.tail_id in fact_by_id
+                 and str(r.type).upper() in relation_types]
+    if str(mode).lower() == "changed":
+        changed_ids = set()
+        for relation in relations:
+            if str(relation.type).upper() != "RETAIN":
+                changed_ids.add(relation.head_id)
+                changed_ids.add(relation.tail_id)
+        included_groups = {key for key, units in groups.items() if any(unit.memory_id in changed_ids for unit in units)}
+        facts = [unit for key, units in groups.items() if key in included_groups for unit in units]
     else:
-        ranked = sorted(graph.nodes, key=lambda node: (-len(graph.adj.get(node, ())), node))
-        selected = ranked[:max(5, limit // 3)]
-        selected_set = set(selected)
-        for node in list(selected):
-            if len(selected) >= limit:
-                break
-            for neighbor in sorted(graph.adj.get(node, ()), key=lambda n: (-len(graph.adj.get(n, ())), n)):
-                if neighbor not in selected_set:
-                    selected.append(neighbor)
-                    selected_set.add(neighbor)
-                if len(selected) >= limit:
-                    break
-        # include endpoints of strong edges if the ego expansion is still sparse
-        if len(selected) < limit:
-            for node in ranked:
-                if node not in selected_set:
-                    selected.append(node)
-                    selected_set.add(node)
-                if len(selected) >= limit:
-                    break
-        selected = sorted(selected, key=lambda node: (-len(graph.adj.get(node, ())), node))
-    selected_set = set(selected)
-    nodes = []
-    for node in selected:
-        unit = by_id.get(node)
-        if node.startswith("entity:"):
-            node_type, label = "entity", node.split(":", 1)[1]
-        elif node.startswith("topic:"):
-            node_type, label = "topic", node.split(":", 1)[1]
-        elif node.startswith("event:"):
-            node_type, label = "event", node.split(":", 1)[1]
-        else:
-            node_type = "unit"
-            label = (unit.text[:70] + "…") if unit and len(unit.text) > 70 else (unit.text if unit else node)
-        nodes.append({
-            "id": node, "type": node_type, "label": label,
-            "degree": len(graph.adj.get(node, ())),
-            "kind": unit.kind if unit else node_type,
-            "state": (unit.structured.get("state") if unit else None),
-            "source_turn": (unit.evidence[0].turn_id if unit and unit.evidence else None),
-            "selected_seed": node in set(seeds),
-        })
-    edges = []
-    seen = set()
-    for source in selected:
-        for target in graph.adj.get(source, ()):
-            if target not in selected_set:
-                continue
-            key = tuple(sorted((source, target)))
-            if key in seen:
-                continue
-            seen.add(key)
-            edges.append({"source": source, "target": target, "type": "link"})
+        included_groups = set(groups)
+    facts = facts[:max(1, min(800, limit))]
+    included_ids = {unit.memory_id for unit in facts}
+    nodes: list[dict[str, Any]] = []
+    node_ids: set[str] = set()
+    edges: list[dict[str, Any]] = []
+    edge_keys: set[tuple[str, str, str]] = set()
+
+    def add_node(node: dict[str, Any]) -> None:
+        if node["id"] not in node_ids:
+            node_ids.add(node["id"])
+            nodes.append(node)
+
+    versions_by_slot: dict[str, int] = {}
+    for unit in facts:
+        summary = _unit_summary(unit)
+        slot_id = f"s:{summary['entity']}::{summary['attribute']}"
+        versions_by_slot[slot_id] = versions_by_slot.get(slot_id, 0) + 1
+    for unit in facts:
+        summary = _unit_summary(unit)
+        entity = summary["entity"] or "未知人物"
+        slot = summary["attribute"] or "event"
+        ent_id = f"e:{entity.casefold()}"
+        slot_id = f"s:{entity}::{slot}"
+        add_node({"id": ent_id, "kind": "entity", "label": entity, "state": None, "r": 11})
+        add_node({"id": slot_id, "kind": "slot", "label": slot, "state": None,
+                  "r": 5 + min(5, versions_by_slot.get(slot_id, 1) / 2)})
+        add_node({"id": unit.memory_id, "kind": "fact", "label": f"{summary['value'] or summary['event'] or unit.text}",
+                  "state": summary["state"] or "UNRESOLVED", "r": 3.6,
+                  "source_turn": summary["source_turn"], "t_ingest": summary["t_ingest"]})
+        for source, target, kind in ((ent_id, slot_id, "member"), (slot_id, unit.memory_id, "member")):
+            key = (source, target, kind)
+            if key not in edge_keys:
+                edge_keys.add(key)
+                edges.append({"source": source, "target": target, "type": kind})
+    for relation in relations:
+        if relation.head_id not in included_ids or relation.tail_id not in included_ids:
+            continue
+        kind = str(relation.type).upper()
+        key = (relation.head_id, relation.tail_id, kind)
+        if key not in edge_keys:
+            edge_keys.add(key)
+            edges.append({"source": relation.head_id, "target": relation.tail_id, "type": kind})
     facts_model = legacy_config.extraction_model()
     facts_file = getattr(legacy_config, "FACTS_DIR", ROOT / "data" / "facts") / f"{sample_id}--{legacy_config.model_slug(facts_model)}.json"
     states_file = getattr(legacy_config, "STATES_DIR", ROOT / "data" / "states") / f"{sample_id}--{legacy_config.model_slug(facts_model)}.json"
     return {
-        "sample": sample_id, "representation": repr_name,
-        "representation_label": GRAPH_LABELS.get(repr_name, repr_name),
-        "query": query, "focus": focus, "entities": [node.split(":", 1)[1] for node in entity_nodes], "offline": True,
+        "sample": sample_id, "mode": str(mode).lower(), "offline": True,
         "source": {
-            "kind": "cached_fact_artifacts",
-            "facts_model": facts_model,
+            "kind": "cached_fact_artifacts", "facts_model": facts_model,
             "facts_file": str(facts_file) if facts_file.exists() else None,
             "states_file": str(states_file) if states_file.exists() else None,
-            "note": "图由已缓存的 facts/states 构图；页面不会实时调用 LLM 重新抽取。"
-                    " 换模型后需重跑 scripts/extract.py / scripts/build_states.py。",
+            "note": "图由已缓存的 facts/states 构图；页面不会实时调用 LLM 重新抽取。换模型后需重跑 scripts/extract.py / scripts/build_states.py。",
         },
-        "stats": graph.stats(), "shown": {"nodes": len(nodes), "edges": len(edges)},
+        "stats": {"facts_total": len(fact_by_id), "groups_total": len(groups),
+                  "facts_shown": len(facts), "groups_shown": len(included_groups),
+                  "nodes": len(nodes), "edges": len(edges),
+                  "relations_total": len(relations)},
         "nodes": nodes, "edges": edges,
         "legend": [
-            {"type": "unit", "label": "Memory / turn 单元"},
-            {"type": "entity", "label": "Entity 实体"},
-            {"type": "topic", "label": "Topic 主题"},
-            {"type": "event", "label": "Event 事件"},
+            {"kind": "data", "label": "当前有效"},
+            {"kind": "history", "label": "已过时"},
+            {"kind": "progress", "label": "推进·替换"},
+            {"kind": "conflict", "label": "矛盾"},
         ],
     }
-
-
-C_ARTIFACTS = {
-    "state_accuracy": "eval/archive/state-accuracy.json",
-    "e1_adoption": "eval/archive/e1-adoption-offline.json",
-    "e3_offline": "eval/archive/e3-offline.json",
-    "planner_k": "eval/archive/params-planner-k-corrected.json",
-}
 
 
 def _timeline(sample_id: str) -> dict[str, Any]:
@@ -1019,6 +999,14 @@ def _timeline(sample_id: str) -> dict[str, Any]:
         "groups": out[:80], "group_count": len(out),
         "fact_count": sum(len(group["versions"]) for group in out),
     }
+
+
+C_ARTIFACTS = {
+    "state_accuracy": "eval/archive/state-accuracy.json",
+    "e1_adoption": "eval/archive/e1-adoption-offline.json",
+    "e3_offline": "eval/archive/e3-offline.json",
+    "planner_k": "eval/archive/params-planner-k-corrected.json",
+}
 
 
 def _c_artifacts() -> dict[str, Any]:
@@ -1113,10 +1101,12 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
 
     if route == "/graph":
         sample_id = str(_one(args, "sample", ""))
-        limit = int(_one(args, "limit", 120) or 120)
-        if "repr" in args or "q" in args or _one(args, "view") == "full":
-            return _graph_view(sample_id, str(_one(args, "repr", "state_slot") or "state_slot"),
-                               str(_one(args, "q", "") or ""), limit, str(_one(args, "focus", "") or ""))
+        semantic = "mode" in args or _one(args, "view") == "semantic" or "repr" in args or "q" in args
+        limit = int(_one(args, "limit", 400 if semantic else 120) or (400 if semantic else 120))
+        if "mode" in args or _one(args, "view") == "semantic":
+            return _graph_view(sample_id, str(_one(args, "mode", "changed") or "changed"), limit)
+        if "repr" in args or "q" in args:
+            return _graph_view(sample_id, "changed", limit)
         return _graph(sample_id, limit)
 
     match = re.fullmatch(r"/memories/([^/]+)", route)

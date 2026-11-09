@@ -250,3 +250,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .v6-drawer-item { border-bottom: 1px solid var(--line-2); padding: 10px 0; font-size: 12.5px; line-height: 1.65; }
 .v6-drawer-item .small { white-space: pre-wrap; word-break: break-word; }
 @media (max-width: 900px) { .v6-grid { min-width: 760px; } #v6-heat-view { overflow-x: auto; } }
+/* Force-directed relation graph (legacy 8765 language, canvas) */
+.force-toolbar { display: flex; align-items: center; justify-content: space-between; margin: 8px 0 10px; }
+.graph-canvas-wrap { width: 100%; height: 610px; border: 1px solid var(--line); border-radius: 10px; background: #fff; overflow: hidden; }
+#v2-force-canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+#v2-force-canvas:active { cursor: grabbing; }
+.force-legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 11.5px; margin: 10px 0 0; }
+@media (max-width: 900px) { .graph-canvas-wrap { height: 520px; } }

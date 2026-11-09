@@ -168,13 +168,13 @@ class WebAppTests(unittest.TestCase):
         self.assertGreater(timeline["fact_count"], 0)
         self.assertIn("groups", timeline)
 
-    def test_graph_repr_and_subgraph(self):
-        options = webapp.get("/api/v2/graph/options")
-        self.assertIn("three_layer", [r["id"] for r in options["representations"]])
-        graph = webapp.get("/api/v2/graph", {"sample": ["conv-26"], "repr": ["three_layer"], "limit": ["40"]})
-        self.assertEqual(graph["representation"], "three_layer")
+    def test_semantic_graph_has_entity_slot_fact_and_typed_edges(self):
+        graph = webapp.get("/api/v2/graph", {"sample": ["conv-26"], "mode": ["changed"]})
+        self.assertEqual({n["kind"] for n in graph["nodes"]}, {"entity", "slot", "fact"})
+        self.assertIn("member", {e["type"] for e in graph["edges"]})
+        self.assertTrue({e["type"] for e in graph["edges"]} & {"RETAIN", "UPDATE", "SUPERSEDE", "CONFLICT"})
+        self.assertLessEqual(graph["stats"]["facts_shown"], 400)
         self.assertGreater(graph["stats"]["nodes"], 0)
-        self.assertGreater(len(graph["nodes"]), 0)
 
     def test_experiment_catalog_covers_modules_and_stages(self):
         data = webapp.get("/api/v2/experiments/plan")

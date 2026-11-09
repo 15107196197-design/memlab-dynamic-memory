@@ -81,7 +81,8 @@
 
     let stateFilter = "";
     let typeFilter = "all";
-    let entityFilter = "";
+    let entityFilter = window.__memEntityFilter || "";
+    delete window.__memEntityFilter;
     let facets = null;
     let entries = [];
     let selectedId = null;
@@ -130,7 +131,10 @@
           </button>`;
         }).join("") : `<div class="empty">没有匹配的记忆。</div>`;
         $$("#v1-list [data-mid]").forEach((b) => (b.onclick = () => show(b.dataset.mid)));
-        if (entries.length) show(entries[0].memory_id, false);
+        const wanted = window.__memOpen || null;
+        delete window.__memOpen;
+        const first = wanted ? entries.find((x) => x.memory_id === wanted) || entries[0] : entries[0];
+        if (first) show(first.memory_id, false);
         else $("#v1-detail").innerHTML = `<div class="empty">没有可展示的对象。</div>`;
       } catch (err) {
         $("#v1-list").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
@@ -679,119 +683,168 @@
     }));
   }
 
-  async function renderGraph2(root) {
-    const opts = await api("/api/v2/graph/options");
-    const reprs = opts.representations || [];
-    const select = reprs.map((r) => `<option value="${esc(r.id)}">${esc(r.label_zh || r.id)}</option>`).join("");
-    root.innerHTML = `${header("GRAPH EXPLORER · 图谱", "图谱可视化", "选择图表示（graph.repr），查看 Memory / Entity / Topic / Event 节点与关系；支持按问题取相关子图。")}
-      <div class="card pad">
-        <div class="toolbar">
-          <label class="small">图表示 <span class="muted">Graph representation</span><select id="v2-graph-repr" class="field">${select}</select></label>
-          <input id="v2-graph-q" class="field" placeholder="输入问题，取相关子图（可留空看全图采样）">
-          <button id="v2-graph-load" class="btn primary">生成图谱</button>
-          <button id="v2-graph-reset" class="btn">重置</button>
-        </div>
-        <div class="note">图谱由当前 MemoryStore 构图；切换图表示不会重新抽取原始对话。真实模型会替换 embedding / 回答，但图仍来自当前 W 的 Memory。K 维护不在单题图谱中执行。</div>
-      </div>
-      <div class="v2-cols" style="margin-top:14px">
-        <div class="card pad"><div id="v2-graph-meta" class="sub">加载中…</div><div id="v2-graph-svg" class="graph-view"></div>
-          <div id="v2-graph-legend" class="row" style="margin-top:8px"></div></div>
-        <div class="card pad"><h3>节点详情 <span class="muted small">Node detail</span></h3><div id="v2-graph-detail" class="muted">点击节点查看内容、状态与证据。</div>
-          <h3 style="margin-top:16px">统计 <span class="muted small">Stats</span></h3><div id="v2-graph-stats" class="small"></div></div>
-      </div>`;
-    const draw = async () => {
-      const repr = $("#v2-graph-repr").value;
-      const q = $("#v2-graph-q").value.trim();
-      $("#v2-graph-meta").textContent = "加载中…";
-      try {
-        const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&repr=${encodeURIComponent(repr)}&q=${encodeURIComponent(q)}&limit=180`);
-        const nodes = data.nodes || [], edges = data.edges || [];
-        $("#v2-graph-meta").innerHTML = `<b>${esc(data.representation_label)}</b> · 当前显示 ${data.shown.nodes} / ${data.stats.nodes} 节点、${data.shown.edges} / ${data.stats.edges} 条边${q ? ` · 查询子图 “${esc(q)}”` : ` · 聚焦 ${esc(data.focus || "not_available")}（2 跳）`}`;
-        const src = data.source || {};
-        $("#v2-graph-stats").innerHTML = `全图：${esc(data.stats.nodes)} 节点 / ${esc(data.stats.edges)} 边<br>表示：<span class="mono">${esc(data.representation)}</span><br>构图来源：已缓存 facts/states（cached，不是实时抽取）<br>facts 模型：<span class="mono">${esc(src.facts_model || "—")}</span><br><span class="muted small">${esc(src.note || "")}</span>`;
-        $("#v2-graph-legend").innerHTML = (data.legend || []).map((l) => `<span class="pill">${esc(l.label)}</span>`).join("");
-        if (!nodes.length) { $("#v2-graph-svg").innerHTML = `<div class="empty">没有可展示的节点。</div>`; return; }
-        const W = 920, H = 620, cx = W / 2, cy = H / 2;
-        const groups = {};
-        nodes.forEach((n) => (groups[n.type] = groups[n.type] || []).push(n));
-        const pos = new Map();
-        const order = ["unit", "entity", "topic", "event"];
-        order.forEach((type, gi) => {
-          const list = groups[type] || [];
-          const radius = type === "unit" ? 160 : type === "entity" ? 260 : 300;
-          list.forEach((n, i) => {
-            const angle = (2 * Math.PI * i) / Math.max(1, list.length) - Math.PI / 2 + gi * 0.25;
-            pos.set(n.id, { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) });
-          });
-        });
-        const edgeHtml = edges.map((e) => {
-          const a = pos.get(e.source), b = pos.get(e.target);
-          if (!a || !b) return "";
-          return `<line class="graph-edge" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"><title>${esc(e.source)} -- ${esc(e.target)}</title></line>`;
-        }).join("");
-        const color = (n) => n.type === "entity" ? "#2f5d8a" : n.type === "topic" ? "#6b5b95" : n.type === "event" ? "#8a6d3b" : n.state === "CONFLICT" ? "#a33" : n.state === "HISTORICAL" ? "#b07a2a" : "#2f7a4f";
-        const nodeHtml = nodes.map((n) => {
-          const p = pos.get(n.id);
-          const r = Math.max(4, Math.min(13, 4 + Math.sqrt(n.degree || 1) * 2));
-          const label = n.type === "unit" && n.degree < 4 ? "" : (n.label || n.id).slice(0, 28);
-          return `<g class="graph-node" data-id="${esc(n.id)}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})"><title>${esc(n.id)} · ${esc(n.type)} · degree ${esc(n.degree)}</title><circle r="${r.toFixed(1)}" fill="${color(n)}" fill-opacity="0.22" stroke="${color(n)}"/><text x="${(r + 3).toFixed(1)}" y="3">${esc(label)}</text></g>`;
-        }).join("");
-        $("#v2-graph-svg").innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Memory graph">${edgeHtml}${nodeHtml}</svg>`;
-        $$("#v2-graph-svg .graph-node").forEach((node) => (node.onclick = () => showNode(node.dataset.id, data)));
-      } catch (err) {
-        $("#v2-graph-svg").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
-      }
-    };
-    const showNode = async (id, data) => {
-      const panel = $("#v2-graph-detail");
-      if (id.startsWith("entity:") || id.startsWith("topic:") || id.startsWith("event:")) {
-        const byId = new Map((data.nodes || []).map((n) => [n.id, n]));
-        const neighbors = (data.edges || []).filter((e) => e.source === id || e.target === id).map((e) => e.source === id ? e.target : e.source);
-        panel.innerHTML = `<div class="v1-title">${esc(id.split(":").slice(1).join(":"))}</div><p class="muted small">邻居 ${neighbors.length} 个</p>${neighbors.slice(0, 12).map((x) => { const n = byId.get(x); return `<div class="small">${esc(n?.label || x)}</div>`; }).join("")}`;
-        return;
-      }
-      try {
-        const d = await api(`/api/v2/memories/${encodeURIComponent(id)}?sample=${encodeURIComponent(app.sampleId)}`);
-        panel.innerHTML = `<div class="mono">${esc(id)}</div><p>${esc(d.memory.text)}</p><div class="small">state：${esc(d.summary.state || "—")} · time：${esc(interval(d.summary.t_event))}</div>${d.source_turns.length ? `<div class="v2-evidence"><span class="mono">${esc(d.source_turns[0].turn_id)}</span> ${esc(d.source_turns[0].text || "")}</div>` : ""}`;
-      } catch (err) { panel.textContent = err.message; }
-    };
-    $("#v2-graph-load").onclick = draw;
-    $("#v2-graph-reset").onclick = () => { $("#v2-graph-q").value = ""; draw(); };
-    $("#v2-graph-q").onkeydown = (e) => { if (e.key === "Enter") draw(); };
-    $("#v2-graph-repr").onchange = draw;
-    await draw();
+  function buildForceGraph(data) {
+    const nodes = (data.nodes || []).map((n) => ({
+      id: n.id, kind: n.kind, label: n.kind === "slot" ? attrLabel(n.label) : n.label,
+      state: n.state, r: n.r || (n.kind === "entity" ? 11 : n.kind === "slot" ? 7 : 3.6),
+      source_turn: n.source_turn, t_ingest: n.t_ingest,
+    }));
+    const index = new Map(nodes.map((n, i) => [n.id, i]));
+    const edges = (data.edges || []).map((e) => ({ a: index.get(e.source), b: index.get(e.target), kind: e.type }))
+      .filter((e) => Number.isInteger(e.a) && Number.isInteger(e.b));
+    return { nodes, edges };
   }
 
-  function cArtifactsHtml(artifacts) {
-    const a = artifacts || {};
-    const sa = a.state_accuracy || {};
-    const e1 = a.e1_adoption || {};
-    const e3 = a.e3_offline || {};
-    const pk = a.planner_k || {};
-    const saRows = Object.entries(sa.summary || {}).map(([name, x]) => `<tr><td>${esc(name)}</td><td>${esc(na(x.state_accuracy_item_mean))}</td><td>${esc(na(x.valid_set_exact))}</td><td>${esc(na(x.evidence_recall))}</td><td>${esc(na(x.items))}</td></tr>`).join("");
-    const e1Rows = Object.entries(e1.baselines || {}).map(([name, x]) => {
-      const m = x.metrics || {};
-      return `<tr><td>${esc(name)}</td><td>${esc(na(m.evidence_recall))}</td><td>${esc(na(m.ndcg))}</td><td>${esc(na(m.tokens))}</td></tr>`;
-    }).join("");
-    const e3Rows = (e3.main_effects?.evidence_recall || []).map((x) => `<tr><td>${esc(x.factor)}</td><td>${esc(x.low)} → ${esc(x.high)}</td><td>${esc(na(x.delta_high_minus_low))}</td><td>${esc(JSON.stringify(x.ci95 ?? "not_available"))}</td><td>${x.ci_excludes_zero ? "yes" : "no"}</td></tr>`).join("");
-    const pkRows = (pk.rows || []).map((x) => `<tr><td>${esc(x.level)}</td><td>${esc(na(x.evidence_recall))}</td><td>${esc(na(x.ndcg))}</td><td>${esc(na(x.tokens))}</td><td>${esc(na(x.latency_ms))}</td></tr>`).join("");
-    const raw = (label, data) => `<details style="margin-top:8px"><summary class="small muted">原始 JSON · ${esc(label)}</summary><pre class="v2-pre">${esc(JSON.stringify(data, null, 2))}</pre></details>`;
-    return `<div class="v2-cols" style="margin-top:16px">
-      <div class="card pad"><h3>状态准确率 · State accuracy</h3>
-        ${sa.available === false ? `<p class="note warn">not_available：${esc(sa.reason || "file missing")}</p>` : `<table class="v2-table"><thead><tr><th>candidate</th><th>item mean</th><th>valid exact</th><th>recall</th><th>items</th></tr></thead><tbody>${saRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table><p class="muted small">${esc(sa.benchmark_note || "")}</p>${raw("state-accuracy", sa)}`}
-      </div>
-      <div class="card pad"><h3>E1.1 模块采纳 · Adoption</h3>
-        ${e1.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>baseline</th><th>recall</th><th>nDCG</th><th>tokens</th></tr></thead><tbody>${e1Rows || `<tr><td colspan="4" class="muted">not_available</td></tr>`}</tbody></table>${raw("e1-adoption", e1)}`}
-      </div>
-    </div>
-    <div class="v2-cols" style="margin-top:14px">
-      <div class="card pad"><h3>E3 组合 · Interactions</h3>
-        ${e3.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>factor</th><th>low → high</th><th>delta</th><th>CI95</th><th>excludes 0</th></tr></thead><tbody>${e3Rows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>${raw("e3-offline", e3)}`}
-      </div>
-      <div class="card pad"><h3>R4 planner K · Params</h3>
-        ${pk.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>k</th><th>recall</th><th>nDCG</th><th>tokens</th><th>latency</th></tr></thead><tbody>${pkRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table><p class="muted small">${esc(pk.harness_blocker || "")}</p>${raw("planner-k", pk)}`}
-      </div>
-    </div>`;
+  function forceGraphV2(canvas, graph, onPick) {
+    const ctx = canvas.getContext("2d");
+    const { nodes, edges } = graph;
+    if (!nodes.length) return { stop() {} };
+    const dpr = window.devicePixelRatio || 1;
+    let width = 0, height = 0, alpha = 1, raf = 0, hover = -1, drag = -1, pan = null, ticks = 0, touched = false, downAt = null;
+    const view = { x: 0, y: 0, k: 1 };
+    const CHARGE = { entity: 2400, slot: 1600, fact: 20 };
+    nodes.forEach((n, i) => { const a = i * 2.399963, rad = 14 * Math.sqrt(i); n.x = Math.cos(a) * rad; n.y = Math.sin(a) * rad; n.vx = n.vy = 0; n.charge = CHARGE[n.kind]; });
+    edges.forEach((e) => {
+      const pair = nodes[e.a].kind + "-" + nodes[e.b].kind;
+      e.distance = pair === "entity-slot" ? 110 : pair === "slot-fact" ? 28 : 22;
+      e.strength = e.kind === "member" ? 1.0 : 0.08;
+    });
+    const neighbours = nodes.map(() => new Set());
+    edges.forEach((e) => { neighbours[e.a].add(e.b); neighbours[e.b].add(e.a); });
+    const resize = () => { const rect = canvas.getBoundingClientRect(); width = rect.width; height = rect.height; canvas.width = width * dpr; canvas.height = height * dpr; };
+    const fit = () => {
+      const xs = nodes.map((n) => n.x), ys = nodes.map((n) => n.y);
+      const w = Math.max(...xs) - Math.min(...xs) + 120, h = Math.max(...ys) - Math.min(...ys) + 120;
+      const k = Math.min(3, Math.max(0.3, Math.min(width / w, height / h)));
+      const x = -((Math.max(...xs) + Math.min(...xs)) / 2) * k, y = -((Math.max(...ys) + Math.min(...ys)) / 2) * k;
+      const t = ticks < 30 ? 1 : 0.35;
+      view.k += (k - view.k) * t; view.x += (x - view.x) * t; view.y += (y - view.y) * t;
+    };
+    const tick = () => {
+      const n = nodes.length;
+      for (let i = 0; i < n; i++) {
+        const p = nodes[i];
+        for (let j = i + 1; j < n; j++) {
+          const q = nodes[j];
+          const dx = p.x - q.x, dy = p.y - q.y, d2 = dx * dx + dy * dy;
+          if (d2 > 62500) continue;
+          const d = Math.sqrt(d2) || 0.5;
+          const c = p.kind === "fact" || q.kind === "fact" ? 24 : Math.sqrt(p.charge * q.charge);
+          const f = (c * alpha) / (d * d);
+          p.vx += dx * f; p.vy += dy * f; q.vx -= dx * f; q.vy -= dy * f;
+        }
+      }
+      for (const e of edges) {
+        const p = nodes[e.a], q = nodes[e.b];
+        const dx = q.x - p.x, dy = q.y - p.y, d = Math.sqrt(dx * dx + dy * dy) || 1;
+        const f = ((d - e.distance) / d) * e.strength * alpha * 0.5;
+        p.vx += dx * f; p.vy += dy * f; q.vx -= dx * f; q.vy -= dy * f;
+      }
+      for (let i = 0; i < n; i++) {
+        const p = nodes[i];
+        if (i === drag) { p.vx = p.vy = 0; continue; }
+        p.vx -= p.x * 0.015 * alpha; p.vy -= p.y * 0.015 * alpha;
+        p.vx *= 0.6; p.vy *= 0.6;
+        const speed = Math.hypot(p.vx, p.vy);
+        if (speed > 12) { p.vx *= 12 / speed; p.vy *= 12 / speed; }
+        p.x += p.vx; p.y += p.vy;
+      }
+      alpha = Math.max(0.02, alpha * 0.985);
+      ticks++;
+      if (!touched && ticks % 10 === 0) fit();
+    };
+    const screen = (n) => [n.x * view.k + view.x + width / 2, n.y * view.k + view.y + height / 2];
+    const draw = () => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      const focus = hover >= 0 ? neighbours[hover] : null;
+      for (const e of edges) {
+        const [x1, y1] = screen(nodes[e.a]), [x2, y2] = screen(nodes[e.b]);
+        const lit = focus && (e.a === hover || e.b === hover);
+        ctx.globalAlpha = focus && !lit ? 0.12 : 1;
+        const strong = e.kind === "UPDATE" || e.kind === "SUPERSEDE";
+        ctx.strokeStyle = e.kind === "member" || e.kind === "RETAIN" ? "#ececec" : strong ? "#111" : "#111";
+        ctx.setLineDash(e.kind === "CONFLICT" ? [4, 3] : []);
+        ctx.lineWidth = strong ? 1.6 : e.kind === "member" || e.kind === "RETAIN" ? 1 : 1.6;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      }
+      nodes.forEach((n, i) => {
+        const [x, y] = screen(n);
+        const lit = !focus || i === hover || focus.has(i);
+        const r = n.r * Math.sqrt(view.k);
+        ctx.globalAlpha = lit ? 1 : 0.18;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
+        if (n.kind === "fact" && n.state === "HISTORICAL") { ctx.fillStyle = "#fff"; ctx.fill(); ctx.strokeStyle = "#b8b8b8"; ctx.lineWidth = 1.3; ctx.stroke(); }
+        else { ctx.fillStyle = n.kind === "slot" ? "#8c8c8c" : "#111"; ctx.fill(); }
+        if (n.kind === "entity" || n.kind === "slot") {
+          ctx.fillStyle = n.kind === "entity" ? "#111" : "#444";
+          ctx.font = `${n.kind === "entity" ? "600 13px" : "11.5px"} Inter, "PingFang SC", "Microsoft YaHei", sans-serif`;
+          ctx.textAlign = "center";
+          ctx.fillText(String(n.label || "").slice(0, 42), x, y + r + 13);
+        }
+      });
+      ctx.globalAlpha = 1;
+    };
+    const loop = () => { tick(); draw(); raf = requestAnimationFrame(loop); };
+    const pick = (ev) => {
+      const rect = canvas.getBoundingClientRect(), mx = ev.clientX - rect.left, my = ev.clientY - rect.top;
+      let best = -1, bestD = 12;
+      nodes.forEach((n, i) => { const [x, y] = screen(n); const d = Math.hypot(x - mx, y - my); if (d < Math.max(bestD, n.r + 3)) { best = i; bestD = d; } });
+      return best;
+    };
+    canvas.onmousemove = (ev) => {
+      if (drag >= 0) {
+        const rect = canvas.getBoundingClientRect();
+        nodes[drag].x = (ev.clientX - rect.left - width / 2 - view.x) / view.k;
+        nodes[drag].y = (ev.clientY - rect.top - height / 2 - view.y) / view.k;
+        alpha = Math.max(alpha, 0.3);
+      } else if (pan) { view.x = pan.vx + ev.clientX - pan.x; view.y = pan.vy + ev.clientY - pan.y; }
+      else hover = pick(ev);
+    };
+    canvas.onmousedown = (ev) => { touched = true; downAt = [ev.clientX, ev.clientY]; const i = pick(ev); if (i >= 0) drag = i; else pan = { x: ev.clientX, y: ev.clientY, vx: view.x, vy: view.y }; };
+    canvas.onmouseup = (ev) => { const moved = downAt && Math.hypot(ev.clientX - downAt[0], ev.clientY - downAt[1]) > 4; if (!moved && drag >= 0) onPick(nodes[drag]); drag = -1; pan = null; };
+    canvas.onmouseleave = () => { hover = -1; drag = -1; pan = null; };
+    canvas.onwheel = (ev) => { ev.preventDefault(); touched = true; const k = Math.min(5, Math.max(0.25, view.k * (ev.deltaY < 0 ? 1.12 : 0.89))); view.x *= k / view.k; view.y *= k / view.k; view.k = k; };
+    resize();
+    window.addEventListener("resize", resize);
+    for (let i = 0; i < 300; i++) tick();
+    ticks = 0;
+    fit();
+    draw();
+    loop();
+    return { stop() { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); } };
+  }
+
+  async function renderGraph2(root) {
+    root.classList.add("v1-page");
+    root.innerHTML = `${header("RELATION GRAPH · 关系图", "关系图", "实体 → 类型 → 事实；默认只看发生变化的事。拖动画布平移，滚轮缩放。")}
+      <div class="force-toolbar"><div class="seg"><button data-mode="changed" class="on">只看变化</button><button data-mode="all">全部</button></div><span id="g2-count" class="muted small"></span></div>
+      <div class="graph-canvas-wrap"><canvas id="v2-force-canvas"></canvas></div>
+      <div class="force-legend"><span>● 当前有效</span><span>○ 已过时</span><span>━━ 推进·替换</span><span>┅ 矛盾</span><span>拖动画布平移，滚轮缩放</span></div>
+      <div class="v1-provenance">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）</div>`;
+    let mode = "changed";
+    let sim = null;
+    const start = async () => {
+      if (sim) { sim.stop(); sim = null; }
+      const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&mode=${mode}&limit=400`);
+      const graph = buildForceGraph(data);
+      $("#g2-count").textContent = `${graph.nodes.length} 个节点 · ${graph.edges.length} 条边`;
+      sim = forceGraphV2($("#v2-force-canvas"), graph, (node) => {
+        if (node.kind === "fact") {
+          window.__memOpen = node.id;
+          location.hash = "#/memories";
+        } else if (node.kind === "entity") {
+          window.__memEntityFilter = node.label;
+          location.hash = "#/memories";
+        }
+      });
+    };
+    $$(".force-toolbar [data-mode]").forEach((b) => (b.onclick = () => {
+      mode = b.dataset.mode;
+      $$(".force-toolbar [data-mode]").forEach((x) => x.classList.toggle("on", x === b));
+      start();
+    }));
+    await start();
   }
 
   async function renderEvaluation2(root) {
