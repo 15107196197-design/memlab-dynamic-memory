@@ -154,6 +154,20 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(len(out["rows"]), 6)
         self.assertTrue(out["by_category"])
 
+    def test_memory_facets_and_timeline(self):
+        data = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "page_size": ["1"]})
+        self.assertEqual(data["counts"]["fact"], 335)
+        self.assertEqual(data["counts"]["event"], 146)
+        self.assertEqual(data["counts"]["turn"], 419)
+        self.assertEqual(data["facets"]["status"]["CONFLICT"], 0)
+        self.assertGreater(data["facets"]["entities"][0]["count"], 0)
+        facts = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "type": ["fact"], "page_size": ["1"]})
+        self.assertEqual(facts["total"], 189)
+        timeline = webapp.get("/api/v2/timeline", {"sample": ["conv-26"]})
+        self.assertEqual(timeline["axis"], "t_ingest")
+        self.assertGreater(timeline["fact_count"], 0)
+        self.assertIn("groups", timeline)
+
     def test_graph_repr_and_subgraph(self):
         options = webapp.get("/api/v2/graph/options")
         self.assertIn("three_layer", [r["id"] for r in options["representations"]])

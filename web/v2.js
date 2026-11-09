@@ -68,6 +68,7 @@
     const s = v2sample();
     root.innerHTML = `${header("MEMORY EXPLORER · 记忆库", "记忆库", "先选左边的状态或人物，再在中间选一条记忆；右边是它的原文与时间。")}
       <div class="v1-sub">${esc(app.sampleId)} · <span id="v1-sub-counts">事实 — · 事件 — · 轮次 —</span>${s.split === "test" ? `<span class="v1-test">测试集 · 只读/不调参</span>` : ""}</div>
+      <div class="v1-tabs"><button class="on">记录 Records</button><button id="v1-timeline">时间轴 Timeline</button></div>
       <div class="v1-layout">
         <aside class="v1-left" id="v1-left"></aside>
         <section class="v1-center">
@@ -181,7 +182,47 @@
     };
 
     $("#v1-q").onkeydown = (e) => { if (e.key === "Enter") load(); };
+    $("#v1-timeline").onclick = () => renderTimeline(root);
     await load();
+  }
+
+  async function renderTimeline(root) {
+    root.classList.add("v1-page");
+    const data = await api(`/api/v2/timeline?sample=${encodeURIComponent(app.sampleId)}`);
+    const groups = data.groups || [];
+    const entities = [...new Set(groups.map((g) => g.entity))];
+    const maxDate = String(data.max || "").slice(0, 10);
+    root.innerHTML = `${header("MEMORY TIMELINE · 时间轴", "时间轴", "按写入/会话时间排列同一人物同一类型的版本；事件时间只在已知时标点。")}
+      <div class="v1-sub">${esc(app.sampleId)} · 写入时间轴 · ${esc(data.fact_count)} 条事实 / ${esc(data.group_count)} 组</div>
+      <div class="v1-tabs"><button id="v1-records">记录 Records</button><button class="on">时间轴 Timeline</button></div>
+      <div class="v3-controls"><select id="v3-entity" class="field small"><option value="">全部人物</option>${entities.map((e) => `<option>${esc(e)}</option>`).join("")}</select>
+        <label class="small">只读游标 <input id="v3-asof" type="date" class="field" value="${esc(maxDate)}"></label><span class="muted small">游标后版本淡出，不改变状态</span></div>
+      <div class="v3-axis"><span>${esc(String(data.min || "").slice(0, 10))}</span><span>${esc(maxDate)}</span></div>
+      <div id="v3-groups" class="v3-groups"></div>
+      <div class="v1-provenance">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）；写入时间为主轴，事件时间已知约 4%。</div>`;
+    const draw = () => {
+      const entity = $("#v3-entity").value;
+      const asof = $("#v3-asof").value || maxDate;
+      const selected = groups.filter((g) => !entity || g.entity === entity).slice(0, 40);
+      const min = new Date(data.min || 0).getTime();
+      const max = new Date(data.max || 0).getTime() || min + 1;
+      const pct = (iso) => Math.max(0, Math.min(100, ((new Date(iso).getTime() - min) / (max - min || 1)) * 100));
+      const cursor = asof ? pct(asof) : 100;
+      $("#v3-groups").innerHTML = selected.map((g) => {
+        const versions = (g.versions || []).map((v) => {
+          const d = v.t_ingest?.start || "";
+          const visible = !asof || d.slice(0, 10) <= asof;
+          const ev = v.t_event?.start ? `<i class="v3-event" style="left:${pct(v.t_event.start).toFixed(1)}%" title="事件时间 ${esc(v.t_event.start.slice(0, 10))}"></i>` : "";
+          return `<span class="v3-version ${visible ? "" : "dim"}" style="left:${pct(d).toFixed(1)}%" title="${esc(v.value || v.text)} · ${esc(refLabel(v.source_turn))}">
+            <span class="v1-shape">${shapeFor(v.state)}</span><em>${esc((v.value || v.event || "").slice(0, 26))}</em>${ev}</span>`;
+        }).join("");
+        return `<div class="v3-row"><div class="v3-label"><b>${esc(g.entity)}</b><span>${esc(attrLabel(g.attribute))}</span></div><div class="v3-track"><i class="v3-line"></i>${versions}<i class="v3-cursor" style="left:${cursor.toFixed(1)}%"></i></div></div>`;
+      }).join("") || `<p class="empty">没有可展示的版本。</p>`;
+    };
+    $("#v3-records").onclick = () => renderMemories(root);
+    $("#v3-entity").onchange = draw;
+    $("#v3-asof").onchange = draw;
+    draw();
   }
 
   function renderRun(out) {
@@ -552,7 +593,7 @@
       try {
         const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&repr=${encodeURIComponent(repr)}&q=${encodeURIComponent(q)}&limit=180`);
         const nodes = data.nodes || [], edges = data.edges || [];
-        $("#v2-graph-meta").innerHTML = `<b>${esc(data.representation_label)}</b> · 当前显示 ${data.shown.nodes} / ${data.stats.nodes} 节点、${data.shown.edges} / ${data.stats.edges} 条边${q ? ` · 查询子图 “${esc(q)}”` : " · 按度数采样"}`;
+        $("#v2-graph-meta").innerHTML = `<b>${esc(data.representation_label)}</b> · 当前显示 ${data.shown.nodes} / ${data.stats.nodes} 节点、${data.shown.edges} / ${data.stats.edges} 条边${q ? ` · 查询子图 “${esc(q)}”` : ` · 聚焦 ${esc(data.focus || "not_available")}（2 跳）`}`;
         const src = data.source || {};
         $("#v2-graph-stats").innerHTML = `全图：${esc(data.stats.nodes)} 节点 / ${esc(data.stats.edges)} 边<br>表示：<span class="mono">${esc(data.representation)}</span><br>构图来源：已缓存 facts/states（cached，不是实时抽取）<br>facts 模型：<span class="mono">${esc(src.facts_model || "—")}</span><br><span class="muted small">${esc(src.note || "")}</span>`;
         $("#v2-graph-legend").innerHTML = (data.legend || []).map((l) => `<span class="pill">${esc(l.label)}</span>`).join("");

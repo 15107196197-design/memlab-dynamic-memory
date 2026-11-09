@@ -878,7 +878,7 @@ def _catalog() -> dict[str, Any]:
     return {**data, "items": items, "count": len(items), "status_counts": dict(counts)}
 
 
-def _graph_view(sample_id: str, representation: str, query: str, limit: int = 180) -> dict[str, Any]:
+def _graph_view(sample_id: str, representation: str, query: str, limit: int = 180, focus: str = "") -> dict[str, Any]:
     _sample(sample_id)
     impls = registry.list_implementations().get("graph.repr", [])
     repr_name = representation or "state_slot"
@@ -897,9 +897,16 @@ def _graph_view(sample_id: str, representation: str, query: str, limit: int = 18
         from memlab.retrieve import RetrievalRunner
         retrieval = RetrievalRunner().run(query, ctx, 15)
         seeds = retrieval.memory_ids()
+    entity_nodes = sorted((node for node in graph.nodes if node.startswith("entity:")), key=lambda node: (-len(graph.adj.get(node, ())), node))
+    if not seeds and not focus and entity_nodes:
+        focus = entity_nodes[0].split(":", 1)[1]
+    if focus:
+        target = f"entity:{focus.casefold()}"
+        if target in graph.nodes:
+            seeds = [target]
     limit = max(20, min(300, int(limit)))
     if seeds:
-        expanded = dict(graph.expand(seeds, 1))
+        expanded = dict(graph.expand(seeds, 2))
         selected = sorted(expanded, key=lambda node: (expanded[node], node))[:limit]
     else:
         ranked = sorted(graph.nodes, key=lambda node: (-len(graph.adj.get(node, ())), node))
@@ -961,7 +968,7 @@ def _graph_view(sample_id: str, representation: str, query: str, limit: int = 18
     return {
         "sample": sample_id, "representation": repr_name,
         "representation_label": GRAPH_LABELS.get(repr_name, repr_name),
-        "query": query, "offline": True,
+        "query": query, "focus": focus, "entities": [node.split(":", 1)[1] for node in entity_nodes], "offline": True,
         "source": {
             "kind": "cached_fact_artifacts",
             "facts_model": facts_model,
@@ -987,6 +994,31 @@ C_ARTIFACTS = {
     "e3_offline": "eval/archive/e3-offline.json",
     "planner_k": "eval/archive/params-planner-k-corrected.json",
 }
+
+
+def _timeline(sample_id: str) -> dict[str, Any]:
+    view = _view(sample_id)
+    groups: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for unit in view.units:
+        if unit.kind != "fact":
+            continue
+        summary = _unit_summary(unit)
+        entity = summary["entity"] or "未知人物"
+        attribute = summary["attribute"] or "event"
+        groups.setdefault((entity, attribute), []).append(summary)
+    out = []
+    for (entity, attribute), versions in groups.items():
+        versions.sort(key=lambda x: ((x["t_ingest"] or {}).get("start") or "", x["memory_id"]))
+        out.append({"entity": entity, "attribute": attribute, "versions": versions})
+    out.sort(key=lambda group: (group["entity"], group["attribute"]))
+    stamps = [v["t_ingest"]["start"] for group in out for v in group["versions"] if v["t_ingest"] and v["t_ingest"].get("start")]
+    return {
+        "sample": sample_id, "split": legacy_config.split_of(sample_id),
+        "axis": "t_ingest", "axis_label": "写入/会话时间",
+        "min": min(stamps) if stamps else None, "max": max(stamps) if stamps else None,
+        "groups": out[:80], "group_count": len(out),
+        "fact_count": sum(len(group["versions"]) for group in out),
+    }
 
 
 def _c_artifacts() -> dict[str, Any]:
@@ -1084,7 +1116,7 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         limit = int(_one(args, "limit", 120) or 120)
         if "repr" in args or "q" in args or _one(args, "view") == "full":
             return _graph_view(sample_id, str(_one(args, "repr", "state_slot") or "state_slot"),
-                               str(_one(args, "q", "") or ""), limit)
+                               str(_one(args, "q", "") or ""), limit, str(_one(args, "focus", "") or ""))
         return _graph(sample_id, limit)
 
     match = re.fullmatch(r"/memories/([^/]+)", route)
@@ -1154,6 +1186,9 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             },
             "memories": units[start:start + size],
         }
+
+    if route == "/timeline":
+        return _timeline(str(_one(args, "sample", "")))
 
     if route == "/artifacts":
         return {"available": True, "artifacts": _c_artifacts()}
