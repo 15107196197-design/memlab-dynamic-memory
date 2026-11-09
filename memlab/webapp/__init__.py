@@ -945,10 +945,21 @@ def _graph_view(sample_id: str, representation: str, query: str, limit: int = 18
                 continue
             seen.add(key)
             edges.append({"source": source, "target": target, "type": "link"})
+    facts_model = legacy_config.extraction_model()
+    facts_file = getattr(legacy_config, "FACTS_DIR", ROOT / "data" / "facts") / f"{sample_id}--{legacy_config.model_slug(facts_model)}.json"
+    states_file = getattr(legacy_config, "STATES_DIR", ROOT / "data" / "states") / f"{sample_id}--{legacy_config.model_slug(facts_model)}.json"
     return {
         "sample": sample_id, "representation": repr_name,
         "representation_label": GRAPH_LABELS.get(repr_name, repr_name),
         "query": query, "offline": True,
+        "source": {
+            "kind": "cached_fact_artifacts",
+            "facts_model": facts_model,
+            "facts_file": str(facts_file) if facts_file.exists() else None,
+            "states_file": str(states_file) if states_file.exists() else None,
+            "note": "图由已缓存的 facts/states 构图；页面不会实时调用 LLM 重新抽取。"
+                    " 换模型后需重跑 scripts/extract.py / scripts/build_states.py。",
+        },
         "stats": graph.stats(), "shown": {"nodes": len(nodes), "edges": len(edges)},
         "nodes": nodes, "edges": edges,
         "legend": [

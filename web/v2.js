@@ -567,7 +567,8 @@
         const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&repr=${encodeURIComponent(repr)}&q=${encodeURIComponent(q)}&limit=180`);
         const nodes = data.nodes || [], edges = data.edges || [];
         $("#v2-graph-meta").innerHTML = `<b>${esc(data.representation_label)}</b> · 当前显示 ${data.shown.nodes} / ${data.stats.nodes} 节点、${data.shown.edges} / ${data.stats.edges} 条边${q ? ` · 查询子图 “${esc(q)}”` : " · 按度数采样"}`;
-        $("#v2-graph-stats").innerHTML = `全图：${esc(data.stats.nodes)} 节点 / ${esc(data.stats.edges)} 边<br>表示：<span class="mono">${esc(data.representation)}</span><br>模式：offline 确定性构图`;
+        const src = data.source || {};
+        $("#v2-graph-stats").innerHTML = `全图：${esc(data.stats.nodes)} 节点 / ${esc(data.stats.edges)} 边<br>表示：<span class="mono">${esc(data.representation)}</span><br>构图来源：已缓存 facts/states（cached，不是实时抽取）<br>facts 模型：<span class="mono">${esc(src.facts_model || "—")}</span><br><span class="muted small">${esc(src.note || "")}</span>`;
         $("#v2-graph-legend").innerHTML = (data.legend || []).map((l) => `<span class="pill">${esc(l.label)}</span>`).join("");
         if (!nodes.length) { $("#v2-graph-svg").innerHTML = `<div class="empty">没有可展示的节点。</div>`; return; }
         const W = 920, H = 620, cx = W / 2, cy = H / 2;

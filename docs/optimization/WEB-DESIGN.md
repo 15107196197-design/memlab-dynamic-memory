@@ -89,7 +89,7 @@ Web 必须让用户**看见**这条链路，而不只是看到最终答案。
 - 输入问题可取相关子图；不输入时按度数采样，避免 1000+ 节点卡顿。
 - SVG 分层布局：Memory 单元 / Entity 实体 / Topic 主题 / Event 事件；颜色区分 ACTIVE / HISTORICAL / CONFLICT。
 - 点击节点显示 Memory 内容、状态、source turn 与证据；辅助节点显示邻居。
-- 显示全图统计与当前采样；明确标注“图由当前 W 的 Memory 构图，切换图表示不会重新抽取原始对话”。
+- 显示全图统计与当前采样；明确标注“图由已缓存的 facts/states 构图，页面不会实时调用 LLM 重新抽取”；换模型后需重跑 `scripts/extract.py` / `scripts/build_states.py`。
 
 ### 3.3 提问与状态 `#/ask`
 

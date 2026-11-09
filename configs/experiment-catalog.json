@@ -3,28 +3,401 @@
   "updated": "2026-11-09",
   "source": "docs/optimization/04-experiments.md",
   "items": [
-    {"id":"E1-W1","stage":"E1.1","module":"W","title":"W 写入实现选型","question":"schema / resolver / auditor 哪个组合能保住可追溯性与冲突？","metrics":["evidence_coverage","field_completeness","answer_f1","tokens"],"status":"done","offline":true,"evidence":"S6 36 runs; W1/W2/W3","link":"#/lab"},
-    {"id":"E1-W2","stage":"E1.2","module":"W","title":"W 字段与阈值参数","question":"meta-schema 字段数、审计阈值如何影响质量？","metrics":["field_completeness","evidence_coverage","answer_f1"],"status":"pending","offline":true,"evidence":"未做参数 sweep","link":"#/lab"},
-    {"id":"E1-W3","stage":"E1.3","module":"W","title":"W 抽取 LLM 档位","question":"7B/27B/72B 抽取模型是否改变写入质量？","metrics":["extraction_P","extraction_R","field_completeness"],"status":"blocked","offline":false,"evidence":"需 GPU/API；当前 W 复用缓存 facts","link":"#/system"},
-    {"id":"E1-S1","stage":"E1.1","module":"S","title":"S 图表示选型","question":"state_slot / entity_triple / three_layer / event_sparse 哪个表示有召回增益？","metrics":["evidence_recall@K","graph_nodes","graph_edges","latency"],"status":"done","offline":true,"evidence":"S6 36 runs; S1/S2/S3","link":"#/graph2"},
-    {"id":"E1-S2","stage":"E1.2","module":"S","title":"S 图粒度/扩展参数","question":"k-hop、邻居上限、分层粒度如何影响召回与成本？","metrics":["evidence_recall@K","graph_edges","tokens"],"status":"pending","offline":true,"evidence":"未做 k-hop sweep","link":"#/graph2"},
-    {"id":"E1-R1","stage":"E1.1","module":"R","title":"R 规划器/通道选型","question":"none / rule_router / DAG，dense/bm25/graph/temporal 如何组合？","metrics":["evidence_recall@K","nDCG@K","plan_nodes","tokens"],"status":"done","offline":true,"evidence":"S6 36 runs; R1/R2/R3","link":"#/lab"},
-    {"id":"E1-R2","stage":"E1.2","module":"R","title":"R 检索 K/深度参数","question":"K、depth、通道权重如何取舍召回与成本？","metrics":["evidence_recall@K","tokens","p95_latency_ms"],"status":"pending","offline":true,"evidence":"未做 K sweep","link":"#/lab"},
-    {"id":"E1-R3","stage":"E1.3","module":"R","title":"R 规划 LLM 档位","question":"规划器换 7B/27B/72B 是否改变计划质量？","metrics":["plan_accuracy","evidence_recall@K","p95_latency_ms"],"status":"blocked","offline":false,"evidence":"需 GPU/API；当前 planner 规则化","link":"#/system"},
-    {"id":"E1-M1","stage":"E1.1","module":"M","title":"M 融合/重排/后处理选型","question":"RRF / weighted / adaptive，cross-encoder / filter / MMR / decay / compress 哪些有用？","metrics":["nDCG@K","evidence_recall@K","tokens","p95_latency_ms"],"status":"done","offline":true,"evidence":"S6 M1/M2/M3","link":"#/lab"},
-    {"id":"E1-M2","stage":"E1.2","module":"M","title":"M 阈值/λ/顺序参数","question":"rerank top_n、MMR λ、decay λ、压缩预算如何选？","metrics":["nDCG@K","tokens","p95_latency_ms"],"status":"pending","offline":true,"evidence":"未做参数 sweep","link":"#/lab"},
-    {"id":"E1-M3","stage":"E1.3","module":"M","title":"M 压缩/重排 LLM 档位","question":"LLM summary / LLM rerank 是否优于抽取式压缩？","metrics":["answer_f1","tokens","faithfulness"],"status":"blocked","offline":false,"evidence":"llm_summary 未实现；需模型","link":"#/system"},
-    {"id":"E1-U1","stage":"E1.1","module":"U","title":"U 状态解析/回答器选型","question":"query_llm / offline_slot / bitemporal；direct / valid_history / evidence_chain 怎么选？","metrics":["state_accuracy","answer_f1","citation_precision","refusal"],"status":"partial","offline":true,"evidence":"S6 U1/U2/U3；state_accuracy 未写入","link":"#/ask2"},
-    {"id":"E1-U2","stage":"E1.2","module":"U","title":"U 提示词/验证器/冲突策略","question":"引用校验、拒答阈值、冲突披露如何影响忠实度？","metrics":["answer_f1","judge_accuracy","citation_precision"],"status":"pending","offline":false,"evidence":"需 Judge/真实模型","link":"#/ask2"},
-    {"id":"E1-U3","stage":"E1.3","module":"U","title":"U 回答 LLM 档位","question":"7B/27B/72B 回答模型是否改变系统收益？","metrics":["answer_f1","judge_accuracy","tokens","p95_latency_ms"],"status":"blocked","offline":false,"evidence":"需 GPU/API","link":"#/system"},
-    {"id":"E1-K1","stage":"E1.1","module":"K","title":"K 维护动作选型","question":"none / dedupe / archive 如何影响 staleness、contradiction、update correctness？","metrics":["staleness","contradiction_rate","update_correctness","removed_units"],"status":"partial","offline":true,"evidence":"S6 K1/K2/K3 store-level","link":"#/lab"},
-    {"id":"E1-K2","stage":"E1.2","module":"K","title":"K 阈值/保留策略","question":"dedupe θ、archive 天数、版本保留如何选？","metrics":["staleness","contradiction_rate","removed_units"],"status":"pending","offline":true,"evidence":"未做阈值 sweep","link":"#/lab"},
-    {"id":"E2-1","stage":"E2","module":"E2","title":"E2 耦合/转化率","question":"P(A|R)、P(A|R,S) 的瓶颈在哪个模块？","metrics":["conversion","bottleneck","stage_waterfall"],"status":"partial","offline":true,"evidence":"S7b-A offline only","link":"#/evaluation2"},
-    {"id":"E2-2","stage":"E2","module":"E2","title":"E2 Oracle 干预","question":"给 oracle context/state 后差距多大？","metrics":["oracle_gap","oracle_state_gap"],"status":"pending","offline":true,"evidence":"Oracle executor 未实现","link":"#/evaluation2"},
-    {"id":"E2-3","stage":"E2","module":"E2","title":"E2 LLM 归因","question":"系统增益是否随 LLM 变强而消失？","metrics":["G_system(L)","variance_decomposition","mediation"],"status":"blocked","offline":false,"evidence":"需 L1/L2/L3 模型","link":"#/system"},
-    {"id":"E3-1","stage":"E3","module":"E3","title":"E3 候选组合","question":"模块候选 2×2/部分因子组合是否超加？","metrics":["answer_f1","evidence_recall","interaction","tokens"],"status":"pending","offline":true,"evidence":"待 E1 候选冻结","link":"#/evaluation2"},
-    {"id":"E3-2","stage":"E3","module":"E3","title":"E3 Pareto/成本前沿","question":"质量-成本-延迟的最优组合在哪里？","metrics":["pareto","hypervolume","tokens","p95_latency_ms"],"status":"pending","offline":true,"evidence":"待 E3 组合矩阵","link":"#/evaluation2"},
-    {"id":"E4-1","stage":"E4","module":"E4","title":"E4 环境网格","question":"LLM × 数据规模 × 场景下条件最优是否变化？","metrics":["conditional_best","regret","interaction"],"status":"pending","offline":false,"evidence":"API/grid 规格已建；真实模型未跑","link":"#/evaluation2"},
-    {"id":"E5-1","stage":"E5","module":"E5","title":"E5 留出确认","question":"冻结候选在 test 2 段是否保持？","metrics":["answer_f1","evidence_recall","state_accuracy","judge_accuracy","p95_latency_ms"],"status":"partial","offline":true,"evidence":"W3 test 80 题 offline；B 级未跑","link":"#/experiments/final-w3-test-offline"}
+    {
+      "id": "E1-W1",
+      "stage": "E1.1",
+      "module": "W",
+      "title": "W 写入实现选型",
+      "question": "schema / resolver / auditor 哪个组合能保住可追溯性与冲突？",
+      "metrics": [
+        "evidence_coverage",
+        "field_completeness",
+        "answer_f1",
+        "tokens"
+      ],
+      "status": "done",
+      "offline": true,
+      "evidence": "S6 36 runs; W1/W2/W3",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-W2",
+      "stage": "E1.2",
+      "module": "W",
+      "title": "W 字段与阈值参数",
+      "question": "meta-schema 字段数、审计阈值如何影响质量？",
+      "metrics": [
+        "field_completeness",
+        "evidence_coverage",
+        "answer_f1"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "未做参数 sweep",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-W3",
+      "stage": "E1.3",
+      "module": "W",
+      "title": "W 抽取 LLM 档位",
+      "question": "7B/27B/72B 抽取模型是否改变写入质量？",
+      "metrics": [
+        "extraction_P",
+        "extraction_R",
+        "field_completeness"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "需 GPU/API；当前 W 复用缓存 facts",
+      "link": "#/system"
+    },
+    {
+      "id": "E1-S1",
+      "stage": "E1.1",
+      "module": "S",
+      "title": "S 图表示选型",
+      "question": "state_slot / entity_triple / three_layer / event_sparse 哪个表示有召回增益？",
+      "metrics": [
+        "evidence_recall@K",
+        "graph_nodes",
+        "graph_edges",
+        "latency"
+      ],
+      "status": "done",
+      "offline": true,
+      "evidence": "S6 36 runs; S1/S2/S3",
+      "link": "#/graph2"
+    },
+    {
+      "id": "E1-S2",
+      "stage": "E1.2",
+      "module": "S",
+      "title": "S 图粒度/扩展参数",
+      "question": "k-hop、邻居上限、分层粒度如何影响召回与成本？",
+      "metrics": [
+        "evidence_recall@K",
+        "graph_edges",
+        "tokens"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "未做 k-hop sweep",
+      "link": "#/graph2"
+    },
+    {
+      "id": "E1-R1",
+      "stage": "E1.1",
+      "module": "R",
+      "title": "R 规划器/通道选型",
+      "question": "none / rule_router / DAG，dense/bm25/graph/temporal 如何组合？",
+      "metrics": [
+        "evidence_recall@K",
+        "nDCG@K",
+        "plan_nodes",
+        "tokens"
+      ],
+      "status": "done",
+      "offline": true,
+      "evidence": "S6 36 runs; R1/R2/R3",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-R2",
+      "stage": "E1.2",
+      "module": "R",
+      "title": "R 检索 K/深度参数",
+      "question": "K、depth、通道权重如何取舍召回与成本？",
+      "metrics": [
+        "evidence_recall@K",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "未做 K sweep",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-R3",
+      "stage": "E1.3",
+      "module": "R",
+      "title": "R 规划 LLM 档位",
+      "question": "规划器换 7B/27B/72B 是否改变计划质量？",
+      "metrics": [
+        "plan_accuracy",
+        "evidence_recall@K",
+        "p95_latency_ms"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "需 GPU/API；当前 planner 规则化",
+      "link": "#/system"
+    },
+    {
+      "id": "E1-M1",
+      "stage": "E1.1",
+      "module": "M",
+      "title": "M 融合/重排/后处理选型",
+      "question": "RRF / weighted / adaptive，cross-encoder / filter / MMR / decay / compress 哪些有用？",
+      "metrics": [
+        "nDCG@K",
+        "evidence_recall@K",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "done",
+      "offline": true,
+      "evidence": "S6 M1/M2/M3",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-M2",
+      "stage": "E1.2",
+      "module": "M",
+      "title": "M 阈值/λ/顺序参数",
+      "question": "rerank top_n、MMR λ、decay λ、压缩预算如何选？",
+      "metrics": [
+        "nDCG@K",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "未做参数 sweep",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-M3",
+      "stage": "E1.3",
+      "module": "M",
+      "title": "M 压缩/重排 LLM 档位",
+      "question": "LLM summary / LLM rerank 是否优于抽取式压缩？",
+      "metrics": [
+        "answer_f1",
+        "tokens",
+        "faithfulness"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "llm_summary 未实现；需模型",
+      "link": "#/system"
+    },
+    {
+      "id": "E1-U1",
+      "stage": "E1.1",
+      "module": "U",
+      "title": "U 状态解析/回答器选型",
+      "question": "query_llm / offline_slot / bitemporal；direct / valid_history / evidence_chain 怎么选？",
+      "metrics": [
+        "state_accuracy",
+        "answer_f1",
+        "citation_precision",
+        "refusal"
+      ],
+      "status": "partial",
+      "offline": true,
+      "evidence": "S6 U1/U2/U3；state_accuracy 未写入",
+      "link": "#/ask2"
+    },
+    {
+      "id": "E1-U2",
+      "stage": "E1.2",
+      "module": "U",
+      "title": "U 提示词/验证器/冲突策略",
+      "question": "引用校验、拒答阈值、冲突披露如何影响忠实度？",
+      "metrics": [
+        "answer_f1",
+        "judge_accuracy",
+        "citation_precision"
+      ],
+      "status": "pending",
+      "offline": false,
+      "evidence": "需 Judge/真实模型",
+      "link": "#/ask2"
+    },
+    {
+      "id": "E1-U3",
+      "stage": "E1.3",
+      "module": "U",
+      "title": "U 回答 LLM 档位",
+      "question": "7B/27B/72B 回答模型是否改变系统收益？",
+      "metrics": [
+        "answer_f1",
+        "judge_accuracy",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "需 GPU/API",
+      "link": "#/system"
+    },
+    {
+      "id": "E1-K1",
+      "stage": "E1.1",
+      "module": "K",
+      "title": "K 维护动作选型",
+      "question": "none / dedupe / archive 如何影响 staleness、contradiction、update correctness？",
+      "metrics": [
+        "staleness",
+        "contradiction_rate",
+        "update_correctness",
+        "removed_units"
+      ],
+      "status": "partial",
+      "offline": true,
+      "evidence": "S6 K1/K2/K3 store-level",
+      "link": "#/lab"
+    },
+    {
+      "id": "E1-K2",
+      "stage": "E1.2",
+      "module": "K",
+      "title": "K 阈值/保留策略",
+      "question": "dedupe θ、archive 天数、版本保留如何选？",
+      "metrics": [
+        "staleness",
+        "contradiction_rate",
+        "removed_units"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "未做阈值 sweep",
+      "link": "#/lab"
+    },
+    {
+      "id": "E2-1",
+      "stage": "E2",
+      "module": "E2",
+      "title": "E2 耦合/转化率",
+      "question": "P(A|R)、P(A|R,S) 的瓶颈在哪个模块？",
+      "metrics": [
+        "conversion",
+        "bottleneck",
+        "stage_waterfall"
+      ],
+      "status": "partial",
+      "offline": true,
+      "evidence": "S7b-A offline only",
+      "link": "#/evaluation2"
+    },
+    {
+      "id": "E2-2",
+      "stage": "E2",
+      "module": "E2",
+      "title": "E2 Oracle 干预",
+      "question": "给 oracle context/state 后差距多大？",
+      "metrics": [
+        "oracle_gap",
+        "oracle_state_gap"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "Oracle executor 未实现",
+      "link": "#/evaluation2"
+    },
+    {
+      "id": "E2-3",
+      "stage": "E2",
+      "module": "E2",
+      "title": "E2 LLM 归因",
+      "question": "系统增益是否随 LLM 变强而消失？",
+      "metrics": [
+        "G_system(L)",
+        "variance_decomposition",
+        "mediation"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "需 L1/L2/L3 模型",
+      "link": "#/system"
+    },
+    {
+      "id": "E3-1",
+      "stage": "E3",
+      "module": "E3",
+      "title": "E3 候选组合",
+      "question": "模块候选 2×2/部分因子组合是否超加？",
+      "metrics": [
+        "answer_f1",
+        "evidence_recall",
+        "interaction",
+        "tokens"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "待 E1 候选冻结",
+      "link": "#/evaluation2"
+    },
+    {
+      "id": "E3-2",
+      "stage": "E3",
+      "module": "E3",
+      "title": "E3 Pareto/成本前沿",
+      "question": "质量-成本-延迟的最优组合在哪里？",
+      "metrics": [
+        "pareto",
+        "hypervolume",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "pending",
+      "offline": true,
+      "evidence": "待 E3 组合矩阵",
+      "link": "#/evaluation2"
+    },
+    {
+      "id": "E4-1",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4 环境网格",
+      "question": "LLM × 数据规模 × 场景下条件最优是否变化？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "interaction"
+      ],
+      "status": "pending",
+      "offline": false,
+      "evidence": "API/grid 规格已建；真实模型未跑",
+      "link": "#/evaluation2"
+    },
+    {
+      "id": "E5-1",
+      "stage": "E5",
+      "module": "E5",
+      "title": "E5 留出确认",
+      "question": "冻结候选在 test 2 段是否保持？",
+      "metrics": [
+        "answer_f1",
+        "evidence_recall",
+        "state_accuracy",
+        "judge_accuracy",
+        "p95_latency_ms"
+      ],
+      "status": "partial",
+      "offline": true,
+      "evidence": "W3 test 80 题 offline；B 级未跑",
+      "link": "#/experiments/final-w3-test-offline"
+    },
+    {
+      "id": "E1-S3",
+      "stage": "E1.3",
+      "module": "S",
+      "title": "S LLM 图抽取（实体/事件/关系）",
+      "question": "能否用模型从原始对话直接抽出实体/事件/关系，而不是只消费缓存 facts？",
+      "metrics": [
+        "entity_P/R",
+        "relation_P/R",
+        "graph_nodes",
+        "graph_edges",
+        "evidence_coverage"
+      ],
+      "status": "blocked",
+      "offline": false,
+      "evidence": "未实现；当前图来自 data/facts / data/states 缓存",
+      "link": "#/graph2"
+    }
   ]
 }

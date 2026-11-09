@@ -94,7 +94,7 @@ http://127.0.0.1:8881/#/experiments/final-w3-test-offline
 | 组 | 已做/部分 | 待做/阻塞 |
 |---|---|---|
 | E1-W | W 实现选型（S6 offline） | 字段/阈值 sweep；抽取 LLM（需模型） |
-| E1-S | 图表示选型（S6 offline） | k-hop/邻居上限参数；LLM 事件/社区 |
+| E1-S | 图表示选型（S6 offline） | k-hop/邻居上限参数；LLM 图抽取/事件/社区（E1-S3） |
 | E1-R | planner/通道选型（S6 offline） | K/depth sweep；规划 LLM |
 | E1-M | 融合/重排/后处理选型（S6 offline） | 阈值/λ/顺序 sweep；LLM 压缩 |
 | E1-U | 状态/回答器选型（S6 offline） | 引用/拒答/Judge；回答 LLM |
