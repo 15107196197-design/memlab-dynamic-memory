@@ -1,6 +1,8 @@
 # COORDINATION · S3（main）与 hardening 分支的分工
 
-> 目的：S3 正在 `repo/` 的 `main` 上写 W/S/R；本分支 `hardening/s1s2` 在
+> **状态：已合并（`27dc38d`）。** 本文件保留为历史分工记录；后续 S4 直接在 `repo/` 的 `main` 上做，不再需要单独 worktree。
+>
+> 目的：S3 在 `repo/` 的 `main` 上写 W/S/R；`hardening/s1s2` 在
 > `repo-hardening/` 里修 S1/S2 的 4 个实验完整性问题。两边**不共享工作区**，
 > 所以 S3 的文件不会被本分支改动，反之亦然。
 

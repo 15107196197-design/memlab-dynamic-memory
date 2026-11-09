@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | S0 `420ed0b`；S1–S3 见 `git log --oneline -4` |
+| 当前 commit | `27dc38d`（merge hardening；S3 `bc3f49e`；文档 `b493414`；S1–S3 见 `git log --oneline -8`） |
 | 分支 | `main` |
-| 工作区状态 | S1 骨架 + S2 v2 模型/导出/缓存 + S3 W/S/R 已提交；`memwb/`、`server.py`、`web/` 未改 |
-| 测试 | `python -m unittest discover -s tests -t .` → **123 passed**（旧 38 + S1 39 + S2 25 + S3 21） |
-| 已实现 | `memwb` 原型 + `memlab` S1 骨架 + S2 v2 模型/导出/缓存 + S3 W（2 extractor/4 resolver/2 auditor）、S（BM25/dense/三图/时序/上限）、R（2 analyzer/3 planner/4 channel） |
-| 未实现 | M 融合/重排/MMR/decay、U 状态/回答、K 维护、双时间失效、实验控制面、Lab UI；Web 仍走 v1 export |
-| 当前阶段 | **S3 完成**：W→S→R 10 题冒烟与 legacy_dynamic 检索对照（recall 0.65 = 0.65）；准备进入 S4（M/U/K） |
+| 工作区状态 | S1 骨架 + S2 v2 模型/导出/缓存 + S3 W/S/R + hardening 修复已合并；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪的原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **136 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13） |
+| 已实现 | `memwb` 原型 + `memlab` S1 骨架 + S2 v2 模型/导出/缓存 + S3 W/S/R + hardening（R0 guard、LLM 参数、validity helper、cache code version） |
+| 未实现 | M 融合/重排/MMR/decay、U 状态/回答、K 维护、双时间失效、实验控制面、Lab UI、API provider adapter；Web 仍走 v1 export |
+| 当前阶段 | **S3 + hardening 完成**；准备进入 S4（M/U/K）。S9 前需要 `memlab/providers.py` 和 API key |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -165,6 +165,7 @@ artifacts/
 | `docs/optimization/03-variants.md` | 约 90 个变体/档位、优先级、依赖、组合约束 |
 | `docs/optimization/04-experiments.md` | 模块化实验：W/S/R/M/U/K、E2 耦合、E3 组合、E4 环境、第 7 章评测标准 |
 | `docs/optimization/05-color-focus.md` | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 |
+| `docs/optimization/PHASE-CHECKLIST.md` | 每个会话的 Startup Audit / Completion Audit / 分配模板 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
 | `configs/reference-r0.json` | R0 参考架构 |
 | `configs/variants.json` | 变体目录与预设 |
@@ -350,6 +351,9 @@ artifacts/
 - [x] S2：`memlab/export.py` 输出 `memory-export@2` 并通过契约校验；`schema="v1"` 仍与旧 exporter 逐字段一致
 - [x] S2：`memlab/cache.py` 内容寻址（prompt/schema/impl/params/model 变化必 miss；原子写）
 - [x] S2：102 个测试通过（旧 38 + S1 39 + S2 25），未 push upstream
+- [x] S3：W/S/R + 21 个测试；123 个测试通过
+- [x] hardening：`guards.py`（R0 fail-closed）、LLM 参数、`validity_known/is_valid_at`、cache code version；13 个测试
+- [x] merge：hardening/s1s2 → main（`27dc38d`）；136 个测试通过；未 push upstream
 - [x] S3：`memlab/write.py` W（2 extractor / 4 resolver / 2 auditor / `WritePipeline`）
 - [x] S3：`memlab/store.py` S（BM25/dense、state_slot/entity_triple/three_layer、时序、检索上限）
 - [x] S3：`memlab/retrieve.py` R（none/rule analyzer、none/rule_router/dag、bm25/dense/graph_khop/temporal）
@@ -447,17 +451,19 @@ artifacts/
 
 ## 6. 新会话启动清单（复制到新对话开头）
 
-> 更完整的 S0–S10 提示词见 [SESSION-PROMPTS.md](SESSION-PROMPTS.md)。
+> 更完整的 S0–S10 提示词见 [SESSION-PROMPTS.md](SESSION-PROMPTS.md)；开场/收尾检查见 [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)。
 
 ```text
 请先读：
 1. docs/optimization/HANDOFF.md（本文件，先读 §1、§1.3、§2、§5）
 2. docs/optimization/SESSION-PROMPTS.md 的对应会话（Sx）
-3. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
-4. docs/optimization/04-experiments.md 的对应模块章节
-5. 相关 configs/experiments/*.json
+3. docs/optimization/PHASE-CHECKLIST.md（开场/收尾自检）
+4. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
+5. docs/optimization/04-experiments.md 的对应模块章节
+6. 相关 configs/experiments/*.json
 
-0. 先判断本会话是否需要 API key（见 HANDOFF §1.3）。
+0. 先做 Startup Audit（PHASE-CHECKLIST §0）：报告 branch/commit、git status、worktree、测试基线、当前阶段、key 状态、将改文件、验收。
+   先判断本会话是否需要 API key（见 HANDOFF §1.3）。
    需要且环境变量缺失：先向用户询问 provider/model/env/预算/fallback，未确认前不跑 API。
 
 当前任务：<写清楚>
@@ -536,6 +542,22 @@ artifacts/
   2. S2 测试：换 `prompt_hash` / `schema_version` 必须缓存 miss；v1 export 仍可读。
   3. 保持 77 测试全过；在 HANDOFF 记录迁移前后字段差异。
 - 下个会话先读：本文件 §1、§2、§3；`02-architecture.md` 的 2.5/2.9/2.12；`memory.py`、`export.py`、`extraction.py`；`configs/reference-b0.json`。
+
+---
+
+## 7.2 阶段完成自检
+
+每个会话结束前必须执行 [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) 的 Completion Audit：
+
+1. `python -m unittest discover -s tests -t .` 全过；
+2. 集成检查：Runtime guard、config validation、cache key、LLM 参数、时序 validity、端到端冒烟；
+3. 回归：旧 38 + 前序阶段测试仍过；
+4. 文档：HANDOFF §1/§5/§7 更新，key 状态写清；
+5. Git：只提交本阶段文件，不 push upstream；
+6. 已知缺口：至少列 3 条；
+7. 输出 Completion Report（模板见 PHASE-CHECKLIST §3）。
+
+**不能宣称完成的情况：** 只跑新测试、R0 静默跑 B0、缺 key 却声称跑了 API、缓存命中旧代码、文档没更新、别人未提交文件混入。
 
 ---
 

@@ -2,9 +2,9 @@
 
 > 用途：每个会话新开时，先读 [HANDOFF.md](HANDOFF.md)，再复制对应会话的提示词。
 >
-> **读法（很重要）：** [HANDOFF.md](HANDOFF.md) 是“项目状态 + 契约 + 交接协议”；本文件是“每个会话的任务剧本”。**两个都要读**：只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、先读哪些文件、验收标准是什么”；只读本文件会知道任务，但不知道当前状态、分支、key/模型状态和未解决问题。
+> **读法（很重要）：** [HANDOFF.md](HANDOFF.md) 是“项目状态 + 契约 + 交接协议”；本文件是“每个会话的任务剧本”；[PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) 是“开场自检 + 收尾验收”。**三个都要用**：只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、先读哪些文件、验收标准是什么”；只读本文件会知道任务，但不知道当前状态、分支、key/模型状态和未解决问题。
 >
-> **推荐顺序：** HANDOFF §1/§1.3/§2/§5 → 本文件 §0 会话地图 + §0.1 Key 检查 → 本会话的具体提示词 → 提示词里列出的文件。
+> **推荐顺序：** HANDOFF §1/§1.3/§2/§5 → 本文件 §0 会话地图 + §0.1 Key 检查 → 本会话的具体提示词 → PHASE-CHECKLIST §0 开场自检 → 提示词里列出的文件。
 >
 > **不要把 S0–S10 塞进同一个会话。** 每个会话结束时更新 HANDOFF；下一个会话只读 HANDOFF + 本会话指定文件。
 >
@@ -107,8 +107,9 @@
 - 不改与本次任务无关的模块；不删除既有指标/配置。
 - 大输出写文件，不塞聊天；只读汇总/失败样本。
 - 不 push 到 upstream；不提交 runs/、日志、模型权重、API key。
-- 每个会话开头先做 §0.1 的 Key 检查；需要 key 且缺失时先问用户，未确认前不跑 API。
-- 结束前更新 HANDOFF §5 与 §7（含 Key 状态）。
+- 每个会话开头先做 §0.1 的 Key 检查 + PHASE-CHECKLIST §0 Startup Audit；需要 key 且缺失时先问用户，未确认前不跑 API。
+- 每个会话结束前执行 PHASE-CHECKLIST §1 Completion Audit（全量测试、集成、回归、文档、Git、缺口）。
+- 结束前更新 HANDOFF §5 与 §7（含 Key 状态），不要只说“完成”。
 ```
 
 ---
@@ -606,6 +607,7 @@ K：
 ### 设计文档
 
 - [HANDOFF.md](HANDOFF.md)
+- [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)
 - [README.md](README.md)
 - [01-audit.md](01-audit.md)
 - [02-architecture.md](02-architecture.md)
@@ -649,12 +651,144 @@ K：
 
 ---
 
-## 14. 每个会话结束的固定动作
+## 14. 每个会话的固定动作（Startup + Completion）
 
-1. 跑测试；记录通过/失败。
-2. 更新 HANDOFF §5（run_id、指标、结论）与 §7（下一步 3 件事）。
-3. 提交代码/文档（不 push upstream）。
-4. 若有新决策，写进 HANDOFF §3。
-5. 若上下文压力大，先更新 HANDOFF，再开新会话。
+### 14.1 开场：Startup Audit
+
+在改任何代码前，先读 [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) §0，并报告：
+
+- branch / commit / worktree；
+- `git status`；
+- 测试基线（先跑全量）；
+- 当前阶段（HANDOFF §1）；
+- key 状态（HANDOFF §1.3）；
+- 本会话将改哪些文件；
+- 验收标准。
+
+**如果基线测试已经失败，先修基线，不要叠新功能。**
+
+### 14.2 收尾：Completion Audit
+
+结束前执行 [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) §1：
+
+1. 全量测试 `python -m unittest discover -s tests -t .`；
+2. 集成检查：Runtime guard、config validation、cache key、LLM 参数、时序 validity、端到端冒烟；
+3. 回归：旧 38 + 前序阶段测试仍过；
+4. 文档：HANDOFF §1/§5/§7 更新，Key 状态写清；
+5. Git：只提交本阶段文件，不 push upstream；
+6. 已知缺口至少 3 条；
+7. 输出 Completion Report（PHASE-CHECKLIST §3）。
+
+**没有通过集成检查，不要说“完成”。**
+
+### 14.3 上下文压力
+
+- 如果上下文快满：先更新 HANDOFF，再开新会话；不要硬撑到压缩。
+- 大实验放后台 job/subagent；主会话只读汇总。
+- 不要把逐题日志贴进聊天；写文件、给路径。
 
 > 记住：**会话可以换，文件不能丢。**
+
+---
+
+## 15. 如何给一个会话分配任务
+
+### 15.1 原则
+
+1. **一个会话只做一个阶段**：S4 就做 M/U/K，不要顺手做 S5。
+2. **用链接，不要贴聊天**：HANDOFF + SESSION-PROMPTS + PHASE-CHECKLIST + 相关文件。
+3. **必须写验收标准**：否则会话不知道什么时候停。
+4. **必须写“不要做”**：防止它扩大范围。
+5. **并行任务必须隔离 worktree**：不要让两个会话改同一个工作区。
+
+### 15.2 最简模板（日常用）
+
+```text
+@repo/docs/optimization/HANDOFF.md
+@repo/docs/optimization/SESSION-PROMPTS.md
+@repo/docs/optimization/PHASE-CHECKLIST.md
+
+工作区根目录是 default-workspace，仓库在 repo/。
+请先 cd repo，读 HANDOFF §1/§1.3/§2/§5，再读 SESSION-PROMPTS 的 S4。
+做 S4：M/U/K 最小实现 + 测试。
+验收：全量测试通过；10 题端到端；HANDOFF 更新。
+不要做：不要改 W/S/R 接口；不要做 S5；不要 push upstream。
+完成后执行 PHASE-CHECKLIST §1 Completion Audit。
+```
+
+### 15.3 完整模板（复杂任务/需要 key 时）
+
+```text
+会话：S9（E4 环境）
+工作区：/Users/.../default-workspace/repo
+分支：main
+当前 commit：<hash>
+Key：需要 L3 API；先按 HANDOFF §1.3 询问，未确认不跑 API。
+
+先读：
+- HANDOFF §1/§1.3/§2/§5
+- SESSION-PROMPTS §0.1 + S9
+- PHASE-CHECKLIST §0
+- 04-experiments.md §4.13
+- e4-environment-grid.json
+
+目标：3 LLM × 3 数据规模，找条件最优；先 L1/L2，本地；L3 只在拿到 key 后跑最终候选。
+
+交付：
+- runs/e4 下的 run + manifest；
+- 条件最优表、regret、热力图、Pareto；
+- HANDOFF §5 更新。
+
+验收：
+- 至少 2 个格子最优不同；
+- 条件策略 regret 有 CI；
+- 没有 key 时明确标 blocked_on_key，不伪造 L3。
+
+不要做：
+- 不要全量 27 格；
+- 不要用测试集调参；
+- 不要把本地 27B 冒充 L3。
+
+完成后执行 Completion Audit，并给出 Completion Report。
+```
+
+### 15.4 分配后先看它的 Startup Report
+
+会话开始后，先要求它报告：
+
+```text
+Startup audit:
+- branch/commit:
+- git status:
+- tests (before):
+- current phase:
+- key status:
+- files I will touch:
+- acceptance:
+```
+
+如果它没报告就直接改代码，先叫停；否则你无法知道它是不是在正确的基线上。
+
+### 15.5 并行任务怎么分
+
+- 两个会话**不要共用同一个工作区**；用 `git worktree` 或独立 clone。
+- 每个会话声明“文件所有权”；不要同时改 `runtime.py`、`cache.py`、`model.py` 这种共享文件。
+- 合并前先 rebase 到最新 main，跑全量测试，再 merge。
+- 如果必须改同一个文件，先停一个，不要“边改边合”。
+
+### 15.6 什么时候拆会话
+
+- 一个模块写不完 → 拆 W/S/R 和 M/U/K。
+- 实验跑不完 → 拆 S6a/S6b，或按数据集拆。
+- 分析写不完 → 拆“跑数”和“写报告”。
+- 上下文超过 ~60% → 先更新 HANDOFF，准备新会话。
+
+### 15.7 不要这样发
+
+- 不要一次发 S0–S10 全部提示词。
+- 不要只发“继续做”，不写验收。
+- 不要把所有文档都 @ 进去。
+- 不要把旧聊天记录/大段日志贴进去。
+- 不要在缺 key 时让它“先用别的模型试试”而不记录。
+
+> 一句话：**给会话的不是“任务描述”，而是“入口文件 + 阶段提示词 + 验收 + 不要做 + 完成自检”。**
