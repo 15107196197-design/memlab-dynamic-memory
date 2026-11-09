@@ -26,11 +26,11 @@
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；新增 Web 设计文档（未改 `server.py`/`web/` 代码）；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **223 passed**（212 + provider 8 + judge 3） |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 Web MVP 代码已接入**（`/api/v2` + v2 记忆/提问/实验台/系统页，旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **229 passed**（223 + Web 6） |
 | 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**Web W1–W3**（设计见 [WEB-DESIGN.md](WEB-DESIGN.md)）；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | 代码已具备“接模型即跑”的条件（provider + preflight + Judge）；真实模型仍未接入，B 级待跑。**课程 Web 设计框架已补齐，W1 Web MVP 是 P0 下一步**；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**Web W2–W3**（实验台轴编辑/异步批量/实验详情四 tab/最终 test 评测；W1 已实现）；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 当前阶段 | **W1 Web MVP 已完成**：6 段 / v2 Memory / v2 JSON / 提问与状态 / 基础实验台 / 系统页；旧 API 保留。下一步 W2（轴编辑器、异步 run、实验详情四 tab、test 评测）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -215,6 +215,7 @@ artifacts/
 | `memlab/tokens.py` | 统一 token 估算（瀑布 bookkeeping） | M/U/S5 成本 |
 | `memlab/experiments/` | spec / compiler / runner / SQLite store / analysis / CLI | S6 E1、S7 分析 |
 | `memlab/experiments/executor.py` | S6 前置：`e2e_executor`（E2EPipeline，不静默回退 legacy）、K executor、offline LLM/embedding | S6/S7/S9 实验 |
+| `memlab/webapp/__init__.py` | W1 `/api/v2`：6 段、v2 记忆/详情/导出、preset validate、单题 module/legacy run、system | Web W1/W2；旧 `/api/*` 不动 |
 | `scripts/s6_e1.py` | 6 模块 × 3 候选 × 80 题 × 2 seeds（4 对话）；SQLite/manifest/JSON | S6 复现 / S5 CLI 之外的模块筛选 |
 | `scripts/s7b_a.py` | S7b-A 只读 screen：`coupling.screen` → JSON（by_module/by_candidate/by_seed/gaps） | S7b-A 复现；B 级复用同一 DB 结构 |
 | `tests/test_memlab_s7.py` | S7a/S7b-A 测试（conversion/oracle/group/screen 数学，无模型） | 回归门禁 |
@@ -680,8 +681,25 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 
 **边界：** 这是 A 级机制/链路验证，不产出 S7b 正式结论；没有把 `not_available` 写成 0 或“无差异”。
 
+### 5.1.10 W1 Web MVP（2026-11-09）
+
+- 目标：课程交付的可运行 Web 第一版；不改 `memwb`、不改旧 `/api/*`、不重写旧 tab。
+- 已实现：
+  - `GET /api/v2/course`：6 段（4 dev + 2 test）+ v2 counts；`/api/v2/samples` 含 extension。
+  - `GET /api/v2/memories`（筛选/分页）、`/api/v2/memories/{id}`（structured / t_event / valid_interval / evidence / relations）。
+  - `GET /api/v2/export?sample=&schema=2`、`/api/v2/export/all`；v1 兼容。
+  - `GET /api/v2/config/presets`、`POST /api/v2/config/validate`（RunConfig + probe_config，返回 runnable/problems/hash）。
+  - `POST /api/v2/runs`：单题同步；`mode=module` 走 E2E（offline 默认）；`mode=legacy` 走 Runtime（需 Ollama）。
+  - `GET /api/v2/system`：commit/dataset/model/known gaps。
+  - 前端 `web/v2.js` + `v2.css`：记忆库、提问与状态、实验台（preset/JSON/validate/单题）、系统；旧版入口折叠；首页加 6 段入口条。
+- 兼容：旧 `/api/memories|slots|questions|ask|import` 与旧 6 tab 保留；`server.py` 仅加 v2 分流。
+- 测试：`python -m unittest discover -s tests -t .` → **229 passed**；新增 6 个 API 测试（course/memory/detail/export/config/offline run/static）。
+- 冒烟：HTTP 启动 `8877` 后 `/api/v2/course|memories|export|presets|system` 均 200；B0/R0/CHEAP/QUALITY offline 单题可跑。
+- 边界：W1 是单题同步；没有异步 job、轴编辑器、批量实验、实验详情四 tab、test 2 段最终评测（W2/W3）。legacy 模式无 Ollama 会返回 502。Safari remote automation 未启用，未做自动截图验收。
+- 结果数据：未产生正式实验 run；offline 单题仅用于接口冒烟，不写入候选表。
+
 ### 5.2 未开始
-- [ ] W1 Web MVP：首页 6 段、记忆库 v2、v2 JSON 下载、提问/状态页、旧 API 兼容（P0，可离线）
+- [x] W1 Web MVP：6 段入口、记忆库 v2、v2 JSON 下载、提问/状态页、基础实验台、系统页、旧 API 兼容（2026-11-09，229 tests）
 - [ ] W2 Web 实验台：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照 + **实验详情四 tab（Results/Comparison/Analysis/Conclusion）**（P0/P1）
 - [ ] 实验报告器：`memlab/experiment-report@1`（results/comparisons/analysis/conclusion）落盘 + Web API；每次实验强制
 - [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）

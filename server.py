@@ -9,6 +9,7 @@ import traceback
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
+from memlab import webapp
 from memwb import config, dataset, export, memory, pipeline
 
 MAX_ASK_BYTES = 100_000
@@ -71,13 +72,18 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         url = urlparse(self.path)
         try:
+            args = parse_qs(url.query)
+            if url.path.startswith("/api/v2/"):
+                return self.send_json(webapp.get(url.path, args))
             if url.path in ROUTES:
-                return self.send_json(ROUTES[url.path](parse_qs(url.query)))
+                return self.send_json(ROUTES[url.path](args))
             name = "index.html" if url.path == "/" else url.path.lstrip("/")
             target = (config.WEB_DIR / name).resolve()
             if config.WEB_DIR.resolve() in target.parents and target.is_file():
                 return self.send_file(target)
             self.send_json({"error": "not found"}, 404)
+        except webapp.WebError as exc:
+            self.send_json({"error": str(exc), **exc.details}, exc.status)
         except KeyError as exc:
             self.send_json({"error": str(exc).strip("'\"")}, 404)
         except Exception as exc:  # noqa: BLE001 - report to the client, keep serving
@@ -86,7 +92,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            if self.path not in ("/api/ask", "/api/import"):
+            if not (self.path in ("/api/ask", "/api/import") or self.path.startswith("/api/v2/")):
                 return self.send_json({"error": "not found"}, 404)
             if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
                 return self.send_json({"error": "Expected application/json"}, 415)
@@ -95,10 +101,14 @@ class Handler(BaseHTTPRequestHandler):
             if length <= 0 or length > limit:
                 raise ValueError("Request size out of bounds")
             body = json.loads(self.rfile.read(length))
+            if self.path.startswith("/api/v2/"):
+                return self.send_json(webapp.post(self.path, body))
             if self.path == "/api/import":
                 return self.send_json({"imported": dataset.store().import_samples(body)})
             k = min(50, max(1, int(body.get("k", 15))))
             self.send_json(pipeline.answer(body["sample"], body.get("question", ""), body.get("method", "dynamic"), k, body.get("as_of") or None))
+        except webapp.WebError as exc:
+            self.send_json({"error": str(exc), **exc.details}, exc.status)
         except KeyError as exc:
             self.send_json({"error": "Missing or unknown: " + str(exc).strip("'\"")}, 400)
         except (ValueError, json.JSONDecodeError) as exc:

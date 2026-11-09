@@ -351,6 +351,8 @@ UI 选择轴
 
 ### W1 · Web MVP（P0，先做）
 
+> **状态（2026-11-09）：已实现。** `/api/v2/course|memories|export|config|runs|system` + `#/memories|ask2|lab|system`；229 tests；W2 待做。
+
 **依赖：** S2（v2/export）、S4（StateView/U）、现有 `server.py`/`web/`。
 
 **范围：**

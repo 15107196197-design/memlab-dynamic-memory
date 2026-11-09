@@ -84,13 +84,13 @@
 |---|---|---|---|
 | 6 段数据 4+2 | `dataset` + `config.SPLIT`，10 段齐全 | 数据层有 | Web 默认只展示 6 段、test 评测页未接 |
 | 结构化 Memory 内容/时间/来源 | `memlab.MemoryUnit` v2、`model.from_sample` | 有 | Web 未展示 v2 + evidence |
-| 统一 JSON 导出 | `memlab.export.export_v2` / v1 兼容 | 有 | `/api/export` 仍返回 v1；无 v2 下载 |
-| Web 查看记忆/证据 | 旧 `web/` 有 memories/changes/graph | 部分 | 旧接口是 v1 视图；无 v2 详情/证据 |
-| 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | 有 | Web 未接新 pipeline 的 trace |
+| 统一 JSON 导出 | `memlab.export.export_v2` / v1 兼容 | **W1 有** | `/api/v2/export?schema=2` + 6 段 bundle 已接；旧 `/api/export` 仍 v1 |
+| Web 查看记忆/证据 | 旧 `web/` + W1 `#/memories` | **W1 有** | v2 详情/evidence/关系/JSON 已接 |
+| 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | **W1 有基础** | `#/ask2` 单题 trace/state/candidates 已接；异步/实验详情 W2 |
 | 当前有效 Memory + 回答 | `StateView` + U AnswerResult + legacy dynamic | 有 | Web 未展示新 StateView/引用/拒答 |
-| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | 有 | 新模块 pipeline 的状态指标未自动写入；Web 未展示 |
+| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | 有 | W1 只做单题 run；评测对照/状态指标页 W2 |
 | Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
-| Web 交付 / 源码 / JSON / 结果 / 报告 | `web/` 旧 UI、`docs/`、`eval/` | 部分 | **Web v2 + Lab + 最终交付页缺失** |
+| Web 交付 / 源码 / JSON / 结果 / 报告 | 旧 UI + W1 `/api/v2` | **W1 部分** | W1 已交付记忆/提问/基础实验台；W2/W3 补实验详情/评测/test 2 段/报告 |
 | 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；S5/S7a 有指标/SQLite | 部分 | 报告 JSON + 实验详情页四 tab 未实现 |
 | Bonus：图/多跳/合并/时间/冲突 | S3/S4 已实现多数 | 超出 | 需在 Lab 中可插拔呈现 |
 

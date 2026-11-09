@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>动态记忆工作台</title>
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/v2.css">
 </head>
 <body>
   <header class="topbar">
@@ -12,11 +13,17 @@
       <a class="wordmark" href="#/home">动态记忆工作台</a>
       <nav class="tabs" id="tabs">
         <a href="#/home" data-view="home">首页</a>
-        <a href="#/conversation" data-view="conversation">对话记忆</a>
-        <a href="#/changes" data-view="changes">变化追踪</a>
-        <a href="#/graph" data-view="graph">关系图</a>
-        <a href="#/ask" data-view="ask">提问</a>
-        <a href="#/evaluation" data-view="evaluation">评测</a>
+        <a href="#/memories" data-view="memories">记忆库</a>
+        <a href="#/ask2" data-view="ask2">提问与状态</a>
+        <a href="#/lab" data-view="lab">实验台</a>
+        <a href="#/system" data-view="system">系统</a>
+        <details class="legacy-menu"><summary>旧版</summary><div class="legacy-links">
+          <a href="#/conversation">对话记忆</a>
+          <a href="#/changes">变化追踪</a>
+          <a href="#/graph">关系图</a>
+          <a href="#/ask">旧提问</a>
+          <a href="#/evaluation">旧评测</a>
+        </div></details>
       </nav>
       <span class="grow"></span>
       <select id="sample" class="conv" title="切换对话"></select>
@@ -29,6 +36,7 @@
   <main class="page" id="view"></main>
 
   <div id="overlay-root"></div>
+  <script src="/v2.js"></script>
   <script src="/app.js"></script>
 </body>
 </html>

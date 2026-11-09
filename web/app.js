@@ -71,7 +71,7 @@ const app = {
   evaluation: null,
 };
 
-const VIEWS = { home: renderHome, conversation: renderConversation, changes: renderChanges, graph: renderGraph, ask: renderAsk, evaluation: renderEvaluation };
+const VIEWS = Object.assign({ home: renderHome, conversation: renderConversation, changes: renderChanges, graph: renderGraph, ask: renderAsk, evaluation: renderEvaluation }, window.V2VIEWS || {});
 const currentView = () => { const v = location.hash.replace(/^#\//, "").split("?")[0]; return VIEWS[v] ? v : "home"; };
 const sampleInfo = () => app.samples.find((s) => s.id === app.sampleId) || {};
 const turnOf = (memoryId) => app.turnById.get(memoryId);
@@ -150,10 +150,17 @@ async function renderHome(root) {
   const example = slots.length ? exampleSlot(slots) : null;
   const historical = app.facts.filter((f) => f.state === "HISTORICAL").length;
   const question = example ? `What is ${example.entity}'s latest ${humanize(example.slot).toLowerCase()}?` : "";
+  let course = [];
+  try { course = (await api("/api/v2/course")).samples; } catch (err) { course = []; }
+  const courseRibbon = course.length ? `<div class="card pad" style="margin:18px 0">
+      <div class="row" style="justify-content:space-between"><b>课程 6 段：4 开发 + 2 测试</b><a class="small" href="#/memories">进入记忆库 →</a></div>
+      <div class="row" style="margin-top:10px">${course.map((c) => `<a class="chip" href="#/memories">${esc(c.id)} <span>${c.split === "test" ? "测试" : "开发"}</span></a>`).join("")}</div>
+    </div>` : "";
 
   root.innerHTML = `
     ${header("LoCoMo 长期对话 · " + convLabel(), "人会变，记忆也要跟着更新。",
       "普通检索会把“过去的说法”和“现在的情况”一起找回来，于是答错。这个工具把多轮对话整理成可以追溯的记忆，记下每件事后来怎么变了；回答问题时，只采用当下仍然成立的那一条。")}
+    ${courseRibbon}
 
     <div class="steps3">
       <div><div class="n">01</div><h3>整理成记忆</h3><p>从每句对话里抽出“谁、什么事、什么状态、什么时候说的”，并保留原话和出处。</p></div>
