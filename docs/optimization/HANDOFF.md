@@ -490,6 +490,7 @@ artifacts/
   1.
   2.
   3.
+- 下一步选择：A 本会话继续 S<x+1> / B 新会话（附提示词）
 - 下个会话先读：
 ```
 
@@ -555,7 +556,8 @@ artifacts/
 4. 文档：HANDOFF §1/§5/§7 更新，key 状态写清；
 5. Git：只提交本阶段文件，不 push upstream；
 6. 已知缺口：至少列 3 条；
-7. 输出 Completion Report（模板见 PHASE-CHECKLIST §3）。
+7. 输出 Completion Report（模板见 PHASE-CHECKLIST §3）；
+8. 给用户 A/B 选择：A 在本会话继续下一 S（先做 Startup Audit），B 新会话（给可直接复制的启动提示词）。**用户没选之前不要自动开始下一阶段。**
 
 **不能宣称完成的情况：** 只跑新测试、R0 静默跑 B0、缺 key 却声称跑了 API、缓存命中旧代码、文档没更新、别人未提交文件混入。
 

@@ -98,6 +98,9 @@
 
 ## 1. 通用前缀（每个提示词已包含，可单独复用）
 
+> **使用方式：** 复制 §2–§12 任意一个 Sx 代码块时，把下面这段通用前缀一起带上；代码块末尾默认追加三行：
+> `开始前：Startup Audit（PHASE-CHECKLIST §0）`、`完成后：Completion Audit（§1）`、`完成后给 A/B 选择，不自动继续`。
+
 ```text
 你是本项目第 <N> 个会话的工程代理。先读 docs/optimization/HANDOFF.md，再读本会话指定文件。
 项目目标：在 dynamic-memory-workbench 上实现 MemLab：一个运行时、六模块（W/S/R/M/U/K）、可插拔、可复现实验。
@@ -110,6 +113,7 @@
 - 每个会话开头先做 §0.1 的 Key 检查 + PHASE-CHECKLIST §0 Startup Audit；需要 key 且缺失时先问用户，未确认前不跑 API。
 - 每个会话结束前执行 PHASE-CHECKLIST §1 Completion Audit（全量测试、集成、回归、文档、Git、缺口）。
 - 结束前更新 HANDOFF §5 与 §7（含 Key 状态），不要只说“完成”。
+- 完成并通过自检后，不要自动开始下一个 S；先给用户 A/B 选择（见 §14.4）。
 ```
 
 ---
@@ -681,7 +685,32 @@ K：
 
 **没有通过集成检查，不要说“完成”。**
 
-### 14.3 上下文压力
+### 14.3 阶段完成后的二选一（必须执行）
+
+完成 Completion Audit 后，**不要自动开始下一个 S**。先给用户一个明确的选择：
+
+```text
+本阶段 Sx 已完成并通过自检。
+下一阶段：S<x+1> <名称>
+建议：<继续 / 新会话>，理由：<上下文/任务大小/key>
+
+请选择：
+A. 在本会话继续 S<x+1>
+   - 我会先做 Startup Audit，再开始；
+   - 适合：上下文 < 60%、下一阶段不需要新 key、没有 blocker。
+B. 新会话继续 S<x+1>
+   - 我会给你一段可直接复制的启动提示词；
+   - 适合：上下文 > 60%、下一阶段是实验/大改、需要新 key、或你想保留一个干净会话。
+```
+
+**规则：**
+
+- 用户没选之前，停在“完成报告 + 选择”。
+- 用户选 A：先做 Startup Audit，再开始；不要跳过。
+- 用户选 B：输出 §15.8 的完整提示词，包含当前 commit、测试数、key 状态、已知缺口、下一阶段任务/验收/不要做。
+- 如果上下文已经 > 60%，默认推荐 B；如果下一阶段需要 API key 而当前没有，推荐 B 并写 `blocked_on_key`。
+
+### 14.4 上下文压力
 
 - 如果上下文快满：先更新 HANDOFF，再开新会话；不要硬撑到压缩。
 - 大实验放后台 job/subagent；主会话只读汇总。
@@ -783,7 +812,47 @@ Startup audit:
 - 分析写不完 → 拆“跑数”和“写报告”。
 - 上下文超过 ~60% → 先更新 HANDOFF，准备新会话。
 
-### 15.7 不要这样发
+### 15.7 新会话启动提示词生成模板（会话结束时填）
+
+当用户选 B，或你建议新会话时，输出这段（把 `<...>` 换成实际值）：
+
+```text
+@repo/docs/optimization/HANDOFF.md
+@repo/docs/optimization/SESSION-PROMPTS.md
+@repo/docs/optimization/PHASE-CHECKLIST.md
+
+工作区：/Users/.../default-workspace
+仓库：repo/
+分支：main
+当前 commit：<hash>
+上一阶段：S<x> 已完成；测试 <n> passed；key 状态 <...>
+
+任务：S<x+1> <名称>
+先读：
+- HANDOFF §1/§1.3/§2/§5
+- SESSION-PROMPTS §0.1 + S<x+1>
+- PHASE-CHECKLIST §0
+- <本阶段相关文档/配置>
+
+目标：
+- <3–5 条>
+
+交付：
+- <文件/run/报告>
+
+验收：
+- <可验证标准>
+
+不要做：
+- <边界>
+- 不要 push upstream
+- 不要提交 runs/、日志、key
+
+Key：<不需要 / 本地 / API 需要，先问 / blocked_on_key>
+开始前先做 Startup Audit；完成后做 Completion Audit，并给我 A/B 选择。
+```
+
+### 15.8 不要这样发
 
 - 不要一次发 S0–S10 全部提示词。
 - 不要只发“继续做”，不写验收。
