@@ -1006,7 +1006,6 @@
           if (node.entity) q.set("entity", node.entity);
           if (node.attribute) q.set("attribute", node.attribute);
           q.set("memory", node.id);
-          q.set("via", "fact");
         } else if (node.kind === "slot") {
           if (node.entity) q.set("entity", node.entity);
           if (node.attribute) q.set("attribute", node.attribute);
