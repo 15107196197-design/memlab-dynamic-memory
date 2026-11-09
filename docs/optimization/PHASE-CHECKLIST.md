@@ -84,6 +84,7 @@ python -m unittest discover -s tests -t .
 | 时序过滤 | HISTORICAL 未知端点不被当作有效 | 否则 as-of 结果偏乐观 |
 | 前置服务/模型 | `ollama list`、`import sentence_transformers`、provider adapter 冒烟 | 前置没通就开跑，结果是假的 |
 | 端到端冒烟 | 10 题或 dry-run | 模块接不起来 |
+| 实验结论/Web | `reports/experiments/<id>.json` 四段齐全；Web 详情页 Results/Comparison/Analysis/Conclusion 可读 | 只跑数没结论/没上 Web，不能算实验完成 |
 
 ### 1.3 回归
 
@@ -122,7 +123,9 @@ git remote -v
 - `runs/<run_id>/manifest.json` 有 config/dataset/model/seed/prompt hash；
 - 指标文件可读；
 - 失败样本有分类；
-- 没有把“未跑”写成“无差异”。
+- 没有把“未跑”写成“无差异”；
+- 实验类会话有 `experiment-report@1`（results/comparisons/analysis/conclusion），且 Web 实验详情页可读；
+- 报告缺 conclusion 时标 `not_analyzed`，不能写“完成”。
 
 ### 1.7 已知缺口
 
@@ -181,6 +184,7 @@ B. 新会话继续 S<x+1>：我给出可直接复制的启动提示词。
 - 文档/HANDOFF 没更新；
 - 有别人未提交的文件混进本次 commit；
 - 端到端冒烟没跑，只说“单测通过”；
+- 实验跑完但没有 results→comparisons→analysis→conclusion，或结论没有上 Web；
 - 失败样本被当成 0 分，没分类；
 - 只让测试变绿，却留下声明未实现/配置不消费的因子；
 - 只报“系统提升”，没有区分 LLM 能力；

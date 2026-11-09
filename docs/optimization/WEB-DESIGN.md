@@ -116,6 +116,13 @@ Web 必须让用户**看见**这条链路，而不只是看到最终答案。
 - **瀑布区**：raw → fusion → rerank → filter → MMR → decay → compress → answer，每阶段 recall/nDCG/候选/tokens。
 - **对照区**：同题/同集选择 2–4 个 run，并排 diff；Pareto 散点（质量 vs tokens/P95）。
 - **历史区**：SQLite 中最近 runs，可 resume/复跑/导出。
+- **实验详情页 `#/experiments/<id>`**（新，必须）：
+  - `Results`：per-run/聚合表、error、manifest、config_hash；
+  - `Comparison`：基线 vs 候选、delta、CI、成本/延迟；
+  - `Analysis`：主效应/交互/Pareto/阶段瀑布/失败分类；
+  - `Conclusion`：状态（supported/partial/not_supported/inconclusive）、claims、适用条件、局限、下一步；
+  - 没有 `conclusion` 的报告显示 `not_analyzed`，不能算完成；
+  - 一键导出 experiment report JSON，链接到原始 run/trace。
 
 ### 3.5 评测对照 `#/evaluation`
 
@@ -174,6 +181,8 @@ POST /api/v2/runs/{job_id}/cancel
 GET  /api/v2/runs?limit=                历史
 POST /api/v2/experiments                批量 {spec|configs, samples, questions, seeds}
 GET  /api/v2/experiments/{job_id}
+GET  /api/v2/experiments/{id}/report     experiment-report JSON（四段）
+POST /api/v2/experiments/{id}/report     保存/更新结论（仅本地）
 GET  /api/v2/metrics/summary?split=
 GET  /api/v2/compare?run_ids=
 GET  /api/v2/system
@@ -254,6 +263,31 @@ UI 选择轴
 
 **对照表：** Full Text / Vector RAG / Hybrid / Dynamic（B0）/ 当前模块配置；开发集调参，test 只读评测。
 
+### 6.1 Experiment report（结果→对照→分析→结论）
+
+每次实验写一份 `memlab/experiment-report@1` JSON（契约见 [04-experiments.md](04-experiments.md) §4.15.7）：
+
+```json
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-M2",
+  "manifest": {"git_commit": "...", "config_hash": "...", "dataset_hash": "...", "model_fingerprint": "..."},
+  "dataset": {"split": "development", "samples": ["conv-26"], "questions": 80, "seeds": [13, 17], "test_only": false},
+  "results": {"runs": [], "metrics": {"answer_f1": 0.0, "evidence_recall": 0.0, "state_accuracy": null,
+               "tokens": 0, "p95_latency_ms": 0, "error_rate": 0.0}},
+  "comparisons": [{"baseline": "B0", "candidate": "M2", "metric": "evidence_recall",
+                    "delta": 0.0, "ci95": [0.0, 0.0], "paired": true, "significant": false}],
+  "analysis": {"main_effects": [], "interactions": [], "pareto": [],
+                "stage_waterfall": [], "failure_breakdown": []},
+  "conclusion": {"status": "supported|partial|not_supported|inconclusive",
+                  "claims": [], "conditions": [], "limitations": [], "next_actions": []}
+}
+```
+
+- 报告缺失/缺 conclusion → Web 显示 `not_analyzed`，实验不能标记完成。
+- offline 必须在 `manifest` 标 `offline=true`；test 必须 `test_only=true`。
+- 同一实验的报告只追加/更新结论，不覆盖原始 metrics。
+
 ---
 
 ## 7. 结构化 JSON（课程交付重点）
@@ -296,7 +330,8 @@ UI 选择轴
 5. Lab 改 `graph.repr` / `fusion` / `answer` 各一次，config_hash 变化、runnable 徽标正确、能跑 1 题；
 6. 禁用项（如未实现 hmem）不能选，原因可见；
 7. 评测页 test split 显示 F1/Recall/状态准确率与 manifest；
-8. 导出结构化 JSON 并验证 schema。
+8. 打开任一实验详情页，四个 tab 齐全，结论与对照可追溯；
+9. 导出结构化 JSON 并验证 schema。
 
 ### 9.3 交付验收
 
@@ -339,10 +374,11 @@ UI 选择轴
 2. 单题 + 批量异步运行、作业队列、SQLite 历史；
 3. 瀑布图、Pareto、同题/同集 compare；
 4. 评测页：F1/Recall/状态准确率；Full/Vector/Hybrid/Dynamic 对照；
-5. 导出 CSV/JSON、manifest 下载；
-6. 6 段（含 test）评测入口；test 只读提示。
+5. 实验详情页 Results/Comparison/Analysis/Conclusion 四 tab；报告 JSON 导出；
+6. 导出 CSV/JSON、manifest 下载；
+7. 6 段（含 test）评测入口；test 只读提示。
 
-**验收：** 每个轴改一次都能运行 1 题；不可运行项禁用；3 配置 ×10 题写入 SQLite；页面可见阶段指标与对照。
+**验收：** 每个轴改一次都能运行 1 题；不可运行项禁用；3 配置 ×10 题写入 SQLite；页面可见阶段指标与对照；**实验详情页四 tab + 结论 JSON 可见**。
 
 ### W3 · 最终交付整合
 
@@ -353,7 +389,7 @@ UI 选择轴
 1. test 2 段最终评测（真实或明确 offline 标签）；
 2. 6 段结构化 JSON 打包；
 3. 截图/演示脚本/3–5 分钟视频脚本；
-4. 报告章节：架构、数据、状态、指标、对照、错误分析、局限；
+4. 报告章节：架构、数据、状态、指标、对照、错误分析、局限；每个实验引用 Web 实验详情页的结论；
 5. 复现包：`python server.py`、配置、manifest、种子；
 6. 课程要求逐条对照表（本文件 §1/COURSE-REQUIREMENTS）。
 

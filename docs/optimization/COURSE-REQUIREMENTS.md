@@ -50,7 +50,19 @@
 
 `Memory ID · Content · Entity / Event · Timestamp · Source Session / Turn · Query Relation · Validity / State`
 
-### 2.7 Bonus
+### 2.7 实验后必须输出结果、对照、分析与结论，并在 Web 呈现
+
+课程要求“实验结果与对照分析”是交付项；本项目再加一条执行标准：
+
+- 每次实验必须产出 `results + comparisons + analysis + conclusion` 的 **experiment report JSON**；
+- 报告至少包含：基线对照、delta/CI、Pareto/瀑布/失败分类、支持/部分/不支持/无差异的结论、适用条件与局限；
+- 质量、Tokens、P95 三件套不能缺；缺了必须标 `not_available`；
+- Web 实验详情页必须有 `Results / Comparison / Analysis / Conclusion` 四个 tab；
+- 没有 `conclusion` 的 run 只能在 Web 显示 `not_analyzed`，不能算实验完成。
+
+详细契约见 [04-experiments.md](04-experiments.md) §4.15.7 与 [WEB-DESIGN.md](WEB-DESIGN.md) §3.4/§6。
+
+### 2.8 Bonus
 
 - 更复杂的冲突消解与多版本保留
 - Graph Memory / 多跳关系建模
@@ -79,6 +91,7 @@
 | F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | 有 | 新模块 pipeline 的状态指标未自动写入；Web 未展示 |
 | Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
 | Web 交付 / 源码 / JSON / 结果 / 报告 | `web/` 旧 UI、`docs/`、`eval/` | 部分 | **Web v2 + Lab + 最终交付页缺失** |
+| 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；S5/S7a 有指标/SQLite | 部分 | 报告 JSON + 实验详情页四 tab 未实现 |
 | Bonus：图/多跳/合并/时间/冲突 | S3/S4 已实现多数 | 超出 | 需在 Lab 中可插拔呈现 |
 
 **结论：** 能力层“只多不少”；**交付层目前少 5 项**（6 段/default、v2 JSON 下载、v2 记忆/证据页、状态 trace 页、Lab/对照/最终交付页）。W1–W3 补齐后，严格满足并超过 PDF。

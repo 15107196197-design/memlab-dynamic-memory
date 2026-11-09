@@ -302,7 +302,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 
 ## 2. 不可丢的架构不变量
 
-新会话如果只能记住 10 件事，记这些：
+新会话如果只能记住 11 件事，记这些：
 
 1. **一个运行时，多套实现。** 所有变体注册在同一个 `memlab` 包，配置切换；不复制仓库、不拉分支。
 2. **实验组织单位是模块**：W 写入、S 存储、R 检索、M 合并、U 使用、K 维护。
@@ -314,6 +314,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 8. **缓存必须内容寻址**：`prompt_hash + schema_version + impl + params + model_fingerprint` 都进缓存键；否则换提示词会复用旧事实，消融直接失效。
 9. **第 7 章评测标准固定**：主基准 LoCoMo + LongMemEval；辅助 InfiniteBench / MemoryAgentBench；系统/生产指标单独报；不同 Judge 分数不可横比。
 10. **成本—质量—延迟三件套**：每个结论至少报质量 + Tokens + P95；只报质量会得出“全开最好”的平凡结论。
+11. **实验后必须交付四段并在 Web 呈现**：results → comparisons → analysis → conclusion；没有 conclusion/Web 详情的 run 不算实验完成；契约见 04 §4.15.7、WEB-DESIGN §3.4/§6。
 
 ---
 
@@ -355,6 +356,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 | Web 数据范围 | 默认 6 段（4 dev + 2 test）；test 只读评测；extension 折叠 | 对齐课程硬性数据划分，避免 test 调参 |
 | Web 模式标签 | offline/online、legacy/module、真实/抽取式 F1 必须显式标记 | 不把 offline 当 LLM 指标 |
 | Web 交付顺序 | W1 立即做，W2 与 S7 并行，W3 在最终报告前；不等 S10 | 课程最终交付要求 Web，不能压到最后 |
+| 实验报告契约 | 每次实验产出 `memlab/experiment-report@1` 四段（results/comparisons/analysis/conclusion）并发布到 Web 实验详情页 | 课程要求结果与对照；用户要求分析/结论也上 Web；无 conclusion 不算完成 |
 | S4 融合输入 | `RetrievalResult.by_channel` 为 S4 新增只读字段（旧字段不变） | M 需要每通道排名；旧调用方无需改 |
 | S4 U 引用/拒答 | 引用只接受上下文证据的 turn id；无 LLM/空答案/`unknown` 一律拒答；冲突显式披露 | 不伪造引用；状态失败也拒绝而非猜 |
 | S4 K 矛盾定义 | 只把“同键同时 ACTIVE 的不同值”或 CONFLICT 状态算矛盾；历史版本不算 | 避免把正常版本链误报为矛盾 |
@@ -680,7 +682,8 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 
 ### 5.2 未开始
 - [ ] W1 Web MVP：首页 6 段、记忆库 v2、v2 JSON 下载、提问/状态页、旧 API 兼容（P0，可离线）
-- [ ] W2 Web 实验台：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照（P0/P1）
+- [ ] W2 Web 实验台：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照 + **实验详情四 tab（Results/Comparison/Analysis/Conclusion）**（P0/P1）
+- [ ] 实验报告器：`memlab/experiment-report@1`（results/comparisons/analysis/conclusion）落盘 + Web API；每次实验强制
 - [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）
 - [ ] E0 基线复现
 - [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
@@ -971,7 +974,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 **课程最终交付要求 Web；W1/W2 与模型 B 级并行，不要等 S10。**
 
 1. **W1 Web MVP（P0，立即可做、可离线）**：6 段首页、记忆库 v2、v2 JSON 下载、提问/状态页；保留旧 API/tab。见 [WEB-DESIGN.md](WEB-DESIGN.md) §3–§4、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)。
-2. **W2 Web 实验台**：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照；与 S7 并行。
+2. **W2 Web 实验台**：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照 + 实验详情四 tab；每实验必须生成 `experiment-report@1` 并发布 Web；与 S7 并行。
 3. **W3 最终交付**：6 段/test 评测、截图/演示、复现包、报告素材；在最终报告前完成。
 
 **S7b-A 已完成（A 级描述性）；B 级真实指标仍按下面顺序，不继续堆 offline 分析。**

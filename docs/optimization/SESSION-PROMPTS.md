@@ -142,6 +142,21 @@ blocked_on_<x>
 - manifest 只记 provider/model/base_url/api_key_env/调用日期，不记 key。
 - API 模型可能漂移；优先用带日期的 snapshot，并记录调用日期。
 
+## 0.4 实验后固定交付：结果 → 对照 → 分析 → 结论 → Web
+
+> 适用于 S6–S10 以及所有 E1/E2/E3/E4/E5 实验；完整契约见 [04-experiments.md](04-experiments.md) §4.15.7。
+
+每个实验结束前必须：
+
+1. **结果 Results**：per-question 指标、聚合、error、manifest/config_hash/model/dataset；
+2. **对照 Comparison**：至少一个基线（B0/Full/Vector/上一候选），delta/CI/成本差；
+3. **分析 Analysis**：主效应/交互/Pareto/阶段瀑布/失败分类/子群；
+4. **结论 Conclusion**：`supported|partial|not_supported|inconclusive` + claims + 条件 + 局限 + 下一步；每条结论带质量 + Tokens + P95；
+5. **落盘**：`reports/experiments/<id>.json`（`memlab/experiment-report@1`），最终归档 `eval/archive/experiments/<id>.json`；
+6. **Web 呈现**：实验详情页必须有 `Results / Comparison / Analysis / Conclusion` 四个 tab；没有报告/结论显示 `not_analyzed`，不能算完成。
+
+禁止：只贴指标表不写结论；只报候选绝对值没有对照；offline extractive 冒充 LLM F1；test 调参；用聊天里的分析代替落盘/Web。
+
 ---
 
 ## 1. 通用前缀（每个提示词已包含，可单独复用）
@@ -164,6 +179,7 @@ blocked_on_<x>
   并写已尝试/解除条件/仍可做子集到 HANDOFF §5.4。不要把可修前置留到以后，不要用 fallback 冒充真实。
 - 每个会话结束前执行 PHASE-CHECKLIST §1 Completion Audit（全量测试、集成、回归、前置/缺口、总体目标对齐、文档、Git）。
 - 结束前更新 HANDOFF §5 与 §7（含 Key 状态和 §5.4 前置台账），不要只说“完成”。
+- 任何实验（E1–E5 / S6–S10）结束前必须产出 results→comparisons→analysis→conclusion 的 experiment report，并发布到 Web 实验详情页；无 conclusion 不算完成（§0.4、04 §4.15.7）。
 - 完成并通过自检后，不要自动开始下一个 S；先给用户 A/B 选择（见 §14.4）。
 ```
 
@@ -845,9 +861,10 @@ K：
 4. **前置条件复核**：环境/包/模型/接口/数据六类逐项复检；修过的项写验证结果；未解决项写进 HANDOFF §5.4 台账；
 5. 总体目标对齐：对照 GOAL-AUDIT 检查“能力/阶段/因子是否 wire/是否 no-op/是否 LLM 混淆”；
 6. 文档：HANDOFF §1/§1.3/§5/§5.4/§7 更新，Key/前置状态写清；
-7. Git：只提交本阶段文件，不 push upstream；
-8. 已知缺口至少 3 条；每条必须有“已尝试 / 解除条件 / 仍可做子集 / 下一步触发”，可修缺口不许只写“以后补”；
-9. 输出 Completion Report（PHASE-CHECKLIST §3）。
+7. **实验类会话**：检查 `reports/experiments/<id>.json` 四段齐全、Web 详情页可读；缺 conclusion 标 not_analyzed；
+8. Git：只提交本阶段文件，不 push upstream；
+9. 已知缺口至少 3 条；每条必须有“已尝试 / 解除条件 / 仍可做子集 / 下一步触发”，可修缺口不许只写“以后补”；
+10. 输出 Completion Report（PHASE-CHECKLIST §3）。
 
 **没有通过集成检查，不要说“完成”。**
 
@@ -1153,7 +1170,7 @@ Key：不需要。
 ```text
 执行 W2：Web 实验台与评测对照。
 
-先读：WEB-DESIGN.md §3.4–§6/§9；HANDOFF §5.1.6；S5/S6 报告；memlab/experiments/*。
+先读：WEB-DESIGN.md §3.4–§6/§9；04-experiments.md §4.15.7；HANDOFF §5.1.6；S5/S6 报告；memlab/experiments/*。
 
 实现：
 1. 配置器：W/S/R/M/U/K 轴、预设 B0/R0/CHEAP/QUALITY、高级 JSON；
@@ -1165,12 +1182,15 @@ Key：不需要。
 5. 对照：Full Text / Vector RAG / Hybrid / Dynamic / 当前模块配置；同题 diff。
 6. 评测页：development/test/extension；test 只读提示；manifest/config hash/model 标签；
    offline 与真实模型必须明确区分。
-7. 测试：config validate 合法/非法/未实现；每轴至少一个 runnable；3 配置×10 题写 SQLite；
+7. 实验详情页：Results / Comparison / Analysis / Conclusion 四 tab；读 `experiment-report@1`；
+   缺 conclusion 显示 not_analyzed；报告 JSON 可下载。
+8. 测试：config validate 合法/非法/未实现；每轴至少一个 runnable；3 配置×10 题写 SQLite；
    旧测试全过。
 
 验收：
 - 每个轴改一次都能跑 1 题；不可运行项有原因；
 - 3 配置 × 10 题写入 SQLite 且页面可见；
+- 实验详情页四 tab 可见，结论/对照/分析可追溯；
 - 评估指标/对照/瀑布可导出；不 push。
 不要做：不写新模块；不跑 E1 全量；不把 offline 当 LLM。
 ```
@@ -1183,7 +1203,7 @@ Key：不需要。
 实现/整理：
 1. test 2 段最终评测（真实或 offline 明确标签）；development 4 段不参与调参声明。
 2. 6 段结构化 Memory JSON 打包；v2 schema 校验。
-3. 演示脚本 + 截图 + 3–5 分钟展示；报告章节（架构/数据/状态/指标/对照/错误/局限）。
+3. 演示脚本 + 截图 + 3–5 分钟展示；报告章节（架构/数据/状态/指标/对照/错误/局限）；每个实验引用 Web 详情页的 Results/Comparison/Analysis/Conclusion。
 4. 复现包：python server.py、配置、manifest、seed、模型前置。
 5. COURSE-REQUIREMENTS 逐条勾选；Bonus 清单（graph/multihop/merge/compress/temporal）。
 6. 更新 HANDOFF §5/§7、README/报告。

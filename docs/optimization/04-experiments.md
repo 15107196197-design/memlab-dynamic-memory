@@ -736,6 +736,68 @@ s.t. tokens(c,e) <= B_token, p95(c,e) <= B_latency
 | 重排增益随规模增大 | 第 4 章假设成立 | 大规模默认开重排 |
 | 压缩后 token 降但 F1 大降 | 压缩过度 | 提高预算/换抽取式 |
 
+### 4.15.7 每次实验后必须交付：结果 → 对照 → 分析 → 结论 → Web
+
+**这是硬规则，不是建议。** 任何实验（E1/E2/E3/E4/E5，含 S6–S10 的模块实验）结束前必须产出 **experiment report**，否则该实验只能算“跑过”，不能算“完成”。
+
+固定四段：
+
+| 段 | 内容 | 最低要求 |
+|---|---|---|
+| **1. 结果 Results** | 每个 run 的 per-question 指标、汇总、error rate、manifest/config_hash/model/dataset | 不可只贴截图；必须可追溯到 SQLite/JSON |
+| **2. 对照 Comparison** | 基线 vs 候选、B0/R0/Full/Vector RAG、delta、CI/配对、成本差 | 至少一个基线；不能只报绝对分数 |
+| **3. 分析 Analysis** | 主效应/交互/Pareto/阶段瀑布/失败分类/子群 | 说明“为什么”，不只“是多少” |
+| **4. 结论 Conclusion** | 支持/部分支持/不支持/无差异；适用条件；局限；下一步 | 每条结论至少带质量 + Tokens + P95 三件套 |
+
+**机器可读格式（建议 `memlab/experiment-report@1`）：**
+
+```json
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-M2",
+  "created_at": "...",
+  "manifest": {"git_commit": "...", "config_hash": "...", "dataset_hash": "...", "model_fingerprint": "..."},
+  "dataset": {"split": "development", "samples": ["conv-26"], "questions": 80,
+               "seeds": [13, 17], "test_only": false},
+  "results": {"runs": [...], "metrics": {"answer_f1": 0.0, "evidence_recall": 0.0,
+              "state_accuracy": null, "tokens": 0, "p95_latency_ms": 0, "error_rate": 0.0}},
+  "comparisons": [
+    {"baseline": "B0", "candidate": "M2", "metric": "evidence_recall",
+     "delta": 0.0, "ci95": [0.0, 0.0], "paired": true, "significant": false}
+  ],
+  "analysis": {
+    "main_effects": [], "interactions": [], "pareto": [],
+    "stage_waterfall": [], "failure_breakdown": []
+  },
+  "conclusion": {
+    "status": "supported | partial | not_supported | inconclusive",
+    "claims": ["..."],
+    "conditions": ["..."],
+    "limitations": ["..."],
+    "next_actions": ["..."]
+  },
+  "web": {"route": "#/experiments/<experiment_id>", "published": true}
+}
+```
+
+**强制规则：**
+
+1. **无结论不算完成**：`conclusion.status` 缺失或为 `inconclusive` 时，必须在 Web 和 HANDOFF 明确写原因（缺 key/模型、样本不足、指标未记录），不能写“完成”。
+2. **Web 必须呈现**：实验详情页至少 4 个 tab：`Results / Comparison / Analysis / Conclusion`；没有报告 JSON 的 run 显示 `not_analyzed`，不能只显示一张指标表。
+3. **对照是必填**：每个实验至少一个基线（B0 / Full Text / Vector RAG / 上一候选）；只报候选绝对值视为无效。
+4. **三件套**：每条结论至少质量（F1/Recall/状态）+ 成本（Tokens/题）+ 延迟（P95）；缺一项就标 `not_available`，不能猜。
+5. **test 只读**：`split=test` 的实验报告必须标 `test_only=true`，不允许用 test 调参；开发集结论迁移到 test 需单独报告。
+6. **可复现**：报告必须带 manifest/config_hash/dataset_hash/seed；同配置重跑差异 >0.01 要写进 limitations。
+7. **offline/真实模型标签**：offline extractive 的 F1 不得写成 LLM F1；Judge 缺失写 `not_run`。
+
+**输出位置：**
+
+- 运行产物：`runs/<experiment_id>/`（gitignored）；
+- 汇总报告：`reports/experiments/<experiment_id>.json`（Web 读取）；
+- 最终交付归档：`eval/archive/experiments/<experiment_id>.json`（可选提交，用于报告复现）。
+
+**Web 承载：** 见 [WEB-DESIGN.md](WEB-DESIGN.md) §3.4/§6；实验台详情页读取同一 JSON，不接受“只存在于聊天/临时日志”的结论。
+
 ---
 
 ## 4.16 阶段、预算与最小路径
