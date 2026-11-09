@@ -49,6 +49,177 @@
   const na = (v) => (v === null || v === undefined || v === "" ? "not_available" : v);
   const REL_LABEL = { RETAIN: "保留 RETAIN", UPDATE: "更新 UPDATE", SUPERSEDE: "替代 SUPERSEDE", CONFLICT: "冲突 CONFLICT" };
 
+  // W-LAB v2: shared question-bank, typed-error and run-comparison helpers.
+  const QB_CATEGORY = { 1: "多跳", 2: "时间", 3: "常识/开放域", 4: "单跳", 5: "对抗" };
+  const cleanMessage = (value) => String(value ?? "")
+    .replace(/<urlopen error[^>]*>/gi, "后端连接失败")
+    .replace(/urlopen error[^:]*:\s*/gi, "")
+    .replace(/Connection refused/gi, "后端未启动")
+    .trim();
+  function asError(err) {
+    return {
+      code: err && err.code ? String(err.code) : "",
+      message: cleanMessage(err && err.message !== undefined ? err.message : err) || "未知错误",
+      hint: err && err.hint ? String(err.hint) : "",
+    };
+  }
+  const errorHtml = (err) => {
+    const e = asError(err);
+    return `<div class="v2-error note warn">${e.code ? `<b class="mono">${esc(e.code)}</b> · ` : ""}${esc(e.message)}${e.hint ? `<div class="muted small">${esc(e.hint)}</div>` : ""}</div>`;
+  };
+  // Fetch wrapper that preserves W-API's {code, message, hint} instead of
+  // letting "<urlopen error ...>" or "[object Object]" reach the page.
+  async function wapi(url, body) {
+    let response;
+    try {
+      response = await fetch(url, body === undefined ? {} : {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+      });
+    } catch (err) {
+      const e = new Error("无法连接后端服务（network_error）");
+      e.code = "network_error";
+      throw e;
+    }
+    let data = null;
+    try { data = await response.json(); } catch (err) { data = null; }
+    if (!response.ok) {
+      const detail = data && data.error;
+      const code = (detail && typeof detail === "object" && detail.code)
+        || (data && data.code) || `http_${response.status}`;
+      const raw = (detail && typeof detail === "object" && detail.message)
+        || (typeof detail === "string" && detail)
+        || (data && typeof data.message === "string" && data.message)
+        || `HTTP ${response.status}`;
+      const e = new Error(cleanMessage(raw) || `HTTP ${response.status}`);
+      e.code = code;
+      e.hint = detail && typeof detail === "object" ? detail.hint : "";
+      throw e;
+    }
+    return data;
+  }
+  const f1Score = (pred, gold) => {
+    if (gold === null || gold === undefined || String(gold).trim() === "") return null;
+    return typeof tokenF1 === "function" ? tokenF1(pred, gold) : null;
+  };
+  const runTokens = (out) => (out && out.tokens !== undefined && out.tokens !== null ? out.tokens : out && out.metrics ? out.metrics.tokens : null);
+  const runLatency = (out) => (out && out.latency_ms !== undefined && out.latency_ms !== null ? out.latency_ms : out && out.metrics ? out.metrics.p95_latency_ms : null);
+  const runF1 = (out, gold) => {
+    if (!out) return null;
+    if (out.kind === "batch") return out.metrics && out.metrics.answer_f1 !== undefined ? out.metrics.answer_f1 : null;
+    return gold ? f1Score((out.answer && out.answer.answer) || "", gold.answer) : null;
+  };
+  const fmtValue = (value) => {
+    if (value === null || value === undefined || value === "") return "none";
+    if (Array.isArray(value)) return value.length ? value.join("+") : "none";
+    if (typeof value === "object") return JSON.stringify(value);
+    return String(value);
+  };
+  const shortHash = (hash) => (hash ? String(hash).replace(/^sha256:/, "").slice(0, 12) : "not_available");
+  const stamp = () => {
+    const d = new Date(), pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`;
+  };
+  const runLog = () => (window.__v2runLog = window.__v2runLog || []);
+  function logRun(out, gold, question) {
+    const entry = {
+      run_id: out.run_id, kind: out.kind || "single_question",
+      question: out.question || (question && question.question) || "",
+      gold: gold ? String(gold.answer) : null, goldQuestion: gold || null, out,
+      answer_f1: runF1(out, gold), tokens: runTokens(out), latency_ms: runLatency(out),
+      config_hash: out.config_hash || "", preset: out.preset || "",
+    };
+    const log = runLog();
+    log.push(entry);
+    while (log.length > 8) log.shift();
+    window.__v2runLog = log;
+    window.__v2runs = log.map((x) => x.run_id).slice(-6);
+    window.__v2lastRuns = window.__v2runs;
+    return entry;
+  }
+  async function loadQuestionBank() {
+    try {
+      const data = await wapi(`/api/v2/questions?sample=${encodeURIComponent(app.sampleId)}&limit=100`);
+      return { questions: Array.isArray(data && data.questions) ? data.questions : [], total: data && data.total, error: null };
+    } catch (err) {
+      return { questions: [], total: 0, error: asError(err) };
+    }
+  }
+  function questionBankHtml(prefix, bank) {
+    const questions = (bank && bank.questions) || [];
+    const groups = new Map();
+    questions.forEach((q) => {
+      const key = String(q.category === null || q.category === undefined ? "" : q.category);
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(q);
+    });
+    const keys = [...groups.keys()].sort((a, b) => (Number(a) || 99) - (Number(b) || 99));
+    const groupsHtml = keys.map((key) => {
+      const list = groups.get(key);
+      const label = (list[0] && list[0].category_label) || QB_CATEGORY[key] || `category ${key}`;
+      return `<optgroup label="${esc(label)}（${list.length}）">${list.map((q) => `<option value="${esc(q.qid)}">#${esc(q.index)} ${esc(q.question)}</option>`).join("")}</optgroup>`;
+    }).join("");
+    return `<div class="v2-qbank">
+      <div class="v2-qbank-head"><span class="v1-label">LoCoMo 题库 · QUESTION BANK</span>
+        <span class="muted small">${questions.length} 题 · 选中自动填入，仍可手改</span>
+        <button type="button" class="btn small" id="${prefix}-qrandom">随机一题</button></div>
+      <select id="${prefix}-qselect" class="field"><option value="">— 从题库选一题（按类别分组）—</option>${groupsHtml}</select>
+      ${bank && bank.error ? errorHtml(bank.error) : ""}
+    </div>`;
+  }
+  function wireQuestionBank(prefix, bank, textarea) {
+    const questions = (bank && bank.questions) || [];
+    const select = document.getElementById(`${prefix}-qselect`);
+    const random = document.getElementById(`${prefix}-qrandom`);
+    const meta = document.getElementById(`${prefix}-qmeta`);
+    const byId = new Map(questions.map((q) => [q.qid, q]));
+    let selected = null;
+    const paint = () => {
+      if (!meta) return;
+      if (!selected) {
+        meta.innerHTML = `<span class="muted small">题库只是预填，不锁死；也可以直接手写问题。选中后这里显示 gold answer、category、evidence turns。</span>`;
+        return;
+      }
+      const edited = textarea.value.trim() !== String(selected.question || "").trim();
+      const evidence = (selected.evidence || []).map((x) => esc(x)).join(" · ") || "not_available";
+      meta.innerHTML = `<div class="v2-qmeta-row"><span class="v1-label">gold answer</span><b>${esc(selected.answer === null || selected.answer === undefined ? "not_available" : selected.answer)}</b></div>
+        <div class="v2-qmeta-row"><span class="v1-label">category</span><span>${esc(selected.category_label || QB_CATEGORY[selected.category] || selected.category)}</span><span class="muted"> · evidence turns: ${evidence}</span></div>
+        ${edited ? `<div class="muted small">问题已被手动修改：gold 仍展示，但不再参与本次 F1。</div>` : `<div class="muted small">gold 将用于逐题 F1（token overlap）与命中判定。</div>`}`;
+    };
+    const choose = (q) => {
+      selected = q || null;
+      if (q) {
+        textarea.value = q.question;
+        if (select) select.value = q.qid;
+      } else if (select) select.value = "";
+      paint();
+    };
+    if (select) select.onchange = () => choose(byId.get(select.value) || null);
+    if (random) random.onclick = () => {
+      if (!questions.length) return;
+      choose(questions[Math.floor(Math.random() * questions.length)]);
+    };
+    textarea.addEventListener("input", paint);
+    paint();
+    return {
+      get selected() { return selected; },
+      currentGold() {
+        if (!selected) return null;
+        return textarea.value.trim() === String(selected.question || "").trim() ? selected : null;
+      },
+    };
+  }
+  async function waitJob(jobId, timeoutMs = 120000) {
+    const started = Date.now();
+    while (Date.now() - started < timeoutMs) {
+      const job = await wapi(`/api/v2/jobs/${encodeURIComponent(jobId)}`);
+      if (["done", "error", "cancelled"].includes(job.status)) return job;
+      await new Promise((resolve) => setTimeout(resolve, 350));
+    }
+    const e = new Error("运行超时（job_timeout）");
+    e.code = "job_timeout";
+    throw e;
+  }
+
   const courseSamples = () => (app.samples || []).filter((s) => s.split === "development" || s.split === "test");
   const extensionSamples = () => (app.samples || []).filter((s) => s.split === "extension" || !["development", "test"].includes(s.split));
   function courseChips() {
@@ -194,7 +365,7 @@
       if (q) p.set("q", q);
       $("#v1-list").innerHTML = `<div class="empty">加载中…</div>`;
       try {
-        const data = await api(`/api/v2/memories?${p}`);
+        const data = await wapi(`/api/v2/memories?${p}`);
         facets = data.facets || null;
         entries = data.memories || [];
         total = data.total || 0;
@@ -207,7 +378,7 @@
           if (hit) pinned = { ...hit, __inFilter: true };
           else {
             try {
-              const d = await api(`/api/v2/memories/${encodeURIComponent(memoryParam)}?sample=${encodeURIComponent(app.sampleId)}`);
+              const d = await wapi(`/api/v2/memories/${encodeURIComponent(memoryParam)}?sample=${encodeURIComponent(app.sampleId)}`);
               pinned = { ...d.summary, __inFilter: false };
             } catch (err) {
               pinned = null;
@@ -233,7 +404,7 @@
           $("#v1-detail").innerHTML = `<div class="empty">没有可展示的对象。</div>`;
         }
       } catch (err) {
-        $("#v1-list").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
+        $("#v1-list").innerHTML = errorHtml(err);
       }
     };
 
@@ -250,7 +421,7 @@
       const row = $(`#v1-list [data-mid="${CSS.escape(id)}"]`);
       if (row) row.scrollIntoView({ block: "nearest" });
       try {
-        const d = await api(`/api/v2/memories/${encodeURIComponent(id)}?sample=${encodeURIComponent(app.sampleId)}`);
+        const d = await wapi(`/api/v2/memories/${encodeURIComponent(id)}?sample=${encodeURIComponent(app.sampleId)}`);
         const m = d.memory, st = d.summary;
         currentSummary = st;
         const state = st.state || "UNRESOLVED";
@@ -297,7 +468,7 @@
 
   async function renderTimeline(root) {
     root.classList.add("v1-page");
-    const data = await api(`/api/v2/timeline?sample=${encodeURIComponent(app.sampleId)}`);
+    const data = await wapi(`/api/v2/timeline?sample=${encodeURIComponent(app.sampleId)}`);
     const groups = data.groups || [];
     const entities = [...new Set(groups.map((g) => g.entity))];
     const maxDate = String(data.max || "").slice(0, 10);
@@ -334,7 +505,76 @@
     draw();
   }
 
-  function renderRun(out) {
+  function citationsOf(out) {
+    const details = (out.citation_details || []).map((c) => ({ turn: c.turn || c.id, text: c.text || "" }));
+    const byTurn = new Map();
+    (out.candidates || []).forEach((c) => {
+      if (!c.source_turn) return;
+      if (!byTurn.has(c.source_turn)) byTurn.set(c.source_turn, []);
+      byTurn.get(c.source_turn).push(c.text || c.value || "");
+    });
+    const ids = ((out.answer && out.answer.citations) || []).map((c) => (typeof c === "string" ? c : c && (c.turn || c.id))).filter(Boolean);
+    const rows = [];
+    const seen = new Set();
+    ids.forEach((turn) => {
+      if (seen.has(turn)) return;
+      seen.add(turn);
+      const detail = details.find((d) => d.turn === turn);
+      rows.push({ turn, text: detail ? detail.text : ((byTurn.get(turn) || [])[0] || "") });
+    });
+    details.forEach((d) => {
+      if (d.turn && !seen.has(d.turn)) { seen.add(d.turn); rows.push(d); }
+    });
+    return rows.slice(0, 8);
+  }
+
+  function fixedF1(value) {
+    return value === null || value === undefined || !Number.isFinite(Number(value)) ? "not_available" : Number(value).toFixed(4);
+  }
+
+  function compareTable(prev, curr, prevGold, currGold) {
+    if (!prev || !curr) return "";
+    const f1Prev = runF1(prev, prevGold);
+    const f1Curr = runF1(curr, currGold);
+    const tokenPrev = runTokens(prev), tokenCurr = runTokens(curr);
+    const latPrev = runLatency(prev), latCurr = runLatency(curr);
+    const numDelta = (a, b) => (a === null || a === undefined || b === null || b === undefined ? "not_available" : `${Number(b) - Number(a) > 0 ? "+" : ""}${(Number(b) - Number(a)).toFixed(2)}`);
+    const f1Delta = f1Prev === null || f1Curr === null ? "not_available" : `${f1Curr - f1Prev > 0 ? "+" : ""}${(f1Curr - f1Prev).toFixed(4)}`;
+    const hashChanged = String(prev.config_hash || "") !== String(curr.config_hash || "");
+    const rows = [
+      ["answer_f1", fixedF1(f1Prev), fixedF1(f1Curr), f1Delta],
+      ["tokens", esc(na(tokenPrev)), esc(na(tokenCurr)), numDelta(tokenPrev, tokenCurr)],
+      ["latency", esc(na(latPrev)), esc(na(latCurr)), numDelta(latPrev, latCurr)],
+      ["config_hash", esc(shortHash(prev.config_hash)), esc(shortHash(curr.config_hash)), hashChanged ? "已变化" : "未变化"],
+    ];
+    return `<div class="v2-compare">
+      <div class="v2-compare-head"><b>与上一次运行对比</b><span class="muted small">单题对比，仅描述性</span></div>
+      <table class="v2-table v2-compare-table"><thead><tr><th>指标</th><th>上一次</th><th>本次</th><th>变化</th></tr></thead><tbody>
+        ${rows.map(([metric, before, after, delta]) => `<tr><td class="mono">${metric}</td><td>${before}</td><td>${after}</td><td class="mono">${esc(delta)}</td></tr>`).join("")}
+      </tbody></table>
+    </div>`;
+  }
+
+  function reportHtml(out, opts) {
+    const baseline = (opts.prev && opts.prev.run_id) || out.run_id || "";
+    const module = opts.module || "M";
+    const experimentId = `lab-${module}-${stamp()}`;
+    return `<div class="v2-report" data-report>
+      <button type="button" class="btn" data-report-toggle>生成实验报告（Report）</button>
+      <div class="v2-report-form hidden" data-report-form>
+        <div class="v2-report-grid">
+          <label class="small">baseline run（默认上一次）<input class="field mono" data-report-base value="${esc(baseline)}" placeholder="上一次 run_id"></label>
+          <label class="small">candidate run（默认本次）<input class="field mono" data-report-cand value="${esc(out.run_id || "")}"></label>
+          <label class="small">experiment_id（自动生成）<input class="field mono" data-report-id value="${esc(experimentId)}"></label>
+        </div>
+        <div class="row"><button type="button" class="btn primary" data-report-submit>生成</button><span class="muted small" data-report-status></span></div>
+        <div class="muted small">POST /api/v2/reports/from-runs · 只读两个已保存 run，不重新执行。</div>
+      </div>
+      <div class="v2-report-result" data-report-result></div>
+    </div>`;
+  }
+
+  function renderRun(out, opts = {}) {
     if (!out) return "";
     const a = out.answer || {};
     const st = out.state || {};
@@ -349,59 +589,208 @@
       ["替代", "SUPERSEDE", supersededCount],
       ["冲突", "CONFLICT", conflictCount],
     ];
-    const cites = out.citation_details || [];
-    return `<div class="v2-answer-wrap">
+    const cites = citationsOf(out);
+    const gold = opts.gold || null;
+    const currentF1 = runF1(out, gold);
+    const hit = currentF1 === null ? null : currentF1 >= 0.5;
+    const graph = out.graph || {};
+    const compare = opts.prev ? compareTable(opts.prev, out, opts.prevGold || null, gold) : "";
+    return `<div class="v2-answer-wrap v2-run-panel">
       <div class="v2-asked">${esc(out.question || "")}</div>
       <div class="v2-answer-serif">${esc(a.answer || "not_available")}</div>
       ${a.refused ? `<div class="note">没有足够证据，系统选择拒答。</div>` : ""}
-      <div class="v2-state-blocks">${blocks.map(([label, en, n]) => `<div class="v2-state-block"><b>${label}</b><span>${en}</span><em>${n} 条</em></div>`).join("")}</div>
-      <div class="v2-cites"><div class="v1-label">引用证据 · EVIDENCE</div>
-        ${cites.length ? cites.map((c) => `<div class="v2-evidence"><div class="v1-cite">${esc(refLabel(c.turn) || c.id || "not_available")}</div><blockquote>${esc(c.text || "not_available")}</blockquote></div>`).join("") : `<p class="muted small">not_available</p>`}
+      <div class="v2-run-meta">
+        <span><b>answer_f1</b> ${gold ? fixedF1(currentF1) : "not_available（无 gold）"}</span>
+        <span><b>tokens</b> ${esc(na(runTokens(out)))}</span>
+        <span><b>latency_ms</b> ${esc(na(runLatency(out)))}</span>
+        <span><b>config_hash</b> <span class="mono">${esc(shortHash(out.config_hash))}</span></span>
+        <span class="badge ${out.offline ? "offline" : "online"}">${out.offline ? "offline 离线" : "online 在线"}</span>
       </div>
-      <details class="v1-tech"><summary>▸ 执行轨迹 · trace</summary>
-        ${(out.trace || []).map((t) => `<div class="mono small">${esc(t.stage || "")}/${esc(t.name || "")} · ${esc(t.ms ?? "not_available")} ms</div>`).join("") || `<div class="muted small">not_available</div>`}
-        <div class="mono small" style="margin-top:6px">run_id: ${esc(out.run_id || "not_available")} · config_hash: ${esc(out.config_hash || "not_available")}</div>
+      ${gold ? `<div class="v2-gold">
+        <div class="v2-gold-head"><span class="v1-label">题库对照 · GOLD</span><span class="pill">${esc(gold.category_label || QB_CATEGORY[gold.category] || gold.category || "题库")}</span></div>
+        <div class="v2-gold-row"><span class="v1-label">gold answer</span><b>${esc(gold.answer === null || gold.answer === undefined ? "not_available" : gold.answer)}</b></div>
+        <div class="v2-gold-row"><span class="v1-label">evidence turns</span><span>${(gold.evidence || []).map((x) => esc(x)).join(" · ") || "not_available"}</span></div>
+        <div class="v2-f1 ${hit ? "hit" : "miss"}">逐题 F1（answer_f1）：<b>${fixedF1(currentF1)}</b> · ${hit ? "命中" : "未命中"} <span class="muted">（token overlap，≥0.5 记为命中）</span></div>
+      </div>` : `<div class="v2-gold muted">未使用题库 gold（手写问题或未选题）：不计算逐题 answer_f1。</div>`}
+      ${compare}
+      <div class="v2-state-blocks">${blocks.map(([label, en, n]) => `<div class="v2-state-block"><b>${label}</b><span>${en}</span><em>${n} 条</em></div>`).join("")}</div>
+      <div class="v2-cites"><div class="v1-label">引用证据 · EVIDENCE（turn + 文本）</div>
+        ${cites.length ? cites.map((c) => `<div class="v2-evidence"><div class="v1-cite">${esc(refLabel(c.turn) || c.turn || "not_available")}</div><blockquote>${esc(c.text || "not_available")}</blockquote></div>`).join("") : `<p class="muted small">not_available</p>`}
+      </div>
+      <div class="v2-graph-stats"><span class="v1-label">GRAPH STATS</span> 节点（nodes）${esc(na(graph.nodes))} · 边（edges）${esc(na(graph.edges))}${graph.representation ? ` · ${esc(graph.representation)}` : ""}</div>
+      <details class="v1-tech"><summary>▸ 技术细节</summary>
+        <div class="mono small">run_id: ${esc(out.run_id || "not_available")}</div>
+        <div class="mono small">候选数 candidates: ${(out.candidates || []).length}</div>
+        <div class="mono small">config_hash: ${esc(out.config_hash || "not_available")}</div>
+        <div class="mono small">trace:</div>
+        ${(out.trace || []).map((t) => `<div class="mono small">　${esc(t.stage || "")}/${esc(t.name || "")} · ${esc(t.ms ?? "not_available")} ms</div>`).join("") || `<div class="muted small">　not_available</div>`}
       </details>
       <div class="v1-provenance">${out.offline ? "offline extractive · 非 27B LLM 结果" : "online model"} · Memory 来源 cached facts/states</div>
+      ${opts.reportable ? reportHtml(out, opts) : ""}
     </div>`;
   }
 
+  function renderBatch(out, opts = {}) {
+    if (!out) return "";
+    const metrics = out.metrics || {};
+    const rows = out.rows || [];
+    return `<div class="v2-run-panel">
+      <div class="row"><b>批量运行 Batch</b><span class="badge">${esc(out.questions ?? rows.length)} 题</span><span class="badge ${out.offline ? "offline" : "online"}">${out.offline ? "offline 离线" : "online 在线"}</span><span class="mono small">${esc(shortHash(out.config_hash))}</span></div>
+      <div class="v2-run-meta">
+        <span><b>answer_f1</b> ${esc(na(metrics.answer_f1))}</span>
+        <span><b>evidence_recall</b> ${esc(na(metrics.evidence_recall))}</span>
+        <span><b>tokens</b> ${esc(na(metrics.tokens))}</span>
+        <span><b>latency_ms</b> ${esc(na(metrics.p95_latency_ms))}</span>
+      </div>
+      ${opts.prev ? compareTable(opts.prev, out, null, null) : ""}
+      <table class="v2-table v2-batch-table"><thead><tr><th>#</th><th>question</th><th>gold</th><th>answer_f1</th><th>结果</th><th>tokens</th><th>latency_ms</th></tr></thead><tbody>
+        ${rows.map((r, i) => `<tr><td>${i + 1}</td><td>${esc(r.question || "")}</td><td>${esc(na(r.gold))}</td><td class="mono">${esc(na(r.answer_f1))}</td><td>${Number(r.answer_f1) >= 0.5 ? "命中" : "未命中"}</td><td>${esc(na(r.tokens))}</td><td>${esc(na(r.latency_ms))}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">not_available</td></tr>`}
+      </tbody></table>
+      <div class="v2-graph-stats"><span class="v1-label">GRAPH STATS</span> 节点（nodes）${esc(na((out.graph || {}).nodes))} · 边（edges）${esc(na((out.graph || {}).edges))}</div>
+      <details class="v1-tech"><summary>▸ 技术细节</summary>
+        <div class="mono small">run_id: ${esc(out.run_id || "not_available")}</div>
+        <div class="mono small">seed: ${esc(na(out.seed))} · questions: ${esc(na(out.questions))}</div>
+        <div class="mono small">config_hash: ${esc(out.config_hash || "not_available")}</div>
+        ${(out.stage_waterfall || []).map((s) => `<div class="mono small">　${esc(s.stage)} · ${esc(na(s.ms))} ms</div>`).join("")}
+      </details>
+      <div class="v1-provenance">${out.offline ? "offline extractive · 非 27B LLM 结果" : "online model"} · 批量指标不是论文级结论。</div>
+      ${opts.reportable ? reportHtml(out, opts) : ""}
+    </div>`;
+  }
+
+  function wireReport(container, out, opts) {
+    const root = container.querySelector("[data-report]");
+    if (!root) return;
+    const toggle = root.querySelector("[data-report-toggle]");
+    const form = root.querySelector("[data-report-form]");
+    const result = root.querySelector("[data-report-result]");
+    if (!toggle || !form || !result) return;
+    toggle.onclick = () => form.classList.toggle("hidden");
+    const submit = root.querySelector("[data-report-submit]");
+    if (!submit) return;
+    submit.onclick = async () => {
+      const baseline = root.querySelector("[data-report-base]").value.trim();
+      const candidate = root.querySelector("[data-report-cand]").value.trim();
+      const experimentId = root.querySelector("[data-report-id]").value.trim();
+      const status = root.querySelector("[data-report-status]");
+      if (!baseline || !candidate) {
+        status.textContent = "需要 baseline 和 candidate 两个 run_id";
+        return;
+      }
+      status.textContent = "生成中…";
+      submit.disabled = true;
+      try {
+        const data = await wapi("/api/v2/reports/from-runs", {
+          baseline_run_id: baseline,
+          candidate_run_id: candidate,
+          experiment_id: experimentId,
+          module: opts.module || "M",
+          stage: opts.stage || "E1.1",
+        });
+        const report = data.report || {};
+        const conclusion = report.conclusion || {};
+        const claims = (conclusion.claims || []).slice(0, 3);
+        const webPath = data.web_path || `#/experiments/${data.report_id}`;
+        result.innerHTML = `<div class="v2-report-done">
+          <div class="row"><span class="pill ${esc(conclusion.status || "")}">${esc(conclusion.status || "not_analyzed")}</span><span class="muted small">conclusion.status</span><span class="mono small">${esc(data.report_id || "")}</span></div>
+          <ul>${claims.map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
+          <div><a href="${esc(webPath)}">${esc(webPath)}</a> · 四 tab：Results / Comparison / Analysis / Conclusion</div>
+        </div>`;
+        status.textContent = "已生成";
+      } catch (err) {
+        result.innerHTML = errorHtml(err);
+        status.textContent = "失败";
+      } finally {
+        submit.disabled = false;
+      }
+    };
+  }
+
   async function presets() {
-    if (!window.__v2presets) window.__v2presets = (await api("/api/v2/config/presets")).presets;
+    if (!window.__v2presets) window.__v2presets = (await wapi("/api/v2/config/presets")).presets;
     return window.__v2presets;
   }
 
+  function modelUnavailableHtml(err) {
+    const e = asError(err);
+    return `<div class="v2-model-error card pad">
+      <div class="row"><span class="badge hardware_blocked">${esc(e.code || "model_unavailable")}</span><b>本地模型不可用：已自动切离线？</b></div>
+      <p class="small">没有自动切换。你可以手动用离线演示重跑，或去系统页检查模型配置。</p>
+      <div class="row"><button type="button" class="btn primary" id="v2-ask-offline-retry">用离线演示重跑</button><a class="btn" href="#/system">去系统页看模型配置</a></div>
+      <details class="v1-tech"><summary>▸ 技术细节</summary><div class="mono small">${esc(e.code || "model_unavailable")}</div><div class="small">${esc(e.message)}</div></details>
+    </div>`;
+  }
+
   async function renderAsk2(root) {
-    const list = await presets();
-    const options = list.filter((p) => !p.error).map((p) => `<option value="${esc(p.name)}" ${p.name === "B0" ? "selected" : ""}>${esc(p.name)}</option>`).join("");
-    root.innerHTML = `${header("ASK & STATE · 提问与状态", "提问与状态", "输入一个关于当前状态的问题，系统会先找证据，再判断哪条记忆仍然有效。")}
+    let list;
+    try {
+      list = await presets();
+    } catch (err) {
+      root.innerHTML = `${header("ASK & STATE · 提问与状态", "提问与状态", "")}${errorHtml(err)}`;
+      return;
+    }
+    const usable = list.filter((p) => !p.error);
+    const defaultPreset = usable.some((p) => p.name === "R0") ? "R0" : (usable[0] ? usable[0].name : "");
+    const options = usable.map((p) => `<option value="${esc(p.name)}" ${p.name === defaultPreset ? "selected" : ""}>${esc(p.name)}</option>`).join("");
+    const bank = await loadQuestionBank();
+    root.innerHTML = `${header("ASK & STATE · 提问与状态", "提问与状态", "输入一个关于当前状态的问题，系统会先找证据，再判断哪条记忆仍然有效。默认 R0：模块路径、离线可用。")}
       <div class="v2-ask-input">
+        ${questionBankHtml("v2-ask", bank)}
         <textarea id="v2-question" class="v2-question" placeholder="例如：Caroline 现在的心情是什么？"></textarea>
-        <div class="v2-ask-actions"><select id="v2-preset" class="field small">${options}</select><button id="v2-run" class="btn primary">提问</button><span id="v2-run-status" class="muted small"></span></div>
+        <div id="v2-ask-qmeta" class="v2-qmeta"></div>
+        <div class="v2-ask-actions"><select id="v2-preset" class="field small">${options}</select>
+          <label class="small"><input type="checkbox" id="v2-ask-offline" checked> 离线演示（offline）</label>
+          <button id="v2-run" class="btn primary">提问</button><span id="v2-run-status" class="muted small"></span></div>
       </div>
       <div id="v2-run-out"></div>`;
-    const run = async () => {
+    const picker = wireQuestionBank("v2-ask", bank, $("#v2-question"));
+    const run = async (forceOffline) => {
       const q = $("#v2-question").value.trim();
       if (!q) return;
+      const offline = forceOffline === true ? true : $("#v2-ask-offline").checked;
+      const previous = runLog().slice(-1)[0] || null;
+      const gold = picker.currentGold();
       $("#v2-run-status").textContent = "检索中…";
       $("#v2-run").disabled = true;
       try {
-        const out = await api("/api/v2/runs", { sample: app.sampleId, question: q, preset: $("#v2-preset").value, offline: true });
-        $("#v2-run-out").innerHTML = renderRun(out);
+        const out = await wapi("/api/v2/runs", { sample: app.sampleId, question: q, preset: $("#v2-preset").value, offline });
+        $("#v2-run-out").innerHTML = renderRun(out, {
+          gold, prev: previous ? previous.out : null, prevGold: previous ? previous.goldQuestion : null, reportable: false,
+        });
+        logRun(out, gold);
         $("#v2-run-status").textContent = "";
+        $("#v2-run-out").scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (err) {
-        $("#v2-run-out").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
+        const e = asError(err);
+        if (e.code === "model_unavailable") {
+          $("#v2-run-out").innerHTML = modelUnavailableHtml(err);
+          const retry = $("#v2-ask-offline-retry");
+          if (retry) retry.onclick = () => run(true);
+        } else {
+          $("#v2-run-out").innerHTML = errorHtml(err);
+        }
         $("#v2-run-status").textContent = "失败";
       } finally { $("#v2-run").disabled = false; }
     };
-    $("#v2-run").onclick = run;
-    $("#v2-question").onkeydown = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run(); };
+    $("#v2-run").onclick = () => run(false);
+    $("#v2-question").onkeydown = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") run(false); };
   }
 
+  const axisShort = (axis) => (axis.id === "retrieval.channels" ? "channels" : String(axis.id || axis.path || "").split(".").pop());
+
   async function renderLab2(root) {
-    const [list, axisData] = await Promise.all([presets(), api("/api/v2/config/axes")]);
+    let list, axisData;
+    try {
+      [list, axisData] = await Promise.all([presets(), wapi("/api/v2/config/axes")]);
+    } catch (err) {
+      root.innerHTML = `${header("EXPERIMENT LAB · 实验台", "实验台", "")}${errorHtml(err)}`;
+      return;
+    }
+    const bank = await loadQuestionBank();
     const modules = axisData.modules || [];
-    const options = list.filter((p) => !p.error).map((p) => `<option value="${esc(p.name)}" ${p.name === "B0" ? "selected" : ""}>${esc(p.name)}</option>`).join("");
+    const usable = list.filter((p) => !p.error);
+    const defaultPreset = usable.some((p) => p.name === "B0") ? "B0" : (usable[0] ? usable[0].name : "");
+    const options = usable.map((p) => `<option value="${esc(p.name)}" ${p.name === defaultPreset ? "selected" : ""}>${esc(p.name)}</option>`).join("");
     root.innerHTML = `${header("EXPERIMENT LAB · 实验台", "实验台", "六模块分区：W 写入 → S 存储 → R 检索 → M 合并 → U 使用 → K 维护；一次只改一个模块，其他模块固定，才可归因。")}
       ${hardwareBanner(axisData.hardware)}
       <div class="lab-flow">${modules.map((m) => `<button data-jump="lab-${m.id}"><b>${esc(m.id)}</b> ${esc(m.label_zh)}<span>${esc(m.name)}</span></button>`).join("<i>→</i>")}</div>
@@ -412,30 +801,104 @@
       <div class="card pad" style="margin-top:14px">
         <div class="toolbar"><span class="small"><b>预设</b> Preset</span><select id="v2-lab-preset" class="field">${options}</select><button id="v2-lab-validate" class="btn">校验配置 Validate</button><span id="v2-lab-hash" class="mono muted"></span></div>
         <div class="note">当前对话 <b>${esc(app.sampleId)}</b>；改动任何轴后需重新校验。不可运行项会显示 <span class="mono">problems</span>，不会静默 fallback（回退）。</div>
+        <div id="v2-lab-diff" class="lab-diff"><span class="muted small">配置与预设一致（0 处修改）。</span></div>
+        <div id="v2-lab-check" class="note">未校验（not validated）；校验通过前 Run 禁用。</div>
       </div>
       <div id="v2-lab-axes" class="lab-modules"></div>
       <div class="v2-cols" style="margin-top:16px">
         <details class="card pad"><summary>高级：配置 JSON（Advanced config）</summary><textarea id="v2-lab-config" class="field mono" style="min-height:260px;font-size:12px;margin-top:10px"></textarea></details>
-        <div class="card pad">
+        <div class="card pad lab-run-card">
           <h3>运行 <span class="muted small">Run</span></h3>
+          ${questionBankHtml("v2-lab", bank)}
           <textarea id="v2-lab-question" class="field" placeholder="单题问题；批量模式可留空"></textarea>
+          <div id="v2-lab-qmeta" class="v2-qmeta"></div>
           <div class="row"><label class="small"><input type="checkbox" id="v2-lab-batch"> 批量多题 <span class="muted">Batch</span></label>
             <label class="small">题数 <input id="v2-lab-questions" class="field" type="number" min="1" max="50" value="10" style="width:70px;padding:5px"></label>
             <label class="small">seed 随机种子 <input id="v2-lab-seed" class="field" type="number" value="13" style="width:75px;padding:5px"></label>
           </div>
           <label class="small"><input type="checkbox" id="v2-lab-offline" checked> 离线演示 <span class="muted">offline extractive（离线抽取式）</span></label>
           <div class="row" style="margin-top:10px"><button id="v2-lab-run" class="btn primary">运行 Run</button><span id="v2-lab-status" class="muted small"></span></div>
-          <div id="v2-lab-check" class="note"></div>
+          <p class="run-hint">单题运行 = 1 题；批量运行 = N 题；两者都不是论文级结论。</p>
+          <div id="v2-lab-out"></div>
           <div id="v2-lab-link" class="note"></div>
         </div>
-      </div>
-      <div id="v2-lab-out" style="margin-top:18px"></div>`;
+      </div>`;
 
     const configEl = $("#v2-lab-config");
     const checkEl = $("#v2-lab-check");
+    const diffEl = $("#v2-lab-diff");
+    const hashEl = $("#v2-lab-hash");
     const runBtn = $("#v2-lab-run");
+    const validateBtn = $("#v2-lab-validate");
     runBtn.disabled = true;
     let lastCheck = null;
+    let baselineConfig = {};
+    let lastModule = "M";
+    const picker = wireQuestionBank("v2-lab", bank, $("#v2-lab-question"));
+
+    const moduleSummaryHtml = (config) => modules.map((m) => {
+      const parts = (m.axes || []).map((a) => `${axisShort(a)}=${fmtValue(getPath(config, a.path))}`);
+      return `<div class="lab-eff-row"><b>${esc(m.id)}</b> ${esc(m.label_zh)}：<span class="mono">${esc(parts.join(" · ") || "无实现轴")}</span></div>`;
+    }).join("");
+    const moduleCurrentText = (m, config) => {
+      const parts = (m.axes || []).map((a) => `${axisShort(a)}=${fmtValue(getPath(config, a.path))}`);
+      return `<b>当前选择</b> ${esc(m.id)} ${esc(m.label_zh)}：<span class="mono">${esc(parts.join(" · ") || "无实现轴")}</span>`;
+    };
+    const moduleCurrentHtml = (m, config) => `<div class="lab-current" id="lab-current-${esc(m.id)}">${moduleCurrentText(m, config)}</div>`;
+    const paintCurrent = (config) => {
+      modules.forEach((m) => {
+        const el = document.getElementById(`lab-current-${m.id}`);
+        if (el) el.innerHTML = moduleCurrentText(m, config);
+      });
+    };
+    const flatten = (value, prefix = "", out = {}) => {
+      if (Array.isArray(value)) { out[prefix] = value.slice(); return out; }
+      if (value && typeof value === "object") {
+        Object.keys(value).forEach((key) => flatten(value[key], prefix ? `${prefix}.${key}` : key, out));
+        return out;
+      }
+      out[prefix] = value;
+      return out;
+    };
+    const diffConfigs = (base, current) => {
+      const a = flatten(base || {}), b = flatten(current || {});
+      const keys = [...new Set([...Object.keys(a), ...Object.keys(b)])].sort();
+      return keys.filter((key) => JSON.stringify(a[key]) !== JSON.stringify(b[key]))
+        .map((key) => ({ path: key, before: a[key], after: b[key] }));
+    };
+    const moduleOfPath = (path) => {
+      for (const m of modules) for (const a of m.axes || []) {
+        if (path === a.path || path.startsWith(`${a.path}.`)) return m.id;
+      }
+      return "config";
+    };
+    const paintDiff = (config) => {
+      const changes = diffConfigs(baselineConfig, config);
+      if (diffEl) {
+        if (!changes.length) {
+          diffEl.innerHTML = `<span class="muted small">配置与预设一致（0 处修改）。</span>`;
+        } else {
+          diffEl.innerHTML = `<div class="lab-diff-title">配置已修改（${changes.length} 处）→ 点【校验配置】确认可运行</div>
+            <ul>${changes.slice(0, 5).map((c) => `<li class="mono">${esc(c.path)}: ${esc(fmtValue(c.before))} → ${esc(fmtValue(c.after))}</li>`).join("")}</ul>
+            ${changes.length > 5 ? `<div class="muted small">另有 ${changes.length - 5} 处未列出</div>` : ""}`;
+        }
+      }
+      modules.forEach((m) => {
+        const el = document.getElementById(`lab-diff-${m.id}`);
+        if (!el) return;
+        const own = changes.filter((c) => moduleOfPath(c.path) === m.id);
+        el.innerHTML = own.length
+          ? `<div class="lab-module-diff on">配置已修改 · ${own.length} 处：${own.slice(0, 3).map((c) => `<span class="mono">${esc(c.path)}: ${esc(fmtValue(c.before))} → ${esc(fmtValue(c.after))}</span>`).join("；")}${own.length > 3 ? `；另有 ${own.length - 3} 处` : ""}</div>`
+          : "";
+      });
+      return changes;
+    };
+    const invalidate = (message) => {
+      lastCheck = null;
+      runBtn.disabled = true;
+      hashEl.textContent = "";
+      checkEl.innerHTML = message;
+    };
 
     const axisField = (axis, config) => {
       const current = getPath(config, axis.path);
@@ -457,6 +920,8 @@
       const axes = m.axes || [];
       return `<section class="lab-module" id="lab-${esc(m.id)}">
         <div class="lab-mod-head"><span class="lab-code">${esc(m.id)}</span><div><h3>${esc(m.label_zh)} · ${esc(m.name)} ${m.hardware_status ? statusBadge(m.hardware_status, "GPU 受限") : ""}</h3><p>${esc(m.question || "")}</p>${m.hardware_note ? `<p class="small hw-note">${esc(m.hardware_note)}</p>` : ""}</div></div>
+        ${moduleCurrentHtml(m, config)}
+        <div class="lab-module-diff" id="lab-diff-${esc(m.id)}"></div>
         <div class="lab-stage">${(m.stages || []).map((x) => `<span>${esc(x)}</span>`).join("")}</div>
         ${axes.length ? `<div class="lab-axis-list">${axes.map((a) => axisField(a, config)).join("")}</div>` : `<p class="note">${esc(m.note || "本模块没有可在单题 Web 运行中切换的实现轴。")}</p>`}
       </section>`;
@@ -478,15 +943,21 @@
     };
     const fill = () => {
       const p = list.find((x) => x.name === $("#v2-lab-preset").value);
-      const config = p?.config || {};
+      const config = JSON.parse(JSON.stringify(p && p.config ? p.config : {}));
+      baselineConfig = JSON.parse(JSON.stringify(config));
       configEl.value = JSON.stringify(config, null, 2);
       $("#v2-lab-axes").innerHTML = modulesHtml(config);
       setAxisValues(config);
+      paintCurrent(config);
+      paintDiff(config);
       lastCheck = null;
       runBtn.disabled = true;
-      $("#v2-lab-hash").textContent = "";
-      checkEl.textContent = "未校验（not validated）；校验通过前 Run 禁用。";
+      hashEl.textContent = "";
+      checkEl.innerHTML = "未校验（not validated）；校验通过前 Run 禁用。";
+      $("#v2-lab-out").innerHTML = "";
       $("#v2-lab-link").innerHTML = "";
+      $("#v2-lab-status").textContent = "";
+      lastModule = "M";
     };
     $("#v2-lab-preset").onchange = fill;
     fill();
@@ -495,6 +966,14 @@
       const target = document.getElementById(b.dataset.jump);
       if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
     }));
+
+    const applyConfigChange = (config, moduleId) => {
+      configEl.value = JSON.stringify(config, null, 2);
+      if (moduleId) lastModule = moduleId;
+      paintCurrent(config);
+      paintDiff(config);
+      invalidate("配置已改变（config changed）；点“校验配置”确认可运行。");
+    };
 
     $("#v2-lab-axes").onchange = (event) => {
       try {
@@ -510,50 +989,93 @@
             .filter((x) => x.dataset.path === path && x.checked).map((x) => x.value);
           setPath(config, path, values);
         } else return;
-        configEl.value = JSON.stringify(config, null, 2);
-        lastCheck = null;
-        runBtn.disabled = true;
-        $("#v2-lab-hash").textContent = "";
-        checkEl.textContent = "配置已改变（config changed）；点“校验配置”确认可运行。";
-      } catch (err) { checkEl.textContent = "配置文件不是合法 JSON"; }
+        const moduleEl = event.target.closest(".lab-module");
+        applyConfigChange(config, moduleEl ? moduleEl.id.replace(/^lab-/, "") : "");
+      } catch (err) {
+        checkEl.innerHTML = errorHtml(err);
+      }
     };
 
-    $("#v2-lab-validate").onclick = async () => {
+    configEl.addEventListener("input", () => {
+      try {
+        const config = JSON.parse(configEl.value);
+        paintCurrent(config);
+        paintDiff(config);
+        invalidate("配置已改变（config changed）；点“校验配置”确认可运行。");
+      } catch (err) {
+        invalidate("配置文件不是合法 JSON；Run 已禁用。");
+      }
+    });
+
+    validateBtn.onclick = async () => {
+      validateBtn.disabled = true;
       try {
         const cfg = JSON.parse(configEl.value);
-        const check = await api("/api/v2/config/validate", { config: cfg });
+        const check = await wapi("/api/v2/config/validate", { config: cfg });
         lastCheck = check;
         runBtn.disabled = !(check.valid && check.runnable);
-        $("#v2-lab-hash").textContent = check.config_hash || "";
-        checkEl.innerHTML = `<b>${check.valid && check.runnable ? "可运行（runnable）" : "不可运行（not runnable）— Run 已禁用"}</b><br>${(check.problems || []).map((p) => esc(p)).join("<br>") || "no problems"}<br><span class="muted">${(check.warnings || []).map((w) => esc(w)).join("<br>")}</span>`;
-      } catch (err) { checkEl.textContent = err.message; }
+        hashEl.textContent = check.config_hash || "";
+        const effective = check.effective_config || cfg;
+        const problems = check.problems || [];
+        const warnings = check.warnings || [];
+        checkEl.innerHTML = `<div class="lab-check ${check.valid && check.runnable ? "ok" : "bad"}">
+          <b>${check.valid && check.runnable ? "校验通过 · 可运行（runnable）" : "不可运行（not runnable）— Run 已禁用"}</b>
+          <div class="small mono" style="margin-top:4px">config_hash: ${esc(check.config_hash || "not_available")}</div>
+          <div class="v1-label" style="margin-top:10px">effective config 摘要</div>
+          ${moduleSummaryHtml(effective)}
+          <div class="v1-label" style="margin-top:10px">problems</div>
+          ${problems.length ? `<ul class="lab-problems">${problems.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>` : `<div class="muted small">none</div>`}
+          ${warnings.length ? `<div class="v1-label" style="margin-top:8px">warnings</div><ul class="lab-warnings">${warnings.map((w) => `<li>${esc(w)}</li>`).join("")}</ul>` : ""}
+        </div>`;
+      } catch (err) {
+        runBtn.disabled = true;
+        hashEl.textContent = "";
+        checkEl.innerHTML = errorHtml(err);
+      } finally {
+        validateBtn.disabled = false;
+      }
     };
 
-    $("#v2-lab-run").onclick = async () => {
+    runBtn.onclick = async () => {
       const batch = $("#v2-lab-batch").checked;
       const q = $("#v2-lab-question").value.trim();
-      if (!batch && !q) return;
+      if (!batch && !q) {
+        $("#v2-lab-status").textContent = "请先从题库选一题或手写问题。";
+        return;
+      }
+      if (!lastCheck || !(lastCheck.valid && lastCheck.runnable)) {
+        $("#v2-lab-status").textContent = "请先点【校验配置】。";
+        return;
+      }
+      const gold = batch ? null : picker.currentGold();
+      const previous = runLog().slice(-1)[0] || null;
       $("#v2-lab-status").textContent = "提交中（submitting）…";
-      $("#v2-lab-run").disabled = true;
+      runBtn.disabled = true;
       try {
         const cfg = JSON.parse(configEl.value);
         const body = { sample: app.sampleId, config: cfg, offline: $("#v2-lab-offline").checked };
         if (batch) Object.assign(body, { batch: true, questions: Number($("#v2-lab-questions").value), seed: Number($("#v2-lab-seed").value) });
         else body.question = q;
-        const job = await api("/api/v2/jobs", body);
-        $("#v2-lab-status").innerHTML = `<span class="spinner"></span> ${esc(job.status)}（排队/运行）`;
-        const done = await waitJob(job.job_id);
-        if (done.status !== "done") throw new Error(done.error || done.status);
-        const out = done.result;
-        $("#v2-lab-out").innerHTML = out.kind === "batch" ? renderBatch(out) : renderRun(out);
+        const out = await wapi("/api/v2/runs", body);
+        const opts = {
+          gold,
+          prev: previous ? previous.out : null,
+          prevGold: previous ? previous.goldQuestion : null,
+          reportable: true,
+          module: lastModule,
+          stage: "E1.1",
+        };
+        const panel = $("#v2-lab-out");
+        panel.innerHTML = out.kind === "batch" ? renderBatch(out, opts) : renderRun(out, opts);
+        wireReport(panel, out, opts);
+        logRun(out, gold);
         $("#v2-lab-status").textContent = out.kind === "batch" ? `完成（done）· ${out.questions} 题` : `完成（done）· ${out.latency_ms ?? "?"} ms`;
-        window.__v2runs = [...(window.__v2runs || []), out.run_id].slice(-6);
-        window.__v2lastRuns = window.__v2runs;
-        $("#v2-lab-link").innerHTML = `run: <span class="mono">${esc(out.run_id)}</span> · <a href="#/experiments/${esc(out.run_id)}">生成/查看实验报告（Report）→</a>`;
+        $("#v2-lab-link").innerHTML = `run: <span class="mono">${esc(out.run_id)}</span> · <a href="#/experiments">全部实验报告 →</a> · 报告按钮在结果面板底部。`;
+        panel.scrollIntoView({ behavior: "smooth", block: "start" });
       } catch (err) {
-        $("#v2-lab-out").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
+        $("#v2-lab-out").innerHTML = errorHtml(err);
         $("#v2-lab-status").textContent = "失败（error）";
-      } finally { $("#v2-lab-run").disabled = false; }
+      } finally { runBtn.disabled = false; }
     };
   }
 
@@ -723,14 +1245,102 @@
     apply();
   }
 
+  const fixed = (v, digits = 4) => {
+    const n = Number(v);
+    return v === null || v === undefined || v === "" || !Number.isFinite(n) ? "not_available" : n.toFixed(digits);
+  };
+  const signed = (v, digits = 4) => {
+    const n = Number(v);
+    if (v === null || v === undefined || v === "" || !Number.isFinite(n)) return "not_available";
+    return `${n > 0 ? "+" : ""}${n.toFixed(digits)}`;
+  };
+  const ciRange = (ci) => (Array.isArray(ci) && ci.length === 2 && ci.every((x) => Number.isFinite(Number(x)))
+    ? `[${fixed(ci[0])}, ${fixed(ci[1])}]` : "not_available");
+  const crossesZero = (ci) => {
+    if (!Array.isArray(ci) || ci.length !== 2) return null;
+    const [lo, hi] = ci.map(Number);
+    if (!Number.isFinite(lo) || !Number.isFinite(hi)) return null;
+    return lo <= 0 && hi >= 0;
+  };
+  const reportLink = (id, label = "查看报告 →") => (id
+    ? `<a class="ev-report-link" href="#/experiments/${encodeURIComponent(id)}">${esc(label)}</a>` : "not_available");
+  const pctText = (v) => (Number.isFinite(Number(v)) ? `${(Number(v) * 100).toFixed(1)}%` : "not_available");
+
+  function mainEffectsTable(report) {
+    const analysis = report.analysis || {};
+    const effects = Array.isArray(analysis.main_effects) ? analysis.main_effects : [];
+    const comps = Array.isArray(report.comparisons) ? report.comparisons : [];
+    const metricOrder = ["answer_f1", "evidence_recall", "ndcg", "context_precision", "tokens", "p95_latency_ms"];
+    const rows = [];
+    effects.forEach((e) => {
+      const levels = Array.isArray(e.levels) ? e.levels : [];
+      const table = e.metrics && typeof e.metrics === "object" ? e.metrics : null;
+      if (table && levels.length >= 2) {
+        const first = levels[0], last = levels[levels.length - 1];
+        const keys = Object.keys(table[first] || {});
+        const ordered = [...new Set([...metricOrder.filter((k) => keys.includes(k)), ...keys])];
+        let used = 0;
+        ordered.forEach((key) => {
+          const lowValue = table[first]?.[key];
+          const highValue = table[last]?.[key];
+          if (!Number.isFinite(Number(lowValue)) || !Number.isFinite(Number(highValue))) return;
+          const cmp = comps.find((c) => c.metric === key && c.baseline === first && c.candidate === last);
+          const delta = cmp?.delta ?? (Number(highValue) - Number(lowValue));
+          const ci = cmp?.ci95 ?? e.ci95 ?? e.ci ?? null;
+          used += 1;
+          rows.push(`<tr><td><b>${esc(e.factor || "not_available")}</b><div class="muted small">${esc(key)}</div></td><td>${esc(first)} · ${fixed(lowValue)}</td><td>${esc(last)} · ${fixed(highValue)}</td><td class="mono">${signed(delta)}</td><td class="mono">${ciRange(ci)}</td></tr>`);
+        });
+        if (used) return;
+      }
+      const low = e.low ?? levels[0];
+      const high = e.high ?? levels[levels.length - 1];
+      const delta = e.delta ?? (Number.isFinite(Number(low)) && Number.isFinite(Number(high)) ? Number(high) - Number(low) : null);
+      const ci = e.ci95 ?? e.ci ?? null;
+      rows.push(`<tr><td><b>${esc(e.factor || "not_available")}</b><div class="muted small">${esc(levels.join(" / ") || "not_available")}</div></td><td>${low === null || low === undefined ? "not_available" : esc(low)}</td><td>${high === null || high === undefined ? "not_available" : esc(high)}</td><td class="mono">${signed(delta)}</td><td class="mono">${ciRange(ci)}</td></tr>`);
+    });
+    return `<table class="v2-table ev-analysis-table"><thead><tr><th>factor</th><th>low</th><th>high</th><th>delta</th><th>ci</th></tr></thead><tbody>${rows.join("") || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>`;
+  }
+
+  function paretoTable(report) {
+    const items = Array.isArray(report.analysis?.pareto) ? report.analysis.pareto : [];
+    const rows = items.map((p) => {
+      const quality = p.quality ?? p.answer_f1 ?? p.evidence_recall;
+      const cost = p.cost ?? p.cost_tokens ?? p.tokens;
+      const latency = p.p95_latency_ms == null ? "" : `<div class="muted small">p95 ${fixed(p.p95_latency_ms, 1)} ms</div>`;
+      return `<tr><td>${esc(p.config ?? p.candidate ?? p.id ?? "not_available")}</td><td class="mono">${fixed(quality)}</td><td class="mono">${fixed(cost)}${latency}</td></tr>`;
+    });
+    return `<table class="v2-table ev-analysis-table"><thead><tr><th>config</th><th>quality</th><th>cost</th></tr></thead><tbody>${rows.join("") || `<tr><td colspan="3" class="muted">not_available</td></tr>`}</tbody></table>`;
+  }
+
+  function failureTable(report) {
+    const items = Array.isArray(report.analysis?.failure_breakdown) ? report.analysis.failure_breakdown : [];
+    const countOf = (x) => Number(x.count ?? x.n ?? 0);
+    const total = items.reduce((sum, x) => sum + countOf(x), 0);
+    const rows = items.map((x) => {
+      const count = countOf(x);
+      const share = x.share ?? x.ratio ?? (total ? count / total : null);
+      const shareText = share === null || share === undefined ? "not_available" : (Number(share) <= 1 ? pctText(share) : `${fixed(share, 1)}%`);
+      return `<tr><td>${esc(x.type ?? x.category ?? x.reason ?? x.name ?? "not_available")}</td><td class="mono">${Number.isFinite(count) ? count : "not_available"}</td><td class="mono">${shareText}</td></tr>`;
+    });
+    return `<table class="v2-table ev-analysis-table"><thead><tr><th>type</th><th>count</th><th>share</th></tr></thead><tbody>${rows.join("") || `<tr><td colspan="3" class="muted">not_available</td></tr>`}</tbody></table>`;
+  }
+
+  function byCandidateTable(report) {
+    const by = report.analysis?.by_candidate;
+    if (!by || typeof by !== "object" || Array.isArray(by)) return "";
+    const rows = Object.entries(by).map(([candidate, m]) => `<tr><td>${esc(candidate)}</td><td class="mono">${fixed(m.answer_f1)}</td><td class="mono">${fixed(m.evidence_recall)}</td><td class="mono">${fixed(m.ndcg)}</td><td class="mono">${fixed(m.tokens)}</td></tr>`);
+    if (!rows.length) return "";
+    return `<h3 style="margin-top:18px">By candidate 候选指标</h3><table class="v2-table ev-analysis-table"><thead><tr><th>candidate</th><th>F1</th><th>Recall</th><th>nDCG</th><th>tokens</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+  }
+
   async function renderExperiment(root) {
     const path = location.hash.replace(/^#\//, "").split("?")[0].split("/");
     const id = path[1] || "";
-    const list = await api("/api/v2/experiments");
+    const list = await wapi("/api/v2/experiments");
     const plan = await api("/api/v2/experiments/plan").catch(() => ({ items: [] }));
     let report = null;
     if (id) {
-      try { report = await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`); } catch (err) { report = null; }
+      try { report = await wapi(`/api/v2/experiments/${encodeURIComponent(id)}/report`); } catch (err) { report = null; }
     }
     if (!report) {
       const runs = window.__v2runs || [];
@@ -751,9 +1361,9 @@
         if (!id) { $("#v2-rep-status").textContent = "请先从实验台运行并打开对应 run 的实验报告链接。"; return; }
         try {
           $("#v2-rep-status").textContent = "生成中…";
-          await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`, { run_ids: [$("#v2-rep-base").value.trim(), $("#v2-rep-cand").value.trim()] });
+          await wapi(`/api/v2/experiments/${encodeURIComponent(id)}/report`, { run_ids: [$("#v2-rep-base").value.trim(), $("#v2-rep-cand").value.trim()] });
           renderExperiment(root);
-        } catch (err) { $("#v2-rep-status").textContent = err.message; }
+        } catch (err) { $("#v2-rep-status").innerHTML = errorHtml(err); }
       };
       return;
     }
@@ -766,15 +1376,28 @@
         </tbody></table><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre>`;
       }
       if (tab === "comparison") {
-        return `<table class="v2-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th></tr></thead><tbody>
-          ${(report.comparisons || []).map((r) => `<tr><td>${esc(r.metric)}</td><td>${esc(na(r.baseline_value))}</td><td>${esc(na(r.candidate_value))}</td><td>${esc(na(r.delta))}</td></tr>`).join("")}
-        </tbody></table>`;
+        const comps = Array.isArray(report.comparisons) ? report.comparisons : [];
+        const hasCI = comps.some((r) => Array.isArray(r.ci95) && r.ci95.length === 2);
+        return `<table class="v2-table ev-analysis-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th>${hasCI ? "<th>是否跨 0</th>" : ""}</tr></thead><tbody>
+          ${comps.map((r) => {
+            const cross = crossesZero(r.ci95);
+            const crossText = cross === null ? "not_available" : (cross ? "是" : "否");
+            return `<tr><td>${esc(r.metric)}</td><td class="mono">${fixed(r.baseline_value)}</td><td class="mono">${fixed(r.candidate_value)}</td><td class="mono">${signed(r.delta)}</td>${hasCI ? `<td>${crossText}<div class="muted small">CI ${ciRange(r.ci95)}</div></td>` : ""}</tr>`;
+          }).join("") || `<tr><td colspan="${hasCI ? 5 : 4}" class="muted">not_available</td></tr>`}
+        </tbody></table>${hasCI ? `<p class="muted small">delta 带正负号；“是否跨 0”表示 95% CI 是否包含 0。</p>` : ""}`;
       }
       if (tab === "analysis") {
-        const cats = report.analysis.by_category || [];
-        return `<h3>By category 按类别</h3>${cats.length ? `<table class="v2-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>${cats.map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(na(c.answer_f1))}</td><td>${esc(na(c.evidence_recall))}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">not_available</p>`}
-          <h3 style="margin-top:14px">Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(na(s.ms))} ms</span></div>`).join("") || `<p class="muted">not_available</p>`}
-          <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
+        const analysis = report.analysis || {};
+        const cats = Array.isArray(analysis.by_category) ? analysis.by_category : [];
+        const rest = { ...analysis };
+        delete rest.main_effects; delete rest.pareto; delete rest.failure_breakdown;
+        return `<h3>Main effects 主效应</h3>${mainEffectsTable(report)}
+          <h3 style="margin-top:18px">Pareto 帕累托</h3>${paretoTable(report)}
+          <h3 style="margin-top:18px">Failure breakdown 失败分解</h3>${failureTable(report)}
+          ${byCandidateTable(report)}
+          <h3 style="margin-top:18px">By category 按类别</h3>${cats.length ? `<table class="v2-table ev-analysis-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>${cats.map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(na(c.answer_f1))}</td><td>${esc(na(c.evidence_recall))}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">not_available</p>`}
+          <h3 style="margin-top:14px">Stage waterfall</h3>${(analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(na(s.ms))} ms</span></div>`).join("") || `<p class="muted">not_available</p>`}
+          <details class="ev-raw"><summary>其他 analysis 字段（JSON）</summary><pre class="v2-pre">${esc(JSON.stringify(rest, null, 2))}</pre></details>`;
       }
       if (tab === "plan") {
         return planHeatmap(plan.items);
@@ -995,7 +1618,7 @@
     let sim = null;
     const start = async () => {
       if (sim) { sim.stop(); sim = null; }
-      const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&mode=${mode}&limit=400`);
+      const data = await wapi(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&mode=${mode}&limit=400`);
       const graph = buildForceGraph(data);
       $("#g2-count").textContent = `${graph.nodes.length} 个节点 · ${graph.edges.length} 条边`;
       sim = forceGraphV2($("#v2-force-canvas"), graph, (node) => {
@@ -1024,10 +1647,13 @@
   }
 
   async function renderEvaluation2(root) {
-    const [data, plan, art] = await Promise.all([
+    const [data, plan, art, w3Report, m1Report, r3Report] = await Promise.all([
       api("/api/v2/evaluation"),
       api("/api/v2/experiments/plan").catch(() => ({ items: [] })),
       api("/api/v2/artifacts").catch(() => ({ artifacts: {} })),
+      api("/api/v2/experiments/final-w3-test-online/report").catch(() => null),
+      api("/api/v2/experiments/E1-M1-online/report").catch(() => null),
+      api("/api/v2/experiments/E1-R3/report").catch(() => null),
     ]);
     if (!data.available) {
       root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "")}<p class="note warn">${esc(data.reason)}</p>`;
@@ -1038,9 +1664,92 @@
     const name = { full: "Full", vector: "Vector", hybrid: "Hybrid", dynamic: "Dynamic" };
     const f1 = (m) => test.summary?.[m]?.f1;
     const rec = (m) => test.summary?.[m]?.evidence_recall;
-    const project = (data.project_reports || []).find((r) => r.experiment_id === "final-w3-test-offline") || {};
-    const pm = project.results?.metrics || {};
-    const pb = project.results?.baseline_metrics || {};
+    const project = new Map((data.project_reports || []).map((r) => [r.experiment_id, r]));
+    const onlineProject = project.get("final-w3-test-online") || {};
+    const offlineProject = project.get("final-w3-test-offline") || {};
+    const onlineFull = w3Report || onlineProject;
+    const onlineMetrics = onlineFull.results?.metrics || onlineProject.results?.metrics || {};
+    const onlineBaseline = onlineFull.results?.baseline_metrics || onlineProject.results?.baseline_metrics || {};
+    const offlineMetrics = offlineProject.results?.metrics || {};
+    const offlineBaseline = offlineProject.results?.baseline_metrics || {};
+    const comparisons = Array.isArray(onlineFull.comparisons) ? onlineFull.comparisons : [];
+    const f1Cmp = comparisons.find((r) => r.metric === "answer_f1");
+    const recCmp = comparisons.find((r) => r.metric === "evidence_recall");
+    const conclusion = onlineFull.conclusion?.status || onlineProject.conclusion?.status || null;
+    const recSig = recCmp && ((recCmp.significant === true) || (Number(recCmp.delta) < 0 && crossesZero(recCmp.ci95) === false));
+    const b0 = f1Cmp?.baseline_value ?? onlineBaseline.answer_f1;
+    const r0 = f1Cmp?.candidate_value ?? onlineMetrics.answer_f1;
+
+    const m1Full = m1Report || project.get("E1-M1-online") || {};
+    const m1ByCand = m1Full.analysis?.by_candidate || {};
+    let m1Entries = Object.entries(m1ByCand)
+      .map(([candidate, m]) => ({ candidate, f1: m.answer_f1 }))
+      .filter((x) => Number.isFinite(Number(x.f1)));
+    if (!m1Entries.length) {
+      const grouped = new Map();
+      (m1Full.results?.runs || []).forEach((run) => {
+        const candidate = run.candidate || run.preset;
+        const value = Number(run.metrics?.answer_f1 ?? run.answer_f1);
+        if (!candidate || !Number.isFinite(value)) return;
+        if (!grouped.has(candidate)) grouped.set(candidate, []);
+        grouped.get(candidate).push(value);
+      });
+      m1Entries = [...grouped.entries()].map(([candidate, values]) => ({ candidate, f1: values.reduce((a, b) => a + b, 0) / values.length }));
+    }
+    const m1Best = m1Entries.slice().sort((a, b) => b.f1 - a.f1)[0];
+
+    const r3Full = r3Report || project.get("E1-R3") || {};
+    const impls = Array.isArray(r3Full.analysis?.by_impl) ? r3Full.analysis.by_impl : [];
+    const recalls = impls.map((x) => Number(x.evidence_recall)).filter((v) => Number.isFinite(v));
+    const graphRecall = r3Full.results?.metrics?.evidence_recall ?? recalls[0];
+    const graphUniform = recalls.length > 1 && recalls.every((v) => Math.abs(v - recalls[0]) < 1e-9);
+    const planGraph = (plan.items || []).find((x) => x.id === "E1-S2") || {};
+    const graphMarker = (planGraph.markers || []).find((x) => /not[_\s-]?wired/i.test(String(x)));
+    const graphNote = graphMarker || planGraph.reason || ((planGraph.status_flags || []).some((x) => /not[_\s-]?wired/i.test(String(x))) ? "status: not_wired" : null);
+    const graphConfigs = new Set(impls.map((x) => `${x.impl}/${x.repr}`)).size;
+
+    const cards = `<div class="ev-cards">
+      <div class="ev-card">
+        <div class="ev-kicker">在线 B0 vs R0</div>
+        <div class="ev-big">${b0 != null && r0 != null ? `F1 ${fixed(b0)} vs ${fixed(r0)}` : "not_available"}</div>
+        <p class="ev-note">结论 <b>${esc(conclusion || "not_available")}</b>${recSig ? "（Recall 显著负）" : ""}</p>
+        ${recCmp ? `<p class="ev-note muted">Recall Δ ${signed(recCmp.delta)} · CI ${ciRange(recCmp.ci95)}</p>` : ""}
+        <div class="ev-sub">online 27B · test 2 段 · 80 题/配置</div>
+      </div>
+      <div class="ev-card">
+        <div class="ev-kicker">S6 最佳</div>
+        <div class="ev-big">${m1Best ? `${esc(m1Best.candidate)} · F1 ${fixed(m1Best.f1)}` : "not_available"}</div>
+        <p class="ev-note">S6 候选按 answer_f1 取最高</p>
+        <div class="ev-sub">${m1Full.dataset?.questions ? `${esc(m1Full.dataset.questions)} 题` : "题数 not_available"} · ${m1Full.dataset?.seeds?.length ?? "not_available"} seed · online</div>
+      </div>
+      <div class="ev-card">
+        <div class="ev-kicker">图检索</div>
+        <div class="ev-big">${graphRecall != null ? `${graphUniform ? "所有实现 " : ""}Recall ${fixed(graphRecall)}` : "not_available"}</div>
+        <p class="ev-note"><span class="badge not_wired">not_wired</span> ${esc(graphNote || "not_available")}</p>
+        <div class="ev-sub">E1-R3${graphConfigs ? ` · ${graphConfigs} configs` : ""}${r3Full.results?.metrics?.questions ? ` · ${esc(r3Full.results.metrics.questions)} 题` : ""} · offline</div>
+      </div>
+    </div>`;
+
+    const projectRow = (label, metrics, id) => `<tr><td>${esc(label)}</td><td class="mono">${fixed(metrics.answer_f1)}</td><td class="mono">${fixed(metrics.evidence_recall)}</td><td>${reportLink(id)}</td></tr>`;
+    const onlineTable = `<div class="card pad ev-project">
+      <div class="row" style="justify-content:space-between"><h3>本项目 online · B0 vs R0</h3><span class="muted small">final-w3-test-online</span></div>
+      <table class="v2-table ev-table">
+        <caption>online 27B · test 2 段 · 80 题/配置</caption>
+        <thead><tr><th>配置</th><th>F1</th><th>Recall</th><th>报告</th></tr></thead>
+        <tbody>${projectRow("B0 baseline", onlineBaseline, "final-w3-test-online")}${projectRow("R0 candidate", onlineMetrics, "final-w3-test-online")}</tbody>
+      </table>
+      <p class="muted small">final-w3-test-online · 80 题/配置 · ${onlineFull.dataset?.seeds?.length ?? "not_available"} seeds · 27B 在线回答</p>
+    </div>`;
+    const offlineTable = `<details class="card pad ev-fold">
+      <summary>本项目 offline · final-w3-test-offline（展开）</summary>
+      <table class="v2-table ev-table">
+        <caption>offline final-w3-test-offline · test 2 段 · 80 题/配置</caption>
+        <thead><tr><th>配置</th><th>F1</th><th>Recall</th><th>报告</th></tr></thead>
+        <tbody>${projectRow("B0 baseline", offlineBaseline, "final-w3-test-offline")}${projectRow("R0 candidate", offlineMetrics, "final-w3-test-offline")}</tbody>
+      </table>
+      <p class="muted small">离线圈定口径；与在线表不可横比，默认折叠。</p>
+    </details>`;
+
     const W = 760, H = 260, left = 44, bottom = 34, top = 18;
     const maxY = 0.7, groupW = (W - left - 20) / methods.length;
     const bar = (x, value, shade) => value === null || value === undefined ? "" : `<rect x="${x}" y="${(top + (H - top - bottom) * (1 - value / maxY)).toFixed(1)}" width="20" height="${((H - top - bottom) * value / maxY).toFixed(1)}" fill="${shade}"/>`;
@@ -1049,28 +1758,27 @@
       return `${bar(x, f1(m), "#202020")}${bar(x + 23, rec(m), "#b8b8b8")}<text x="${(x + 20).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="12">${name[m]}</text>`;
     }).join("");
     const grid = [0, .2, .4, .6].map((v) => `<line x1="${left}" y1="${(top + (H - top - bottom) * (1 - v / maxY)).toFixed(1)}" x2="${W - 20}" y2="${(top + (H - top - bottom) * (1 - v / maxY)).toFixed(1)}" stroke="#eeeeee"/><text x="${left - 8}" y="${(top + (H - top - bottom) * (1 - v / maxY) + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="#999">${v.toFixed(1)}</text>`).join("");
-    root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "先看四种方法的 F1 与证据召回，再看在线归档与本项目离线结果。")}
-      <div class="card pad v5-chart-card">
+
+    root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "先看在线 27B 的 B0/R0 对照，再看本项目离线结果与上一版归档。")}
+      ${cards}
+      ${onlineTable}
+      <div class="ev-caliber">口径不同，不可横比</div>
+      ${offlineTable}
+      <div class="card pad ev-archive" style="margin-top:16px">
+        <div class="row" style="justify-content:space-between"><h3>上一版 27B 归档 · Full / Vector / Hybrid / Dynamic</h3><span class="muted small">eval/results.json</span></div>
+        <table class="v2-table ev-table"><thead><tr><th>方法</th><th>F1</th><th>Recall</th></tr></thead><tbody>
+          ${methods.map((m) => `<tr><td>${name[m]}</td><td class="mono">${fixed(f1(m))}</td><td class="mono">${fixed(rec(m))}</td></tr>`).join("")}
+        </tbody></table>
+        <p class="muted small">上一版 27B 归档，不是本项目新跑；Full 无检索，Recall 不适用。</p>
+      </div>
+      <div class="card pad v5-chart-card" style="margin-top:16px">
         <div class="row" style="justify-content:space-between"><b>F1 / Recall · test 2 段</b><span class="muted small">27B 归档（eval/results.json）</span></div>
         <svg class="v5-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="F1 and recall chart">
           <g>${grid}</g><g>${bars}</g>
           <rect x="${W - 150}" y="8" width="10" height="10" fill="#202020"/><text x="${W - 136}" y="17" font-size="11">F1</text>
           <rect x="${W - 90}" y="8" width="10" height="10" fill="#b8b8b8"/><text x="${W - 76}" y="17" font-size="11">Recall</text>
         </svg>
-        <div class="muted small">Full 无检索，因此 Recall 不适用；两表口径不同，不可横比。</div>
-      </div>
-      <div class="v5-tables">
-        <div class="card pad"><h3>在线归档 · 27B</h3>
-          <table class="v2-table"><thead><tr><th>方法</th><th>F1</th><th>Recall</th></tr></thead><tbody>
-          ${methods.map((m) => `<tr><td>${name[m]}</td><td>${esc(na(f1(m)))}</td><td>${esc(na(rec(m)))}</td></tr>`).join("")}
-          </tbody></table><p class="muted small">上一版 27B 归档，不是本项目新跑。</p>
-        </div>
-        <div class="card pad"><h3>本项目 offline · B0 vs R0</h3>
-          <table class="v2-table"><thead><tr><th>配置</th><th>F1</th><th>Recall</th></tr></thead><tbody>
-            <tr><td>B0 baseline</td><td>${esc(na(pb.answer_f1))}</td><td>${esc(na(pb.evidence_recall))}</td></tr>
-            <tr><td>R0 candidate</td><td>${esc(na(pm.answer_f1))}</td><td>${esc(na(pm.evidence_recall))}</td></tr>
-          </tbody></table><p class="muted small">本项目 final-w3 test 离线运行；口径不同，不可横比。</p>
-        </div>
+        <div class="muted small">Full 无检索，因此 Recall 不适用；归档与项目表口径不同，不可横比。</div>
       </div>
       <div class="v5-tabs"><button data-tab="plan">实验计划</button><button data-tab="artifacts">C 新产物</button></div>
       <div id="v5-tab-body" class="v5-tab-body"></div>`;
@@ -1083,7 +1791,7 @@
   }
 
   async function renderSystem(root) {
-    const data = await api("/api/v2/system");
+    const data = await wapi("/api/v2/system");
     root.innerHTML = `${header("SYSTEM · 系统", "系统", "运行环境、数据、模型与已知边界；用于课程演示和复现。")}
       ${hardwareBanner(data.hardware)}
       <div class="v2-cols">
@@ -1101,10 +1809,76 @@
         <div class="row"><button id="v2-download-all" class="btn primary">下载 6 段 v2 JSON</button><a class="btn" href="#/memories">去记忆库</a></div>
       </div>`;
     $("#v2-download-all").onclick = async () => {
-      const all = await api("/api/v2/export/all?schema=2");
+      const all = await wapi("/api/v2/export/all?schema=2");
       download("memlab-course-memory-v2.json", all);
     };
   }
 
-  window.V2VIEWS = { memories: renderMemories, ask2: renderAsk2, lab: renderLab2, graph2: renderGraph2, experiments: renderExperiment, evaluation2: renderEvaluation2, system: renderSystem };
+  const safeView = (fn) => async (root) => {
+    try { await fn(root); }
+    catch (err) { root.innerHTML = `${header("W-LAB · 页面", "无法加载", "")}${errorHtml(err)}`; }
+  };
+  window.V2VIEWS = {
+    memories: safeView(renderMemories), ask2: safeView(renderAsk2), lab: safeView(renderLab2),
+    graph2: safeView(renderGraph2), experiments: safeView(renderExperiment),
+    evaluation2: safeView(renderEvaluation2), system: safeView(renderSystem),
+  };
+
+  // TEMP-SMOKE: removed before commit.
+  (() => {
+    const params = new URLSearchParams((location.hash.split("?")[1] || ""));
+    const mode = params.get("smoke");
+    if (!mode) return;
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    const pickQuestion = (selector) => {
+      const q = document.querySelector(selector);
+      if (q && q.options.length > 1) { q.selectedIndex = 1; q.dispatchEvent(new Event("change", { bubbles: true })); }
+    };
+    const changeAxis = () => {
+      const sel = document.querySelector('#lab-M select[data-path="fusion.impl"]');
+      if (!sel) return;
+      const values = [...sel.options].map((o) => o.value);
+      sel.value = values.find((v) => v !== sel.value) || sel.value;
+      sel.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+    const validate = async () => { document.querySelector("#v2-lab-validate")?.click(); await sleep(1400); };
+    const run = async () => { document.querySelector("#v2-lab-run")?.click(); await sleep(4000); };
+    setTimeout(async () => {
+      try {
+        if (mode === "axis") changeAxis();
+        if (["question", "run", "run2", "report", "reportpage"].includes(mode)) pickQuestion("#v2-lab-qselect");
+        if (["run", "run2", "report", "reportpage"].includes(mode)) { await validate(); await run(); }
+        if (["run2", "report", "reportpage"].includes(mode)) await run();
+        if (mode === "report" || mode === "reportpage") {
+          document.querySelector("[data-report-toggle]")?.click();
+          await sleep(250);
+          document.querySelector("[data-report-submit]")?.click();
+          await sleep(2200);
+        }
+        if (mode === "reportpage") {
+          const link = document.querySelector("[data-report-result] a");
+          if (link) location.hash = link.getAttribute("href").replace(/^#/, "");
+          await sleep(1800);
+        }
+        if (mode === "ask" || mode === "ask-online") {
+          pickQuestion("#v2-ask-qselect");
+          if (mode === "ask-online") {
+            const offline = document.querySelector("#v2-ask-offline");
+            if (offline) offline.checked = false;
+          }
+          document.querySelector("#v2-run")?.click();
+          await sleep(4000);
+        }
+        const scrollTo = (selector, offset) => {
+          const el = document.querySelector(selector);
+          if (el) { el.scrollIntoView({ block: "start" }); window.scrollBy(0, offset || 0); }
+        };
+        if (mode === "axis") scrollTo("#lab-M", -20);
+        if (mode === "question") scrollTo(".lab-run-card", -20);
+        if (mode === "run" || mode === "run2") scrollTo("#v2-lab-out", -90);
+        if (mode === "report") scrollTo("[data-report-result]", -120);
+        if (mode === "ask" || mode === "ask-online") scrollTo("#v2-run-out", -90);
+      } catch (err) { console.error(err); }
+    }, 1500);
+  })();
 })();

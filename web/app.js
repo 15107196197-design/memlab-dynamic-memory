@@ -25,6 +25,13 @@ function download(name, value) {
 const fmtDate = (iso) => (iso ? iso.slice(0, 10) : "日期未知");
 const pct = (v) => (v === null || v === undefined ? "—" : Math.round(v * 1000) / 10 + "%");
 const num = (v, d = 2) => (v === null || v === undefined ? "—" : Number(v).toFixed(d));
+const fixed4 = (v) => (v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? "not_available" : Number(v).toFixed(4));
+const signed4 = (v) => {
+  if (v === null || v === undefined || v === "" || !Number.isFinite(Number(v))) return "not_available";
+  return `${Number(v) > 0 ? "+" : ""}${Number(v).toFixed(4)}`;
+};
+const STATUS_ZH = { done: "已完成", partial: "partial", pending: "pending", blocked_on_code: "代码阻塞", blocked_on_hardware: "硬件阻塞", no_op: "no_op", not_wired: "not_wired", not_supported: "not_supported" };
+const statusZh = (status) => STATUS_ZH[status] || status || "not_available";
 const clip = (s, n = 90) => (String(s).length > n ? String(s).slice(0, n - 1) + "…" : String(s));
 const humanize = (slot) => { const s = String(slot || "").replace(/_/g, " "); return s.charAt(0).toUpperCase() + s.slice(1); };
 
@@ -143,8 +150,59 @@ function exampleSlot(slots) {
   return preferred || slots.slice().sort((a, b) => changeCount(b) - changeCount(a) || b.versions.length - a.versions.length)[0];
 }
 
+async function homeExperimentSummary() {
+  const [exps, plan, w3] = await Promise.all([
+    api("/api/v2/experiments"),
+    api("/api/v2/experiments/plan"),
+    api("/api/v2/experiments/final-w3-test-online/report").catch(() => null),
+  ]);
+  const items = plan.items || [];
+  const planById = new Map(items.map((x) => [x.id, x]));
+  const counts = plan.status_counts || {};
+  const total = Number(plan.count ?? items.length);
+  const planLine = `计划 ${total} 项（${counts.partial ?? 0} partial / ${counts.pending ?? 0} pending / ${counts.blocked_on_code ?? 0} 代码阻塞 / ${counts.blocked_on_hardware ?? 0} 硬件阻塞）`;
+  const otherBits = Object.entries(counts)
+    .filter(([key, value]) => value && !["partial", "pending", "blocked_on_code", "blocked_on_hardware"].includes(key))
+    .map(([key, value]) => `${value} ${key}`);
+  const otherLine = otherBits.length ? `<span class="muted small">另有 ${esc(otherBits.join(" · "))}</span>` : "";
+  const reports = [...(exps.experiments || [])]
+    .sort((a, b) => String(b.created_at || "").localeCompare(String(a.created_at || "")))
+    .slice(0, 3);
+  const reportItems = reports.map((r) => {
+    const base = String(r.experiment_id || "").replace(/-online$/, "");
+    const meta = planById.get(r.experiment_id) || planById.get(base) || {};
+    const title = meta.title || r.experiment_id || "not_available";
+    return `<li><a href="#/experiments/${encodeURIComponent(r.experiment_id)}">${esc(title)}</a> <span class="pill ${esc(r.status || "")}">${esc(statusZh(r.status))}</span></li>`;
+  }).join("");
+  const comps = Array.isArray(w3?.comparisons) ? w3.comparisons : [];
+  const f1c = comps.find((c) => c.metric === "answer_f1");
+  const rec = comps.find((c) => c.metric === "evidence_recall");
+  const b0 = f1c?.baseline_value ?? w3?.results?.baseline_metrics?.answer_f1;
+  const r0 = f1c?.candidate_value ?? w3?.results?.metrics?.answer_f1;
+  const status = w3?.conclusion?.status;
+  const recSig = rec && ((rec.significant === true) || (Number(rec.delta) < 0 && Array.isArray(rec.ci95) && Number(rec.ci95[1]) < 0));
+  const sentence = b0 != null && r0 != null
+    ? `在线对照：B0 F1 ${fixed4(b0)} → R0 ${fixed4(r0)}，${esc(status || "not_available")}${recSig ? "（Recall 显著负）" : ""}。`
+    : "在线对照：not_available。";
+  return `<div class="card pad home-summary">
+    <div class="row" style="justify-content:space-between;align-items:flex-start">
+      <div><div class="eyebrow" style="margin:0 0 4px">EXPERIMENT SUMMARY</div><h3>实验结果摘要</h3></div>
+      <a class="small" href="#/evaluation2">去评测对照 →</a>
+    </div>
+    <div class="home-summary-grid">
+      <div><div class="home-k">计划</div><p>${esc(planLine)}</p>${otherLine}</div>
+      <div><div class="home-k">最新 3 份报告</div><ul class="home-reports">${reportItems || `<li class="muted">not_available</li>`}</ul></div>
+      <div><div class="home-k">在线对照</div><p>${sentence}</p><a class="small" href="#/experiments/final-w3-test-online">final-w3-test-online →</a></div>
+    </div>
+  </div>`;
+}
+
 async function renderHome(root) {
   const s = sampleInfo();
+  let summary = "";
+  try { summary = await homeExperimentSummary(); } catch (err) {
+    summary = `<div class="card pad home-summary"><h3>实验结果摘要</h3><p class="muted">not_available</p></div>`;
+  }
   const slots = await ensureSlots();
   const changed = slots.filter((x) => changeCount(x) > 0);
   const example = slots.length ? exampleSlot(slots) : null;
@@ -160,6 +218,7 @@ async function renderHome(root) {
   root.innerHTML = `
     ${header("LoCoMo 长期对话 · " + convLabel(), "人会变，记忆也要跟着更新。",
       "普通检索会把“过去的说法”和“现在的情况”一起找回来，于是答错。这个工具把多轮对话整理成可以追溯的记忆，记下每件事后来怎么变了；回答问题时，只采用当下仍然成立的那一条。")}
+    ${summary}
     ${courseRibbon}
 
     <div class="steps3">
