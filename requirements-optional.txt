@@ -1,0 +1,8 @@
+# Optional heavy dependencies. The core memlab runtime is standard-library only.
+#
+# Real cross-encoder reranking (rerank.impl=cross_encoder):
+#   pip install -r requirements-optional.txt
+# The model is downloaded on first use (BAAI/bge-reranker-v2-m3, ~2 GB) and
+# needs network access. Without this package memlab falls back gracefully and
+# records "rerank: ModuleNotFoundError" in the merge fallbacks.
+sentence-transformers>=3.0

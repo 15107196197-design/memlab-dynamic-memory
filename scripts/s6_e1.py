@@ -30,7 +30,7 @@ from memlab.experiments import compiler, executor, runner, store as store_module
 from memwb import dataset, evaluation
 
 BASE_R0 = lab_config.RunConfig.load(ROOT / "configs" / "reference-r0.json").to_dict()
-SAMPLE_ID = "conv-26"
+SAMPLES = ["conv-26", "conv-30", "conv-43", "conv-44"]
 
 
 def config_from(base: dict, overrides: dict) -> dict:
@@ -139,16 +139,29 @@ def select_questions(sample_id: str, limit: int, seed: int) -> list:
     return [runner.Question(sample_id, index, qa) for index, qa in selected]
 
 
-def make_plan(module: str, candidate: dict, seed: int, question_limit: int):
+def question_sets(samples: list[str], total: int, seed: int) -> list:
+    per_sample = max(1, total // len(samples))
+    extra = total - per_sample * len(samples)
+    questions = []
+    for index, sample_id in enumerate(samples):
+        questions.extend(select_questions(sample_id, per_sample + (1 if index < extra else 0), seed))
+    return questions
+
+
+def make_plan(module: str, candidate: dict, seed: int, question_limit: int,
+              samples: list[str] | None = None):
     config = copy.deepcopy(candidate["config"])
     config.setdefault("environment", {})["seed"] = seed
     lab_config.RunConfig.from_dict(config)  # validate before the run starts
     digest = lab_config.digest(config)
-    run_id = f"s6-{module}-{candidate['name']}-s{seed}-{digest.split(':')[-1][:8]}"
+    sample_set = list(samples or SAMPLES)
+    run_id = (f"s6-{module}-{candidate['name']}-s{seed}-{'-'.join(sample_set)}-"
+              f"{digest.split(':')[-1][:8]}")
     return compiler.RunPlan(
         run_id=run_id, spec_id="S6-E1-MODULES", design="module_screening",
         config=config, requested_config=config, effective_config=config, config_hash=digest,
-        environment=config.get("environment"), dataset={"samples": [SAMPLE_ID], "question_limit": question_limit},
+        environment=config.get("environment"),
+        dataset={"samples": list(samples or SAMPLES), "question_limit": question_limit},
         factors={"module": module, "candidate": candidate["name"], "seed": seed},
         notes=("offline_extractive",),
     )
@@ -170,8 +183,10 @@ def summarize(store: store_module.ResultStore, run_id: str, n: int) -> dict:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Run S6 module screening")
-    parser.add_argument("--questions", type=int, default=60)
+    parser.add_argument("--questions", type=int, default=120,
+                        help="questions per seed, distributed across --samples")
     parser.add_argument("--seeds", type=int, nargs="+", default=[13, 17])
+    parser.add_argument("--samples", nargs="+", default=SAMPLES)
     parser.add_argument("--db", default=str(ROOT / "runs" / "s6" / "e1.sqlite"))
     parser.add_argument("--out", default=str(ROOT / "eval" / "archive" / "s6-e1-screening.json"))
     parser.add_argument("--cache", default=str(ROOT / "runs" / "s6" / "cache"))
@@ -195,13 +210,13 @@ def main(argv=None) -> int:
         "archive": executor.make_k_executor(policy="archive", params={"age_days": 90},
                                             offline=offline, cache=cache),
     }
-    questions = {seed: select_questions(SAMPLE_ID, args.questions, seed) for seed in args.seeds}
+    questions = {seed: question_sets(args.samples, args.questions, seed) for seed in args.seeds}
     results = []
     with store_module.ResultStore(db) as store:
         for module, candidates in CANDIDATES.items():
             for candidate in candidates:
                 for seed in args.seeds:
-                    plan = make_plan(module, candidate, seed, args.questions)
+                    plan = make_plan(module, candidate, seed, args.questions, args.samples)
                     execute = k_executors[candidate["action"]] if module == "K" else e2e
                     machine = runner.Runner(store, executor=execute, resume=False)
                     outcome = machine.run_plan(plan, questions[seed])
@@ -221,7 +236,7 @@ def main(argv=None) -> int:
                                      ensure_ascii=False))
 
     # reproducibility: same candidate/questions, two independent databases
-    reference_plan = make_plan("R", CANDIDATES["R"][1], args.seeds[0], args.questions)
+    reference_plan = make_plan("R", CANDIDATES["R"][1], args.seeds[0], args.questions, args.samples)
     subset = questions[args.seeds[0]][:10]
     repeats = []
     with tempfile.TemporaryDirectory() as directory:
@@ -247,7 +262,7 @@ def main(argv=None) -> int:
         "offline": offline,
         "ollama": not offline,
         "answer_f1_kind": "offline_extractive (not an LLM answer)" if offline else "local_llm",
-        "dataset": {"samples": [SAMPLE_ID], "questions_per_seed": args.questions, "seeds": args.seeds},
+        "dataset": {"samples": args.samples, "questions_per_seed": args.questions, "seeds": args.seeds},
         "modules": {
             module: [
                 {

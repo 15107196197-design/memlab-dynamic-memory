@@ -87,6 +87,9 @@ not silently dropped.
   local Ollama.
 - **Offline e2e**: hashing embeddings are not semantic; use only for interface,
   A-level and smoke runs. Real B-level needs Ollama or the S9 provider adapter.
+- **Cross-encoder**: `pip install -r requirements-optional.txt` enables real
+  `rerank.impl=cross_encoder`; without it the pipeline records a fallback and
+  keeps the incoming order.
 - **Artifacts** are registered but not content-addressed by the runner; module
   caches already use `memlab.cache`.
 
