@@ -48,6 +48,1321 @@
   };
   const na = (v) => (v === null || v === undefined || v === "" ? "not_available" : v);
   const REL_LABEL = { RETAIN: "保留 RETAIN", UPDATE: "更新 UPDATE", SUPERSEDE: "替代 SUPERSEDE", CONFLICT: "冲突 CONFLICT" };
+  // ---------------------------------------------------------------------------
+  // Narrative layer, generated from reports/narratives/*.json.
+  // Chinese-first copy for the report and evaluation first screens; the English
+  // method names and original field names stay in the raw report JSON and tabs.
+  // Keep in sync: `python3 scripts/check_narratives.py` compares this block to disk.
+  const NARRATIVE_OVERVIEW = {
+    "schema": "memlab/narrative@1",
+    "updated_at": "2026-11-09T21:00:00+08:00",
+    "headline_zh": "在线 27B 上融合与校验能小幅提分，但没有一项结论达到可推广强度",
+    "overall_zh": "做对了什么：本轮把单因素、B0/R0 test 对照、转化率、oracle、2×2 和重排放进同一套在线 27B 口径，数字都能回到报告 JSON。M1 的 RRF 融合 F1 0.3064 是六个模块里最高，U2 的 0.2998 紧随其后；检索命中后答对率 0.5657，比总体高 0.0457，说明检索对答案有正向作用。\n\n没证明什么：B0 与 R0 的 F1 差 −0.0363，区间跨 0，只能算无定论；召回显著低 0.2032，是唯一确定的负向结论。三种图表示结果完全相同，是接口未接线，不能读成“无差异”。重排把 nDCG 提高 0.0808，同时把召回压低 0.2287，不是全面胜利。所有实验都缺 Judge、第二 seed 和状态准确率。\n\n下一步：先补第二 seed、LLM Judge 和按对话的 cluster bootstrap，再修图检索接线与 cross-encoder 回退；在此之前，任何“某模块更好”的说法都只按描述性结论使用，不升级为可推广结论。",
+    "blocks": [
+      {
+        "id": "baseline",
+        "title_zh": "与全文/向量基线比",
+        "en": "baseline",
+        "headline_zh": "归档全文 0.5589 最高，但不能与本轮直接比",
+        "body_zh": "上一版 27B 归档在 test 120 题上给出 Full 0.5589、Vector 0.3623、Hybrid 0.3986、Dynamic 0.4157；Full 不做检索，Recall 不适用。本轮 B0 为 0.1883、R0 为 0.1520，题集、答案器与评测口径都不同，只能当参照，不能据此说“系统退步”。真正可比的是同一轮内的 B0/R0 对照。",
+        "route": "#/experiments/final-w3-test-online",
+        "evidence": [
+          {
+            "text_zh": "归档 Full 的 F1 为 0.5589。",
+            "value": "0.5589",
+            "source": "eval/results.json#qa.test.summary.full.f1"
+          },
+          {
+            "text_zh": "归档 Vector 的 F1 为 0.3623。",
+            "value": "0.3623",
+            "source": "eval/results.json#qa.test.summary.vector.f1"
+          },
+          {
+            "text_zh": "归档 Dynamic 的 F1 为 0.4157。",
+            "value": "0.4157",
+            "source": "eval/results.json#qa.test.summary.dynamic.f1"
+          },
+          {
+            "text_zh": "本轮 B0 的 F1 为 0.1883。",
+            "value": "0.1883",
+            "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+          }
+        ]
+      },
+      {
+        "id": "b0r0",
+        "title_zh": "B0 与 R0 的在线对照",
+        "en": "B0 vs R0",
+        "headline_zh": "R0 的 F1 与 B0 无显著差异，召回低 0.2032",
+        "body_zh": "test 两段、各 80 题、seeds 13/17。B0 的 F1 0.1883、召回 0.5435；R0 的 F1 0.1520、召回 0.3403。F1 差 −0.0363，95% 区间 [−0.1351, 0.0575] 跨 0；召回差 −0.2032，区间 [−0.3509, −0.048] 不含 0。R0 更省更快（319.3 vs 924.6 tokens），但代价是确定的召回损失。结论：无定论，不能说 R0 更好。",
+        "route": "#/experiments/final-w3-test-online",
+        "evidence": [
+          {
+            "text_zh": "B0 的 F1 为 0.1883，R0 为 0.1520。",
+            "value": "0.1883",
+            "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+          },
+          {
+            "text_zh": "F1 差 −0.0363，区间跨 0。",
+            "value": "-0.0363",
+            "source": "reports/experiments/final-w3-test-online.json#comparisons[0].delta"
+          },
+          {
+            "text_zh": "召回差 −0.2032，区间不含 0。",
+            "value": "-0.2032",
+            "source": "reports/experiments/final-w3-test-online.json#comparisons[1].delta"
+          }
+        ]
+      },
+      {
+        "id": "modules",
+        "title_zh": "六个模块谁最好",
+        "en": "modules",
+        "headline_zh": "M1 融合 0.3064 最高，U2 0.2998 紧随",
+        "body_zh": "在线 27B、40 题/候选、单 seed。W 最好 W2 0.1837；S 三种表示都是 0.1837，但属 not_wired；R2 0.1540；M1 0.3064；U2 0.2998；K3 只有存储级更新正确率 0.8086。M1 的代价是 403.8 tokens，U2 的代价是拒答率 0.275。除 M 与 U 外，其余模块的 F1 都在 0.18 附近，差距没有区间支撑。",
+        "route": "#/experiments/E1-M1-online",
+        "evidence": [
+          {
+            "text_zh": "M1 的 F1 为 0.3064，是六模块最高。",
+            "value": "0.3064",
+            "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.answer_f1"
+          },
+          {
+            "text_zh": "U2 的 F1 为 0.2998。",
+            "value": "0.2998",
+            "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.answer_f1"
+          },
+          {
+            "text_zh": "W2 的 F1 为 0.1837。",
+            "value": "0.1837",
+            "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.answer_f1"
+          },
+          {
+            "text_zh": "K3 的更新正确率为 0.8086。",
+            "value": "0.8086",
+            "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.update_correctness"
+          }
+        ]
+      },
+      {
+        "id": "graph",
+        "title_zh": "图检索有没有用",
+        "en": "graph",
+        "headline_zh": "图检索没有可测增益：图通道召回 0.2372",
+        "body_zh": "在线 S1/S2/S3 完全相同，是 graph.retrieval.impl 未被消费的 not_wired；离线 R3 的 13 个图配置召回都是 0.2372，只比纯向量高 0.0115。图通道能产出 34 到 91 条候选，但融合后 0 条存活，瓶颈在融合预算。因此既不能证明图有用，也不能证明图没用；当前只能说“测不到”，不能下结论。",
+        "route": "#/experiments/E1-R3",
+        "evidence": [
+          {
+            "text_zh": "图配置的最终召回为 0.2372。",
+            "value": "0.2372",
+            "source": "reports/experiments/E1-R3.json#results.metrics.evidence_recall"
+          },
+          {
+            "text_zh": "纯向量的召回为 0.2257。",
+            "value": "0.2257",
+            "source": "reports/experiments/E1-R3.json#results.metrics.vector_only.evidence_recall"
+          },
+          {
+            "text_zh": "entity_subgraph 产出 91 条图候选。",
+            "value": "91",
+            "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_candidates"
+          },
+          {
+            "text_zh": "融合后存活的图候选为 0 条。",
+            "value": "0",
+            "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_in_final"
+          }
+        ]
+      },
+      {
+        "id": "combo",
+        "title_zh": "组合与重排的代价",
+        "en": "combination",
+        "headline_zh": "融合 +0.0264 很薄；重排拿 nDCG 换召回",
+        "body_zh": "E3 2×2 里，加权融合加直接作答 0.1764，比单通道 0.1500 高 0.0264；证据链反而低 0.0157。M2 重排把 nDCG 从 0.4315 提到 0.5123，却把召回从 0.5785 压到 0.3498、F1 从 0.2844 压到 0.2373。两者都说明：组合有收益但很薄，重排是拿覆盖换排序，不能当全面改进。",
+        "route": "#/experiments/E3-1-online",
+        "evidence": [
+          {
+            "text_zh": "加权融合比单通道高 0.0264。",
+            "value": "0.0264",
+            "source": "reports/experiments/E3-1-online.json#comparisons[0].delta"
+          },
+          {
+            "text_zh": "重排后 nDCG 为 0.5123。",
+            "value": "0.5123",
+            "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.ndcg"
+          },
+          {
+            "text_zh": "重排后召回为 0.3498。",
+            "value": "0.3498",
+            "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.evidence_recall"
+          },
+          {
+            "text_zh": "不开重排的召回为 0.5785。",
+            "value": "0.5785",
+            "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.evidence_recall"
+          }
+        ]
+      }
+    ]
+  };
+  const NARRATIVES = {
+    "E1-2-params": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-2-params",
+      "source_report": "reports/experiments/E1-2-params.json",
+      "title_zh": "E1-2 参数 · 离线：k 换召回，rrf_k 换排序",
+      "subtitle_zh": "E1-2-params · 4 段开发集 · 240 题/档 · 23 个配置",
+      "headline_zh": "k=25 召回 0.4913，比默认高 0.0295",
+      "status_zh": "部分支持",
+      "summary_zh": "问：检索参数往哪调有收益。答：k=25 换召回，rrf_k=10 换排序，但都加成本。",
+      "analysis_zh": "参数扫描只覆盖检索侧，answer F1 不参与。k 从 15 调到 25，召回从 0.4619 升到 0.4913，高 0.0295，但每题材元多 234.3；k 降到 10，召回掉 0.0417，省 117.2。nDCG 对 k 不敏感。MMR 在关闭衰减时，lambda 0.9 比 0.5 的 nDCG 高 0.00236，区间 [0.00098, 0.00417] 不含 0；rrf_k 10 比 60 的 nDCG 高 0.0448。max_neighbors 虽然接线，但只有 23/240 题走到 graph_khop，预算饱和，所以是平的。边界：嵌入是哈希，不是语义；P95 是单题运行延迟；MMR 与衰减的交互没测。",
+      "evidence": [
+        {
+          "text_zh": "k=25 的召回为 0.491282。",
+          "value": "0.491282",
+          "source": "reports/experiments/E1-2-params.json#comparisons[30].candidate_value"
+        },
+        {
+          "text_zh": "默认 k=15 的召回为 0.46187。",
+          "value": "0.46187",
+          "source": "reports/experiments/E1-2-params.json#comparisons[30].baseline_value"
+        },
+        {
+          "text_zh": "k=25 的每题材元为 578.858333。",
+          "value": "578.858333",
+          "source": "reports/experiments/E1-2-params.json#comparisons[32].candidate_value"
+        },
+        {
+          "text_zh": "rrf_k=10 的 nDCG 为 0.319232。",
+          "value": "0.319232",
+          "source": "reports/experiments/E1-2-params.json#comparisons[52].candidate_value"
+        },
+        {
+          "text_zh": "filter=none 的召回为 0.550805。",
+          "value": "0.550805",
+          "source": "reports/experiments/E1-2-params.json#comparisons[63].candidate_value"
+        }
+      ],
+      "caveats_zh": [
+        "嵌入是哈希，不是语义；结果不能直接外推到 bge-m3。",
+        "P95 是单题运行延迟，不是部署延迟。",
+        "MMR 与衰减的交互没测；max_neighbors 只有 23/240 题真正走到图路径。"
+      ],
+      "next_zh": "在语义嵌入下重跑 k 与 rrf_k，并补 MMR × 衰减交互。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，k=25）",
+          "value": "0.4913"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，rrf_k=10）",
+          "value": "0.3192"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，k=25）",
+          "value": "578.9"
+        }
+      ]
+    },
+    "E1-K1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-K1-online",
+      "source_report": "reports/experiments/E1-K1-online.json",
+      "title_zh": "K 维护 · 在线 27B：归档略胜，只有存储级指标",
+      "subtitle_zh": "E1-K1-online · 4 段开发集 · 40 题 · store-level",
+      "headline_zh": "K3 更新正确率 0.8086，清掉 490.75 条",
+      "status_zh": "部分支持",
+      "summary_zh": "问：归档与去重能不能改善记忆维护。答：归档的存储级指标略好，但没有答案级证据。",
+      "analysis_zh": "K 这组只测存储级维护，不测答案。比较 K1 不维护、K2 去重、K3 归档 90 天。K3 的更新正确率为 0.8086，比 K1 高 0.0172；陈旧率 0.2234，比 K1 低 0.008；矛盾率 0.4000，比 K1 低 0.0224；代价是清掉 490.75 条单元。K2 只清 8.5 条，三项指标几乎不动。机制上，归档把过时事实移出有效集，更新正确率和陈旧率同时改善；去重没有触及过时问题。边界：K 没有答案 F1、召回、每题材元和 P95，不能和 W/S/R/M/U 比；指标按题重复计数，不是独立样本，也没有 Judge。",
+      "evidence": [
+        {
+          "text_zh": "K3 的更新正确率为 0.8086，K1 为 0.7914。",
+          "value": "0.8086",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.update_correctness"
+        },
+        {
+          "text_zh": "K3 的陈旧率为 0.2234，K1 为 0.2314。",
+          "value": "0.2234",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.staleness"
+        },
+        {
+          "text_zh": "K3 的矛盾率为 0.4000，K1 为 0.4224。",
+          "value": "0.4",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.contradiction_rate"
+        },
+        {
+          "text_zh": "K3 清掉 490.75 条单元，K2 只清 8.5 条。",
+          "value": "490.75",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.removed"
+        },
+        {
+          "text_zh": "K1 的更新正确率为 0.7914。",
+          "value": "0.7914",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K1-none.update_correctness"
+        }
+      ],
+      "caveats_zh": [
+        "只有存储级指标，不能和 W/S/R/M/U 比答案 F1。",
+        "指标按题重复计数，不是独立样本。",
+        "无 Judge、无第二 seed；K3 清掉 490.75 条，是否误删未人工核查。"
+      ],
+      "next_zh": "给 K 接上答案级评测，再判断归档是否真的帮到回答。",
+      "metrics_zh": [
+        {
+          "key": "update_correctness",
+          "label_zh": "更新正确率（update_correctness，K3）",
+          "value": "0.8086"
+        },
+        {
+          "key": "staleness",
+          "label_zh": "陈旧率（staleness，K3）",
+          "value": "0.2234"
+        },
+        {
+          "key": "removed",
+          "label_zh": "清掉单元（removed，K3）",
+          "value": "490.75"
+        }
+      ]
+    },
+    "E1-M1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-M1-online",
+      "source_report": "reports/experiments/E1-M1-online.json",
+      "title_zh": "M 合并 · 在线 27B：RRF 融合效果最好",
+      "subtitle_zh": "E1-M1-online · 4 段开发集 · 40 题/候选 · seed 13",
+      "headline_zh": "M1 融合 F1 0.3064，比 M2 高 0.079",
+      "status_zh": "部分支持",
+      "summary_zh": "问：三种合并方式哪种答得更准。答：RRF 融合的答案 F1 最高，但每题上下文也最多。",
+      "analysis_zh": "比较三种合并方式：M1 用倒数排名融合（RRF），M2 加权重再压缩，M3 按问题类型自适应。结果 M1 的答案 F1 为 0.3064，比 M2 高 0.079，比 M3 高 0.1524；证据召回 0.6983，也是三者最高。原因是 M1 保留两路候选、压缩最少，M2 的压缩丢掉部分证据，M3 平均只取 2.2 个候选。代价是 M1 每题材元 403.8、P95 延迟 17.0 秒，都高于 M3。边界要说清：M2 的 cross-encoder 仍是回退实现，所以这不是“重排不如融合”的结论；离线 M2 召回反而更高，在线与离线方向相反，不能互相替代。",
+      "evidence": [
+        {
+          "text_zh": "M1 的答案 F1 为 0.3064，是三种合并方式中最高。",
+          "value": "0.3064",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.answer_f1"
+        },
+        {
+          "text_zh": "M2 的答案 F1 为 0.2274，比 M1 低 0.079。",
+          "value": "0.2274",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M2-weighted-compress.answer_f1"
+        },
+        {
+          "text_zh": "M1 的证据召回为 0.6983。",
+          "value": "0.6983",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.evidence_recall"
+        },
+        {
+          "text_zh": "M3 的答案 F1 只有 0.1540，候选数 2.225。",
+          "value": "0.154",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M3-query-adaptive.answer_f1"
+        },
+        {
+          "text_zh": "M1 每题材元 403.825。",
+          "value": "403.825",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "40 题/候选、单 seed、无 bootstrap 置信区间。",
+        "M2 的 cross-encoder 仍是回退实现，不能当作真重排结论。",
+        "没有 LLM Judge；M3 的候选数只有 2.2，F1 差距可能混入拒答策略。"
+      ],
+      "next_zh": "补第二个 seed 与 Judge，修好 cross-encoder 后重跑 M2。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，M1）",
+          "value": "0.3064"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall）",
+          "value": "0.6983"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "403.8"
+        }
+      ]
+    },
+    "E1-M1": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-M1",
+      "source_report": "reports/experiments/E1-M1.json",
+      "title_zh": "M 合并 · 离线：M2 召回反超，和在线相反",
+      "subtitle_zh": "E1-M1 · 4 段开发集 · 480 题 · seeds 13/17",
+      "headline_zh": "离线 M2 召回 0.5482，反超 M1",
+      "status_zh": "部分支持",
+      "summary_zh": "问：离线时 M1 与 M2 谁召回更高。答：M2 更高且显著，和在线方向相反。",
+      "analysis_zh": "离线口径下比较 M1 与 M2。M2 的召回为 0.5482，比 M1 的 0.5288 高 0.0194，区间 [0.0021, 0.0393] 不含 0；nDCG 为 0.4856，比 M1 高 0.0493，区间也不含 0。M2 每题材元还少 7.4，但 P95 从 6.5 毫秒升到 27.0 毫秒。机制上，M2 的加权与压缩在离线抽取式作答下保留了更多可抽取的证据。边界：离线 F1 是抽取式，不是 LLM F1；cross-encoder 仍是回退实现，所以这个召回优势不能直接搬到在线；在线方向相反，M1 反而更好。",
+      "evidence": [
+        {
+          "text_zh": "M2 的召回为 0.5482，M1 为 0.5288。",
+          "value": "0.5482",
+          "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "召回差 0.0194，区间 [0.0021, 0.0393] 不含 0。",
+          "value": "0.0194",
+          "source": "reports/experiments/E1-M1.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "M2 的 nDCG 为 0.4856。",
+          "value": "0.4856",
+          "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.ndcg"
+        },
+        {
+          "text_zh": "M2 每题材元 392.7812。",
+          "value": "392.7812",
+          "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.tokens"
+        },
+        {
+          "text_zh": "M1 的召回为 0.5288。",
+          "value": "0.5288",
+          "source": "reports/experiments/E1-M1.json#results.by_candidate.M1-rrf.metrics.evidence_recall"
+        }
+      ],
+      "caveats_zh": [
+        "离线 F1 是抽取式，不是 LLM F1。",
+        "cross-encoder 是回退实现，不能当作真重排结论。",
+        "在线与离线方向相反，两组不能互相替代。"
+      ],
+      "next_zh": "修好 cross-encoder 后重跑离线与在线，确认方向差异来自哪里。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，M2）",
+          "value": "0.5482"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，M2）",
+          "value": "0.4856"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，M2）",
+          "value": "392.7812"
+        }
+      ]
+    },
+    "E1-R1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-R1-online",
+      "source_report": "reports/experiments/E1-R1-online.json",
+      "title_zh": "R 检索 · 在线 27B：规则路由小胜，DAG 无收益",
+      "subtitle_zh": "E1-R1-online · 4 段开发集 · 40 题/候选 · seed 13",
+      "headline_zh": "R2 规则路由 F1 0.1540，比无规划高 0.0297",
+      "status_zh": "部分支持",
+      "summary_zh": "问：规则路由和 DAG 规划能不能帮检索。答：规则路由小幅领先，DAG 与不规划持平。",
+      "analysis_zh": "比较三种检索规划：R1 不做规划，R2 规则路由，R3 DAG 计划。R2 的 F1 为 0.1540，比 R1 高 0.0297；召回 0.4487，比 R1 高 0.0308；每题材元还少 1.7。R3 与 R1 完全一致，F1、召回、nDCG 都相同，说明 DAG 在当前配置下没有真正展开多节点计划。机制上，规则路由按问题类型选通道，收益小但方向一致；R3 的计划节点没有带来新证据。边界：单 seed、40 题、无区间，0.0297 只能算描述性差异；规划器仍用规则分析器，没有用上 LLM 规划。",
+      "evidence": [
+        {
+          "text_zh": "R2 的答案 F1 为 0.1540，R1 为 0.1243。",
+          "value": "0.154",
+          "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.answer_f1"
+        },
+        {
+          "text_zh": "R2 比 R1 高 0.0297。",
+          "value": "0.0297",
+          "source": "reports/experiments/E1-R1-online.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "R2 的证据召回为 0.4487。",
+          "value": "0.4487",
+          "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.evidence_recall"
+        },
+        {
+          "text_zh": "R3 的答案 F1 与 R1 相同，为 0.1243。",
+          "value": "0.1243",
+          "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R3-dag.answer_f1"
+        },
+        {
+          "text_zh": "R2 每题材元 54.325。",
+          "value": "54.325",
+          "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "40 题、单 seed、无区间；0.0297 是描述性差异。",
+        "R3 与 R1 完全相同，需先确认 DAG 是否真的展开多节点计划。",
+        "规划器仍用规则分析器；无 Judge。"
+      ],
+      "next_zh": "补 seed/CI，并检查 DAG 的计划展开是否真的生效。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，R2）",
+          "value": "0.154"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，R2）",
+          "value": "0.4487"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，R2）",
+          "value": "54.325"
+        }
+      ]
+    },
+    "E1-R1": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-R1",
+      "source_report": "reports/experiments/E1-R1.json",
+      "title_zh": "R 检索 · 离线：DAG 与无规划持平",
+      "subtitle_zh": "E1-R1 · 4 段开发集 · 480 题 · seeds 13/17",
+      "headline_zh": "离线 DAG 召回 0.4704，与无规划持平",
+      "status_zh": "部分支持",
+      "summary_zh": "问：离线 DAG 规划有没有收益。答：与无规划持平，规则路由反而更差。",
+      "analysis_zh": "离线比较三种规划。R3 DAG 的召回为 0.4704，与 R1 无规划完全相同，区间 [0, 0]；nDCG 为 0.3696，比 R1 低 0.0015，也不显著。R2 规则路由反而更差：召回 0.4452，比 R1 低 0.0252，区间 [−0.0524, −0.0005] 不含 0；nDCG 低 0.0675。机制上，R3 没有真正展开多节点计划，R2 的选择在离线哈希嵌入下选错了通道。边界：离线 F1 是抽取式；规划器是规则分析器；在线方向又相反，R2 在线最好。两组不能互相替代。",
+      "evidence": [
+        {
+          "text_zh": "R3 的召回为 0.4704，与 R1 相同。",
+          "value": "0.4704",
+          "source": "reports/experiments/E1-R1.json#results.by_candidate.R3-dag.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "R2 的召回为 0.4452，比 R1 低 0.0252。",
+          "value": "0.4452",
+          "source": "reports/experiments/E1-R1.json#results.by_candidate.R2-rule-router.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "R2 的召回差 −0.0252，区间 [−0.0524, −0.0005]。",
+          "value": "-0.0252",
+          "source": "reports/experiments/E1-R1.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "R1 的 nDCG 为 0.3711。",
+          "value": "0.3711",
+          "source": "reports/experiments/E1-R1.json#results.by_candidate.R1-planner-none.metrics.ndcg"
+        },
+        {
+          "text_zh": "R3 的 P95 为 19.5 毫秒。",
+          "value": "19.5",
+          "source": "reports/experiments/E1-R1.json#results.by_candidate.R3-dag.metrics.p95_latency_ms"
+        }
+      ],
+      "caveats_zh": [
+        "R3 与 R1 完全相同，需确认 DAG 是否真的展开。",
+        "离线用哈希嵌入，规划器是规则分析器。",
+        "在线方向相反（R2 在线最好），两组不能互相替代。"
+      ],
+      "next_zh": "检查 DAG 计划展开，并在语义嵌入下重跑规划对照。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，R3）",
+          "value": "0.4704"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，R1）",
+          "value": "0.3711"
+        },
+        {
+          "key": "p95_latency_ms",
+          "label_zh": "P95 延迟（p95 latency，R3）",
+          "value": "19.5"
+        }
+      ]
+    },
+    "E1-R3": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-R3",
+      "source_report": "reports/experiments/E1-R3.json",
+      "title_zh": "E1-R3 图检索 · 离线：图候选进不了最终上下文",
+      "subtitle_zh": "E1-R3 · 4 段开发集 · 61 道多跳题 · 13 个图配置",
+      "headline_zh": "13 个图配置召回都是 0.2372",
+      "status_zh": "部分支持",
+      "summary_zh": "问：图检索的候选能不能进最终上下文。答：34 到 91 条图候选，0 条存活。",
+      "analysis_zh": "用 13 个图配置跑 61 道多跳题，最后召回都是 0.2372，纯向量是 0.2257，只高 0.0115；nDCG 0.2334，P95 28.5 毫秒。图通道确实产出了 34 到 91 条图候选，但融合后 0 条存活，所以最终召回对图实现和图表示都不敏感。这不是“图没用”，而是融合与候选预算把图信号挡在外面。边界：dual_channel 是近似实现，语义通道用 BM25；离线哈希嵌入不是语义；planner 的 LLM 分析器在每个格子里都回退成规则，所以不能把差异归给图。",
+      "evidence": [
+        {
+          "text_zh": "13 个图配置的最终召回都是 0.2372。",
+          "value": "0.2372",
+          "source": "reports/experiments/E1-R3.json#results.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "纯向量的召回为 0.2257。",
+          "value": "0.2257",
+          "source": "reports/experiments/E1-R3.json#results.metrics.vector_only.evidence_recall"
+        },
+        {
+          "text_zh": "entity_subgraph 产出 91 条图候选。",
+          "value": "91",
+          "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_candidates"
+        },
+        {
+          "text_zh": "融合后存活的图候选为 0 条。",
+          "value": "0",
+          "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_in_final"
+        },
+        {
+          "text_zh": "P95 延迟为 28.457 毫秒。",
+          "value": "28.457",
+          "source": "reports/experiments/E1-R3.json#results.metrics.p95_latency_ms"
+        }
+      ],
+      "caveats_zh": [
+        "图候选在融合后 0 条存活，最终召回无法区分图实现。",
+        "dual_channel 是近似实现，语义通道用 BM25；嵌入是哈希。",
+        "planner 的 LLM 分析器全部回退成规则。"
+      ],
+      "next_zh": "调整融合预算让图候选有存活机会，再比较图实现。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，图配置）",
+          "value": "0.2372"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG）",
+          "value": "0.2334"
+        },
+        {
+          "key": "p95_latency_ms",
+          "label_zh": "P95 延迟（p95 latency）",
+          "value": "28.457"
+        }
+      ]
+    },
+    "E1-S2-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-S2-online",
+      "source_report": "reports/experiments/E1-S2-online.json",
+      "title_zh": "S 存储 · 在线 27B：三种图表示结果相同，是未接线",
+      "subtitle_zh": "E1-S2-online · 4 段开发集 · 40 题/候选 · seed 13 · not_wired",
+      "headline_zh": "三种图表示同为 0.1837：接口未接线",
+      "status_zh": "部分支持",
+      "summary_zh": "问：三种图表示有没有差别。答：结果完全相同，因为图检索接口没有接线。",
+      "analysis_zh": "比较三种图表示：S1 状态槽、S2 实体三元组、S3 三层图。三者的答案 F1 都是 0.1837，召回都是 0.5269，每题材元都是 44.65，连 P95 也只差 0.1 秒。四位小数完全一致，不是“三种表示效果相同”，而是图检索接口没有接线：graph.retrieval.impl 只被读取，没有被检索路径消费。因此本轮只能报告 not_wired，不能写成“图表示无差异”。边界：这是接线问题，不是模型或数据问题；离线 R3 也看到图候选在融合后 0 条存活，但那是另一个融合瓶颈，不能拿来补这个结论。下一步先把接口接上再重跑。",
+      "evidence": [
+        {
+          "text_zh": "S1 的答案 F1 为 0.1837。",
+          "value": "0.1837",
+          "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.answer_f1"
+        },
+        {
+          "text_zh": "S2 的答案 F1 也是 0.1837。",
+          "value": "0.1837",
+          "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S2-entity-triple.answer_f1"
+        },
+        {
+          "text_zh": "S3 的答案 F1 同样为 0.1837。",
+          "value": "0.1837",
+          "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S3-three-layer.answer_f1"
+        },
+        {
+          "text_zh": "三种表示的证据召回都是 0.5269。",
+          "value": "0.5269",
+          "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.evidence_recall"
+        },
+        {
+          "text_zh": "三种表示的每题材元都是 44.65。",
+          "value": "44.65",
+          "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "三种表示完全相同是未接线（not_wired），不是“无差异”。",
+        "40 题、单 seed；无 Judge。",
+        "不能拿离线 R3 的融合瓶颈来替代本实验的接线结论。"
+      ],
+      "next_zh": "把 graph.retrieval.impl 接到检索路径，再重跑 S1/S2/S3。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，S1/S2/S3）",
+          "value": "0.1837"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall）",
+          "value": "0.5269"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "44.65"
+        }
+      ]
+    },
+    "E1-S2": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-S2",
+      "source_report": "reports/experiments/E1-S2.json",
+      "title_zh": "S 存储 · 离线：三种图表示召回相同",
+      "subtitle_zh": "E1-S2 · 4 段开发集 · 480 题 · seeds 13/17",
+      "headline_zh": "离线三种图表示召回同为 0.5053",
+      "status_zh": "部分支持",
+      "summary_zh": "问：离线三种图表示有没有差别。答：召回完全相同，图表示未被消费。",
+      "analysis_zh": "离线比较三种图表示。S1、S2、S3 的召回都是 0.5053，nDCG 分别 0.3563、0.3553、0.3553，几乎一样。S3 的边数是 1973.75，S1 是 752，但更大的图没有带来召回。这和在线一致：图表示接口没有被检索路径消费，所以三种表示结果相同，不能读成“图表示无差异”。在线实验也出现同样的一致性，说明问题不在数据或模型，而在接线与融合预算。边界：离线用的是哈希嵌入，不是语义向量；图候选在 R3 融合后 0 条存活，说明瓶颈在融合预算，不在图本身；无 Judge。",
+      "evidence": [
+        {
+          "text_zh": "S1 的召回为 0.5053。",
+          "value": "0.5053",
+          "source": "reports/experiments/E1-S2.json#results.by_candidate.S1-state-slot.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "S2 的召回也是 0.5053。",
+          "value": "0.5053",
+          "source": "reports/experiments/E1-S2.json#results.by_candidate.S2-entity-triple.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "S3 的召回同样为 0.5053。",
+          "value": "0.5053",
+          "source": "reports/experiments/E1-S2.json#results.by_candidate.S3-three-layer.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "S1 的边数为 752。",
+          "value": "752",
+          "source": "reports/experiments/E1-S2.json#results.by_candidate.S1-state-slot.metrics.graph_edges"
+        },
+        {
+          "text_zh": "S3 的边数为 1973.75。",
+          "value": "1973.75",
+          "source": "reports/experiments/E1-S2.json#results.by_candidate.S3-three-layer.metrics.graph_edges"
+        }
+      ],
+      "caveats_zh": [
+        "三种表示相同是“未被消费”，不能读成“无差异”。",
+        "离线用哈希嵌入，不是语义向量。",
+        "图候选在融合后 0 条存活；无 Judge。"
+      ],
+      "next_zh": "先把图表示接入检索路径，再比较 S1/S2/S3。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall）",
+          "value": "0.5053"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，S1）",
+          "value": "0.3563"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "306.9125"
+        }
+      ]
+    },
+    "E1-U1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-U1-online",
+      "source_report": "reports/experiments/E1-U1-online.json",
+      "title_zh": "U 使用 · 在线 27B：校验提分，代价是拒答",
+      "subtitle_zh": "E1-U1-online · 4 段开发集 · 40 题/候选 · seed 13",
+      "headline_zh": "U2 的 F1 0.2998 最高，但拒答率 0.275",
+      "status_zh": "部分支持",
+      "summary_zh": "问：加答案校验能不能提高答对率。答：能小幅提高 F1，但会拒答更多问题。",
+      "analysis_zh": "比较三种使用策略：U1 直接作答，U2 只保留离线校验通过的证据，U3 再串证据链。三者的证据召回都是 0.7462，说明检索输入相同，差别只在作答。U2 的 F1 为 0.2998，比 U1 高 0.0115，U3 为 0.2921。代价是拒答率从 U1 的 0.025 升到 0.275，P95 也从 4.0 秒升到 4.7 秒。机制上，校验会过滤掉证据不足的答案，提高答对的精度，但更多问题被拒答。边界：差距只有 0.0115，单 seed、40 题，没有区间；在线没有记录状态准确率，所以 P(A|S) 算不出来，不能把 U2 说成全面更好。",
+      "evidence": [
+        {
+          "text_zh": "U2 的答案 F1 为 0.2998，U1 为 0.2883。",
+          "value": "0.2998",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.answer_f1"
+        },
+        {
+          "text_zh": "三种策略的证据召回都是 0.7462。",
+          "value": "0.7462",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U1-none-direct.evidence_recall"
+        },
+        {
+          "text_zh": "U2 的拒答率为 0.275，U1 只有 0.025。",
+          "value": "0.275",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.refused"
+        },
+        {
+          "text_zh": "U3 的答案 F1 为 0.2921。",
+          "value": "0.2921",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U3-offline-chain.answer_f1"
+        },
+        {
+          "text_zh": "U1 的拒答率为 0.025。",
+          "value": "0.025",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U1-none-direct.refused"
+        }
+      ],
+      "caveats_zh": [
+        "40 题、单 seed、无区间；F1 差距只有 0.0115。",
+        "在线未记录 state_accuracy，P(A|S) 不可得。",
+        "无 Judge；拒答率 0.275 会直接影响可用性，不能只看 F1。"
+      ],
+      "next_zh": "把 state_accuracy 接入在线评测，按“质量—拒答—成本”三件套选型。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，U2）",
+          "value": "0.2998"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall）",
+          "value": "0.7462"
+        },
+        {
+          "key": "refused",
+          "label_zh": "拒答率（refused，U2）",
+          "value": "0.275"
+        }
+      ]
+    },
+    "E1-U1": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-U1",
+      "source_report": "reports/experiments/E1-U1.json",
+      "title_zh": "U 使用 · 离线：召回相同，状态分略高",
+      "subtitle_zh": "E1-U1 · 4 段开发集 · 480 题 · seeds 13/17",
+      "headline_zh": "三种使用策略召回同为 0.5927",
+      "status_zh": "部分支持",
+      "summary_zh": "问：离线三种使用策略差别在哪。答：召回相同，状态基准 U2/U3 略高。",
+      "analysis_zh": "离线比较三种使用策略。三者的召回都是 0.5927，nDCG 都是 0.4061，说明检索输入相同。差别在状态基准：17 题上 U1 的题均分 0.3431，U2 与 U3 为 0.3627，高 0.0196；valid-set 全对率只有 0.2353。U2 用 offline_slot 把 ACTIVE 的 0.4762 换成 HISTORICAL 的 0.3846。边界：状态基准没有和答案 F1 配对，所以 P(A|S) 仍不可得；离线答案 F1 只有 0.021 到 0.022，是抽取式，不是 LLM 质量；三种策略的召回完全相同，不能挑出“最好”。",
+      "evidence": [
+        {
+          "text_zh": "三种使用策略的召回都是 0.5927。",
+          "value": "0.5927",
+          "source": "reports/experiments/E1-U1.json#results.by_candidate.U1-none-direct.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "U1 的状态题均分为 0.3431。",
+          "value": "0.3431",
+          "source": "reports/experiments/E1-U1.json#results.state_accuracy.candidates.U1-none-direct.item_mean"
+        },
+        {
+          "text_zh": "U2 的状态题均分为 0.3627。",
+          "value": "0.3627",
+          "source": "reports/experiments/E1-U1.json#results.state_accuracy.candidates.U2-offline-valid.item_mean"
+        },
+        {
+          "text_zh": "valid-set 全对率为 0.2353。",
+          "value": "0.2353",
+          "source": "reports/experiments/E1-U1.json#results.state_accuracy.candidates.U1-none-direct.valid_set_exact"
+        },
+        {
+          "text_zh": "U2 的 ACTIVE 准确率为 0.3333。",
+          "value": "0.3333",
+          "source": "reports/experiments/E1-U1.json#results.state_accuracy.candidates.U2-offline-valid.active_acc"
+        }
+      ],
+      "caveats_zh": [
+        "状态基准没有和答案 F1 配对，P(A|S) 仍不可得。",
+        "离线 F1 是抽取式，不是 LLM 质量。",
+        "三种策略召回完全相同，不能据此挑出最佳方案。"
+      ],
+      "next_zh": "把状态基准与答案评测配对，再判断状态策略的收益。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall）",
+          "value": "0.5927"
+        },
+        {
+          "key": "state_accuracy",
+          "label_zh": "状态准确率（state accuracy，U2）",
+          "value": "0.3627"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG）",
+          "value": "0.4061"
+        }
+      ]
+    },
+    "E1-W1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-W1-online",
+      "source_report": "reports/experiments/E1-W1-online.json",
+      "title_zh": "W 写入 · 在线 27B：元数据略提 F1，召回反降",
+      "subtitle_zh": "E1-W1-online · 4 段开发集 · 40 题/候选 · seed 13",
+      "headline_zh": "W2 的 F1 0.1837 最高，W1 召回 0.5564",
+      "status_zh": "部分支持",
+      "summary_zh": "问：元数据写入是否比旧式追加更好。答：F1 略高，召回反而更低，两个指标各指一个赢家。",
+      "analysis_zh": "比较三种写入表示：W1 旧式追加，W2 元数据追加，W3 元数据加 mem0 摘要。W2 的 F1 为 0.1837，比 W1 高 0.0138，W3 最低，为 0.1540。但召回方向相反：W1 为 0.5564，W2 为 0.5269，W1 更好。机制上，元数据让答案更规整，候选条数却从 2.6 降到 2.5；W3 的摘要压缩丢细节，召回掉到 0.4487。三者的拒答率都在 0.45 到 0.475，偏高，说明当前作答策略本身保守。边界：单 seed、40 题、无区间，F1 与召回各指一个赢家，不能合成“W2 更好”的结论。",
+      "evidence": [
+        {
+          "text_zh": "W2 的答案 F1 为 0.1837，W1 为 0.1699。",
+          "value": "0.1837",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.answer_f1"
+        },
+        {
+          "text_zh": "W1 的证据召回为 0.5564，W2 为 0.5269。",
+          "value": "0.5564",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W1-legacy-append.evidence_recall"
+        },
+        {
+          "text_zh": "W3 的答案 F1 只有 0.1540，召回 0.4487。",
+          "value": "0.154",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W3-meta-mem0.answer_f1"
+        },
+        {
+          "text_zh": "W 的拒答率在 0.45 到 0.475 之间。",
+          "value": "0.45",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W1-legacy-append.refused"
+        },
+        {
+          "text_zh": "W2 每题材元 44.65。",
+          "value": "44.65",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "40 题、单 seed、无区间，F1 与召回方向相反。",
+        "W 的拒答率 0.45–0.475 偏高，F1 差距可能被拒答策略放大。",
+        "无 Judge；W3 的摘要损失没有单独分解。"
+      ],
+      "next_zh": "补 seed 与 Judge，并单独分解 mem0 摘要带来的证据损失。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，W2）",
+          "value": "0.1837"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，W1）",
+          "value": "0.5564"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，W2）",
+          "value": "44.65"
+        }
+      ]
+    },
+    "E1-W1": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E1-W1",
+      "source_report": "reports/experiments/E1-W1.json",
+      "title_zh": "W 写入 · 离线：W2 召回略高但不显著",
+      "subtitle_zh": "E1-W1 · 4 段开发集 · 480 题 · seeds 13/17",
+      "headline_zh": "离线 W2 召回高 0.0300，但区间跨 0",
+      "status_zh": "部分支持",
+      "summary_zh": "问：离线 W2 是否优于 W1。答：召回高 0.0300 但区间跨 0，不算显著。",
+      "analysis_zh": "离线比较三种写入表示。W2 的召回为 0.5053，比 W1 的 0.4753 高 0.0300，但区间 [−0.0005, 0.0629] 跨 0，不算显著；nDCG 反而低 0.0091。W2 每题材元少 4.6，P95 从 11.0 毫秒升到 57.0 毫秒。W3 更差：召回 0.4452，nDCG 0.3036，P95 167.5 毫秒，三项都输给 W1。机制上，元数据写入让证据更规整，但摘要与审计增加了开销。边界：离线 F1 是抽取式；cross-encoder 回退；W2 的召回优势不显著，不能写成“元数据更好”。",
+      "evidence": [
+        {
+          "text_zh": "W2 的召回为 0.5053，W1 为 0.4753。",
+          "value": "0.5053",
+          "source": "reports/experiments/E1-W1.json#results.by_candidate.W2-meta-append.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "召回差 0.0300，区间 [−0.0005, 0.0629] 跨 0。",
+          "value": "0.03",
+          "source": "reports/experiments/E1-W1.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "W1 的 nDCG 为 0.3644，W2 为 0.3553。",
+          "value": "0.3644",
+          "source": "reports/experiments/E1-W1.json#results.by_candidate.W1-legacy-append.metrics.ndcg"
+        },
+        {
+          "text_zh": "W2 每题材元 306.9125。",
+          "value": "306.9125",
+          "source": "reports/experiments/E1-W1.json#results.by_candidate.W2-meta-append.metrics.tokens"
+        },
+        {
+          "text_zh": "W3 的召回为 0.4452。",
+          "value": "0.4452",
+          "source": "reports/experiments/E1-W1.json#results.by_candidate.W3-meta-mem0.metrics.evidence_recall"
+        }
+      ],
+      "caveats_zh": [
+        "W2 的召回区间 [−0.0005, 0.0629] 跨 0，不算显著。",
+        "离线 F1 是抽取式；cross-encoder 回退。",
+        "W3 更差，但摘要与审计的开销没有单独分解。"
+      ],
+      "next_zh": "扩大样本并补 CI，再判断元数据写入是否值得。",
+      "metrics_zh": [
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，W2）",
+          "value": "0.5053"
+        },
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，W1）",
+          "value": "0.3644"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，W2）",
+          "value": "306.9125"
+        }
+      ]
+    },
+    "E2-1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E2-1-online",
+      "source_report": "reports/experiments/E2-1-online.json",
+      "title_zh": "E2 转化率 · 在线 27B：检索命中后答对率更高",
+      "subtitle_zh": "E2-1-online · 4 段开发集 · 600 题 · seed 13",
+      "headline_zh": "检索命中后答对率 0.5657，比总体高 0.0457",
+      "status_zh": "部分支持",
+      "summary_zh": "问：检索命中是否提高答对率。答：命中后答对率高 0.0457，在线方向为正。",
+      "analysis_zh": "把 600 道题拆成“检索是否命中”和“答案是否正确”两步。总体答对率 P(A) 为 0.5200，检索命中率 P(R) 为 0.4567；在命中的 274 题里，答对率 P(A|R=1) 为 0.5657，比总体高 0.0457。分模块看，U 的 0.6282 最高，其次是 S 的 0.5882、M 的 0.5818、W 的 0.5417，R 只有 0.4286。机制上，证据到位后答对率上升，说明检索对答案有正向作用；这与离线负转化不同，因为离线是抽取式作答。边界：单 seed、无区间；P(A|S) 因在线没有状态准确率而不可得；P(A|C) 只有 94 题，分母偏小。",
+      "evidence": [
+        {
+          "text_zh": "检索命中后的答对率 P(A|R=1) 为 0.5657。",
+          "value": "0.5657",
+          "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A|R=1)\"].value"
+        },
+        {
+          "text_zh": "总体答对率 P(A) 为 0.5200。",
+          "value": "0.52",
+          "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A)\"].value"
+        },
+        {
+          "text_zh": "检索命中率 P(R) 为 0.4567。",
+          "value": "0.4567",
+          "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(R)\"].value"
+        },
+        {
+          "text_zh": "P(A|C=1) 为 0.4149，只有 94 题。",
+          "value": "0.4149",
+          "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A|C=1)\"].value"
+        },
+        {
+          "text_zh": "U 模块的 P(A|R=1) 最高，为 0.6282。",
+          "value": "0.6282",
+          "source": "reports/experiments/E2-1-online.json#analysis.by_module.U[\"P(A|R=1)\"].value"
+        }
+      ],
+      "caveats_zh": [
+        "单 seed、无区间；0.0457 只能算描述性转化差。",
+        "P(A|S) 不可得：在线没有 state_accuracy，状态基准也未和答案配对。",
+        "P(A|C) 只有 94 题，分母偏小；无 Judge。"
+      ],
+      "next_zh": "补第二 seed 与状态准确率，让 P(A|S) 可算。",
+      "metrics_zh": [
+        {
+          "key": "conversion",
+          "label_zh": "转化率（P(A|R=1)）",
+          "value": "0.5657"
+        },
+        {
+          "key": "retrieval_hit",
+          "label_zh": "检索命中率（P(R)）",
+          "value": "0.4567"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "160.5"
+        }
+      ]
+    },
+    "E2-2-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E2-2-online",
+      "source_report": "reports/experiments/E2-2-online.json",
+      "title_zh": "E2-2 Oracle · 在线 27B：证据给满，答案仍是瓶颈",
+      "subtitle_zh": "E2-2-online · 4 段开发集 · 80 题 · seed 13 · retrieval oracle",
+      "headline_zh": "给全 gold 证据，F1 也只有 0.2437",
+      "status_zh": "部分支持",
+      "summary_zh": "问：把 gold 证据直接给模型，能答对多少。答：F1 只有 0.2437，答案环节仍是瓶颈。",
+      "analysis_zh": "把检索替换成 oracle：直接把 gold 证据注入上下文，合并与使用仍用冻结的 R0，共 80 题。答案 F1 为 0.2437，每题材元 232.15，单题延迟 2.2 秒。这个数回答的是“证据给全时还能答对多少”，不是系统召回的对照。F1 只有 0.2437，说明即使证据齐全，作答与拒答策略仍是瓶颈；oracle 的召回 0.6611 是 gold 注入构造出来的，不能和系统召回比高低。边界：只做了 retrieval oracle，write、store、merge、state、answer 的 oracle 都没跑，所以算不出完整的 oracle gap；也没有 Judge。",
+      "evidence": [
+        {
+          "text_zh": "oracle 的答案 F1 为 0.2437。",
+          "value": "0.2437",
+          "source": "reports/experiments/E2-2-online.json#results.metrics.answer_f1"
+        },
+        {
+          "text_zh": "oracle 的证据召回为 0.6611，是构造值。",
+          "value": "0.6611",
+          "source": "reports/experiments/E2-2-online.json#results.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "每题材元 232.15。",
+          "value": "232.15",
+          "source": "reports/experiments/E2-2-online.json#results.metrics.tokens"
+        },
+        {
+          "text_zh": "单题延迟 2217.14 毫秒。",
+          "value": "2217.14",
+          "source": "reports/experiments/E2-2-online.json#results.metrics.latency_ms"
+        }
+      ],
+      "caveats_zh": [
+        "oracle 召回 0.6611 是 gold 注入构造出来的，不能和系统召回比。",
+        "只做了 retrieval oracle，其余 oracle 未跑，算不出完整 oracle gap。",
+        "80 题、单 seed；无 Judge。"
+      ],
+      "next_zh": "补 write/store/merge/state/answer oracle，才能算完整的 oracle gap。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1）",
+          "value": "0.2437"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，构造值）",
+          "value": "0.6611"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "232.15"
+        }
+      ]
+    },
+    "E3-1-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "E3-1-online",
+      "source_report": "reports/experiments/E3-1-online.json",
+      "title_zh": "E3 组合 · 在线 27B：融合小胜，证据链拖后腿",
+      "subtitle_zh": "E3-1-online · 4 段开发集 · 60 题/格 · seed 13",
+      "headline_zh": "加权融合 F1 0.1764，比单通道高 0.0264",
+      "status_zh": "部分支持",
+      "summary_zh": "问：融合与作答方式怎么组合最好。答：加权融合加直接作答最好，证据链反而更低。",
+      "analysis_zh": "把融合方式与作答方式做成 2×2：单通道或加权融合，直接作答或证据链。加权融合加直接作答的 F1 为 0.1764，单通道加直接作答为 0.1500，高 0.0264；召回 0.3026 对 0.2860，高 0.0166。同一融合下，直接作答比证据链高 0.0157。机制上，加权融合把两路候选合并，补到少量单通道漏掉的证据；证据链增加约束，反而更容易拒答。边界：每格 60 题、单 seed、无重复与区间，也没做交互显著性检验，所以只能作描述性结论，不能说融合与作答方式存在交互。",
+      "evidence": [
+        {
+          "text_zh": "加权融合加直接作答的 F1 为 0.1764。",
+          "value": "0.1764",
+          "source": "reports/experiments/E3-1-online.json#analysis.by_cell[2].metrics.answer_f1"
+        },
+        {
+          "text_zh": "单通道加直接作答的 F1 为 0.1500。",
+          "value": "0.15",
+          "source": "reports/experiments/E3-1-online.json#analysis.by_cell[0].metrics.answer_f1"
+        },
+        {
+          "text_zh": "加权融合的召回为 0.3026。",
+          "value": "0.3026",
+          "source": "reports/experiments/E3-1-online.json#analysis.by_cell[2].metrics.evidence_recall"
+        },
+        {
+          "text_zh": "同一融合下，证据链的 F1 为 0.1607。",
+          "value": "0.1607",
+          "source": "reports/experiments/E3-1-online.json#analysis.by_cell[3].metrics.answer_f1"
+        },
+        {
+          "text_zh": "加权/直接比单通道/直接高 0.0264。",
+          "value": "0.0264",
+          "source": "reports/experiments/E3-1-online.json#comparisons[0].delta"
+        }
+      ],
+      "caveats_zh": [
+        "60 题/格、单 seed、无重复与 CI。",
+        "未做 fusion × answer 的交互显著性检验。",
+        "无 Judge；证据链的拒答率更高，需结合可用性看。"
+      ],
+      "next_zh": "补 seed 与配对 CI，再做 fusion × answer 交互检验。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，加权/直接）",
+          "value": "0.1764"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，加权）",
+          "value": "0.3026"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "48.57"
+        }
+      ]
+    },
+    "M2-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "M2-online",
+      "source_report": "reports/experiments/M2-online.json",
+      "title_zh": "M2 重排 · 在线 27B：排序更准，证据更少",
+      "subtitle_zh": "M2-online · 4 段开发集 · 40 题/配置 · seed 13",
+      "headline_zh": "重排把 nDCG 提到 0.5123，召回却掉 0.2287",
+      "status_zh": "部分支持",
+      "summary_zh": "问：cross-encoder 重排是否全面提升。答：排序质量升，召回和 F1 降，是 trade-off。",
+      "analysis_zh": "比较 M2 重排开与不开：不开时 F1 0.2844、召回 0.5785、nDCG 0.4315；开 cross-encoder 后 F1 0.2373、召回 0.3498、nDCG 0.5123。排序质量升了 0.0808，但召回掉了 0.2287，F1 掉了 0.0471，每题材元从 376.5 降到 47.3，拒答率从 0.175 升到 0.55。机制上，重排把候选压到更少、更靠前的证据，排序更准但覆盖更窄。边界：单 seed、40 题/配置、无区间，且只跑了一次 GPU；不能据此说重排更好或更差，只能说它是拿召回换排序与成本。",
+      "evidence": [
+        {
+          "text_zh": "不开重排时 F1 为 0.2844，开重排后为 0.2373。",
+          "value": "0.2844",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.answer_f1"
+        },
+        {
+          "text_zh": "不开重排时召回为 0.5785，开重排后为 0.3498。",
+          "value": "0.5785",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.evidence_recall"
+        },
+        {
+          "text_zh": "重排把 nDCG 从 0.4315 提到 0.5123。",
+          "value": "0.5123",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.ndcg"
+        },
+        {
+          "text_zh": "重排后每题材元降到 47.25。",
+          "value": "47.25",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.tokens"
+        },
+        {
+          "text_zh": "重排后拒答率升到 0.55。",
+          "value": "0.55",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.refused"
+        }
+      ],
+      "caveats_zh": [
+        "单 seed、40 题/配置、无区间，只跑了一次 GPU。",
+        "重排是拿召回换 nDCG 与 tokens，不是全面胜利。",
+        "拒答率升到 0.55；无 Judge。"
+      ],
+      "next_zh": "在更多题/seed 上做配对 CI，并试“重排但保底召回”的折中。",
+      "metrics_zh": [
+        {
+          "key": "ndcg",
+          "label_zh": "排序质量（nDCG，重排）",
+          "value": "0.5123"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，重排）",
+          "value": "0.3498"
+        },
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，重排）",
+          "value": "0.2373"
+        }
+      ]
+    },
+    "final-w3-test-offline": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "final-w3-test-offline",
+      "source_report": "reports/experiments/final-w3-test-offline.json",
+      "title_zh": "B0 与 R0 · 离线对照：只用于口径说明",
+      "subtitle_zh": "final-w3-test-offline · test 2 段 · 80 题/配置 · seeds 13/17",
+      "headline_zh": "离线口径下 R0 的 F1 反而低 0.0300",
+      "status_zh": "不支持",
+      "summary_zh": "问：离线口径下 R0 是否更好。答：更差，但离线 F1 不能当 LLM F1。",
+      "analysis_zh": "这是离线口径的 B0/R0 对照，只用来解释口径，不进入在线结论。B0 的抽取式 F1 为 0.0354，R0 为 0.0054，差 −0.0300，95% 区间 [−0.0575, −0.0104] 不含 0；召回 0.5435 对 0.4018，差 −0.1417，区间也不含 0。也就是说，离线口径下 R0 更差，方向和在线召回一致，但 F1 的数值完全不能当 LLM F1 用。机制上，离线用抽取式作答，R0 的候选更少，抽不到答案就直接掉分。边界：80 题、2 段 test、bootstrap 按题；没有 Judge，也没有状态准确率。",
+      "evidence": [
+        {
+          "text_zh": "B0 的离线抽取式 F1 为 0.0354，R0 为 0.0054。",
+          "value": "0.0354",
+          "source": "reports/experiments/final-w3-test-offline.json#results.baseline_metrics.answer_f1"
+        },
+        {
+          "text_zh": "F1 差 −0.0300，95% 区间 [−0.0575, −0.0104]。",
+          "value": "-0.03",
+          "source": "reports/experiments/final-w3-test-offline.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "B0 的召回为 0.5435，R0 为 0.4018。",
+          "value": "0.5435",
+          "source": "reports/experiments/final-w3-test-offline.json#results.baseline_metrics.evidence_recall"
+        },
+        {
+          "text_zh": "召回差 −0.1417，区间不含 0。",
+          "value": "-0.1417",
+          "source": "reports/experiments/final-w3-test-offline.json#comparisons[1].delta"
+        },
+        {
+          "text_zh": "R0 每题材元 990.975。",
+          "value": "990.975",
+          "source": "reports/experiments/final-w3-test-offline.json#results.metrics.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "离线 F1 是抽取式，不是 LLM F1，不能写成在线答案质量。",
+        "80 题、2 段 test，bootstrap 按题不按对话。",
+        "无 Judge、无 state_accuracy。"
+      ],
+      "next_zh": "只把离线当口径参照，正式结论以在线 B0/R0 为准。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，R0，抽取式）",
+          "value": "0.0054"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，R0）",
+          "value": "0.4018"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question，R0）",
+          "value": "990.975"
+        }
+      ]
+    },
+    "final-w3-test-online": {
+      "schema": "memlab/narrative@1",
+      "experiment_id": "final-w3-test-online",
+      "source_report": "reports/experiments/final-w3-test-online.json",
+      "title_zh": "B0 与 R0 · 在线 27B：更省更快的代价是召回",
+      "subtitle_zh": "final-w3-test-online · test 2 段 · 80 题/配置 · seeds 13/17",
+      "headline_zh": "R0 的 F1 与 B0 无显著差异，召回低 0.2032",
+      "status_zh": "无定论",
+      "summary_zh": "问：在 test 上 R0 是否比 B0 更好。答：F1 没有显著差异，召回显著更低，R0 更省更快。",
+      "analysis_zh": "在 test 两段对话上比较冻结的 B0 与 R0，各 80 题、两个 seed。R0 的答案 F1 为 0.1520，B0 为 0.1883，差 −0.0363，配对 bootstrap 的 95% 区间 [−0.1351, 0.0575] 跨 0，所以 F1 无定论。但 R0 的证据召回从 0.5435 降到 0.3403，差 −0.2032，区间 [−0.3509, −0.048] 不含 0，召回显著更低。机制上，R0 把每题材元从 924.6 压到 319.3、P95 从 16.0 秒降到 8.4 秒，省成本的同时丢了证据；答案 F1 没同步下降，说明模型能靠剩余证据作答，但召回损失是确定的。边界：只有 2 段 test、bootstrap 按题不按对话，也没有第二 Judge。",
+      "evidence": [
+        {
+          "text_zh": "B0 的答案 F1 为 0.1883，R0 为 0.1520。",
+          "value": "0.1883",
+          "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+        },
+        {
+          "text_zh": "F1 差 −0.0363，95% bootstrap 区间 [−0.1351, 0.0575] 跨 0。",
+          "value": "-0.0363",
+          "source": "reports/experiments/final-w3-test-online.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "B0 的证据召回为 0.5435，R0 只有 0.3403。",
+          "value": "0.5435",
+          "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.evidence_recall"
+        },
+        {
+          "text_zh": "召回差 −0.2032，区间 [−0.3509, −0.048] 不含 0。",
+          "value": "-0.2032",
+          "source": "reports/experiments/final-w3-test-online.json#comparisons[1].delta"
+        },
+        {
+          "text_zh": "R0 每题材元 319.3，B0 为 924.6。",
+          "value": "319.3",
+          "source": "reports/experiments/final-w3-test-online.json#results.metrics.tokens"
+        }
+      ],
+      "caveats_zh": [
+        "80 题只覆盖 2 段 test，bootstrap 按题重采样，不按对话。",
+        "没有第二 Judge、也没有人工 kappa，F1 是单评审口径。",
+        "state_accuracy 未记录，只能比较 F1 与召回。"
+      ],
+      "next_zh": "扩大 test 对话数并按对话做 cluster bootstrap，再加第二 Judge。",
+      "metrics_zh": [
+        {
+          "key": "answer_f1",
+          "label_zh": "答案 F1（answer_f1，R0）",
+          "value": "0.152"
+        },
+        {
+          "key": "evidence_recall",
+          "label_zh": "证据召回（evidence_recall，R0）",
+          "value": "0.3403"
+        },
+        {
+          "key": "tokens",
+          "label_zh": "每题材元（tokens/question）",
+          "value": "319.3"
+        }
+      ]
+    }
+  };
+  // ---------------------------------------------------------------------------
 
   // W-LAB v2: shared question-bank, typed-error and run-comparison helpers.
   const QB_CATEGORY = { 1: "多跳", 2: "时间", 3: "常识/开放域", 4: "单跳", 5: "对抗" };
@@ -1321,6 +2636,56 @@
     return `<h3 style="margin-top:18px">By candidate 候选指标</h3><table class="v2-table ev-analysis-table"><thead><tr><th>candidate</th><th>F1</th><th>Recall</th><th>nDCG</th><th>tokens</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
   }
 
+  // Chinese-first narrative rendering: the first screen is conclusion -> why ->
+  // evidence/limits; run_id, config_hash and raw JSON stay below in the tabs.
+  const NARR_STATUS_MARK = { "支持": "●", "部分支持": "◐", "无定论": "○", "不支持": "✕", "待验证": "◌" };
+  const narrSourceName = (source) => String(source || "").split("#")[0].split("/").pop() || "";
+  const narrMetricsHtml = (n) => (n.metrics_zh || []).slice(0, 3).map((m) => `<div class="narr-metric"><div class="narr-metric-value mono">${esc(m.value)}</div><div class="narr-metric-label">${esc(m.label_zh)}</div></div>`).join("");
+  function narrativeScreen(n, opts = {}) {
+    if (!n) return "";
+    const mark = NARR_STATUS_MARK[n.status_zh] || "○";
+    const evidence = (n.evidence || []).slice(0, 5).map((e, i) => `<li><span class="narr-ev-index mono">${String(i + 1).padStart(2, "0")}</span><span class="narr-ev-value mono">${esc(e.value)}</span><span class="narr-ev-text">${esc(e.text_zh)}</span><span class="narr-ev-src mono">${esc(narrSourceName(e.source))}</span></li>`).join("");
+    const caveats = (n.caveats_zh || []).slice(0, 3).map((c) => `<li>${esc(c)}</li>`).join("");
+    return `<section class="narr-screen">
+      <div class="narr-eyebrow">${esc(opts.eyebrow || "EXPERIMENT REPORT · 实验报告")}</div>
+      <h1 class="narr-title">${esc(n.title_zh || n.experiment_id)}</h1>
+      <div class="narr-subtitle">${esc(n.subtitle_zh || "")}</div>
+      <div class="narr-conclusion">
+        <div class="narr-status"><span class="narr-status-mark" aria-hidden="true">${mark}</span>${esc(n.status_zh || "无定论")}</div>
+        <h2 class="narr-headline">${esc(n.headline_zh)}</h2>
+        <p class="narr-summary">${esc(n.summary_zh)}</p>
+        <div class="narr-metrics">${narrMetricsHtml(n)}</div>
+      </div>
+      <div class="narr-analysis">
+        <h3>为什么是这个结果</h3>
+        <p>${esc(n.analysis_zh)}</p>
+      </div>
+      <div class="narr-evidence-block">
+        <h3>证据与局限</h3>
+        <ol class="narr-evidence">${evidence}</ol>
+        <h4>局限</h4>
+        <ul class="narr-caveats">${caveats}</ul>
+      </div>
+    </section>`;
+  }
+  function overviewScreen(ov) {
+    if (!ov) return "";
+    const paragraphs = String(ov.overall_zh || "").split(/\n{2,}/).filter(Boolean).map((p) => `<p>${esc(p)}</p>`).join("");
+    const blocks = (ov.blocks || []).map((b) => `<a class="narr-block" href="${esc(b.route || "#/evaluation2")}">
+        <div class="narr-block-en">${esc(b.en || "")}</div>
+        <div class="narr-block-title">${esc(b.title_zh)}</div>
+        <div class="narr-block-headline">${esc(b.headline_zh)}</div>
+        <div class="narr-block-link">查看实验 →</div>
+      </a>`).join("");
+    return `<section class="narr-overview">
+      <div class="narr-eyebrow">EVALUATION · 评测对照</div>
+      <h1 class="narr-title">评测总评</h1>
+      <h2 class="narr-eval-headline">${esc(ov.headline_zh)}</h2>
+      <div class="narr-overall">${paragraphs}</div>
+      <div class="narr-blocks">${blocks}</div>
+    </section>`;
+  }
+
   async function renderExperiment(root) {
     const path = location.hash.replace(/^#\//, "").split("?")[0].split("/");
     const id = path[1] || "";
@@ -1361,7 +2726,7 @@
       if (tab === "results") {
         return `<table class="v2-table v2-report-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
           ${(report.results.runs || []).map((r) => `<tr><td class="mono">${esc(r.run_id)}</td><td>${esc(na(r.question))}</td><td>${esc(na(r.tokens))}</td><td>${esc(na(r.latency_ms))}</td><td>${esc(na(r.candidates))}</td><td>${esc(r.answer ? r.answer.slice(0, 80) : "not_available")}</td></tr>`).join("")}
-        </tbody></table><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre>`;
+        </tbody></table><details class="ev-raw"><summary>技术细节 · metrics JSON</summary><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre></details>`;
       }
       if (tab === "comparison") {
         const comps = Array.isArray(report.comparisons) ? report.comparisons : [];
@@ -1396,9 +2761,15 @@
         <h3>Limitations 局限</h3><ul>${(c.limitations || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
         <h3>Next actions 下一步</h3><ul>${(c.next_actions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>`;
     };
-    root.innerHTML = `${header("EXPERIMENT REPORT · 实验报告", `实验 ${report.experiment_id}`, `schema: ${esc(report.schema)} · ${esc(report.created_at)}`)}
+    const narrative = NARRATIVES[report.experiment_id] || null;
+    const top = narrative
+      ? narrativeScreen(narrative)
+      : header("EXPERIMENT REPORT · 实验报告", `实验 ${report.experiment_id}`, `schema: ${esc(report.schema)} · ${esc(report.created_at)}`);
+    root.innerHTML = `${top}
+      <div class="narr-tech-label">技术细节 · 原始结果与对照（tab 页）</div>
       <div class="seg" id="v2-rep-tabs">${Object.entries(tabs).map(([k, v], i) => `<button data-tab="${k}" class="${i === 0 ? "on" : ""}">${v}</button>`).join("")}</div>
       <div class="card pad" id="v2-rep-body" style="margin-top:14px">${tabBody("results")}</div>
+      <details class="ev-raw narr-raw"><summary>技术细节 · 原始报告 JSON（含 run_id / config_hash）</summary><pre class="v2-pre">${esc(JSON.stringify(report, null, 2))}</pre></details>
       <p class="muted small" style="margin-top:12px"><a href="#/experiments">全部实验报告</a> · <a href="#/lab">回实验台</a></p>`;
     $$("#v2-rep-tabs button").forEach((b) => (b.onclick = () => {
       $$("#v2-rep-tabs button").forEach((x) => x.classList.toggle("on", x === b));
@@ -1747,7 +3118,11 @@
     }).join("");
     const grid = [0, .2, .4, .6].map((v) => `<line x1="${left}" y1="${(top + (H - top - bottom) * (1 - v / maxY)).toFixed(1)}" x2="${W - 20}" y2="${(top + (H - top - bottom) * (1 - v / maxY)).toFixed(1)}" stroke="#eeeeee"/><text x="${left - 8}" y="${(top + (H - top - bottom) * (1 - v / maxY) + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="#999">${v.toFixed(1)}</text>`).join("");
 
-    root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "先看在线 27B 的 B0/R0 对照，再看本项目离线结果与上一版归档。")}
+    const overviewTop = NARRATIVE_OVERVIEW
+      ? overviewScreen(NARRATIVE_OVERVIEW)
+      : header("EVALUATION · 评测对照", "评测对照", "先看在线 27B 的 B0/R0 对照，再看本项目离线结果与上一版归档。");
+    root.innerHTML = `${overviewTop}
+      <div class="narr-tech-label">明细与归档 · 原有表格保留在总评之后</div>
       ${cards}
       ${onlineTable}
       <div class="ev-caliber">口径不同，不可横比</div>
