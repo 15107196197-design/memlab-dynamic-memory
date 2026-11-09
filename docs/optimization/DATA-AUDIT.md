@@ -1,6 +1,6 @@
 # DATA-AUDIT · 数据与结论核查
 
-生成时间：2026-11-09T23:04:40+08:00  
+生成时间：2026-11-09T23:19:36+08:00  
 审计脚本：`scripts/audit_data.py`（可复跑）  
 机器可读结果：`reports/audit/data-audit.json`
 
@@ -51,14 +51,14 @@
 | `configs/experiment-catalog.json` | items[E2-1].reason | stale_value | E2-1 reason says 'A-level offline only' | reports/experiments/E2-1-online.json | B |
 | `configs/experiment-catalog.json` | items[E5-1].reason | stale_value | E5-1 reason says 'Offline only; no online rerun' | reports/experiments/E5-1-online.json | B |
 | `docs/optimization/HANDOFF.md` | line 794 | stale_value | HANDOFF says max_neighbors/evidence/MMR×decay/graph channel '仍是 no-op' | eval/archive/params-graph-max-neighbors-corrected.json | B |
-| `docs/report/07-results.md` | line 93 | stale_value | report says catalog still marks E1-M2 as blocked_on_hardware; catalog now marks it partial | configs/experiment-catalog.json | D/B |
+| `docs/report/07-results.md` | line 122 | stale_value | report says catalog still marks E1-M2 as blocked_on_hardware; catalog now marks it partial | configs/experiment-catalog.json | D/B |
 | `reports/experiments/E3-1-online.json` | conclusion | conclusion_conflict | report says partial (+0.0264 F1); new archive says inconclusive: +0.0262 CI [-0.00867, 0.075588] crosses 0 | eval/archive/e3-online-2x2-report.json | B/A |
 | `reports/experiments/M2-online.json` | conclusion | conclusion_conflict | report says partial (nDCG +0.0808); new paired archive says inconclusive (F1 -0.0471 CI [-0.116242, 0.001702]; nDCG +0.0544 CI [-0.0529,+0.1695]) | eval/archive/m2-online-rerank-report.json | B/A |
 | `configs/experiment-catalog.json` | items[E2-2/E3-1/E1-M2] | stale_evidence | catalog cites the raw run, not the new bootstrap report: E2-2→e2-oracle-retrieval-report.json, E3-1→e3-online-2x2-report.json, E1-M2→m2-online-rerank-report.json | eval/archive/*-report.json | B/A |
 | `deck/MemLab-展示-2026-11-09.pptx` | slide 1 · title block | placeholder_unfilled | title slide still says '姓名 / 学号' | — | D |
 | `deck/MemLab-展示-2026-11-09.pptx` | slide 1 · footer | stale_placeholder | deck still says '在线 27B 结果 19:50 回填' | reports/experiments/E1-W1-online.json | D |
-| `/api/v2/evaluation` | project_reports | count_mismatch | API returns 27 project reports; filesystem has 28 | reports/experiments/ | Web/B |
-| `/api/v2/experiments` | count | count_mismatch | API count=27; filesystem reports=28 | reports/experiments/ | Web/B |
+| `/api/v2/evaluation` | project_reports | count_mismatch | API returns 26 project reports; filesystem has 27 | reports/experiments/ | Web/B |
+| `/api/v2/experiments` | count | count_mismatch | API count=26; filesystem reports=27 | reports/experiments/ | Web/B |
 | `docs/optimization/WEB-DATA-PROVENANCE.md` | line 60 | stale_value | '评测对照页实验计划矩阵 \| 24 项计划/状态' | configs/experiment-catalog.json | B/Web |
 | `memlab/webapp/__init__.py` | line 1242 | stale_value | system provenance says 24 plan items; plan endpoint returns 50 | configs/experiment-catalog.json | Web/B |
 
@@ -134,7 +134,7 @@
 | M2 online rerank nDCG delta | {"report M2-online": "+0.0808", "archive m2-online-rerank-report": "+0.0544 CI [-0.0529,+0.1695]", "status": "report partial vs archive inconclusive"} | estimator_conflict | `eval/archive/m2-online-rerank-report.json#conclusion.per_metric_status.ndcg` |
 | E2-2 oracle conclusion status | {"report E2-2-online": "inconclusive (no delta)", "archive e2-oracle-retrieval-report": "inconclusive"} | consistent | `eval/archive/e2-oracle-retrieval-report.json#conclusion` |
 | catalog row count | {"catalog": 50, "HANDOFF": 50, "web plan": 50, "report": 50, "deck slide 7": 50, "web system provenance": 24} | inconsistent | `configs/experiment-catalog.json` |
-| reports/experiments file count | {"filesystem": 28, "HANDOFF": 28, "web": 28} | consistent | `reports/experiments/` |
+| reports/experiments file count | {"filesystem": 27, "HANDOFF": 27, "web": 27} | consistent | `reports/experiments/` |
 
 ### 4.3 三个 archive 复算（C2）
 
@@ -153,9 +153,9 @@
 | 项 | 实际 | brief 期望 | 说明 |
 |---|---|---|---|
 | catalog 行数 | 50 | 48 | 运行中由 48 增至 50（B 新增 E2-WR/E2-SM）；主 catalog 无 done |
-| reports/experiments JSON | 28 | 20 | 运行中由 20 增至 23（A/B 新增 E2-2/E3-1/M2 online） |
-| eval/archive JSON（递归） | 43 | 31 | 实际 34；brief 的 31 已过期 |
-| runs SQLite | 22 | 12 | 实际 21；brief 的 12 已过期 |
+| reports/experiments JSON | 27 | 20 | 运行中由 20 增至 23（A/B 新增 E2-2/E3-1/M2 online） |
+| eval/archive JSON（递归） | 41 | 31 | 实际 34；brief 的 31 已过期 |
+| runs SQLite | 21 | 12 | 实际 21；brief 的 12 已过期 |
 | deck 页数 | 12 | 12 | 一致 |
 | repo-g2 catalog | 24 | — | 旧 24 行，4 done / 6 blocked |
 | repo-g2 独有 archive | — | — | G2 已在 2103023 合并；无 g2-only archive，但 catalog 未吸收 |
