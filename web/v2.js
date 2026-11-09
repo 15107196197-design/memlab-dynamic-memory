@@ -463,8 +463,46 @@
   const PLAN_STATUS = { done: "已完成", partial: "部分完成", pending: "待做", blocked: "阻塞", unknown: "未知" };
   function planTable(items) {
     return `<table class="v2-table"><thead><tr><th>ID</th><th>阶段</th><th>模块</th><th>实验（要回答什么）</th><th>指标</th><th>状态</th><th>证据/去向</th></tr></thead><tbody>
-      ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "")}</div></td><td class="small">${(x.metrics || []).map((m) => esc(m)).join(" / ")}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("")}
+      ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "")}</div></td><td class="small">${(x.metrics || []).map((m) => esc(m)).join(" / ")}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">没有匹配的实验。</td></tr>`}
     </tbody></table>`;
+  }
+
+  function planPanel(items, prefix) {
+    const stages = [...new Set((items || []).map((x) => x.stage))].filter(Boolean).sort();
+    const modules = [...new Set((items || []).map((x) => x.module))].filter(Boolean).sort();
+    const statuses = [...new Set((items || []).map((x) => x.status))].filter(Boolean).sort();
+    return `<div class="plan-filters">
+      <input id="${prefix}-q" class="field" placeholder="搜索 ID / 标题 / 指标 / 证据">
+      <select id="${prefix}-stage" class="field"><option value="">全部阶段</option>${stages.map((x) => `<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>
+      <select id="${prefix}-module" class="field"><option value="">全部模块</option>${modules.map((x) => `<option value="${esc(x)}">${esc(x)}</option>`).join("")}</select>
+      <select id="${prefix}-status" class="field"><option value="">全部状态</option>${statuses.map((x) => `<option value="${esc(x)}">${esc(PLAN_STATUS[x] || x)}</option>`).join("")}</select>
+      <span id="${prefix}-meta" class="muted small"></span>
+    </div>
+    <div id="${prefix}-body">${planTable(items)}</div>`;
+  }
+
+  function wirePlan(items, prefix) {
+    const q = document.getElementById(`${prefix}-q`);
+    const stage = document.getElementById(`${prefix}-stage`);
+    const module = document.getElementById(`${prefix}-module`);
+    const status = document.getElementById(`${prefix}-status`);
+    const body = document.getElementById(`${prefix}-body`);
+    const meta = document.getElementById(`${prefix}-meta`);
+    if (!q || !body) return;
+    const apply = () => {
+      const needle = q.value.trim().toLowerCase();
+      const filtered = (items || []).filter((x) => {
+        if (stage.value && x.stage !== stage.value) return false;
+        if (module.value && x.module !== module.value) return false;
+        if (status.value && x.status !== status.value) return false;
+        if (!needle) return true;
+        return `${x.id} ${x.title} ${x.question} ${(x.metrics || []).join(" ")} ${x.evidence || ""}`.toLowerCase().includes(needle);
+      });
+      body.innerHTML = planTable(filtered);
+      meta.textContent = `显示 ${filtered.length} / ${(items || []).length} 项`;
+    };
+    [q, stage, module, status].forEach((el) => { el.oninput = apply; el.onchange = apply; });
+    apply();
   }
 
   async function renderExperiment(root) {
@@ -521,7 +559,7 @@
           <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
       }
       if (tab === "plan") {
-        return `<p class="muted small">来自 04-experiments 的固定实验清单；状态是当前仓库的覆盖情况，不是统计结论。</p>${planTable(plan.items)}`;
+        return `<p class="muted small">来自 04-experiments 的固定实验清单；状态是当前仓库的覆盖情况，不是统计结论。</p>${planPanel(plan.items, "v2-rep-plan")}`;
       }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
         <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
@@ -536,6 +574,7 @@
     $$("#v2-rep-tabs button").forEach((b) => (b.onclick = () => {
       $$("#v2-rep-tabs button").forEach((x) => x.classList.toggle("on", x === b));
       $("#v2-rep-body").innerHTML = tabBody(b.dataset.tab);
+      if (b.dataset.tab === "plan") wirePlan(plan.items, "v2-rep-plan");
     }));
   }
 
@@ -644,9 +683,10 @@
       </div>
       <div class="card pad" style="margin-top:16px"><h3>实验计划矩阵 <span class="muted small">Experiment plan</span></h3>
         <p class="muted small">课程设计里每个实验原本要回答什么、用什么指标、当前状态。不是所有都已跑；状态见标签。</p>
-        ${planTable(plan.items)}
+        ${planPanel(plan.items, "v2-eval-plan")}
       </div>
       <div class="card pad" style="margin-top:16px"><h3>Web 实验报告</h3>${data.reports?.length ? data.reports.map((r) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:7px 0"><a href="#/experiments/${esc(r.experiment_id)}">${esc(r.experiment_id)}</a><span class="muted small">${esc(r.status || "not_analyzed")}</span></div>`).join("") : `<p class="muted">还没有 Web 实验报告；去实验台运行 baseline + candidate 后生成。</p>`}</div>`;
+    wirePlan(plan.items, "v2-eval-plan");
   }
 
   async function renderSystem(root) {

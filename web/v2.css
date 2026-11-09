@@ -102,3 +102,6 @@
 .pill.partial { border-color: #e0d6c2; background: #fbf8f1; color: #6b5630; }
 .pill.pending { border-color: #e4e4e4; background: #fafafa; color: #777; }
 .pill.blocked { border-color: #e6c5c5; background: #fdf6f6; color: #7a2f2f; }
+.plan-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 12px; }
+.plan-filters .field { width: auto; min-width: 120px; font-size: 12px; padding: 7px 9px; }
+.plan-filters input.field { flex: 1; min-width: 200px; }
