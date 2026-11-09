@@ -37,8 +37,13 @@
 | **S8** | E3 模块组合 | S6/S7 | 组合矩阵、超加/次加、Pareto | 高 |
 | **S9** | E4 环境 | S8 | 条件策略、regret、热力图 | 很高 |
 | **S10** | E5 确认 + 最终报告 | S9 | 留出集结论、复现包、报告 | 很高 |
+| **W1** | Web MVP：6 段记忆库 + v2 JSON + 提问/状态页 | S2/S4 | 可运行页面 + API 测试 | 中 |
+| **W2** | Web 实验台：插拔配置 + 异步 run + 指标对照 | W1/S5/S6 | 实验台 + 评测页 | 高 |
+| **W3** | 最终 Web 交付整合 | W2/S10 | 6 段演示、截图、复现包、报告素材 | 高 |
 
 > S6 可拆成 S6a（W/S/R）和 S6b（M/U/K）；如果单会话跑不完，按这个拆。
+>
+> **Web 轨道 W1–W3 与 S6–S10 并行，是课程交付 P0**：W1 不依赖模型，立即可做；W2 与 S7 并行；W3 在最终报告前完成。详见 [WEB-DESIGN.md](WEB-DESIGN.md) 与 [COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)。
 >
 > **每个 S 的前置条件不同**：完整矩阵、检测命令、缺口处置模板见 [PREREQUISITES.md](PREREQUISITES.md)。会话提示词里的“前置条件”块是硬门禁，不是参考信息。
 
@@ -1103,6 +1108,91 @@ Key：<不需要 / 本地 / API 需要，先给选项 / blocked_on_key + 解除�
 
 Key：不需要。
 开始前 Startup Audit；完成后 Completion Audit + Goal Alignment。
+```
+
+
+---
+
+## 17. Web 交付轨道（W1–W3）
+
+> 课程硬要求：可运行 Web 应用、完整源码、结构化 Memory JSON、实验结果/对照、报告/展示。设计框架见 [WEB-DESIGN.md](WEB-DESIGN.md)，要求对照见 [COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)。
+>
+> **Web 是 P0，不要等 S10。** W1 可离线立即做；W2 与 S7 并行；W3 在最终报告前完成。
+
+### 17.1 W1：Web MVP（记忆库 + v2 JSON + 提问/状态）
+
+```text
+执行 W1：课程 Web 应用 MVP。只做交付面，不重写 memlab/memwb。
+
+先读：
+- HANDOFF §1/§1.3/§2/§5
+- COURSE-REQUIREMENTS.md、WEB-DESIGN.md §2–§4
+- server.py、web/、memlab/export.py、memlab/model.py、memlab/e2e.py
+
+实现：
+1. 首页：6 段（4 dev + 2 test）卡片、split、系统状态；extension 折叠。
+2. 记忆库 v2：列表/筛选/详情/structured/t_event/t_ingest/valid_interval/evidence/关系；
+   详情可点回原始 turn。
+3. 导出：GET /api/v2/export?sample=&schema=2（v2 下载），保留 v1 兼容；
+   6 段单段导出。
+4. 提问页：sample/question/as_of/config；B0 legacy（full/vector/hybrid/dynamic）
+   可直接跑；模块配置走 E2E executor，无模型时 offline 并标记。
+5. 展示：答案/引用/拒答、valid/superseded/conflicts、候选、关系图、trace 时间线。
+6. 保留旧 /api/* 与旧 tab；新增 /api/v2/*，不破坏旧测试。
+7. 测试：API、v2 export schema、6 段、旧 Web 回归；手工 smoke。
+
+验收：
+- python server.py 可运行；6 段可见；v2 JSON 通过 validate_v2；
+- 至少 1 个 B0 真跑 + 1 个 offline 模块真跑；状态/证据/trace 可见；
+- 旧 38 + 现有测试全过；不 push。
+不要做：不重写旧 UI/旧 API；不跑大实验；不伪造 LLM 指标。
+```
+
+### 17.2 W2：实验台 + 评测对照
+
+```text
+执行 W2：Web 实验台与评测对照。
+
+先读：WEB-DESIGN.md §3.4–§6/§9；HANDOFF §5.1.6；S5/S6 报告；memlab/experiments/*。
+
+实现：
+1. 配置器：W/S/R/M/U/K 轴、预设 B0/R0/CHEAP/QUALITY、高级 JSON；
+   服务端 RunConfig + probe_config/runnable gate + effective config/hash。
+2. 插拔可运行：每轴每个 level 要么可运行，要么禁用并给出 available/problem；
+   不允许静默 fallback。
+3. 单题/批量异步 run：job 队列、轮询、取消、超时、SQLite 历史、resume。
+4. 结果：F1/Recall@K/state accuracy/tokens/P95/error；阶段瀑布；Pareto。
+5. 对照：Full Text / Vector RAG / Hybrid / Dynamic / 当前模块配置；同题 diff。
+6. 评测页：development/test/extension；test 只读提示；manifest/config hash/model 标签；
+   offline 与真实模型必须明确区分。
+7. 测试：config validate 合法/非法/未实现；每轴至少一个 runnable；3 配置×10 题写 SQLite；
+   旧测试全过。
+
+验收：
+- 每个轴改一次都能跑 1 题；不可运行项有原因；
+- 3 配置 × 10 题写入 SQLite 且页面可见；
+- 评估指标/对照/瀑布可导出；不 push。
+不要做：不写新模块；不跑 E1 全量；不把 offline 当 LLM。
+```
+
+### 17.3 W3：最终交付整合
+
+```text
+执行 W3：课程最终 Web 交付。
+
+实现/整理：
+1. test 2 段最终评测（真实或 offline 明确标签）；development 4 段不参与调参声明。
+2. 6 段结构化 Memory JSON 打包；v2 schema 校验。
+3. 演示脚本 + 截图 + 3–5 分钟展示；报告章节（架构/数据/状态/指标/对照/错误/局限）。
+4. 复现包：python server.py、配置、manifest、seed、模型前置。
+5. COURSE-REQUIREMENTS 逐条勾选；Bonus 清单（graph/multihop/merge/compress/temporal）。
+6. 更新 HANDOFF §5/§7、README/报告。
+
+验收：
+- 五项交付齐全（Web/源码/JSON/结果对照/报告展示）；
+- test 2 段结果独立；offline/真实标签清楚；
+- 演示 10 分钟内跑完；不 push。
+不要做：不重跑 E1 全量；不伪造 B 级；不改评测标准。
 ```
 
 > 一句话：**给会话的不是“任务描述”，而是“入口文件 + 阶段提示词 + 验收 + 不要做 + 完成自检”。**

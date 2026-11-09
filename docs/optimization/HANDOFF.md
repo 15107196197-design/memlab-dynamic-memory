@@ -26,11 +26,11 @@
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；新增 Web 设计文档（未改 `server.py`/`web/` 代码）；`activity-dashboard/` 是未跟踪原型 |
 | 测试 | `python -m unittest discover -s tests -t .` → **223 passed**（212 + provider 8 + judge 3） |
 | 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）、Lab UI；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **代码已具备“接模型即跑”的条件**：provider adapter + preflight + Judge + CLI overrides；真实模型仍未接入，B 级待跑。见 [RUNBOOK.md](RUNBOOK.md) |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**Web W1–W3**（设计见 [WEB-DESIGN.md](WEB-DESIGN.md)）；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 当前阶段 | 代码已具备“接模型即跑”的条件（provider + preflight + Judge）；真实模型仍未接入，B 级待跑。**课程 Web 设计框架已补齐，W1 Web MVP 是 P0 下一步**；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -176,6 +176,8 @@ artifacts/
 | `docs/optimization/S7B-DECISION.md` | S7b/B 级决策：offline A 级先跑、B 级作结论，含只读可行性表 |
 | `docs/optimization/S7B-A-REPORT.md` | S7b-A 离线耦合结果：P(A\|R) 表、seed 波动、B 级缺口 |
 | `docs/optimization/AUDIT-2026-11-09.md` | 产物整体审计 + P0/P1 修复验收 + §3.2 遗留项收尾 |
+| `docs/optimization/COURSE-REQUIREMENTS.md` | 2026 课程 PDF 硬性要求、6 段 4+2 划分、交付对照 |
+| `docs/optimization/WEB-DESIGN.md` | Web 应用/实验台设计框架、页面/API/配置门禁、W1–W3 实施轨道 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
 | `configs/reference-r0.json` | R0 参考架构 |
 | `configs/reference-cheap.json` | E4 CHEAP 预设（03-variants §3.8；6 字段/1-hop/无重排） |
@@ -348,6 +350,11 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 | S6 结果边界 | 36 runs、conv-26、offline；B 级 Judge/F1 与真实 P95 全部 blocked_on_ollama | 不能把本表当最终 E1 结论 |
 | S4 M 阶段顺序 | 默认 `fusion → rerank → filter → mmr → decay → compress`；`MergePipeline(order=...)` 可改 | filter 是后处理的一部分；其余顺序按 4.8；每阶段记瀑布 |
 | S4 cross-encoder | 可选依赖；`sentence_transformers` 缺失时保持原顺序并记 `fallbacks` | 不让缺依赖阻塞实验；有依赖时才是真实重排 |
+| Web 技术栈 | 继续 stdlib `http.server` + 原生 JS；新增 `/api/v2/*`，不引入 npm/构建 | 课程演示零网络依赖；旧 UI/旧 API 保留 |
+| Web 配置门禁 | 每次插拔走 `RunConfig` + `probe_config`；不可运行项禁用并给原因，不静默 fallback | “每个选择都能运行”必须可验证 |
+| Web 数据范围 | 默认 6 段（4 dev + 2 test）；test 只读评测；extension 折叠 | 对齐课程硬性数据划分，避免 test 调参 |
+| Web 模式标签 | offline/online、legacy/module、真实/抽取式 F1 必须显式标记 | 不把 offline 当 LLM 指标 |
+| Web 交付顺序 | W1 立即做，W2 与 S7 并行，W3 在最终报告前；不等 S10 | 课程最终交付要求 Web，不能压到最后 |
 | S4 融合输入 | `RetrievalResult.by_channel` 为 S4 新增只读字段（旧字段不变） | M 需要每通道排名；旧调用方无需改 |
 | S4 U 引用/拒答 | 引用只接受上下文证据的 turn id；无 LLM/空答案/`unknown` 一律拒答；冲突显式披露 | 不伪造引用；状态失败也拒绝而非猜 |
 | S4 K 矛盾定义 | 只把“同键同时 ACTIVE 的不同值”或 CONFLICT 状态算矛盾；历史版本不算 | 避免把正常版本链误报为矛盾 |
@@ -376,6 +383,9 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 | **E2 耦合** | 转化率/Oracle/LLM 归因 | 高 | 会话 H | 04 的 4.11 | HANDOFF §5 |
 | **E3 组合** | 组合矩阵/Pareto | 高 | 会话 I | 04 的 4.12、e3 | HANDOFF §5 |
 | **E4/E5** | 条件策略/确认 | 很高 | 会话 J/K | 04 的 4.13–4.14、e4 | HANDOFF §5、§6 |
+| **W1 Web MVP** | 6 段记忆库、v2 JSON、提问/状态页 | 中 | 会话 W1（P0，可离线） | COURSE-REQUIREMENTS、WEB-DESIGN §3–4 | HANDOFF §1、§5、§7 |
+| **W2 实验台** | 插拔配置器、异步 run、指标/对照 | 高 | 会话 W2（与 S7 并行） | WEB-DESIGN §3.4–§6、S5/S6 报告 | HANDOFF §1、§5、§7 |
+| **W3 交付整合** | 6 段/test 评测、截图、复现包、报告素材 | 高 | 会话 W3（最终报告前） | WEB-DESIGN §9–§10、COURSE-REQUIREMENTS | HANDOFF §1、§5、§7 |
 
 **规则：**
 
@@ -669,13 +679,15 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 **边界：** 这是 A 级机制/链路验证，不产出 S7b 正式结论；没有把 `not_available` 写成 0 或“无差异”。
 
 ### 5.2 未开始
+- [ ] W1 Web MVP：首页 6 段、记忆库 v2、v2 JSON 下载、提问/状态页、旧 API 兼容（P0，可离线）
+- [ ] W2 Web 实验台：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照（P0/P1）
+- [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）
 - [ ] E0 基线复现
 - [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
 - [ ] E1b 延后变体（`deferred`，不是静默删除）：`schema=hmem/structmem/amem`、`graph.repr=community`（+`community_resolution`）、`schema.params.cot`、`post.compress=llm_summary`；重入条件见 e1-screening spec 的 `deferred`
 - [ ] 正式 S7b：Oracle 干预 run + LLM 归因（等 B 级；S7b-A 已完成，见 §5.1.9）
 - [ ] E0/E2/E3/E4/E5
 - [ ] 正式 E1 的 run 顺序随机化 / bootstrap / 多重比较（analysis 仍只有 per-run 汇总）
-- [ ] Lab UI / 报告自动化
 - [x] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；已实现 + 单测/本地 HTTP 冒烟）
 - [ ] API key / 预算确认（S9 L3 与 S10 第二 Judge；当前未配置）
 
@@ -954,9 +966,15 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 
 ---
 
-## 10. 建议的下一步（S7b-B / 补真实 S6）
+## 10. 建议的下一步（Web P0 / S7b-B / 补真实 S6）
 
-**S7b-A 已完成（A 级描述性）；下一步是 B 级真实指标，不是继续堆 offline 分析。**
+**课程最终交付要求 Web；W1/W2 与模型 B 级并行，不要等 S10。**
+
+1. **W1 Web MVP（P0，立即可做、可离线）**：6 段首页、记忆库 v2、v2 JSON 下载、提问/状态页；保留旧 API/tab。见 [WEB-DESIGN.md](WEB-DESIGN.md) §3–§4、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)。
+2. **W2 Web 实验台**：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照；与 S7 并行。
+3. **W3 最终交付**：6 段/test 评测、截图/演示、复现包、报告素材；在最终报告前完成。
+
+**S7b-A 已完成（A 级描述性）；B 级真实指标仍按下面顺序，不继续堆 offline 分析。**
 
 **前置（按优先级）：**
 

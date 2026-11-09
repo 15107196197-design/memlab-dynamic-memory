@@ -231,7 +231,9 @@ runs/<run_id>/
 | [04-experiments.md](04-experiments.md) | 模块化实验：六模块内部选型/参数/LLM → 耦合/瓶颈/LLM 归因 → 组合/环境/确认；含第 7 章评测标准选择 | 想规划“实验怎么做” |
 | [05-color-focus.md](05-color-focus.md) | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 | 想确认“开发与消融如何承接” |
 | [HANDOFF.md](HANDOFF.md) | 项目状态、架构不变量、阶段计划、上下文交接协议 | 新会话/被压缩后继续 |
-| [SESSION-PROMPTS.md](SESSION-PROMPTS.md) | S0–S10 的会话提示词、引用文件、交付与验收 | 准备开始开发/实验 |
+| [SESSION-PROMPTS.md](SESSION-PROMPTS.md) | S0–S10 + W1–W3 的会话提示词、引用文件、交付与验收 | 准备开始开发/实验/Web |
+| [COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md) | 2026 课程 PDF 硬性要求、6 段 4+2、交付对照 | 做最终交付/报告前 |
+| [WEB-DESIGN.md](WEB-DESIGN.md) | Web 应用/实验台页面、API、插拔 runnable 门禁、W1–W3 | 做 Web/演示 |
 | [PREREQUISITES.md](PREREQUISITES.md) | 每个 S 的环境/包/模型/接口/数据前置、检测命令、缺口 A/B/C 处理 | 新会话开场/遇到环境阻塞 |
 | [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) | Startup Audit / Completion Audit / 分配模板 | 每个会话开场与收尾 |
 | [GOAL-AUDIT.md](GOAL-AUDIT.md) | 总体目标对齐、10 个审计问题、红旗 | 阶段收尾/实验设计评审 |

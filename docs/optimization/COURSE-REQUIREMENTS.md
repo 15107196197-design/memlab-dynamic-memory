@@ -1,0 +1,90 @@
+# COURSE-REQUIREMENTS · 2026 课程项目硬性要求与对照
+
+> 来源：`0 - Project (2026).pdf`（13 页，Zhiyuan Wan，2026-09-23）。
+> 本文件只摘录与**最终 Web 交付**相关的硬性要求与评分点；项目过程/团队管理不在此范围。
+> 用途：后续 Web 会话先读本文件，不必反复解析 PDF。
+
+## 1. 项目一句话
+
+基于 LoCoMo 长期多会话对话，构建**结构化 Memory**，支持查询驱动的动态状态解析、有效记忆检索与可视化，并交付一个**可运行的 Web 应用**。
+
+## 2. 必做要求（原文对应）
+
+### 2.1 数据与记忆构建
+
+- 使用课程选定的 **6 段 LoCoMo 对话：4 段开发 + 2 段测试**；其余 4 段可作扩展。
+- 从原始对话构建结构化 Memory，至少保存：
+  - 内容 Content
+  - 时间 Timestamp / session time
+  - 来源来源会话/轮次 Source session/turn
+- 支持**统一 JSON 导出**。
+- Web 端可查看结构化记忆及其**原始证据**。
+
+### 2.2 动态维护与查询
+
+- 对输入 QA，从长期历史检索相关 Memory；
+- 判断 Memory 之间的 **RETAIN / UPDATE / SUPERSEDE**（以及 CONFLICT）；
+- 确定**当前有效 Memory** 并完成回答；
+- Web 中展示**相关证据**与**状态解析过程**。
+
+### 2.3 评测指标
+
+- 问题回答 **F1**
+- 证据记忆检索 **Recall@K**
+- 动态状态更新判断**准确率**
+
+### 2.4 对照方法
+
+1. **Full Text**：全文
+2. **Vector RAG**：检索相关 Memory，但不做状态关系判断
+
+### 2.5 交付内容
+
+1. 可运行的 Web 应用
+2. 完整源代码
+3. 结构化 Memory JSON
+4. 实验结果与对照分析
+5. 项目报告与课堂展示
+
+### 2.6 建议 Memory 字段
+
+`Memory ID · Content · Entity / Event · Timestamp · Source Session / Turn · Query Relation · Validity / State`
+
+### 2.7 Bonus
+
+- 更复杂的冲突消解与多版本保留
+- Graph Memory / 多跳关系建模
+- Memory 合并与压缩
+- 自适应检索或更复杂的时间推理
+
+## 3. 课程数据与划分
+
+- `data/locomo10.json`，10 段对话；每段平均 588.2 轮 / 27.2 会话 / 约 1.66 万 token。
+- 项目 `memwb.config.SPLIT`：
+  - development：`conv-26, conv-30, conv-43, conv-44`
+  - test：`conv-41, conv-42`
+  - extension：`conv-47, conv-48, conv-49, conv-50`
+- 最终评测必须使用 **test 的 2 段**作为独立测试集；开发/调参只用 development 4 段。
+
+## 4. 我们的覆盖结论（先给结论）
+
+| 课程要求 | 现有实现 | 是否已有 | 交付缺口 |
+|---|---|---|---|
+| 6 段数据 4+2 | `dataset` + `config.SPLIT`，10 段齐全 | 数据层有 | Web 默认只展示 6 段、test 评测页未接 |
+| 结构化 Memory 内容/时间/来源 | `memlab.MemoryUnit` v2、`model.from_sample` | 有 | Web 未展示 v2 + evidence |
+| 统一 JSON 导出 | `memlab.export.export_v2` / v1 兼容 | 有 | `/api/export` 仍返回 v1；无 v2 下载 |
+| Web 查看记忆/证据 | 旧 `web/` 有 memories/changes/graph | 部分 | 旧接口是 v1 视图；无 v2 详情/证据 |
+| 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | 有 | Web 未接新 pipeline 的 trace |
+| 当前有效 Memory + 回答 | `StateView` + U AnswerResult + legacy dynamic | 有 | Web 未展示新 StateView/引用/拒答 |
+| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | 有 | 新模块 pipeline 的状态指标未自动写入；Web 未展示 |
+| Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
+| Web 交付 / 源码 / JSON / 结果 / 报告 | `web/` 旧 UI、`docs/`、`eval/` | 部分 | **Web v2 + Lab + 最终交付页缺失** |
+| Bonus：图/多跳/合并/时间/冲突 | S3/S4 已实现多数 | 超出 | 需在 Lab 中可插拔呈现 |
+
+**结论：** 能力层“只多不少”；**交付层目前少 5 项**（6 段/default、v2 JSON 下载、v2 记忆/证据页、状态 trace 页、Lab/对照/最终交付页）。W1–W3 补齐后，严格满足并超过 PDF。
+
+## 5. 评分点提醒
+
+- 最终报告/展示必须覆盖：结构化 Memory、动态状态、检索/状态/回答指标、Full Text vs Vector RAG 对照、错误分析、局限。
+- 不要把 offline extractive F1 当真实 LLM F1；不要用 development 调参后直接报 test。
+- 不要把 4 段开发结果说成 6 段最终结果；test 2 段必须单独跑。
