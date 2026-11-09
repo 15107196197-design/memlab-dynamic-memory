@@ -69,17 +69,28 @@ def main() -> int:
     parser.add_argument("--seeds", type=int, nargs="+", default=[13, 17])
     parser.add_argument("--offline", action="store_true", default=True)
     parser.add_argument("--online", action="store_true", help="use Ollama/API instead of offline clients")
+    parser.add_argument("--context", type=int, default=None,
+                        help="override LLM context (24GB GPUs should use 8192/16384)")
     args = parser.parse_args()
     offline = not args.online
+    experiment_id = "final-w3-test-online" if not offline else "final-w3-test-offline"
     started = time.time()
     batches, rows_by_run = {}, {}
     for preset in CONFIGS:
         for sample_id in TEST_SAMPLES:
             for seed in args.seeds:
-                out = webapp.post("/api/v2/runs", {
+                body = {
                     "sample": sample_id, "preset": preset, "batch": True,
                     "questions": args.questions, "seed": seed, "offline": offline,
-                })
+                }
+                if args.context:
+                    config_data = webapp._preset(preset).to_dict()
+                    environment = config_data.setdefault("environment", {})
+                    environment["context_budget"] = int(args.context)
+                    environment.setdefault("llm", {})["context"] = int(args.context)
+                    body["config"] = config_data
+                    body.pop("preset", None)
+                out = webapp.post("/api/v2/runs", body)
                 key = (preset, sample_id, seed)
                 batches[key] = out
                 rows_by_run[key] = out["rows"]
@@ -135,32 +146,39 @@ def main() -> int:
     else:
         status = "inconclusive"
         claim = f"R0 F1 {delta_f1:+.4f} vs B0; 95% bootstrap CI {f1_ci} includes 0."
+    model_label = legacy_config.answer_model() if not offline else "offline-extractive"
+    embedding_label = legacy_config.embed_model() if not offline else "offline-hash"
     conclusion = {
         "status": status,
         "claims": [claim],
         "conditions": [
             "Frozen B0/R0 configs; no test-time tuning.",
             "Test split conv-41/conv-42; questions stratified by category.",
-            "Offline extractive answer + hashing embedding; this is NOT an LLM-quality claim.",
+            ("Real model answer via the configured Ollama/API endpoint; this is a B-level LLM answer comparison."
+             if not offline else
+             "Offline extractive answer + hashing embedding; this is NOT an LLM-quality claim."),
         ],
         "limitations": [
-            "No real Ollama/API model: F1 is offline extractive, not B-level.",
+            ("Local/remote model latency and API/network variance are part of P95; not a GPU-only latency claim."
+             if not offline else "No real Ollama/API model: F1 is offline extractive, not B-level."),
             "state_accuracy is not recorded for the module pipeline; only F1/Recall are comparable.",
             "Two seeds and 20 questions/sample; bootstrap resamples questions, not conversations.",
+            "No LLM-as-Judge in this comparison; F1 is the primary metric.",
         ],
         "next_actions": [
-            "Re-run --online with the frozen configs when a model endpoint is available.",
+            ("If time allows, add a second judge or more candidates; do not tune on test."
+             if not offline else "Re-run --online with the frozen configs when a model endpoint is available."),
             "Add state_accuracy from a frozen module-pipeline benchmark before reporting it.",
         ],
     }
     report = {
         "schema": "memlab/experiment-report@1",
-        "experiment_id": "final-w3-test-offline",
+        "experiment_id": experiment_id,
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "manifest": {
             "git_commit": lab_manifest.git_commit(),
             "config_hashes": {preset: batches[(preset, TEST_SAMPLES[0], args.seeds[0])]["config_hash"] for preset in CONFIGS},
-            "model": {"llm": "offline-extractive" if offline else "online", "embedding": "offline-hash" if offline else "online"},
+            "model": {"llm": model_label, "embedding": embedding_label},
             "offline": offline,
         },
         "dataset": {"split": "test", "samples": TEST_SAMPLES, "questions": len(base_rows),
@@ -193,17 +211,19 @@ def main() -> int:
             "bootstrap": {"samples": 1000, "seed": 2026, "pairs_f1": len(pairs), "pairs_recall": len(rpairs)},
         },
         "conclusion": conclusion,
-        "web": {"route": "#/experiments/final-w3-test-offline", "published": True},
+        "web": {"route": f"#/experiments/{experiment_id}", "published": True},
         "elapsed_seconds": round(time.time() - started, 1),
     }
-    for path in (ROOT / "eval" / "archive" / "final-w3.json",
-                 ROOT / "eval" / "archive" / "experiments" / "final-w3-test-offline.json",
-                 ROOT / "reports" / "experiments" / "final-w3-test-offline.json"):
+    for path in (ROOT / "eval" / "archive" / f"{experiment_id}.json",
+                 ROOT / "eval" / "archive" / "experiments" / f"{experiment_id}.json",
+                 ROOT / "reports" / "experiments" / f"{experiment_id}.json"):
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
         print("wrote", path)
-    print(json.dumps({"B0": base_metrics, "R0": cand_metrics, "delta_f1": delta_f1,
-                      "f1_ci": f1_ci, "recall_ci": recall_ci, "conclusion": status}, ensure_ascii=False, indent=2))
+    print(json.dumps({"experiment_id": experiment_id, "model": model_label,
+                      "B0": base_metrics, "R0": cand_metrics, "delta_f1": delta_f1,
+                      "f1_ci": f1_ci, "recall_ci": recall_ci, "conclusion": status},
+                     ensure_ascii=False, indent=2))
     return 0
 
 

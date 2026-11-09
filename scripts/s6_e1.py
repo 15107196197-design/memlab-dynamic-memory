@@ -36,6 +36,7 @@ SAMPLES = ["conv-26", "conv-30", "conv-43", "conv-44"]
 PROVIDER_OVERRIDES: dict[str, str] = {}
 EMBEDDING_OVERRIDES: dict[str, str] = {}
 JUDGE_ENABLED = False
+CONTEXT_OVERRIDE: int | None = None
 
 
 def apply_provider_overrides(config: dict) -> dict:
@@ -46,6 +47,9 @@ def apply_provider_overrides(config: dict) -> dict:
         environment.setdefault("embedding", {}).update(EMBEDDING_OVERRIDES)
     if JUDGE_ENABLED:
         environment["judge"] = dict(environment.get("llm") or {})
+    if CONTEXT_OVERRIDE:
+        environment.setdefault("llm", {})["context"] = int(CONTEXT_OVERRIDE)
+        environment["context_budget"] = int(CONTEXT_OVERRIDE)
     return config
 
 
@@ -235,8 +239,14 @@ def main(argv=None) -> int:
     parser.add_argument("--embedding-api-key-env", default=None)
     parser.add_argument("--judge", action="store_true",
                         help="run LLM-as-Judge for every question (B-level; online only)")
+    parser.add_argument("--modules", nargs="+", default=None, choices=("W", "S", "R", "M", "U", "K"),
+                        help="only these modules (default: all six)")
+    parser.add_argument("--candidates", nargs="+", default=None,
+                        help="only these candidate names (default: all; e.g. W1-legacy-append S1-state-slot)")
+    parser.add_argument("--context", type=int, default=None,
+                        help="override LLM context budget (24GB GPUs should use 8192/16384)")
     args = parser.parse_args(argv)
-    global PROVIDER_OVERRIDES, EMBEDDING_OVERRIDES, JUDGE_ENABLED
+    global PROVIDER_OVERRIDES, EMBEDDING_OVERRIDES, JUDGE_ENABLED, CONTEXT_OVERRIDE
     PROVIDER_OVERRIDES = {key: value for key, value in {
         "provider": args.provider, "model": args.model, "base_url": args.base_url,
         "api_key_env": args.api_key_env,
@@ -246,6 +256,7 @@ def main(argv=None) -> int:
         "base_url": args.embedding_base_url, "api_key_env": args.embedding_api_key_env,
     }.items() if value}
     JUDGE_ENABLED = bool(args.judge)
+    CONTEXT_OVERRIDE = args.context
 
     db = Path(args.db)
     cache = lab_cache.ArtifactCache(Path(args.cache))
@@ -288,8 +299,24 @@ def main(argv=None) -> int:
     }
     questions = {seed: question_sets(args.samples, args.questions, seed) for seed in args.seeds}
     results = []
+    modules = args.modules or list(CANDIDATES)
+    wanted = set(args.candidates or [])
+    selected = {
+        module: [candidate for candidate in CANDIDATES[module]
+                 if not wanted or candidate["name"] in wanted]
+        for module in modules
+    }
+    selected = {module: candidates for module, candidates in selected.items() if candidates}
+    if not selected:
+        print(json.dumps({"error": "no candidates selected", "modules": modules, "candidates": args.candidates},
+                         ensure_ascii=False, indent=2))
+        return 2
+    print(json.dumps({"selected": {module: [c["name"] for c in candidates]
+                                   for module, candidates in selected.items()},
+                      "context": CONTEXT_OVERRIDE, "judge": bool(args.judge), "offline": offline},
+                     ensure_ascii=False, indent=2))
     with store_module.ResultStore(db) as store:
-        for module, candidates in CANDIDATES.items():
+        for module, candidates in selected.items():
             for candidate in candidates:
                 for seed in args.seeds:
                     plan = make_plan(module, candidate, seed, args.questions, args.samples)
@@ -312,7 +339,9 @@ def main(argv=None) -> int:
                                      ensure_ascii=False))
 
     # reproducibility: same candidate/questions, two independent databases
-    reference_plan = make_plan("R", CANDIDATES["R"][1], args.seeds[0], args.questions, args.samples)
+    first_module = next(iter(selected))
+    first_candidate = selected[first_module][0]
+    reference_plan = make_plan(first_module, first_candidate, args.seeds[0], args.questions, args.samples)
     subset = questions[args.seeds[0]][:10]
     repeats = []
     with tempfile.TemporaryDirectory() as directory:
