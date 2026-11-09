@@ -191,11 +191,13 @@
     const rels = out.relations || [];
     const byType = (type) => rels.filter((r) => r.type === type).length;
     const validCount = (st.valid_ids || []).length;
+    const supersededCount = Math.max(byType("SUPERSEDE"), (st.superseded_ids || []).length);
+    const conflictCount = (st.conflicts || []).length;
     const blocks = [
       ["保留", "RETAIN", validCount],
       ["更新", "UPDATE", byType("UPDATE")],
-      ["替代", "SUPERSEDE", byType("SUPERSEDE")],
-      ["冲突", "CONFLICT", (st.conflicts || []).length],
+      ["替代", "SUPERSEDE", supersededCount],
+      ["冲突", "CONFLICT", conflictCount],
     ];
     const cites = out.citation_details || [];
     return `<div class="v2-answer-wrap">
