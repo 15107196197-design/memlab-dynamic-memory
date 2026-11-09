@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | S4 见 `git log -1 --oneline`；S1–S3 + hardening 见 `git log --oneline -10` |
+| 当前 commit | `18d1402`（merge S5；S4 `2113135`；S5 `47ce7a0`；S1–S3 + hardening 见 `git log --oneline -12`） |
 | 分支 | `main` |
-| 工作区状态 | S1 骨架 + S2 v2 + S3 W/S/R + hardening + S4 M/U/K 已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **164 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28） |
-| 已实现 | `memwb` 原型 + S1 骨架 + S2 v2/导出/缓存 + S3 W/S/R + hardening + S4 M（融合/重排/后处理瀑布）/U（状态/回答/引用/拒答）/K（维护/扫描/指标）/E2E |
-| 未实现 | 实验控制面（S5）、R0 经 Runtime 运行的放行/编译器、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
-| 当前阶段 | **S4 完成**（M/U/K + 10 题端到端）；准备进入 S5（实验控制面）。S9 前需要 `memlab/providers.py` 和 API key |
+| 工作区状态 | S1 骨架 + S2 v2 + S3 W/S/R + hardening + S4 M/U/K + S5 实验控制面已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **176 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28 + S5 12） |
+| 已实现 | `memwb` 原型 + S1 骨架 + S2 v2/导出/缓存 + S3 W/S/R + hardening + S4 M/U/K/E2E + S5 spec/compiler/runner/SQLite/analysis/CLI |
+| 未实现 | R0 经 Runtime/E2E 的 runner 执行器（S6 前置）、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
+| 当前阶段 | **S5 完成**（实验控制面；176 测试）。S6 前置：把 S4 `E2EPipeline` 接成 S5 `Runner` 的可执行 executor，放行 R0 配置。S9 前需要 `memlab/providers.py` 和 API key |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -166,6 +166,7 @@ artifacts/
 | `docs/optimization/04-experiments.md` | 模块化实验：W/S/R/M/U/K、E2 耦合、E3 组合、E4 环境、第 7 章评测标准 |
 | `docs/optimization/05-color-focus.md` | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 |
 | `docs/optimization/PHASE-CHECKLIST.md` | 每个会话的 Startup Audit / Completion Audit / 分配模板 |
+| `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
 | `configs/reference-r0.json` | R0 参考架构 |
 | `configs/variants.json` | 变体目录与预设 |
@@ -199,10 +200,12 @@ artifacts/
 | `memlab/maintenance.py` | K：update/forget/consolidate/scan + staleness/contradiction/update correctness | E1 K 轴；长期实验 |
 | `memlab/e2e.py` | `E2EPipeline`：R→M→U 编排 + 端到端 trace/token/latency | 10 题冒烟/S5 runner |
 | `memlab/tokens.py` | 统一 token 估算（瀑布 bookkeeping） | M/U/S5 成本 |
+| `memlab/experiments/` | spec / compiler / runner / SQLite store / analysis / CLI | S6 E1、S7 分析 |
 | `tests/test_memlab.py` | 39 个 S1 测试（含 10 题 × 4 方法 legacy 对照） | 回归门禁 |
 | `tests/test_memlab_s2.py` | 25 个 S2 测试（往返/未知时间/export schema/缓存失效） | 回归门禁 |
 | `tests/test_memlab_s3.py` | 21 个 S3 测试（W/S/R 模块、契约、缓存、10 题冒烟） | 回归门禁 |
 | `tests/test_memlab_s4.py` | 28 个 S4 测试（融合/重排/后处理/状态/回答/维护/端到端） | 回归门禁 |
+| `tests/test_memlab_s5.py` | 12 个 S5 测试（spec/compiler/store/runner/CLI） | 回归门禁 |
 
 
 ---
@@ -377,6 +380,12 @@ artifacts/
 - [x] S4：`memlab/maintenance.py` K（update/forget/consolidate/scan + staleness/contradiction/update correctness）
 - [x] S4：`memlab/e2e.py` 10 题 R→M→U 端到端（覆盖 LoCoMo 4 类），2 M + 2 U 候选，记录 token/P95
 - [x] S4：164 个测试通过（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28），未 push upstream
+- [x] S5：`memlab/experiments/spec.py` spec 加载/校验（reference/refs、factors、modules、grid）
+- [x] S5：`compiler.py` single_factor / adoption / full_factorial / 2^(k-1) half-fraction / environment_grid；derived_rules + applies_when + requested/effective config
+- [x] S5：`runner.py` resume / shard / fake executor 注入 / R0 guard 保留
+- [x] S5：`store.py` SQLite（runs/metrics/artifacts）+ `analysis.py` 最小汇总
+- [x] S5：`cli.py` sweep/run/analyze；e1-adoption 23、e1-screening 102、E3 16、E4 135 个 run 可编译
+- [x] S5：176 个测试通过（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28 + S5 12）；merge `18d1402`；未 push upstream
 
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
@@ -472,7 +481,7 @@ artifacts/
 **结论：** S4 接口与瀑布可运行，2 M + 2 U 候选可复现；真实质量/延迟需等 Ollama 或 API provider，且 R0 经 Runtime 的运行要等 S5 放行 guard/编译器。
 
 ### 5.2 未开始
-- [ ] 实验 runner / SQLite / analysis（S5）
+- [ ] S6 前置：把 S4 `E2EPipeline` 接成 S5 `Runner` 的 executor，并放行已注册模块的 R0 配置
 - [ ] E0 基线复现
 - [ ] E1 六模块实验
 - [ ] E2/E3/E4/E5
@@ -655,15 +664,23 @@ artifacts/
 
 ---
 
-## 10. 建议的下一步（S5）
+## 10. 建议的下一步（S6，先补一个前置）
 
-1. spec loader/validator：读取 `configs/experiments/*.json`，校验 factors/levels/derived_rules/applies_when。
-2. compiler：single_factor/adoption/factorial/environment_grid → `runs.jsonl`；去重、随机化、shard。
-3. runner：resume、shard、隔离目录、错误分类、超时、`--dry-run`；把 S4 的 M/U/K 接上配置与 guard。
-4. store：SQLite（runs/metrics/artifacts）+ CSV/JSON；metrics：L1–L4 + 阶段瀑布。
-5. analysis：主效应、配对 bootstrap、CI、互动、Pareto 最小版；CLI `memlab run/sweep/analyze`。
+**S6 前置（必须先做）：** S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，而 `guards.require_runnable` 只放行 legacy/B0。S4 已有 `E2EPipeline`，但还没接成 S5 executor。因此 S6 的第一件事不是跑 E1，而是：
 
-**验收：** 旧 164 个测试全过；`memlab sweep --spec e1-adoption.json --dry-run` 能生成矩阵；3 配置 × 10 题写入 SQLite；resume 不重复；不跑 E1 全量。
+1. 在 S5 `runner.py` 增加 `e2e_executor`：用 `E2EPipeline` 执行 W/S/R/M/U，返回 answer/retrieved_turns/tokens/latency；
+2. 给 `Runner` 一个显式 `--executor e2e|legacy` 或 `executor_factory`；
+3. 在配置已注册模块齐全时，允许 R0 配置经 `e2e_executor` 启动（guard 不再误杀），并记录 `effective_config`；
+4. 用 2–3 个 E1 候选 × 10 题冒烟，确认 SQLite 有 answer_f1/recall/tokens/seconds。
+
+前置通过后再做 S6：
+
+1. E1-W/S/R：每模块 2–3 个候选，A 级评测筛；
+2. E1-M/U/K：每模块 2–3 个候选，B 级评测；
+3. 每模块写 1 个候选表 + 1 个 Pareto 候选；
+4. 不跑 E2/E3/E4；不 push upstream。
+
+**验收：** 全量测试通过；R0/E2E 冒烟 10 题写入 SQLite；每模块 2–3 候选；HANDOFF §5 更新。
 
 ---
 

@@ -409,6 +409,14 @@ K：
 
 每个模块跑出 2–3 个 Pareto 候选；不是全局大扫。
 
+### 前置（先检查，不满足就先补）
+
+S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.require_runnable` 拒绝。S6 开始前确认：
+
+- `memlab/experiments/runner.py` 是否有 `e2e_executor` 或 `--executor e2e`；
+- 能否用 `E2EPipeline` 跑 2–3 个 E1 候选 × 10 题，并把 `answer_f1/evidence_recall/tokens/seconds` 写进 SQLite；
+- 如果没有，先补这个执行器（这是 S6 的一部分，不要跳过）。
+
 ### 先读
 
 - [04-experiments.md](04-experiments.md) 的 4.5–4.10（按模块）
@@ -422,6 +430,11 @@ K：
 
 ```text
 执行 S6：E1 模块内实验。先做 W/S/R，再做 M/U/K；每模块 60–120 题，2 seeds。
+
+前置：
+0. 确认 S5 Runner 有 e2e_executor；用 E2EPipeline 跑 2–3 个候选 × 10 题冒烟，
+   写入 SQLite 的 answer_f1/evidence_recall/tokens/seconds。没有就先补，不要用
+   legacy_dynamic 冒充 R0。
 
 规则：
 1. 每个模块先 E1.1 插拔/选型，再 E1.2 参数，再 E1.3 模块 LLM；不要同时改多个模块。
@@ -612,6 +625,7 @@ K：
 
 - [HANDOFF.md](HANDOFF.md)
 - [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)
+- [S5-REPORT.md](S5-REPORT.md)
 - [README.md](README.md)
 - [01-audit.md](01-audit.md)
 - [02-architecture.md](02-architecture.md)
