@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `18d1402`（merge S5；S4 `2113135`；S5 `47ce7a0`；S1–S3 + hardening 见 `git log --oneline -12`） |
+| 当前 commit | S6 见 `git log -1 --oneline`；S5/S7a 已合并（`23d563c` 前）；S1–S4 见 `git log --oneline -15` |
 | 分支 | `main` |
-| 工作区状态 | S1 骨架 + S2 v2 + S3 W/S/R + hardening + S4 M/U/K + S5 实验控制面已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **176 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28 + S5 12） |
-| 已实现 | `memwb` 原型 + S1 骨架 + S2 v2/导出/缓存 + S3 W/S/R + hardening + S4 M/U/K/E2E + S5 spec/compiler/runner/SQLite/analysis/CLI |
-| 未实现 | R0 经 Runtime/E2E 的 runner 执行器（S6 前置）、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
-| 当前阶段 | **S5 完成**（实验控制面；176 测试）。S6 前置：把 S4 `E2EPipeline` 接成 S5 `Runner` 的可执行 executor，放行 R0 配置。S9 前需要 `memlab/providers.py` 和 API key |
+| 工作区状态 | S1–S5 + hardening + S7a 已提交；S6 executor/筛选/报告本次提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **190 passed**（S5 基线 186 + S6 executor 4） |
+| 已实现 | S1–S5 + hardening + S7a + S6：R0/E2E executor、offline clients、W/S/R/M/U/K 候选筛选、SQLite/manifest/报告 |
+| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
+| 当前阶段 | **S6 离线筛选完成**（36 runs、0 error、复现 0；B 级 blocked_on_ollama）；准备 S7b / 补真实 E1 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -167,6 +167,7 @@ artifacts/
 | `docs/optimization/05-color-focus.md` | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 |
 | `docs/optimization/PHASE-CHECKLIST.md` | 每个会话的 Startup Audit / Completion Audit / 分配模板 |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
+| `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
 | `configs/reference-r0.json` | R0 参考架构 |
 | `configs/variants.json` | 变体目录与预设 |
@@ -201,11 +202,14 @@ artifacts/
 | `memlab/e2e.py` | `E2EPipeline`：R→M→U 编排 + 端到端 trace/token/latency | 10 题冒烟/S5 runner |
 | `memlab/tokens.py` | 统一 token 估算（瀑布 bookkeeping） | M/U/S5 成本 |
 | `memlab/experiments/` | spec / compiler / runner / SQLite store / analysis / CLI | S6 E1、S7 分析 |
+| `memlab/experiments/executor.py` | S6 前置：`e2e_executor`（E2EPipeline，不静默回退 legacy）、K executor、offline LLM/embedding | S6/S7/S9 实验 |
+| `scripts/s6_e1.py` | 6 模块 × 3 候选 × 60 题 × 2 seeds；SQLite/manifest/JSON | S6 复现 / S5 CLI 之外的模块筛选 |
 | `tests/test_memlab.py` | 39 个 S1 测试（含 10 题 × 4 方法 legacy 对照） | 回归门禁 |
 | `tests/test_memlab_s2.py` | 25 个 S2 测试（往返/未知时间/export schema/缓存失效） | 回归门禁 |
 | `tests/test_memlab_s3.py` | 21 个 S3 测试（W/S/R 模块、契约、缓存、10 题冒烟） | 回归门禁 |
 | `tests/test_memlab_s4.py` | 28 个 S4 测试（融合/重排/后处理/状态/回答/维护/端到端） | 回归门禁 |
 | `tests/test_memlab_s5.py` | 12 个 S5 测试（spec/compiler/store/runner/CLI） | 回归门禁 |
+| `tests/test_s6_executor.py` | 4 个 S6 测试（R0/E2E、SQLite 指标、K、guard） | 回归门禁 |
 
 
 ---
@@ -309,6 +313,11 @@ artifacts/
 | S3 规划器回退 | 配置写了未实现的 analyzer/planner（如 `llm`/`reaper`）时，trace 记录 warning 并回退 `rule`/`rule_router` | 旧 R0 配置可加载；不让 S3 因未实现项直接崩 |
 | S3 temporal 通道 | 有 `as_of` 时先按区间过滤再 BM25；无 `as_of` 退化为 BM25 | 无时间约束时避免“按时间倒序”污染候选 |
 | S3 检索缓存键 | 额外包含 `store.index_hash`、`as_of`、`graph.repr` | 换索引/换图/as-of 变化必须 miss |
+| S6 前置 | `e2e_executor` 直接构建 E2E context，不经过 `Runtime`；R0 不 fallback legacy，缺实现显式报错 | guard 仍对 Runtime fail-closed；executor 是显式模块路径 |
+| S6 离线模式 | hashing embedding + extractive answer；`answer_f1` 标注为 offline_extractive | 无 Ollama 时只做 A 级/接口筛选，不冒充 B 级 |
+| S6 候选筛选 | 每模块只跑 3 个候选（E1.1），60 题 × 2 seeds；S/U/K 固定 meta_schema+append | 不把 30+ 因子塞一张表；E1.2/E1.3 留待真实模型 |
+| S6 错误/复现 | 0 error / 0 error run；同 run 独立 DB 重跑差异 0.0 | 无失败可分类；M1 首轮参数错误已修复并重跑 |
+| S6 结果边界 | 36 runs、conv-26、offline；B 级 Judge/F1 与真实 P95 全部 blocked_on_ollama | 不能把本表当最终 E1 结论 |
 | S4 M 阶段顺序 | 默认 `fusion → rerank → filter → mmr → decay → compress`；`MergePipeline(order=...)` 可改 | filter 是后处理的一部分；其余顺序按 4.8；每阶段记瀑布 |
 | S4 cross-encoder | 可选依赖；`sentence_transformers` 缺失时保持原顺序并记 `fallbacks` | 不让缺依赖阻塞实验；有依赖时才是真实重排 |
 | S4 融合输入 | `RetrievalResult.by_channel` 为 S4 新增只读字段（旧字段不变） | M 需要每通道排名；旧调用方无需改 |
@@ -386,6 +395,11 @@ artifacts/
 - [x] S5：`store.py` SQLite（runs/metrics/artifacts）+ `analysis.py` 最小汇总
 - [x] S5：`cli.py` sweep/run/analyze；e1-adoption 23、e1-screening 102、E3 16、E4 135 个 run 可编译
 - [x] S5：176 个测试通过（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28 + S5 12）；merge `18d1402`；未 push upstream
+- [x] S6 前置：`memlab/experiments/executor.py`（E2E/K/offline）+ Runner `--executor e2e` + CLI `--offline`
+- [x] S6：6 模块 × 3 候选 × 60 题 × 2 seeds（36 runs），SQLite + manifest + JSON，0 error
+- [x] S6：候选表（W/S/R/M/U/K）与 K 指标；复现差异 0.0；190 个测试通过
+- [x] S6：`docs/optimization/S6-REPORT.md` + `eval/archive/s6-e1-screening.json`
+- [x] S6：B 级/真实模型标记 blocked_on_ollama（本地无 Ollama），未 push upstream
 
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
@@ -480,10 +494,45 @@ artifacts/
 
 **结论：** S4 接口与瀑布可运行，2 M + 2 U 候选可复现；真实质量/延迟需等 Ollama 或 API provider，且 R0 经 Runtime 的运行要等 S5 放行 guard/编译器。
 
+### 5.1.6 S6 E1 离线筛选（36 runs，60 题 × 2 seeds）
+
+> 协议：conv-26；18 候选（W/S/R/M/U/K 各 3）× seeds 13/17 × 60 题；W/S/R/M/U 用 E2E executor，K 用 store-level executor；**offline hash embedding + extractive answer**；`answer_f1` 不是 LLM 质量。完整表与复现命令见 [S6-REPORT.md](S6-REPORT.md)，原始结果 `eval/archive/s6-e1-screening.json`。
+
+**W / S / R / M / U（seeds 汇总均值；P95 为 per-run P95 均值）：**
+
+| 模块 | 候选 | Recall | nDCG | Tokens | P95 ms | 备注 |
+|---|---|---|---:|---:|---:|---:|---|
+| W | W2 meta+append | **0.5423** | **0.3577** | 334.5 | 9.5 | 质量 |
+| W | W1 legacy+append | 0.5158 | 0.3147 | 340.9 | 25.0 | 成本；字段完整度 0 |
+| W | W3 meta+mem0 | 0.4684 | 0.3065 | 375.2 | 22.0 | 被 W2 支配 |
+| S | S1 state_slot | **0.5423** | **0.3597** | 334.5 | 5.5 | 582 边 |
+| S | S2 entity_triple | 0.5423 | 0.3577 | 334.5 | 3.5 | 1089 边 |
+| S | S3 three_layer | 0.5423 | 0.3577 | 334.5 | 3.5 | 1570 边；本集无增益 |
+| R | R1 none | **0.5058** | **0.3964** | **348.0** | 3.0 | 1 节点 |
+| R | R3 dag | **0.5058** | 0.3887 | **348.0** | 3.0 | 1.39 节点 |
+| R | R2 rule_router | 0.4684 | 0.3065 | 375.2 | 4.0 | 被 R1/R3 支配 |
+| M | M2 weighted+compress | **0.5834** | **0.4733** | 386.8 | 2.5 | 质量；cross 回退 |
+| M | M1 rrf | 0.5438 | 0.4141 | 407.3 | 2.5 | 平衡 |
+| M | M3 query_adaptive | 0.4684 | 0.3065 | **375.2** | 3.0 | 成本 |
+| U | U2 offline_valid | 0.6070 | 0.4171 | 368.5 | 2.0 | valid 13.45 / superseded 1.55 |
+| U | U1 none_direct | 0.6070 | 0.4171 | 368.5 | 3.5 | valid 15 / superseded 0 |
+| U | U3 offline_chain | 0.6070 | 0.4171 | 368.5 | 2.5 | 证据链无本集增益 |
+
+**K（store-level，conv-26，as-of=max ingest）：**
+
+| 候选 | Staleness | Contradiction | Update correctness | 移除 units |
+|---|---:|---:|---:|---:|
+| K1 none | 0.1433 | 0.3970 | 0.8900 | 0 |
+| K2 dedupe | 0.1441 | 0.3934 | 0.8900 | 2 |
+| K3 archive 90d | **0.0924** | 0.4402 | **0.9224** | 366 |
+
+**验收：** 36/36 run `complete`，0 error；同 run 独立 DB 重跑 10 题差异 **0.0**（≤0.01）；每模块 2–3 候选。  
+**边界：** B 级真实 F1/Judge/P95 全部 **blocked_on_ollama**；E1.2/E1.3 未跑；offline embedding 非语义，dense/graph 贡献不可外推。
+
 ### 5.2 未开始
-- [ ] S6 前置：把 S4 `E2EPipeline` 接成 S5 `Runner` 的 executor，并放行已注册模块的 R0 配置
 - [ ] E0 基线复现
-- [ ] E1 六模块实验
+- [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
+- [ ] S7b：E2 耦合（读 S6 候选；S7a 已完成）
 - [ ] E2/E3/E4/E5
 - [ ] Lab UI / 报告自动化
 - [ ] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；S9 前必须）
@@ -543,6 +592,25 @@ artifacts/
 ```
 
 ### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / S6 / 会话
+- 本次完成：S6 前置 `e2e_executor`（R0 经 E2EPipeline，不静默回退 legacy）+ `--executor e2e --offline`；6 模块 × 3 候选 × 60 题 × 2 seeds 离线筛选；36 runs、0 error、复现 0.0；候选表与报告。
+- 改动文件：新增 `memlab/experiments/executor.py`、`tests/test_s6_executor.py`、`scripts/s6_e1.py`、`docs/optimization/S6-REPORT.md`、`eval/archive/s6-e1-screening.json`；修改 `memlab/experiments/{runner,cli,README}.py`（及 README）、`memlab/merge.py`（R0 阈值相对化/cross 参数）、HANDOFF。`memwb/`、`server.py`、`web/` 未改。
+- 测试：`python -m unittest discover -s tests -t .` → **190 passed**（S5/S7a 186 + S6 4）；未 push upstream。
+- Key 状态：**未使用**；本地 Ollama **不可用** → S6 offline；B 级 `blocked_on_ollama`。
+- 新增 run_id / 指标：36 个 `s6-*` run；`runs/s6/e1.sqlite`；候选表见 §5.1.6；0 error；复现差异 0。
+- 关键决策（新增/变更）：S6 executor 显式绕过 Runtime guard 但缺实现报错；离线速度/质量分离；S/U/K 固定 meta+append 保留历史；K3 归档保留 unit；S6 只做 E1.1。
+- 未解决问题：
+  1. **B 级未跑**：真实 F1/Judge/P95 需要 Ollama；`answer_f1` 是 extractive 基线。
+  2. **E1.2/E1.3 未跑**：字段数/λ/模块 LLM 档位未做；只做了每模块 3 个 E1.1 候选。
+  3. offline hash embedding 非语义；cross-encoder 未安装，M2/M3 的 rerank 是回退。
+  4. S6 只用 conv-26/60 题，未覆盖 development 四对话；S7b 需先补真实候选。
+- 下一步 3 件事：
+  1. 有 Ollama 后：`python scripts/s6_e1.py --online --questions 60 --seeds 13 17` 跑 B 级 2–3 候选。
+  2. 补 E1.2（W 字段数、M λ、R k）与 E1.3（模块 LLM 档位）小矩阵。
+  3. 用 S6 候选跑 S7b（E2 耦合；S7a 已合并）。
+- 下一步选择：A 本会话继续 S7b / B 新会话（用 SESSION-PROMPTS S7）；用户未选前不自动开始。
+- 下个会话先读：本文件 §1/§1.3/§2/§5.1.6；`S6-REPORT.md`；`SESSION-PROMPTS` S7；`memlab/experiments/{executor,coupling}.py`。
 
 ### 2026-11-09 / S4 / 会话
 - 本次完成：M（融合/重排/过滤/MMR/decay/压缩 + 阶段瀑布）、U（4 状态解析 + 4 回答器 + 引用/拒答/冲突）、K（update/forget/consolidate/scan + 3 指标）、E2E（R→M→U）；28 个 S4 测试；2 M + 2 U 候选与 10 题端到端。
@@ -664,23 +732,15 @@ artifacts/
 
 ---
 
-## 10. 建议的下一步（S6，先补一个前置）
+## 10. 建议的下一步（S7b / 补真实 S6）
 
-**S6 前置（必须先做）：** S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，而 `guards.require_runnable` 只放行 legacy/B0。S4 已有 `E2EPipeline`，但还没接成 S5 executor。因此 S6 的第一件事不是跑 E1，而是：
+**前置（按优先级）：**
 
-1. 在 S5 `runner.py` 增加 `e2e_executor`：用 `E2EPipeline` 执行 W/S/R/M/U，返回 answer/retrieved_turns/tokens/latency；
-2. 给 `Runner` 一个显式 `--executor e2e|legacy` 或 `executor_factory`；
-3. 在配置已注册模块齐全时，允许 R0 配置经 `e2e_executor` 启动（guard 不再误杀），并记录 `effective_config`；
-4. 用 2–3 个 E1 候选 × 10 题冒烟，确认 SQLite 有 answer_f1/recall/tokens/seconds。
+1. 有 Ollama 后跑真实 B 级：`python scripts/s6_e1.py --online --questions 60 --seeds 13 17`，只对 §5.1.6 的 2–3 候选/模块；把 `answer_f1/Judge/P95` 与 offline 对照。
+2. 补 E1.2/E1.3 小矩阵（W 字段数、M λ、R k；模块 LLM 档位），仍按模块单因子。
+3. S7b：读 S6 run → oracle/转化率 → `coupling_cli`；S7a 已合并但只有合成测试。
 
-前置通过后再做 S6：
-
-1. E1-W/S/R：每模块 2–3 个候选，A 级评测筛；
-2. E1-M/U/K：每模块 2–3 个候选，B 级评测；
-3. 每模块写 1 个候选表 + 1 个 Pareto 候选；
-4. 不跑 E2/E3/E4；不 push upstream。
-
-**验收：** 全量测试通过；R0/E2E 冒烟 10 题写入 SQLite；每模块 2–3 候选；HANDOFF §5 更新。
+**验收：** 全量测试通过；真实 S6 候选表；S7b 至少一张 `P(A|R=1)` 表与一个 Oracle 差距；不跑 E3/E4。
 
 ---
 

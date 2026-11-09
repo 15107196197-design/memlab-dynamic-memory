@@ -17,6 +17,11 @@ python -m memlab.experiments.cli run \
   --spec configs/experiments/e1-adoption.json \
   --db runs/s5.sqlite --limit 10 --shard 0 --shards 4
 
+# module pipeline (R0) through E2EPipeline; offline when Ollama is unavailable
+python -m memlab.experiments.cli run \
+  --spec configs/experiments/e1-adoption.json \
+  --db runs/s6.sqlite --limit 10 --executor e2e --offline
+
 # summarize
 python -m memlab.experiments.cli analyze --db runs/s5.sqlite --metric answer_f1
 ```
@@ -58,9 +63,15 @@ not silently dropped.
 - `--limit` questions per conversation (stratified by LoCoMo category);
 - `--shard/--shards` for manual parallelism (run one process per shard);
 - `--no-resume` to rerun everything;
-- default executor uses `memlab.runtime.Runtime`; R0 is rejected by
-  `memlab.guards.require_runnable` until the module pipeline exists;
-- tests inject a fake executor, so no Ollama is needed for the S5 suite.
+- default executor (`legacy`) uses `memlab.runtime.Runtime`; R0 is rejected by
+  `memlab.guards.require_runnable`;
+- `--executor e2e` uses `memlab.experiments.executor.make_e2e_executor` and
+  `E2EPipeline`: W→S→R→M→U on R0-style configs, recording answer_f1/evidence_recall/
+  ndcg/tokens/seconds;
+- `--offline` (e2e only) uses deterministic hash embeddings + an extractive answer
+  client. Its `answer_f1` is an offline extractive baseline, **not** an LLM answer;
+- tests inject a fake executor or use the offline e2e clients, so no Ollama is
+  needed for the S5/S6 suites.
 
 ## Known limits (S5 scope)
 
@@ -74,6 +85,8 @@ not silently dropped.
   resolution is a later concern.
 - **API provider adapter** is not part of S5; S9 will add it. Default executor is
   local Ollama.
+- **Offline e2e**: hashing embeddings are not semantic; use only for interface,
+  A-level and smoke runs. Real B-level needs Ollama or the S9 provider adapter.
 - **Artifacts** are registered but not content-addressed by the runner; module
   caches already use `memlab.cache`.
 

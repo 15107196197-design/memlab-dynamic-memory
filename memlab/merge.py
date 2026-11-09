@@ -296,7 +296,7 @@ class NoReranker(Reranker):
 class CrossEncoderReranker(Reranker):
     """Optional dependency: if sentence-transformers is missing, keep the order."""
 
-    params_allowed = frozenset({"model", "top_n"})
+    params_allowed = frozenset({"model", "top_n", "batch_size", "device", "max_length"})
 
     def __init__(self, **params):
         super().__init__(**params)
@@ -352,10 +352,12 @@ class ThresholdFilter(Filter):
     params_allowed = frozenset({"min_score", "drop_stale", "drop_conflicting", "min_relevance", "stale_only"})
 
     def apply(self, candidates, frame, store):
-        min_score = self.params.get("min_score", self.params.get("min_relevance"))
+        min_score = self.params.get("min_score")
+        min_relevance = self.params.get("min_relevance")
         drop_stale = bool(self.params.get("drop_stale", False))
         drop_conflicting = bool(self.params.get("drop_conflicting", False))
         conflicting = {memory_id for pair in getattr(store, "conflicts", []) for memory_id in pair}
+        maximum = max((abs(candidate.score) for candidate in candidates if candidate.score is not None), default=0.0)
         output = []
         for candidate in candidates:
             unit = store.get(candidate.memory_id)
@@ -363,6 +365,10 @@ class ThresholdFilter(Filter):
                 continue
             if min_score is not None and candidate.score is not None and candidate.score < float(min_score):
                 continue
+            if min_relevance is not None and candidate.score is not None:
+                relative = abs(candidate.score) / maximum if maximum else 0.0
+                if relative < float(min_relevance):
+                    continue
             if drop_conflicting and candidate.memory_id in conflicting:
                 continue
             if drop_stale:

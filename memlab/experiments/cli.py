@@ -42,9 +42,11 @@ def cmd_run(args) -> int:
         print(json.dumps({"spec": spec.id, "runs": len(plans), "dry_run": True}, ensure_ascii=False, indent=2))
         return 0
     questions = runner.load_questions(spec, limit=args.limit, samples=args.samples)
+    executor = runner.make_executor(getattr(args, "executor", "legacy"),
+                                    offline=getattr(args, "offline", False))
     with ResultStore(args.db) as store:
-        machine = runner.Runner(store, limit=args.limit, shard=args.shard, shards=args.shards,
-                                resume=not args.no_resume, log=print)
+        machine = runner.Runner(store, executor=executor, limit=args.limit, shard=args.shard,
+                                shards=args.shards, resume=not args.no_resume, log=print)
         results = machine.run(spec, plans, questions=questions)
     print(json.dumps({"spec": spec.id, "runs": len(plans), "results": results}, ensure_ascii=False, indent=2))
     return 0
@@ -78,6 +80,10 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--shards", type=int, default=1)
     run.add_argument("--no-resume", action="store_true")
     run.add_argument("--dry-run", action="store_true")
+    run.add_argument("--executor", choices=("legacy", "e2e"), default="legacy",
+                     help="legacy = Runtime/legacy methods; e2e = S4 module pipeline")
+    run.add_argument("--offline", action="store_true",
+                     help="e2e only: deterministic offline clients when Ollama is unavailable")
     run.set_defaults(func=cmd_run)
 
     analyze = sub.add_parser("analyze", help="summarize a result database")

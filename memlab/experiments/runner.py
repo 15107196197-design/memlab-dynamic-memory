@@ -48,9 +48,10 @@ def evaluate_result(result: Mapping[str, Any], question: Question) -> dict[str, 
         recall = evaluation.recall(evaluation.evidence_turns(question.qa), retrieved)
         if recall is not None:
             values["evidence_recall"] = recall
-    for key in ("seconds", "latency_ms", "tokens_in", "tokens_out", "tokens"):
-        if isinstance(result.get(key), (int, float)) and not isinstance(result.get(key), bool):
-            values[key] = result[key]
+    for key, value in result.items():
+        if key.startswith("_") or isinstance(value, bool) or not isinstance(value, (int, float)):
+            continue
+        values[key] = value
     return values
 
 
@@ -86,7 +87,8 @@ class Runner:
                 result = self.executor(plan, question)
                 metrics = evaluate_result(result, question)
                 metrics.setdefault("seconds", round(time.perf_counter() - started, 3))
-                self.store.add_metrics(plan.run_id, question.qid, metrics, meta={"status": "ok"})
+                meta = {"status": "ok", **(result.get("_meta") or {})}
+                self.store.add_metrics(plan.run_id, question.qid, metrics, meta=meta)
                 status = "ok"
             except Exception as exc:  # noqa: BLE001 - failures are data
                 errors += 1
@@ -107,3 +109,14 @@ def default_executor(plan: RunPlan, question: Question) -> Mapping[str, Any]:
     """Use the real runtime.  R0 is rejected by the guard until modules exist."""
     machine = lab_runtime.Runtime(plan.effective_config)
     return machine.answer(question.sample_id, question.qa["question"])
+
+
+def make_executor(name: str = "legacy", *, offline: bool = False):
+    """Factory used by the CLI: ``legacy`` (Runtime) or ``e2e`` (module pipeline)."""
+    if name == "e2e":
+        from .executor import make_e2e_executor
+
+        return make_e2e_executor(offline=offline)
+    if name in ("legacy", "default"):
+        return None
+    raise ValueError(f"unknown executor: {name!r}; expected legacy or e2e")
