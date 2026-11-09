@@ -10,5 +10,9 @@ __version__ = "0.1.0"
 CONFIG_SCHEMA = "memlab/run-config@1"
 MANIFEST_SCHEMA = "memlab/run-manifest@1"
 
-# Importing the package registers the built-in legacy method adapters.
+# Importing the package registers the built-in implementations:
+# legacy method adapters plus the S3 W/S/R modules.
 from . import legacy as _legacy  # noqa: E402,F401
+from . import write as _write  # noqa: E402,F401
+from . import store as _store  # noqa: E402,F401
+from . import retrieve as _retrieve  # noqa: E402,F401

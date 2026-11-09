@@ -1,9 +1,8 @@
 """Runtime: the object a stage receives as ``ctx``.
 
-S1 wires the minimum: a validated config, the instrumented model clients, the
-legacy method adapters behind the registry, and a manifest built from the same
-identity.  Later sessions add cache, trace, budget and memory store to this object;
-stages must keep taking them from ``ctx`` rather than reading ``os.environ``.
+S1 wired the config, model clients, legacy adapters and manifest.  S3 adds the
+content-addressed artifact cache and the memory store, so W/S/R stages can take
+everything from ``ctx`` instead of reading module globals or ``os.environ``.
 """
 from __future__ import annotations
 
@@ -12,6 +11,7 @@ from typing import Any, Mapping
 
 from . import config as lab_config
 from . import legacy
+from .cache import ArtifactCache
 from .llm import EmbeddingClient, LLMClient
 from .manifest import RunManifest, build_manifest
 from .registry import build
@@ -23,7 +23,9 @@ class Runtime:
     def __init__(self, config: lab_config.RunConfig | Mapping[str, Any], *,
                  llm: LLMClient | None = None,
                  embedding: EmbeddingClient | None = None,
-                 prompts: Mapping[str, str] | None = None):
+                 prompts: Mapping[str, str] | None = None,
+                 cache: ArtifactCache | None = None,
+                 store: Any | None = None):
         if isinstance(config, lab_config.RunConfig):
             self.config = config
         else:
@@ -32,6 +34,8 @@ class Runtime:
         self.llm = llm or LLMClient.from_environment(environment.get("llm") or {})
         self.embedding = embedding or EmbeddingClient.from_environment(environment.get("embedding") or {})
         self.prompts = dict(legacy.PROMPTS if prompts is None else prompts)
+        self.cache = cache if cache is not None else ArtifactCache()
+        self.store = store
 
     @classmethod
     def load(cls, path: str | Path, **kwargs) -> "Runtime":
@@ -69,3 +73,22 @@ class Runtime:
     def usage(self) -> dict[str, Any]:
         """Token/latency totals for this runtime (both clients)."""
         return {"llm": self.llm.usage(), "embedding": self.embedding.usage()}
+
+    def attach_store(self, store: Any) -> Any:
+        """Bind a built :class:`memlab.store.MemoryStore` for R stages."""
+        self.store = store
+        return store
+
+    def build_store(self, sample_id: str, **kwargs):
+        """Run W -> S for one conversation and bind the resulting store."""
+        from .ingest import build_store
+
+        result = build_store(sample_id, self, **kwargs)
+        self.store = result.store
+        return result
+
+    def retrieve(self, query: str, *, k: int | None = None):
+        """Run R against the bound store."""
+        from .retrieve import RetrievalRunner
+
+        return RetrievalRunner().run(query, self, k=k)
