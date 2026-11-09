@@ -478,9 +478,10 @@
       if (!matrix.has(key)) matrix.set(key, []);
       matrix.get(key).push(item);
     });
+    const catalogItems = items || [];
     const counts = { data: 0, limited: 0, missing: 0, pending: 0 };
-    counted.forEach((item) => { counts[planKind(item.status)] += 1; });
-    const total = counted.length;
+    catalogItems.forEach((item) => { counts[planKind(item.status)] += 1; });
+    const total = catalogItems.length;
     const cells = [];
     HEAT_ROWS.forEach(([row]) => HEAT_COLS.forEach(([col]) => {
       const cellItems = matrix.get(`${row}|${col}`) || [];
@@ -489,12 +490,12 @@
       const kind = ["data", "limited", "missing", "pending"].find((k) => kinds.includes(k)) || "pending";
       cells.push(`<button class="v6-cell" data-row="${row}" data-col="${col}" title="${cellItems.length} 项"><span class="v6-shape ${kind}">${HEAT[kind].shape}</span><b>${cellItems.length}</b></button>`);
     }));
-    const dataItems = counted.filter((x) => planKind(x.status) === "data");
+    const dataItems = catalogItems.filter((x) => planKind(x.status) === "data");
     const segments = Object.entries(counts).filter(([, n]) => n > 0).map(([kind, n]) => `<span class="v6-seg ${kind}" style="width:${(n / Math.max(1, total)) * 100}%"></span>`).join("");
     return `<div class="v6-top">
       <div class="v6-stack">${segments || `<span class="v6-seg pending" style="width:100%"></span>`}</div>
       <div class="v6-counts"><b>已覆盖 ${counts.data}</b><span>受限 ${counts.limited}</span><span>缺实现 ${counts.missing}</span><span>待跑 ${counts.pending}</span><button id="v6-export" class="btn small">导出 JSON</button></div>
-      <div class="v6-legend">${Object.entries(HEAT).map(([k, v]) => `<span><i class="v6-shape ${k}">${v.shape}</i>${v.label} ${counts[k]}</span>`).join("")}<span class="muted">共 ${total} 项（矩阵内）</span></div>
+      <div class="v6-legend">${Object.entries(HEAT).map(([k, v]) => `<span><i class="v6-shape ${k}">${v.shape}</i>${v.label} ${counts[k]}</span>`).join("")}<span class="muted">共 ${total} 项；矩阵 ${counted.length} 项（E0 不在行列）</span></div>
     </div>
     <div class="v6-toolbar"><label class="small"><input type="checkbox" id="v6-filter" checked> 未完成 + 受限</label><span class="muted small">默认隐藏已完成项；点单元格看明细</span><button id="v6-view-table" class="btn small">表格视图</button></div>
     <div id="v6-heat-view"><div class="v6-grid" style="grid-template-columns: 92px repeat(7, minmax(0,1fr))">
@@ -509,15 +510,7 @@
 
   function wireHeatmap(items) {
     const matrix = new Map();
-    const dataItems = [];
-    (items || []).forEach((item) => {
-      const row = planRow(item), col = planCol(item);
-      if (!row || !col) return;
-      const key = `${row}|${col}`;
-      if (!matrix.has(key)) matrix.set(key, []);
-      matrix.get(key).push(item);
-      if (planKind(item.status) === "data") dataItems.push(item);
-    });
+    const dataItems = (items || []).filter((item) => planKind(item.status) === "data");
     const drawer = document.getElementById("v6-drawer");
     const body = document.getElementById("v6-drawer-body");
     const filter = document.getElementById("v6-filter");
@@ -563,8 +556,8 @@
         const cellItems = matrix.get(`${row}|${col}`) || [];
         cells.push({ row, col, count: cellItems.length, items: cellItems });
       }));
-      const counts = { data: dataItems.length, limited: 0, missing: 0, pending: 0 };
-      (items || []).forEach((item) => { if (planRow(item) && planCol(item)) counts[planKind(item.status)] += 1; });
+      const counts = { data: 0, limited: 0, missing: 0, pending: 0 };
+      (items || []).forEach((item) => { counts[planKind(item.status)] += 1; });
       download("experiment-plan-heatmap.json", { rows: HEAT_ROWS, columns: HEAT_COLS, counts, cells });
     };
   }
