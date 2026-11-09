@@ -402,8 +402,10 @@ def _run_module(sample_id: str, question: str, cfg: lab_config.RunConfig,
     relations = [model.relation_to_dict(relation) for relation in store.relations
                  if relation.head_id in ids or relation.tail_id in ids]
     run_id = plan.run_id
+    graph_index = ctx.store.ensure_graph(cfg.impl("graph.repr") or "state_slot")
     payload = {
         "run_id": run_id,
+        "graph": graph_index.stats(),
         "mode": "module",
         "offline": bool(offline),
         "config_hash": cfg.config_hash,
@@ -575,6 +577,7 @@ def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
                   "embedding": "offline-hash" if offline else getattr(ctx.embedding, "effective_model", None),
                   "offline": bool(offline)},
         "trace": [],
+        "graph": ctx.store.ensure_graph(cfg.impl("graph.repr") or "state_slot").stats(),
     }
     _persist(payload)
     return payload
@@ -842,6 +845,121 @@ def _report_get(experiment_id: str) -> dict[str, Any]:
     raise WebError(f"unknown experiment report: {experiment_id}", 404)
 
 
+GRAPH_LABELS = {
+    "state_slot": "状态槽（state_slot）",
+    "entity_triple": "实体三元组（entity_triple）",
+    "three_layer": "三层图（three_layer）",
+    "event_sparse": "稀疏事件图（event_sparse）",
+}
+
+
+def graph_options() -> dict[str, Any]:
+    impls = registry.list_implementations().get("graph.repr", [])
+    return {"representations": [{"id": name, "label_zh": GRAPH_LABELS.get(name, name)} for name in impls]}
+
+
+def _catalog() -> dict[str, Any]:
+    path = ROOT / "configs" / "experiment-catalog.json"
+    if not path.is_file():
+        return {"schema": "memlab/experiment-catalog@1", "items": [], "count": 0}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    items = data.get("items") or []
+    counts = Counter(str(item.get("status") or "unknown") for item in items)
+    return {**data, "items": items, "count": len(items), "status_counts": dict(counts)}
+
+
+def _graph_view(sample_id: str, representation: str, query: str, limit: int = 180) -> dict[str, Any]:
+    _sample(sample_id)
+    impls = registry.list_implementations().get("graph.repr", [])
+    repr_name = representation or "state_slot"
+    if repr_name not in impls:
+        raise WebError(f"unknown graph.repr: {repr_name}; available={impls}", 422)
+    cfg = _preset("B0").to_dict()
+    cfg.setdefault("graph", {}).setdefault("repr", {})["impl"] = repr_name
+    cfg.setdefault("graph", {})["retrieval"] = {"impl": "vector_only"}
+    cfg = lab_config.RunConfig.from_dict(cfg)
+    plan = _plan(cfg)
+    ctx, _ = _context(plan, sample_id, True)
+    graph = ctx.store.ensure_graph(repr_name)
+    by_id = {unit.memory_id: unit for unit in ctx.store.units}
+    seeds: list[str] = []
+    if query:
+        from memlab.retrieve import RetrievalRunner
+        retrieval = RetrievalRunner().run(query, ctx, 15)
+        seeds = retrieval.memory_ids()
+    limit = max(20, min(300, int(limit)))
+    if seeds:
+        expanded = dict(graph.expand(seeds, 1))
+        selected = sorted(expanded, key=lambda node: (expanded[node], node))[:limit]
+    else:
+        ranked = sorted(graph.nodes, key=lambda node: (-len(graph.adj.get(node, ())), node))
+        selected = ranked[:max(5, limit // 3)]
+        selected_set = set(selected)
+        for node in list(selected):
+            if len(selected) >= limit:
+                break
+            for neighbor in sorted(graph.adj.get(node, ()), key=lambda n: (-len(graph.adj.get(n, ())), n)):
+                if neighbor not in selected_set:
+                    selected.append(neighbor)
+                    selected_set.add(neighbor)
+                if len(selected) >= limit:
+                    break
+        # include endpoints of strong edges if the ego expansion is still sparse
+        if len(selected) < limit:
+            for node in ranked:
+                if node not in selected_set:
+                    selected.append(node)
+                    selected_set.add(node)
+                if len(selected) >= limit:
+                    break
+        selected = sorted(selected, key=lambda node: (-len(graph.adj.get(node, ())), node))
+    selected_set = set(selected)
+    nodes = []
+    for node in selected:
+        unit = by_id.get(node)
+        if node.startswith("entity:"):
+            node_type, label = "entity", node.split(":", 1)[1]
+        elif node.startswith("topic:"):
+            node_type, label = "topic", node.split(":", 1)[1]
+        elif node.startswith("event:"):
+            node_type, label = "event", node.split(":", 1)[1]
+        else:
+            node_type = "unit"
+            label = (unit.text[:70] + "…") if unit and len(unit.text) > 70 else (unit.text if unit else node)
+        nodes.append({
+            "id": node, "type": node_type, "label": label,
+            "degree": len(graph.adj.get(node, ())),
+            "kind": unit.kind if unit else node_type,
+            "state": (unit.structured.get("state") if unit else None),
+            "source_turn": (unit.evidence[0].turn_id if unit and unit.evidence else None),
+            "selected_seed": node in set(seeds),
+        })
+    edges = []
+    seen = set()
+    for source in selected:
+        for target in graph.adj.get(source, ()):
+            if target not in selected_set:
+                continue
+            key = tuple(sorted((source, target)))
+            if key in seen:
+                continue
+            seen.add(key)
+            edges.append({"source": source, "target": target, "type": "link"})
+    return {
+        "sample": sample_id, "representation": repr_name,
+        "representation_label": GRAPH_LABELS.get(repr_name, repr_name),
+        "query": query, "offline": True,
+        "stats": graph.stats(), "shown": {"nodes": len(nodes), "edges": len(edges)},
+        "nodes": nodes, "edges": edges,
+        "legend": [
+            {"type": "unit", "label": "Memory / turn 单元"},
+            {"type": "entity", "label": "Entity 实体"},
+            {"type": "topic", "label": "Topic 主题"},
+            {"type": "event", "label": "Event 事件"},
+        ],
+    }
+
+
 def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     args = args or {}
     route = path[len("/api/v2"):] if path.startswith("/api/v2") else path
@@ -902,6 +1020,9 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     if route == "/graph":
         sample_id = str(_one(args, "sample", ""))
         limit = int(_one(args, "limit", 120) or 120)
+        if "repr" in args or "q" in args or _one(args, "view") == "full":
+            return _graph_view(sample_id, str(_one(args, "repr", "state_slot") or "state_slot"),
+                               str(_one(args, "q", "") or ""), limit)
         return _graph(sample_id, limit)
 
     match = re.fullmatch(r"/memories/([^/]+)", route)
@@ -946,6 +1067,12 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             "counts": counts,
             "memories": units[start:start + size],
         }
+
+    if route == "/graph/options":
+        return graph_options()
+
+    if route == "/experiments/plan":
+        return _catalog()
 
     if route == "/evaluation":
         path = ROOT / "eval" / "results.json"

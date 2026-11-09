@@ -87,6 +87,23 @@ http://127.0.0.1:8881/#/experiments/final-w3-test-offline
 | 指标 F1/Recall@K/状态准确率 | 🟡 F1/Recall 有；state accuracy `not_available`（模块标注缺） |
 | 对照 Full/Vector RAG | ✅ 归档 `eval/results.json` 页；本 W3 是 B0/R0 offline |
 
+## 6.1 实验计划覆盖（每个实验原本要做的）
+
+完整机器可读清单：[configs/experiment-catalog.json](../../configs/experiment-catalog.json)；Web 在 `#/evaluation2` 和 `#/experiments/<id>` 的 `Plan 实验计划` tab 展示。
+
+| 组 | 已做/部分 | 待做/阻塞 |
+|---|---|---|
+| E1-W | W 实现选型（S6 offline） | 字段/阈值 sweep；抽取 LLM（需模型） |
+| E1-S | 图表示选型（S6 offline） | k-hop/邻居上限参数；LLM 事件/社区 |
+| E1-R | planner/通道选型（S6 offline） | K/depth sweep；规划 LLM |
+| E1-M | 融合/重排/后处理选型（S6 offline） | 阈值/λ/顺序 sweep；LLM 压缩 |
+| E1-U | 状态/回答器选型（S6 offline） | 引用/拒答/Judge；回答 LLM |
+| E1-K | K1/K2/K3 store-level（S6 offline） | 阈值 sweep；长期在线 |
+| E2 | S7b-A conversion（offline） | Oracle executor；LLM 归因 |
+| E3/E4/E5 | W3 test offline（E5 部分） | 组合/Pareto、环境网格、B 级 test |
+
+**规则：** 清单是“计划”，不是“已完成”；状态为 `blocked` 的项不得在最终报告中写成已支持/已拒绝。
+
 ## 7. 仍缺 / 下一步
 
 1. **B 级真实模型**：用同一冻结 B0/R0 跑 `--online`，补 27B F1/Judge/P95；否则本报告只能标 offline。

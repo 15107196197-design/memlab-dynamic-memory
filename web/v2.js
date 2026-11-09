@@ -196,6 +196,7 @@
           <p class="v2-answer">${esc(a.answer || "（无回答）")}</p>
           ${a.refused ? `<div class="note warn">拒答：${esc(a.refusal_reason || "证据不足")}</div>` : ""}
           <div class="muted small">citations 引用: ${cites.length ? cites.map((c) => `<span class="mono">${esc(typeof c === "string" ? c : c.turn_id || JSON.stringify(c))}</span>`).join(", ") : "—"}</div>
+          ${out.graph ? `<div class="muted small">图谱 Graph：${esc(out.graph.nodes)} 节点 / ${esc(out.graph.edges)} 边（${esc(out.graph.representation)}）</div>` : ""}
         </div>
         <div class="v2-cols">
           <div class="card pad"><h3>有效 Memory · Valid</h3>
@@ -459,10 +460,18 @@
     };
   }
 
+  const PLAN_STATUS = { done: "已完成", partial: "部分完成", pending: "待做", blocked: "阻塞", unknown: "未知" };
+  function planTable(items) {
+    return `<table class="v2-table"><thead><tr><th>ID</th><th>阶段</th><th>模块</th><th>实验（要回答什么）</th><th>指标</th><th>状态</th><th>证据/去向</th></tr></thead><tbody>
+      ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "")}</div></td><td class="small">${(x.metrics || []).map((m) => esc(m)).join(" / ")}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("")}
+    </tbody></table>`;
+  }
+
   async function renderExperiment(root) {
     const path = location.hash.replace(/^#\//, "").split("?")[0].split("/");
     const id = path[1] || "";
     const list = await api("/api/v2/experiments");
+    const plan = await api("/api/v2/experiments/plan").catch(() => ({ items: [] }));
     let report = null;
     if (id) {
       try { report = await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`); } catch (err) { report = null; }
@@ -493,7 +502,7 @@
       return;
     }
     const c = report.conclusion || {};
-    const tabs = { results: "Results 结果", comparison: "Comparison 对照", analysis: "Analysis 分析", conclusion: "Conclusion 结论" };
+    const tabs = { results: "Results 结果", comparison: "Comparison 对照", analysis: "Analysis 分析", conclusion: "Conclusion 结论", plan: "Plan 实验计划" };
     const tabBody = (tab) => {
       if (tab === "results") {
         return `<table class="v2-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
@@ -511,6 +520,9 @@
           <h3 style="margin-top:14px">Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(s.ms)} ms</span></div>`).join("") || `<p class="muted">—</p>`}
           <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
       }
+      if (tab === "plan") {
+        return `<p class="muted small">来自 04-experiments 的固定实验清单；状态是当前仓库的覆盖情况，不是统计结论。</p>${planTable(plan.items)}`;
+      }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
         <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
         <h3>Conditions 适用条件</h3><ul>${(c.conditions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
@@ -527,8 +539,89 @@
     }));
   }
 
+  async function renderGraph2(root) {
+    const opts = await api("/api/v2/graph/options");
+    const reprs = opts.representations || [];
+    const select = reprs.map((r) => `<option value="${esc(r.id)}">${esc(r.label_zh || r.id)}</option>`).join("");
+    root.innerHTML = `${header("GRAPH EXPLORER · 图谱", "图谱可视化", "选择图表示（graph.repr），查看 Memory / Entity / Topic / Event 节点与关系；支持按问题取相关子图。")}
+      <div class="card pad">
+        <div class="toolbar">
+          <label class="small">图表示 <span class="muted">Graph representation</span><select id="v2-graph-repr" class="field">${select}</select></label>
+          <input id="v2-graph-q" class="field" placeholder="输入问题，取相关子图（可留空看全图采样）">
+          <button id="v2-graph-load" class="btn primary">生成图谱</button>
+          <button id="v2-graph-reset" class="btn">重置</button>
+        </div>
+        <div class="note">图谱由当前 MemoryStore 构图；切换图表示不会重新抽取原始对话。真实模型会替换 embedding / 回答，但图仍来自当前 W 的 Memory。K 维护不在单题图谱中执行。</div>
+      </div>
+      <div class="v2-cols" style="margin-top:14px">
+        <div class="card pad"><div id="v2-graph-meta" class="sub">加载中…</div><div id="v2-graph-svg" class="graph-view"></div>
+          <div id="v2-graph-legend" class="row" style="margin-top:8px"></div></div>
+        <div class="card pad"><h3>节点详情 <span class="muted small">Node detail</span></h3><div id="v2-graph-detail" class="muted">点击节点查看内容、状态与证据。</div>
+          <h3 style="margin-top:16px">统计 <span class="muted small">Stats</span></h3><div id="v2-graph-stats" class="small"></div></div>
+      </div>`;
+    const draw = async () => {
+      const repr = $("#v2-graph-repr").value;
+      const q = $("#v2-graph-q").value.trim();
+      $("#v2-graph-meta").textContent = "加载中…";
+      try {
+        const data = await api(`/api/v2/graph?sample=${encodeURIComponent(app.sampleId)}&repr=${encodeURIComponent(repr)}&q=${encodeURIComponent(q)}&limit=180`);
+        const nodes = data.nodes || [], edges = data.edges || [];
+        $("#v2-graph-meta").innerHTML = `<b>${esc(data.representation_label)}</b> · 当前显示 ${data.shown.nodes} / ${data.stats.nodes} 节点、${data.shown.edges} / ${data.stats.edges} 条边${q ? ` · 查询子图 “${esc(q)}”` : " · 按度数采样"}`;
+        $("#v2-graph-stats").innerHTML = `全图：${esc(data.stats.nodes)} 节点 / ${esc(data.stats.edges)} 边<br>表示：<span class="mono">${esc(data.representation)}</span><br>模式：offline 确定性构图`;
+        $("#v2-graph-legend").innerHTML = (data.legend || []).map((l) => `<span class="pill">${esc(l.label)}</span>`).join("");
+        if (!nodes.length) { $("#v2-graph-svg").innerHTML = `<div class="empty">没有可展示的节点。</div>`; return; }
+        const W = 920, H = 620, cx = W / 2, cy = H / 2;
+        const groups = {};
+        nodes.forEach((n) => (groups[n.type] = groups[n.type] || []).push(n));
+        const pos = new Map();
+        const order = ["unit", "entity", "topic", "event"];
+        order.forEach((type, gi) => {
+          const list = groups[type] || [];
+          const radius = type === "unit" ? 160 : type === "entity" ? 260 : 300;
+          list.forEach((n, i) => {
+            const angle = (2 * Math.PI * i) / Math.max(1, list.length) - Math.PI / 2 + gi * 0.25;
+            pos.set(n.id, { x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle) });
+          });
+        });
+        const edgeHtml = edges.map((e) => {
+          const a = pos.get(e.source), b = pos.get(e.target);
+          if (!a || !b) return "";
+          return `<line class="graph-edge" x1="${a.x.toFixed(1)}" y1="${a.y.toFixed(1)}" x2="${b.x.toFixed(1)}" y2="${b.y.toFixed(1)}"><title>${esc(e.source)} -- ${esc(e.target)}</title></line>`;
+        }).join("");
+        const color = (n) => n.type === "entity" ? "#2f5d8a" : n.type === "topic" ? "#6b5b95" : n.type === "event" ? "#8a6d3b" : n.state === "CONFLICT" ? "#a33" : n.state === "HISTORICAL" ? "#b07a2a" : "#2f7a4f";
+        const nodeHtml = nodes.map((n) => {
+          const p = pos.get(n.id);
+          const r = Math.max(4, Math.min(13, 4 + Math.sqrt(n.degree || 1) * 2));
+          const label = n.type === "unit" && n.degree < 4 ? "" : (n.label || n.id).slice(0, 28);
+          return `<g class="graph-node" data-id="${esc(n.id)}" transform="translate(${p.x.toFixed(1)},${p.y.toFixed(1)})"><title>${esc(n.id)} · ${esc(n.type)} · degree ${esc(n.degree)}</title><circle r="${r.toFixed(1)}" fill="${color(n)}" fill-opacity="0.22" stroke="${color(n)}"/><text x="${(r + 3).toFixed(1)}" y="3">${esc(label)}</text></g>`;
+        }).join("");
+        $("#v2-graph-svg").innerHTML = `<svg class="graph-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Memory graph">${edgeHtml}${nodeHtml}</svg>`;
+        $$("#v2-graph-svg .graph-node").forEach((node) => (node.onclick = () => showNode(node.dataset.id, data)));
+      } catch (err) {
+        $("#v2-graph-svg").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
+      }
+    };
+    const showNode = async (id, data) => {
+      const panel = $("#v2-graph-detail");
+      if (id.startsWith("entity:") || id.startsWith("topic:") || id.startsWith("event:")) {
+        const neighbors = (data.edges || []).filter((e) => e.source === id || e.target === id).map((e) => e.source === id ? e.target : e.source);
+        panel.innerHTML = `<div class="mono">${esc(id)}</div><p>${esc(id.split(":").slice(1).join(":"))}</p><p class="muted small">邻居 ${neighbors.length} 个</p>${neighbors.slice(0, 12).map((x) => `<div class="mono small">${esc(x)}</div>`).join("")}`;
+        return;
+      }
+      try {
+        const d = await api(`/api/v2/memories/${encodeURIComponent(id)}?sample=${encodeURIComponent(app.sampleId)}`);
+        panel.innerHTML = `<div class="mono">${esc(id)}</div><p>${esc(d.memory.text)}</p><div class="small">state：${esc(d.summary.state || "—")} · time：${esc(interval(d.summary.t_event))}</div>${d.source_turns.length ? `<div class="v2-evidence"><span class="mono">${esc(d.source_turns[0].turn_id)}</span> ${esc(d.source_turns[0].text || "")}</div>` : ""}`;
+      } catch (err) { panel.textContent = err.message; }
+    };
+    $("#v2-graph-load").onclick = draw;
+    $("#v2-graph-reset").onclick = () => { $("#v2-graph-q").value = ""; draw(); };
+    $("#v2-graph-q").onkeydown = (e) => { if (e.key === "Enter") draw(); };
+    $("#v2-graph-repr").onchange = draw;
+    await draw();
+  }
+
   async function renderEvaluation2(root) {
-    const data = await api("/api/v2/evaluation");
+    const [data, plan] = await Promise.all([api("/api/v2/evaluation"), api("/api/v2/experiments/plan").catch(() => ({ items: [] }))]);
     if (!data.available) { root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "")}<p class="note warn">${esc(data.reason)}</p>`; return; }
     const test = data.qa?.test || {};
     const retrieval = data.retrieval?.test || {};
@@ -547,6 +640,10 @@
         <div class="card pad"><h3>QA（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>F1</th><th>evidence recall</th><th>sec</th><th>state acc</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table>
           <p class="muted small">这是归档的 27B 结果；当前 W2 的 offline 单题不写入此表。</p></div>
         <div class="card pad"><h3>Retrieval Recall@15（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>@15</th></tr></thead><tbody>${rrows || `<tr><td colspan="2" class="muted">—</td></tr>`}</tbody></table></div>
+      </div>
+      <div class="card pad" style="margin-top:16px"><h3>实验计划矩阵 <span class="muted small">Experiment plan</span></h3>
+        <p class="muted small">课程设计里每个实验原本要回答什么、用什么指标、当前状态。不是所有都已跑；状态见标签。</p>
+        ${planTable(plan.items)}
       </div>
       <div class="card pad" style="margin-top:16px"><h3>Web 实验报告</h3>${data.reports?.length ? data.reports.map((r) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:7px 0"><a href="#/experiments/${esc(r.experiment_id)}">${esc(r.experiment_id)}</a><span class="muted small">${esc(r.status || "not_analyzed")}</span></div>`).join("") : `<p class="muted">还没有 Web 实验报告；去实验台运行 baseline + candidate 后生成。</p>`}</div>`;
   }
@@ -568,5 +665,5 @@
     };
   }
 
-  window.V2VIEWS = { memories: renderMemories, ask2: renderAsk2, lab: renderLab2, experiments: renderExperiment, evaluation2: renderEvaluation2, system: renderSystem };
+  window.V2VIEWS = { memories: renderMemories, ask2: renderAsk2, lab: renderLab2, graph2: renderGraph2, experiments: renderExperiment, evaluation2: renderEvaluation2, system: renderSystem };
 })();

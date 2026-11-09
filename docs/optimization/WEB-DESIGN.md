@@ -83,6 +83,14 @@ Web 必须让用户**看见**这条链路，而不只是看到最终答案。
 - 顶部按钮：**导出 v2 JSON**、导出 v1（兼容）、导出当前筛选。
 - 右侧可切换“关系图”视图（列表/图二选一）。
 
+### 3.2.1 图谱可视化 `#/graph2`
+
+- 选择 `graph.repr`：`state_slot` / `entity_triple` / `three_layer` / `event_sparse`（中文标签+英文实现名）。
+- 输入问题可取相关子图；不输入时按度数采样，避免 1000+ 节点卡顿。
+- SVG 分层布局：Memory 单元 / Entity 实体 / Topic 主题 / Event 事件；颜色区分 ACTIVE / HISTORICAL / CONFLICT。
+- 点击节点显示 Memory 内容、状态、source turn 与证据；辅助节点显示邻居。
+- 显示全图统计与当前采样；明确标注“图由当前 W 的 Memory 构图，切换图表示不会重新抽取原始对话”。
+
 ### 3.3 提问与状态 `#/ask`
 
 输入：对话、问题、`as_of`（可选）、配置（B0/R0/CHEAP/QUALITY/自定义）、模型模式（offline/online）。
@@ -164,6 +172,18 @@ K 维护不作为单题运行的可编辑轴：它需要长期存储与单独 ex
 - 每次评测绑定 run manifest、config hash、model fingerprint、dataset hash。
 - 导出 CSV/JSON；明确 `offline_extractive` 与真实 LLM 的标签。
 - 默认 **test 2 段**只读展示；不允许用 test 调参（页面提示）。
+
+### 3.5.1 实验计划矩阵（评测页/报告页）
+
+评测页与实验报告页都展示 [experiment-catalog.json](../../configs/experiment-catalog.json) 的固定清单：
+
+- E1-W/S/R/M/U/K 的 E1.1/E1.2/E1.3；
+- E2 耦合/Oracle/LLM 归因；
+- E3 组合/Pareto；
+- E4 环境网格；
+- E5 test 留出确认。
+
+每行包含：实验 ID、阶段、模块、要回答的问题、预期指标、当前状态（done/partial/pending/blocked）、已有证据/去向。报告页以 `Plan 实验计划` tab 呈现；没有完成/没有 conclusion 的项不会被写成已完成。
 
 ### 3.6 系统 `#/system`
 

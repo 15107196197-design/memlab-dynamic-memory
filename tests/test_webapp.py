@@ -153,6 +153,23 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(len(out["rows"]), 6)
         self.assertTrue(out["by_category"])
 
+    def test_graph_repr_and_subgraph(self):
+        options = webapp.get("/api/v2/graph/options")
+        self.assertIn("three_layer", [r["id"] for r in options["representations"]])
+        graph = webapp.get("/api/v2/graph", {"sample": ["conv-26"], "repr": ["three_layer"], "limit": ["40"]})
+        self.assertEqual(graph["representation"], "three_layer")
+        self.assertGreater(graph["stats"]["nodes"], 0)
+        self.assertGreater(len(graph["nodes"]), 0)
+
+    def test_experiment_catalog_covers_modules_and_stages(self):
+        data = webapp.get("/api/v2/experiments/plan")
+        self.assertGreaterEqual(data["count"], 20)
+        modules = {item["module"] for item in data["items"]}
+        for module in ("W", "S", "R", "M", "U", "K", "E2", "E3", "E4", "E5"):
+            self.assertIn(module, modules)
+        self.assertGreater(data["status_counts"].get("done", 0), 0)
+        self.assertGreater(data["status_counts"].get("blocked", 0), 0)
+
     def test_evaluation_archive_is_available(self):
         data = webapp.get("/api/v2/evaluation")
         self.assertTrue(data["available"])

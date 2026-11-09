@@ -91,3 +91,14 @@
 .graph-node circle { stroke-width: 1; }
 .graph-node text { font-family: var(--mono); font-size: 8px; fill: #4a4a4a; pointer-events: none; }
 .graph-node:hover circle { stroke: var(--ink); stroke-width: 2; }
+.graph-view { min-height: 360px; margin-top: 8px; }
+.graph-svg { width: 100%; height: auto; display: block; background: #fcfcfc; border: 1px solid var(--line-2); border-radius: 8px; }
+.graph-edge { stroke: #d8d8d8; stroke-width: 1; }
+.graph-node { cursor: pointer; }
+.graph-node circle { transition: fill-opacity .15s; }
+.graph-node:hover circle { fill-opacity: .45; }
+.graph-node text { font-size: 9px; fill: #555; pointer-events: none; }
+.pill.done { border-color: #b9d7c2; background: #f3faf5; color: #245c36; }
+.pill.partial { border-color: #e0d6c2; background: #fbf8f1; color: #6b5630; }
+.pill.pending { border-color: #e4e4e4; background: #fafafa; color: #777; }
+.pill.blocked { border-color: #e6c5c5; background: #fdf6f6; color: #7a2f2f; }

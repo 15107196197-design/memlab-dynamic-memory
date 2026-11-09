@@ -239,6 +239,7 @@ runs/<run_id>/
 | [GOAL-AUDIT.md](GOAL-AUDIT.md) | 总体目标对齐、10 个审计问题、红旗 | 阶段收尾/实验设计评审 |
 | [../../configs/reference-b0.json](../../configs/reference-b0.json) | B0 遗留基线（机器可读） | 想做对照/复现 |
 | [../../configs/reference-r0.json](../../configs/reference-r0.json) | R0 参考配置（机器可读） | 想直接跑配置 |
+| [../../configs/experiment-catalog.json](../../configs/experiment-catalog.json) | 每个实验的计划、指标、状态与证据/去向 | 想核对“原本要做的实验” |
 | [../../configs/variants.json](../../configs/variants.json) | 变体目录（机器可读） | 想生成实验矩阵 |
 | [../../configs/experiments/e1-adoption.json](../../configs/experiments/e1-adoption.json) | E1.1 模块内插拔模板（B0+ / R0− 双向） | 想先回答“模块内开关有没有用” |
 | [../../configs/experiments/e1-screening.json](../../configs/experiments/e1-screening.json) | E1.2/E1.3 实现与参数候选规格 | 想选实现、调参数、变模块 LLM |
