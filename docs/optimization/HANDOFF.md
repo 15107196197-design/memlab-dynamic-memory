@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `27dc38d`（merge hardening；S3 `bc3f49e`；文档 `b493414`；S1–S3 见 `git log --oneline -8`） |
+| 当前 commit | S4 见 `git log -1 --oneline`；S1–S3 + hardening 见 `git log --oneline -10` |
 | 分支 | `main` |
-| 工作区状态 | S1 骨架 + S2 v2 模型/导出/缓存 + S3 W/S/R + hardening 修复已合并；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪的原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **136 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13） |
-| 已实现 | `memwb` 原型 + `memlab` S1 骨架 + S2 v2 模型/导出/缓存 + S3 W/S/R + hardening（R0 guard、LLM 参数、validity helper、cache code version） |
-| 未实现 | M 融合/重排/MMR/decay、U 状态/回答、K 维护、双时间失效、实验控制面、Lab UI、API provider adapter；Web 仍走 v1 export |
-| 当前阶段 | **S3 + hardening 完成**；准备进入 S4（M/U/K）。S9 前需要 `memlab/providers.py` 和 API key |
+| 工作区状态 | S1 骨架 + S2 v2 + S3 W/S/R + hardening + S4 M/U/K 已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **164 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28） |
+| 已实现 | `memwb` 原型 + S1 骨架 + S2 v2/导出/缓存 + S3 W/S/R + hardening + S4 M（融合/重排/后处理瀑布）/U（状态/回答/引用/拒答）/K（维护/扫描/指标）/E2E |
+| 未实现 | 实验控制面（S5）、R0 经 Runtime 运行的放行/编译器、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
+| 当前阶段 | **S4 完成**（M/U/K + 10 题端到端）；准备进入 S5（实验控制面）。S9 前需要 `memlab/providers.py` 和 API key |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -175,7 +175,7 @@ artifacts/
 | `configs/experiments/e3-factorial.json` | E3 模块间组合 + E3b/E3c |
 | `configs/experiments/e4-environment-grid.json` | LLM × 规模 × 场景环境网格 |
 
-### 1.2.1 memlab 代码资产（S1–S3）
+### 1.2.1 memlab 代码资产（S1–S4）
 
 | 文件 | 内容 | 后续会话怎么用 |
 |---|---|---|
@@ -194,9 +194,15 @@ artifacts/
 | `memlab/retrieve.py` | R：`none`/`rule` analyzer、`none`/`rule_router`/`dag` planner、4 channel、`RetrievalRunner` | E1 R 轴；S4 融合输入 |
 | `memlab/ingest.py` | `build_store`：W→S 构建 + 图选择 | 10 题冒烟/实验入口 |
 | `memlab/trace.py` | 统一阶段 trace（stage/name/detail/ms） | S4/S5 瀑布图 |
+| `memlab/merge.py` | M：5 fusion、rerank（cross-encoder 可选回退）、filter/MMR/decay/compress、阶段瀑布 | E1 M 轴；S5 编译 |
+| `memlab/use.py` | U：4 state resolver、4 answerer、引用校验/拒答/冲突披露 | E1 U 轴；S5 编译 |
+| `memlab/maintenance.py` | K：update/forget/consolidate/scan + staleness/contradiction/update correctness | E1 K 轴；长期实验 |
+| `memlab/e2e.py` | `E2EPipeline`：R→M→U 编排 + 端到端 trace/token/latency | 10 题冒烟/S5 runner |
+| `memlab/tokens.py` | 统一 token 估算（瀑布 bookkeeping） | M/U/S5 成本 |
 | `tests/test_memlab.py` | 39 个 S1 测试（含 10 题 × 4 方法 legacy 对照） | 回归门禁 |
 | `tests/test_memlab_s2.py` | 25 个 S2 测试（往返/未知时间/export schema/缓存失效） | 回归门禁 |
 | `tests/test_memlab_s3.py` | 21 个 S3 测试（W/S/R 模块、契约、缓存、10 题冒烟） | 回归门禁 |
+| `tests/test_memlab_s4.py` | 28 个 S4 测试（融合/重排/后处理/状态/回答/维护/端到端） | 回归门禁 |
 
 
 ---
@@ -300,6 +306,13 @@ artifacts/
 | S3 规划器回退 | 配置写了未实现的 analyzer/planner（如 `llm`/`reaper`）时，trace 记录 warning 并回退 `rule`/`rule_router` | 旧 R0 配置可加载；不让 S3 因未实现项直接崩 |
 | S3 temporal 通道 | 有 `as_of` 时先按区间过滤再 BM25；无 `as_of` 退化为 BM25 | 无时间约束时避免“按时间倒序”污染候选 |
 | S3 检索缓存键 | 额外包含 `store.index_hash`、`as_of`、`graph.repr` | 换索引/换图/as-of 变化必须 miss |
+| S4 M 阶段顺序 | 默认 `fusion → rerank → filter → mmr → decay → compress`；`MergePipeline(order=...)` 可改 | filter 是后处理的一部分；其余顺序按 4.8；每阶段记瀑布 |
+| S4 cross-encoder | 可选依赖；`sentence_transformers` 缺失时保持原顺序并记 `fallbacks` | 不让缺依赖阻塞实验；有依赖时才是真实重排 |
+| S4 融合输入 | `RetrievalResult.by_channel` 为 S4 新增只读字段（旧字段不变） | M 需要每通道排名；旧调用方无需改 |
+| S4 U 引用/拒答 | 引用只接受上下文证据的 turn id；无 LLM/空答案/`unknown` 一律拒答；冲突显式披露 | 不伪造引用；状态失败也拒绝而非猜 |
+| S4 K 矛盾定义 | 只把“同键同时 ACTIVE 的不同值”或 CONFLICT 状态算矛盾；历史版本不算 | 避免把正常版本链误报为矛盾 |
+| S4 K 归档 | archive/TTL 从活跃 store 移除，但把 unit 保留在 `MaintenanceResult.archived` | 维护不等于销毁 |
+| S4 运行边界 | 测试用 B0 preset + 显式 M/U 组件；`guards.require_runnable` 仍拒绝 R0 经 Runtime 启动 | S5 编译器/guard 放行前，R0 配置只可加载/单测，不可端到端跑 |
 
 
 
@@ -359,6 +372,11 @@ artifacts/
 - [x] S3：`memlab/retrieve.py` R（none/rule analyzer、none/rule_router/dag、bm25/dense/graph_khop/temporal）
 - [x] S3：`memlab/ingest.py` + `Runtime.build_store/retrieve`；W→S→R 10 题冒烟与 legacy_dynamic 检索对照
 - [x] S3：123 个测试通过（旧 38 + S1 39 + S2 25 + S3 21），未 push upstream
+- [x] S4：`memlab/merge.py` M（single_channel/rrf/weighted_rrf/linear/query_adaptive + cross_encoder 回退 + filter/MMR/decay/compress + 瀑布）
+- [x] S4：`memlab/use.py` U（none/offline_slot/query_llm/bitemporal；direct/valid_history/evidence_chain/citation；引用/拒答/冲突）
+- [x] S4：`memlab/maintenance.py` K（update/forget/consolidate/scan + staleness/contradiction/update correctness）
+- [x] S4：`memlab/e2e.py` 10 题 R→M→U 端到端（覆盖 LoCoMo 4 类），2 M + 2 U 候选，记录 token/P95
+- [x] S4：164 个测试通过（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28），未 push upstream
 
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
@@ -431,8 +449,29 @@ artifacts/
 
 **结论：** S3 的检索闭环在固定输入上与 legacy_dynamic 的检索阶段逐题一致；W 写入与 S 索引未丢失 gold 证据（ceiling=1.0）。差异仅在候选预算（15 vs 23）与 trace/可插拔结构；M 融合/重排尚未接入（S4），不能用该结果判断最终 F1。
 
+### 5.1.5 S4 冒烟：M/U 候选与 10 题端到端（离线固定输入）
+
+> 协议：conv-26；10 题 `evaluation.stratified`（覆盖 1–4 类）；W = B0（`legacy_flat`+`append`+`state_slot`）；R = `rule_router`+`k=15`；M/U 见下表；embedding 用 `FakeEmbedding`，回答用 `FakeLLM`（无 Ollama）。因此数字只用于**接口/瀑布/候选对照**，不代表真实模型质量。测试：`tests/test_memlab_s4.py`。
+
+**2 个 M 候选 × 2 个 U 候选（10 题均值）：**
+
+| M 候选 | U 候选 | Recall | nDCG | Tokens/题 | 拒答 |
+|---|---|---:|---:|---:|---:|
+| M1 `rrf`+`none`+`none` | U1 `none`+`direct` | 0.65 | 0.4578 | 1020.2 | 0 |
+| M1 `rrf`+`none`+`none` | U2 `offline_slot`+`valid_history` | 0.65 | 0.4578 | 1087.2 | 0 |
+| M2 `weighted_rrf`+`cross_encoder`(fallback)+`extractive` | U1 `none`+`direct` | 0.65 | 0.4973 | 888.5 | 0 |
+| M2 `weighted_rrf`+`cross_encoder`(fallback)+`extractive` | U2 `offline_slot`+`valid_history` | 0.65 | 0.4973 | 955.5 | 0 |
+
+- **M1（质量基线）**：RRF 融合、无重排/后处理；上下文约 395 tokens/题。
+- **M2（成本/覆盖候选）**：加权 RRF + 抽取式压缩；上下文约 329 tokens/题（−17%），fake embedding 下 nDCG 反而略高（0.4973）；`cross_encoder` 因 `sentence_transformers` 未安装回退，故 nDCG 增益不是真实重排。
+- **U1（便宜）**：不做状态区分，直接回答；U2（状态感知）：offline slot 分 valid/superseded、披露冲突，约 +67 tokens/题；两者均 10/10 返回引用、0 拒答（fake LLM）。
+- **阶段瀑布（tokens/题）**：raw 387.6 → after_fusion 395.4（M1）/ 328.9（M2）→ 其余阶段不变（M1 未启用后处理；M2 压缩预算 1000 未触发）。
+- **端到端**：10/10 题走完 R→M→U，覆盖类别 {1,2,3,4}；冷启动 P95 ≈ 263.8 ms（首题 BM25 建索引离群），缓存热后 ≈ 12.6 ms；无真实 LLM 延迟。
+- **K 指标（conv-26, as_of=2023-10-22）**：staleness 0.1373，contradiction_rate 0.3970（550 对），update_correctness 0.89。矛盾只计“同键同时 ACTIVE 不同值 / CONFLICT”，历史版本不算。
+
+**结论：** S4 接口与瀑布可运行，2 M + 2 U 候选可复现；真实质量/延迟需等 Ollama 或 API provider，且 R0 经 Runtime 的运行要等 S5 放行 guard/编译器。
+
 ### 5.2 未开始
-- [ ] M 合并 / U 使用 / K 维护（S4）
 - [ ] 实验 runner / SQLite / analysis（S5）
 - [ ] E0 基线复现
 - [ ] E1 六模块实验
@@ -495,6 +534,24 @@ artifacts/
 ```
 
 ### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / S4 / 会话
+- 本次完成：M（融合/重排/过滤/MMR/decay/压缩 + 阶段瀑布）、U（4 状态解析 + 4 回答器 + 引用/拒答/冲突）、K（update/forget/consolidate/scan + 3 指标）、E2E（R→M→U）；28 个 S4 测试；2 M + 2 U 候选与 10 题端到端。
+- 改动文件：新增 `memlab/{merge,use,maintenance,e2e,tokens}.py`、`tests/test_memlab_s4.py`；修改 `memlab/__init__.py`（注册）与 `memlab/retrieve.py`（`RetrievalResult.by_channel` 只读新增字段）；更新本 HANDOFF。`memwb/`、`server.py`、`web/` 未改；未改评测协议。
+- 测试：`python -m unittest discover -s tests -t .` → **164 passed**（旧 38 + S1 39 + S2 25 + S3 21 + hardening 13 + S4 28）；未 push upstream。
+- Key 状态：**未使用**（S4 不需要；本地无 Ollama，M/U 用 fake embedding/LLM）。
+- 新增 run_id / 指标：无真实 run。M/U 候选、瀑布、P95、K 指标见 §5.1.5。
+- 关键决策（新增/变更）：M 默认顺序 fusion→rerank→filter→mmr→decay→compress（可配置）；cross-encoder 缺依赖回退并记录；U 引用只取证据 turn id，无 LLM/空答案拒答；K 归档保留 unit，矛盾只计同时 ACTIVE/CONFLICT；`by_channel` 为 S4 对 R 的只读扩展。
+- 未解决问题：
+  1. **R0 仍不能经 Runtime 端到端跑**：`guards.require_runnable` 只放行 legacy/B0；S4 用 B0 preset + 显式 M/U。S5 需要在编译器/guard 中放行已注册模块。
+  2. M/U 只用 fake embedding/LLM；cross-encoder 未安装（回退），真实 P95/token 未测；R 的 `parallelism` 仍未并行。
+  3. M2 在 fake embedding 下优于 M1 不能外推；需 E1 用真实模型/多数据复测。
+- 下一步 3 件事：
+  1. S5：spec loader/validator + compiler（single_factor/adoption/factorial/environment_grid）→ runs.jsonl。
+  2. S5：runner（resume/shard/dry-run）+ SQLite + metrics（L1–L4 + 瀑布）+ 最小 analysis。
+  3. S5：把 S4 的 M/U/K 与 config/guard 接通，`memlab sweep --dry-run` 可生成矩阵。
+- 下一步选择：A 本会话继续 S5（先 Startup Audit）/ B 新会话（用 SESSION-PROMPTS S5）。
+- 下个会话先读：本文件 §1/§1.3/§2/§5.1.5；`02-architecture.md` 2.9；`04-experiments.md` 4.15–4.16；`e1-adoption.json`、`e1-merge.json`、`e3-factorial.json`；`scripts/evaluate.py`。
 
 ### 2026-11-09 / S3 / 会话
 - 本次完成：W/S/R 最小闭环——`memlab/write.py`（2 extractor、4 resolver、2 auditor）、`memlab/store.py`（BM25/dense/三图/时序/检索上限）、`memlab/retrieve.py`（2 analyzer、3 planner、4 channel、runner）、`memlab/ingest.py`、`memlab/trace.py`；Runtime 增加 cache/store/`build_store`/`retrieve`；21 个 S3 测试。
@@ -598,15 +655,15 @@ artifacts/
 
 ---
 
-## 10. 建议的下一步（S4）
+## 10. 建议的下一步（S5）
 
-1. M：`fusion`（single_channel/rrf/weighted_rrf/query_adaptive）、`rerank`（none/cross_encoder，缺依赖优雅回退）、`post`（filter/mmr/decay/compress）；每阶段记 recall/nDCG/tokens。
-2. U：state resolver（none/offline_slot/query_llm 的离线路径，bitemporal 视 S2 区间）、answer（direct/valid_history/evidence_chain）；输出引用/拒答/冲突。
-3. K：update/forget/consolidate/scan 最小实现；指标 staleness/contradiction/update correctness。
-4. 10 题端到端（W→S→R→M→U），覆盖 LoCoMo 四类；记录每阶段 token/P95 与 waterfall。
-5. 前置检查：复用 S3 的 `RetrievalResult`/`Trace`/`MemoryStore`，不改变 W/S/R 接口；不跑 E1 大实验。
+1. spec loader/validator：读取 `configs/experiments/*.json`，校验 factors/levels/derived_rules/applies_when。
+2. compiler：single_factor/adoption/factorial/environment_grid → `runs.jsonl`；去重、随机化、shard。
+3. runner：resume、shard、隔离目录、错误分类、超时、`--dry-run`；把 S4 的 M/U/K 接上配置与 guard。
+4. store：SQLite（runs/metrics/artifacts）+ CSV/JSON；metrics：L1–L4 + 阶段瀑布。
+5. analysis：主效应、配对 bootstrap、CI、互动、Pareto 最小版；CLI `memlab run/sweep/analyze`。
 
-**验收：** 旧 123 个测试全过；新测试覆盖融合/RRF/MMR/decay、状态/回答；10 题端到端通过；产出 2 个 M 与 2 个 U 候选。
+**验收：** 旧 164 个测试全过；`memlab sweep --spec e1-adoption.json --dry-run` 能生成矩阵；3 配置 × 10 题写入 SQLite；resume 不重复；不跑 E1 全量。
 
 ---
 

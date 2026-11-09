@@ -13,7 +13,7 @@ through config.  Per-node results are cached with the content-addressed
 from __future__ import annotations
 
 import re
-from dataclasses import asdict, dataclass, replace
+from dataclasses import asdict, dataclass, field, replace
 from typing import Any, Mapping, Sequence
 
 from . import model
@@ -271,6 +271,7 @@ class RetrievalResult:
     candidates: list[Candidate]
     trace: list[dict]
     k: int
+    by_channel: dict[str, list[Candidate]] = field(default_factory=dict)
 
     def memory_ids(self) -> list[str]:
         return [candidate.memory_id for candidate in self.candidates]
@@ -284,6 +285,8 @@ class RetrievalResult:
             "nodes": [{"id": node.node_id, "channel": node.channel, "depends_on": node.depends_on}
                       for node in self.plan.nodes],
             "candidates": [asdict(candidate) for candidate in self.candidates],
+            "channels": {name: [candidate.memory_id for candidate in items]
+                         for name, items in self.by_channel.items()},
             "trace": list(self.trace),
         }
 
@@ -375,7 +378,11 @@ class RetrievalRunner:
                 break
         trace.add("retrieve", "merge", f"{len(merged)} unique candidates across "
                                         f"{len(plan.nodes)} node(s); fusion is M/S4")
-        return RetrievalResult(frame=frame, plan=plan, candidates=merged, trace=trace.to_list(), k=budget)
+        by_channel: dict[str, list[Candidate]] = {}
+        for node in plan.nodes:
+            by_channel.setdefault(node.channel, []).extend(executed[node.node_id])
+        return RetrievalResult(frame=frame, plan=plan, candidates=merged, trace=trace.to_list(),
+                               k=budget, by_channel=by_channel)
 
     def _retrieve_node(self, node: PlanNode, frame: QueryFrame, ctx: Any,
                        k: int) -> tuple[list[Candidate], bool]:
