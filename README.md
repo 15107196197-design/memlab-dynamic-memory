@@ -205,7 +205,7 @@ python scripts/evaluate.py summary                         # 写入 eval/results
 python -m unittest discover -s tests -t .
 ```
 
-当前 276 个测试（约 10 秒），覆盖配置 / 编译、provider、W/S/R/M/U/K 模块、legacy `memwb` 流程、Web API 与实验报告口径。测试会 mock 模型和 HTTP，不需要 Ollama 或 API key。
+完整套件约 10–15 秒，覆盖配置 / 编译、provider、W/S/R/M/U/K 模块、legacy `memwb` 流程、Web API 与实验报告口径。测试会 mock 模型和 HTTP，不需要 Ollama 或 API key。
 
 跑单个文件：
 
