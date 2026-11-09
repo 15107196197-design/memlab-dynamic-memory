@@ -6,12 +6,12 @@
 
 ## 1. 结论先行
 
-1. **接线完成，但“图检索有没有用”的答案是：在当前 fusion 预算下，图通道没有带来新的证据。** 13 格、每格 61 道 LoCoMo multi-hop 题、共 793 题、0 error。所有图实现（`slot_expand` / `entity_subgraph` / `dual_channel` / `ppr`）的 evidence_recall 都是 **0.2372**，完全相同；图通道新增的候选在最终 context 中 **0 条存活**（4 个诊断配置：新增 34/91/91/88 条，最终进入 0 条）。图通道只是把 BM25 已经找到的候选重新排了一次。
-2. **相对 `vector_only` 的提升不是“图找到了新证据”。** `vector_only` = BM25 + hashing dense，evidence_recall 0.2257；图格 = BM25 + graph，0.2372（+0.0115，只来自 2/61 题）。NDCG 提升更大（+0.033～+0.039，6～7 题改善、0 题变差），但这是因为 offline hashing dense 很弱，且图候选与 BM25 重叠后改变了融合排序，不是图通道补回了缺失证据。
-3. **四种图实现的行为确实不同，但下游指标几乎不可分。** 单元测试确认候选集合/分数不同（slot 只回同 slot 版本链；entity 走实体 hub；dual 加权改分数；PPR 幂迭代且确定）；E1-R3 中 evidence_recall 完全一致，NDCG 只在少数题上差 0.001～0.007。
-4. **PPR 不值。** 相对同 repr 的 `entity_subgraph`，PPR 的 NDCG 只 +0.0003～+0.0066（中位数 0，改善 1～2 题），但 p95 latency 从 19～23 ms 升到 38～49 ms。没有 recall 收益，复杂度与延迟都不划算。
-5. **表示不是杠杆。** `state_slot`（785 nodes / 373 edges）、`entity_triple`（800/1016）、`three_layer`（974/1347）在 evidence_recall 上完全相同；NDCG 差异 ≤0.001。加更多层/边没有转化为证据命中。
-6. **如果要在这条 pipeline 里选一个：** 现阶段选 `entity_subgraph` + `state_slot`（最便宜、行为可解释、recall 与其它图实现相同）；若只要审计/开关能力，`vector_only` 是唯一能真正关闭图通道的配置。**不建议上 PPR 或 dual_channel 作为默认**。真正要让图检索“有用”，下一步应改 fusion/图的边类型（见 §5），而不是继续换图 impl。
+1. **最终指标上，图通道没有改变证据集合；但候选层面图确实补到了少量 BM25 没有的 gold。** 13 格、每格 61 道 LoCoMo category=1 题、共 793 题、0 error。所有图实现（`slot_expand` / `entity_subgraph` / `dual_channel` / `ppr`）的最终 evidence_recall 都是 **0.2372**，完全相同；图通道新增的候选进入最终 context 的 **0 条**（4 个诊断配置：新增 34/91/91/88 条，最终进入 0 条）。
+2. **但“图通道没用”是错的，准确说法是：路由与 fusion 把图证据丢掉了。** 61 道 category=1 题里，rule analyzer 只把 **8 道**判成 multi_hop 并接入图通道（50 single_hop、3 temporal）。在这 8 道上，BM25 候选 union recall 0.4188；`slot_expand` 与 `ppr/three_layer` 把 union 提到 **0.4854（+6.7pp）**，`dual_channel/three_layer` 0.4604。也就是说图检索在候选层有互补价值，只是这些新增 gold **0 条进入最终 context**。瓶颈首先是 analyzer 路由（53/61 根本没进图），其次是 M 的 fusion/filter 预算。
+3. **四种图实现行为不同，且在 8 道路由题上可分辨；最终指标仍不可分。** `slot_expand` 只回同 slot 版本链（测试 `{f1,f2,f3}`）；`entity_subgraph` 走实体 hub（`{f1,f2,f3,f4,t3}`）；`dual_channel` 同集合但加权改分数；PPR 幂迭代且确定。8 道路由题上的 graph-channel recall：PPR/three_layer 0.3979、slot_expand 0.3667、dual/three_layer 0.3479、entity_subgraph 0.3063；entity_subgraph 的 union 与 BM25 相同（0.4188），没有补到可用的新 gold。
+4. **PPR 不值。** 最终指标上，PPR 相对同 repr `entity_subgraph` 的 NDCG 只 +0.0003～+0.0066（中位数 0，改善 1～2 题），p95 latency 从 19～23 ms 升到 38～49 ms；候选层它确实是 8 道题里 graph recall 最高的（0.3979），union 与 slot_expand 并列 0.4854，但既然 0 条进入最终 context，这个优势没有兑现。
+5. **表示不是最终指标的杠杆，但在候选层有作用。** `state_slot`（785 nodes / 373 edges）、`entity_triple`（800/1016）、`three_layer`（974/1347）的最终 evidence_recall 完全相同、NDCG 差异 ≤0.001；在 8 道路由题上，`three_layer` 只对 dual/PPR 有候选层帮助（dual union 0.4188→0.4604，PPR state_slot 0.4437→0.4854），对 entity_subgraph 无帮助。
+6. **选型建议：** 若看候选层（下一轮要改 fusion 的话），`slot_expand + state_slot` 性价比最好（union 0.4854、最便宜、行为最可解释）；若只看当前最终 F1，`entity_subgraph + state_slot` 的 f1 0.0342 略高但候选层无增益，差异在噪声内。**不建议默认 PPR/dual_channel。** 真正要让图“有用”，先修 analyzer 路由（8/61）和 fusion 对图候选的预算/权重，而不是继续换图 impl。
 
 ## 2. 接线前后差异
 
@@ -79,6 +79,25 @@ python -m memlab.experiments.cli run \
 - NDCG：entity_subgraph +0.0336（state_slot）/+0.0327（entity_triple、three_layer）；dual_channel +0.0330～+0.0336；slot_expand +0.0362；ppr +0.0391/+0.0330/+0.0393。全部 6～7 题改善、0 题变差。
 - 但图新增候选最终存活 0 条（下表），说明 NDCG 变化来自融合排序，不是新证据。
 
+路由诊断（61 题/配置）：rule analyzer 的 intent 分布是 **single_hop 50 / multi_hop 8 / temporal 3**。只有这 8 道题会生成 `bm25 + graph_khop`；其余 53 道即使 LoCoMo 标为 category=1，也不会进入图通道。因此下面的 channel 表只统计这 8 道，不能与 61 题的最终表直接比大小。
+
+图通道候选层（8 道 graph-routed 题，BM25 union recall 0.4188）：
+
+| impl / repr | graph recall | union recall | 图新增 gold 候选 | 新增 gold 题数 | 新增候选进入最终 |
+|---|---:|---:|---:|---:|---:|
+| slot_expand / state_slot | 0.3667 | **0.4854** | 4 | 3 | 0 |
+| entity_subgraph / state_slot | 0.3063 | 0.4188 | 4 | 3 | 0 |
+| entity_subgraph / entity_triple | 0.3063 | 0.4188 | 2 | 2 | 0 |
+| entity_subgraph / three_layer | 0.3063 | 0.4188 | 2 | 2 | 0 |
+| dual_channel / state_slot | 0.3063 | 0.4188 | 4 | 3 | 0 |
+| dual_channel / entity_triple | 0.3063 | 0.4188 | 4 | 3 | 0 |
+| dual_channel / three_layer | 0.3479 | 0.4604 | 5 | 4 | 0 |
+| ppr / state_slot | 0.3563 | 0.4437 | 7 | 3 | 0 |
+| ppr / entity_triple | 0.3063 | 0.4188 | 4 | 3 | 0 |
+| ppr / three_layer | **0.3979** | **0.4854** | 6 | 4 | 0 |
+
+这张表解释了“为什么最终表全是 0.2372”：图通道在 8 道题上确实把候选 union 从 0.4188 提到 0.4854，但这些新 gold 候选全部被 fusion/filter 截掉。`entity_subgraph` 是唯一 union 没有提升的图实现；`slot_expand` 与 `ppr/three_layer` 在候选层最好，但 PPR 的延迟更高。
+
 图通道候选存活诊断（61 题/配置）：
 
 | 配置 | 图新增候选 | 新增候选进入最终 context | 最终 unit 数 | 最终 context 中来自图通道的 unit |
@@ -100,7 +119,7 @@ python -m memlab.experiments.cli run \
 | entity_triple | +0.0003 | 0.0000 | 1 / 2 | 0 | 23.0 → 48.7 ms |
 | three_layer | +0.0066 | 0.0000 | 2 / 0 | 0 | 21.1 → 37.8 ms |
 
-PPR 的收益集中在 1～2 道题，recall 完全不变；延迟约 1.6～2 倍（p95）。它的价值主要是**确定性实现可审计**（固定 50 次迭代，测试断言同输入同输出），不是质量。除非后续 fusion 真的把图候选放进 context，否则不建议默认开 PPR。
+PPR 的收益集中在 1～2 道题，最终 evidence_recall 完全不变；延迟约 1.6～2 倍（p95）。候选层它并不差：在 8 道路由题上 graph recall 0.3979（图实现最高）、union 0.4854（与 slot_expand 并列），但同样 **0 条新增候选进入最终 context**——所以候选层的优势没有兑现到最终指标。它的价值主要是**确定性实现可审计**（固定 50 次迭代，测试断言同输入同输出），以及下一轮修 fusion 后可能有上限；当前不建议默认开。
 
 ## 5. 近似实现的限制（必须写进任何引用）
 
@@ -108,8 +127,8 @@ PPR 的收益集中在 1～2 道题，recall 完全不变；延迟约 1.6～2 �
 - `slot_expand` 只对 `graph.repr=state_slot` 有意义；本次用 level 级 `applies_when` 跳过了另外两个非法组合，它们没有以“改标签”的方式混进矩阵。
 - `community_summary` 与 `hybrid_graph` 是显式 fail-closed；本实验没有这两个 level。
 - offline 的 dense 是 hashing bag-of-characters，不是 bge-m3。因此 `vector_only` 在这里是**弱基线**；图格相对它的 NDCG 优势不能外推为“图检索优于真实 dense”。
-- 所有 cell 的 `planner.analyzer=llm` 都按代码回退到 `rule`（compiler 已记录 warning）；路由在 13 格中相同，因此本实验比较的是图通道，不是路由差异。
-- 证据只覆盖 LoCoMo category=1、4 个开发对话、61 题/格、单 seed；不能据此做显著性结论。13 格、0 error 是“可运行/可审计”的证据，不是“图检索有效”的证明。
+- 所有 cell 的 `planner.analyzer=llm` 都按代码回退到 `rule`（compiler 已记录 warning）；路由在 13 格中相同，因此本实验比较的是图通道，不是路由差异。rule analyzer 只把 8/61 category=1 题判成 multi_hop，最终指标对图通道的检验功效很低；候选层结论只基于这 8 道。
+- 证据只覆盖 LoCoMo category=1、4 个开发对话、61 题/格、单 seed；不能据此做显著性结论。13 格、0 error 是“可运行/可审计”的证据；候选层 +6.7pp 也只有 8 道题，不能当作稳定效应。
 
 ## 6. 与 A 在线结果的口径分界
 
@@ -121,21 +140,23 @@ PPR 的收益集中在 1～2 道题，recall 完全不变；延迟约 1.6～2 �
 
 ### 给 B（E1-R3 状态：`not_wired → partial`）
 
-证据文件：`eval/archive/e1-r3-graph.json`（13 cells、793 题、0 error、protocol/limitations/survival 均在）。
+证据文件：`eval/archive/e1-r3-graph.json`（13 cells、793 题、0 error；新增 `routing` 与 `graph_channel_analysis`）。
 
 可以写：
 
 - “`graph.retrieval.impl` 已在 v2 接线并有行为测试；`vector_only` 能关闭图通道；未实现 impl fail-closed。”
-- “在 offline multi-hop 子集上，图实现之间 evidence_recall 无差异（均 0.2372），图新增候选进入最终 context 的比例为 0/34～0/91。”
+- “最终指标上，图实现之间 evidence_recall 无差异（均 0.2372），图新增候选进入最终 context 的比例为 0/34～0/91。”
+- “但 rule analyzer 只把 8/61 category=1 题路由到图通道；在这 8 道上，图通道把 BM25 候选 union recall 从 0.4188 提到 0.4854（slot_expand 与 ppr/three_layer），说明图候选层有互补价值，瓶颈在 analyzer 路由与 fusion。”
 - “相对 vector_only（弱 hashing dense）图格 NDCG +0.033～+0.039，但这是排序效应，不是新证据。”
-- “PPR 的 NDCG 边际增益 +0.0003～+0.0066，p95 延迟约 1.6～2 倍，不建议默认。”
+- “PPR 的最终 NDCG 边际增益 +0.0003～+0.0066，p95 延迟约 1.6～2 倍，不建议默认。”
 
 不能写：
 
-- “图检索提升了 multi-hop recall”（没有；所有图实现相同，且新增证据 0 存活）。
+- “图检索提升了最终 multi-hop recall”（没有；所有图实现相同，且新增 gold 0 条进入最终 context）。
+- “图检索完全无用/没有补到新证据”（不对；8 道路由题的候选 union +6.7pp，是被 fusion 丢掉的）。
 - “dual_channel 验证了 typed dual-channel 的收益”（近似实现，边无类型）。
 - 任何把本表与 A 在线 27B 表混算的结论。
 
 ### 给 D（可直接进报告的一段 + 数字）
 
-> 在 LoCoMo 多跳子集（4 个开发对话、61 题/配置、offline hashing+extractive、0 error）上，R3 把 `graph.retrieval.impl` 真正接进图通道后，`slot_expand`、`entity_subgraph`、`dual_channel`、`ppr` 的 evidence_recall 完全一致（0.2372），而 `vector_only` 为 0.2257；图通道相对弱 dense 基线把 NDCG 从 0.1988 提到 0.2315～0.2381，但图通道新增的候选在最终 context 中存活 0 条（新增 34～91 条/61 题），说明收益来自融合排序而非新证据。PPR 相对 `entity_subgraph` 的 NDCG 仅 +0.0003～+0.0066（中位数 0），p95 延迟从 19～23 ms 升到 38～49 ms，不值得作为默认。结论：接线让图检索“可选、可审计、可 fail-closed”，但当前 fusion 预算下图检索对多跳证据召回没有可测增益；若要继续投入，应优先改 fusion/边类型，而不是继续换图 impl。
+> 在 LoCoMo category=1 子集（4 个开发对话、61 题/配置、offline hashing+extractive、0 error）上，R3 把 `graph.retrieval.impl` 真正接进图通道后，`slot_expand`、`entity_subgraph`、`dual_channel`、`ppr` 的最终 evidence_recall 完全一致（0.2372），`vector_only` 为 0.2257；图格相对弱 dense 的 NDCG 为 0.2315～0.2381（vector_only 0.1988），但图通道新增候选进入最终 context 的为 0 条。更关键的是路由与 fusion 两层损耗：61 道 category=1 题中 rule analyzer 只把 8 道判成 multi_hop 并接入图通道；在这 8 道上，BM25 候选 union recall 为 0.4188，`slot_expand` 与 `ppr/three_layer` 把它提到 0.4854（+6.7pp），但新增 gold 候选仍 0 条存活到最终 context。PPR 相对 `entity_subgraph` 的最终 NDCG 仅 +0.0003～+0.0066（中位数 0），p95 延迟从 19～23 ms 升到 38～49 ms。结论：接线让图检索“可选、可审计、可 fail-closed”，候选层也确有互补证据；当前没有转化为最终收益，瓶颈在 analyzer 路由（8/61）和 fusion/filter 预算，不在图 impl 本身。下一轮应优先修这两处，而不是继续换图实现。
