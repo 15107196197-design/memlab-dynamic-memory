@@ -11,13 +11,26 @@ import copy
 import itertools
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+from functools import lru_cache
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Iterable, Mapping
 
 from .. import config as lab_config
 from .. import registry
 from . import spec as spec_module
+
+# Declared configuration axes that no implementation reads.  A plan may still be
+# executable when one of these is present, but a *factor* on such an axis cannot
+# answer a causal question: every level would return the same result.  Keeping the
+# list explicit is what stops an inert switch from entering a screening matrix as
+# if it were a real experimental factor.
+NO_OP_AXES: dict[str, str] = {
+    "graph.retrieval.impl": "retrieve.py reads graph.retrieval.params only; the impl switch is never consumed",
+    "post.dedupe": "MergePipeline has no dedupe stage",
+    "write.consolidator": "WritePipeline has no consolidator stage",
+}
 
 
 def get_path(data: Mapping[str, Any], path: str, default: Any = None) -> Any:
@@ -147,6 +160,83 @@ def capability_closure(config: dict[str, Any]) -> tuple[dict[str, Any], list[str
     return out, notes
 
 
+def no_op_axes_for(factors: Mapping[str, Any] | Iterable[str]) -> tuple[str, ...]:
+    """Declared-but-unconsumed axes among a plan's factor ids."""
+    names = factors.keys() if isinstance(factors, Mapping) else factors
+    found = set()
+    for name in names:
+        for axis in NO_OP_AXES:
+            if name == axis or str(name).startswith(axis + "."):
+                found.add(axis)
+                break
+    return tuple(sorted(found))
+
+
+def _probe_config(config: Mapping[str, Any]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Light build of every component the e2e executor would construct.
+
+    This mirrors the real construction path (WritePipeline components, the graph
+    builder, MergePipeline and UsePipeline) without touching data or a model.  It
+    therefore catches exactly the configs that would fail at run time: an
+    unregistered implementation or a parameter the selected implementation
+    rejects.  Unregistered planner/analyzer switches are reported as warnings
+    because RetrievalRunner *does* fall back to rule_router for them (traced, not
+    silent) and they are outside the audit's build-failure set.
+    """
+    from ..merge import MergePipeline
+    from ..use import UsePipeline
+
+    cfg = lab_config.as_config(config)
+    problems: list[str] = []
+    warnings: list[str] = []
+
+    def attempt(label: str, factory) -> None:
+        try:
+            factory()
+        except Exception as exc:  # noqa: BLE001 - reasons are data
+            problems.append(f"{label}: {type(exc).__name__}: {exc}")
+
+    defaults = {"schema": "legacy_flat", "write.resolver": "append", "write.auditor": "none"}
+    for path in ("schema", "write.resolver", "write.auditor"):
+        name = cfg.impl(path) or defaults[path]
+        attempt(f"{path}/{name} build",
+                lambda axis=path, name=name: registry.build(axis, name, cfg.params(path)))
+
+    graph = cfg.impl("graph.repr") or "state_slot"
+    if graph != "none":
+        attempt(f"graph.repr/{graph} build", lambda: registry.build("graph.repr", graph))
+
+    ctx = SimpleNamespace(config=cfg, llm=None, embedding=None, cache=None, prompts={})
+    attempt("merge build", lambda: MergePipeline.from_config(ctx))
+    attempt("use build", lambda: UsePipeline.from_config(ctx))
+
+    planner = cfg.impl("planner") or "none"
+    if planner not in ("none",) and planner not in registry.available("planner"):
+        warnings.append(
+            f"planner.impl={planner!r} is not registered; RetrievalRunner falls back to rule_router"
+        )
+    analyzer = cfg.get("planner.analyzer") or cfg.get("planner.params.analyzer")
+    if analyzer not in (None, "none", "rule"):
+        warnings.append(
+            f"planner.analyzer={analyzer!r} is not implemented; RetrievalRunner falls back to rule"
+        )
+    return tuple(problems), tuple(warnings)
+
+
+@lru_cache(maxsize=4096)
+def _probe_cached(canonical: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    return _probe_config(json.loads(canonical))
+
+
+def probe_config(config: Mapping[str, Any]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Cached :func:`_probe_config`; returns ``(build_problems, warnings)``."""
+    try:
+        canonical = lab_config.canonical_json(config)
+    except TypeError:
+        return _probe_config(config)
+    return _probe_cached(canonical)
+
+
 def _slug(value: str) -> str:
     slug = re.sub(r"[^a-z0-9._-]+", "-", str(value).lower()).strip("-")
     return slug[:40] or "run"
@@ -165,6 +255,16 @@ class RunPlan:
     dataset: dict[str, Any]
     factors: dict[str, Any] = field(default_factory=dict)
     notes: tuple[str, ...] = ()
+    runnable: bool = True
+    runnable_reasons: tuple[str, ...] = ()
+    warnings: tuple[str, ...] = ()
+    no_op_factors: tuple[str, ...] = ()
+    aliases: tuple[str, ...] = ()
+
+    @property
+    def valid(self) -> bool:
+        """Runnable *and* every varied factor is actually wired."""
+        return self.runnable and not self.no_op_factors
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -176,6 +276,12 @@ class RunPlan:
             "dataset": self.dataset,
             "factors": self.factors,
             "notes": list(self.notes),
+            "runnable": self.runnable,
+            "runnable_reasons": list(self.runnable_reasons),
+            "warnings": list(self.warnings),
+            "no_op_factors": list(self.no_op_factors),
+            "valid": self.valid,
+            "aliases": list(self.aliases),
             "config": self.effective_config,
             "requested_config": self.requested_config,
             "effective_config": self.effective_config,
@@ -209,11 +315,15 @@ class Compiler:
         digest = lab_config.digest(effective)
         run_id = f"r-{_slug(self.spec.id)}-{index:03d}-{digest.split(':')[-1][:8]}"
         all_notes = list(notes) + applied
+        reasons, warnings = probe_config(effective)
+        factor_map = dict(factors or {})
         return RunPlan(
             run_id=run_id, spec_id=self.spec.id, design=self.spec.design,
             config=effective, requested_config=requested, effective_config=effective,
             config_hash=digest, environment=env, dataset=data,
-            factors=dict(factors or {}), notes=tuple(all_notes),
+            factors=factor_map, notes=tuple(all_notes),
+            runnable=not reasons, runnable_reasons=reasons, warnings=warnings,
+            no_op_factors=no_op_axes_for(factor_map),
         )
 
     @staticmethod
@@ -329,11 +439,38 @@ class Compiler:
         scenes = grid.get("scene") or [{}]
         plans: list[RunPlan] = []
         for llm, scale, scene, candidate in itertools.product(llms, scales, scenes, candidates):
-            which = "on" if str(candidate.get("config", "")).upper().startswith("R0") else "default"
-            try:
-                base = self._base(which)
-            except spec_module.SpecError:
-                base = self._base()
+            candidate_config = str(candidate.get("config", "") or "")
+            normalized = candidate_config.upper()
+            notes: list[str] = []
+            default_base = self._base()
+            default_preset = str(default_base.get("preset") or "").upper()
+            defined = True
+            if normalized in ("R0", "R0_REFERENCE", "R0_ON"):
+                if self.spec.reference_on is not None:
+                    base = self._base("on")
+                elif default_preset == "R0":
+                    base = default_base
+                else:
+                    defined = False
+                    base = default_base
+            elif normalized in ("B0", "B0_LEGACY", "B0_OFF"):
+                if self.spec.reference_off is not None:
+                    base = self._base("off")
+                elif default_preset == "B0":
+                    base = default_base
+                else:
+                    defined = False
+                    base = default_base
+            elif normalized in ("", "DEFAULT"):
+                base = default_base
+            else:
+                defined = False
+                base = default_base
+            if not defined and candidate_config:
+                notes.append(
+                    f"warning: candidate {candidate.get('id')!r} config "
+                    f"{candidate_config!r} is not defined; compiled from the default reference"
+                )
             env: dict[str, Any] = {}
             if isinstance(llm, Mapping) and llm.get("model"):
                 env = merge(env, {"llm": {"model": llm["model"], "provider": llm.get("provider", "ollama")}})
@@ -353,11 +490,12 @@ class Compiler:
                 "scene": scene.get("id") if isinstance(scene, Mapping) else str(scene),
                 "candidate": candidate.get("id") if isinstance(candidate, Mapping) else str(candidate),
             }
-            plans.append(self._plan(len(plans), base, factors=values, environment=env, dataset=dataset))
+            plans.append(self._plan(len(plans), base, factors=values, environment=env,
+                                    dataset=dataset, notes=notes))
         return plans
 
     # ------------------------------------------------------------- public
-    def compile(self) -> list[RunPlan]:
+    def _compile_design(self) -> list[RunPlan]:
         design = self.spec.design
         if design.startswith("single_factor"):
             if self.spec.modules and design == "single_factor_adoption":
@@ -374,6 +512,56 @@ class Compiler:
                 "coupling_analysis is analysis-only; use memlab.experiments.coupling_cli"
             ])
         raise spec_module.SpecError([f"design {design!r} is not supported by the S5 compiler"])
+
+    def compile(self) -> list[RunPlan]:
+        return dedupe_plans(self._compile_design())
+
+
+def _duplicate_rank(plan: RunPlan) -> tuple[int, int]:
+    """Lower is a better keeper: fewer undefined-config warnings, fewer inert factors."""
+    undefined = sum(1 for note in plan.notes if note.startswith("warning:"))
+    return undefined, len(plan.no_op_factors)
+
+
+def _alias_for(plan: RunPlan) -> str:
+    return f"{plan.run_id} factors={json.dumps(plan.factors, sort_keys=True, ensure_ascii=False)}"
+
+
+def _carry_warnings(notes: Iterable[str]) -> tuple[str, ...]:
+    """Keep alias warnings visible without letting them change keeper ranking."""
+    return tuple(f"alias {note}" for note in notes if note.startswith("warning:"))
+
+
+def dedupe_plans(plans: Iterable[RunPlan]) -> list[RunPlan]:
+    """Keep one plan per effective config and record the dropped labels as aliases.
+
+    Two plans with different factor labels but the same ``config_hash`` would run
+    the identical configuration; reporting them as independent points inflates N
+    and fakes a factor effect.  The first occurrence wins unless a later duplicate
+    is a better keeper (a defined candidate/config and no inert factor), so E4
+    keeps the label that actually matches its R0 configuration.
+    """
+    kept: list[RunPlan] = []
+    positions: dict[str, int] = {}
+    for plan in plans:
+        position = positions.get(plan.config_hash)
+        if position is None:
+            positions[plan.config_hash] = len(kept)
+            kept.append(plan)
+            continue
+        keeper = kept[position]
+        if _duplicate_rank(plan) < _duplicate_rank(keeper):
+            notes = plan.notes + _carry_warnings(keeper.notes)
+            if keeper.no_op_factors:
+                notes += (f"duplicate alias varies no-op axis {', '.join(keeper.no_op_factors)}",)
+            kept[position] = replace(
+                plan, aliases=keeper.aliases + (_alias_for(keeper),), notes=notes)
+            continue
+        notes = keeper.notes + _carry_warnings(plan.notes)
+        if plan.no_op_factors:
+            notes += (f"duplicate alias varies no-op axis {', '.join(plan.no_op_factors)}",)
+        kept[position] = replace(keeper, aliases=keeper.aliases + (_alias_for(plan),), notes=notes)
+    return kept
 
 
 def compile_spec(spec: spec_module.Spec) -> list[RunPlan]:

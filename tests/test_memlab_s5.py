@@ -68,7 +68,10 @@ class CompilerTests(unittest.TestCase):
     def test_derived_rules_close_graph_dependency(self):
         spec = spec_module.load(E1_ADOPTION)
         plans = compiler.compile_spec(spec)
-        self.assertEqual(len(plans), 23)
+        # 23 factor levels compile to 22 effective configs: one duplicate is
+        # recorded as an alias instead of a second identical run.
+        self.assertEqual(len(plans), 22)
+        self.assertEqual(sum(len(plan.aliases) for plan in plans), 1)
         graph_on = [p for p in plans if p.factors.get("module") == "graph" and p.factors.get("baseline") == "add_from_B0"][0]
         self.assertEqual(graph_on.effective_config["graph"]["repr"]["impl"], "entity_triple")
         self.assertEqual(graph_on.effective_config["graph"]["retrieval"]["impl"], "entity_subgraph")

@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
-from memwb import dataset, evaluation
+from memwb import dataset as legacy_dataset, evaluation
 
 from .. import runtime as lab_runtime
 from .compiler import RunPlan
@@ -24,10 +24,19 @@ class Question:
         return f"{self.sample_id}:{self.index}"
 
 
-def load_questions(spec: Spec, *, limit: int | None = None, samples: Sequence[str] | None = None) -> list[Question]:
-    store = dataset.store()
-    ids = list(samples or spec.dataset.get("samples") or store.ids())
-    per_conversation = limit if limit is not None else spec.dataset.get("question_limit")
+def load_questions(spec: Spec, *, limit: int | None = None, samples: Sequence[str] | None = None,
+                   dataset: Mapping[str, Any] | None = None) -> list[Question]:
+    """Load questions for one plan's dataset.
+
+    ``limit``/``samples`` are explicit caller overrides; otherwise the dataset
+    block (plan-level first, spec-level fallback) decides the conversations and
+    question count.  E4 plans differ in both, so the runner must not load one
+    global question set.
+    """
+    data = dict(dataset) if dataset is not None else spec.dataset
+    store = legacy_dataset.store()
+    ids = list(samples if samples is not None else data.get("samples") or store.ids())
+    per_conversation = limit if limit is not None else data.get("question_limit")
     out: list[Question] = []
     for sample_id in ids:
         sample = store.get(sample_id)
@@ -60,7 +69,7 @@ class Runner:
 
     def __init__(self, store: ResultStore, *, executor: Callable[[RunPlan, Question], Mapping[str, Any]] | None = None,
                  limit: int | None = None, shard: int = 0, shards: int = 1, resume: bool = True,
-                 log: Callable[[dict[str, Any]], None] | None = None):
+                 retry_errors: bool = False, log: Callable[[dict[str, Any]], None] | None = None):
         if shards <= 0 or not 0 <= shard < shards:
             raise ValueError("shard must satisfy 0 <= shard < shards")
         self.store = store
@@ -69,6 +78,7 @@ class Runner:
         self.shard = shard
         self.shards = shards
         self.resume = resume
+        self.retry_errors = retry_errors
         self.log = log
 
     def _selected(self, questions: Sequence[Question]) -> list[Question]:
@@ -76,11 +86,18 @@ class Runner:
 
     def run_plan(self, plan: RunPlan, questions: Sequence[Question]) -> dict[str, Any]:
         self.store.upsert_run(plan, status="running")
-        attempted = completed = errors = 0
+        attempted = completed = skipped_errors = errors = 0
         for question in self._selected(questions):
-            if self.resume and self.store.completed(plan.run_id, question.qid):
-                completed += 1
-                continue
+            if self.resume:
+                if self.store.completed(plan.run_id, question.qid):
+                    completed += 1
+                    continue
+                # An error row is not "completed".  By default resume skips it to
+                # avoid an infinite retry loop, but reports it separately; with
+                # retry_errors the question is attempted again.
+                if self.store.errored(plan.run_id, question.qid) and not self.retry_errors:
+                    skipped_errors += 1
+                    continue
             attempted += 1
             started = time.perf_counter()
             try:
@@ -97,12 +114,19 @@ class Runner:
                 status = "error"
             if self.log:
                 self.log({"run_id": plan.run_id, "qid": question.qid, "status": status})
-        self.store.set_status(plan.run_id, "complete" if errors == 0 else "complete_with_errors")
-        return {"run_id": plan.run_id, "attempted": attempted, "skipped": completed, "errors": errors}
+        has_failures = errors > 0 or skipped_errors > 0
+        self.store.set_status(plan.run_id, "complete_with_errors" if has_failures else "complete")
+        return {"run_id": plan.run_id, "attempted": attempted, "skipped": completed,
+                "skipped_errors": skipped_errors, "errors": errors}
 
     def run(self, spec: Spec, plans: Iterable[RunPlan], questions: Sequence[Question] | None = None) -> list[dict[str, Any]]:
-        selected = list(questions) if questions is not None else load_questions(spec, limit=self.limit)
-        return [self.run_plan(plan, selected) for plan in plans]
+        explicit = list(questions) if questions is not None else None
+        results: list[dict[str, Any]] = []
+        for plan in plans:
+            selected = explicit if explicit is not None else load_questions(
+                spec, limit=self.limit, dataset=plan.dataset)
+            results.append(self.run_plan(plan, selected))
+        return results
 
 
 def default_executor(plan: RunPlan, question: Question) -> Mapping[str, Any]:

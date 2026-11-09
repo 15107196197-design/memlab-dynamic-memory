@@ -143,8 +143,18 @@ class ResultStore:
             self.add_metric(run_id, qid, str(name), float(value), meta)
 
     def completed(self, run_id: str, qid: str) -> bool:
+        """True only when the question has a real metric, never for an error row."""
         row = self._conn.execute(
-            "SELECT 1 FROM metrics WHERE run_id=? AND qid=? LIMIT 1", (run_id, qid)
+            "SELECT 1 FROM metrics WHERE run_id=? AND qid=? AND metric!='error' LIMIT 1",
+            (run_id, qid),
+        ).fetchone()
+        return row is not None
+
+    def errored(self, run_id: str, qid: str) -> bool:
+        """True when this question has an error row (it is not completed)."""
+        row = self._conn.execute(
+            "SELECT 1 FROM metrics WHERE run_id=? AND qid=? AND metric='error' LIMIT 1",
+            (run_id, qid),
         ).fetchone()
         return row is not None
 

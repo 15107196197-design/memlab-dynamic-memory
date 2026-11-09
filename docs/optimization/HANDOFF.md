@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | S6 见 `git log -1 --oneline`；S5/S7a 已合并（`23d563c` 前）；S1–S4 见 `git log --oneline -15` |
+| 当前 commit | `git log -1 --oneline`；S6 后续 `d272184`（四对话离线筛选）+ 文档 `33a8ec2`；S6 executor `a8c6dfd` |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a 已提交；S6 executor/筛选/报告本次提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **190 passed**（S5 基线 186 + S6 executor 4） |
-| 已实现 | S1–S5 + hardening + S7a + S6：R0/E2E executor、offline clients、W/S/R/M/U/K 候选筛选、SQLite/manifest/报告 |
-| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b、Lab UI、API provider adapter；Web 仍走 v1 export；cross-encoder 依赖未安装 |
-| 当前阶段 | **S6 离线筛选完成**（36 runs、0 error、复现 0；B 级 blocked_on_ollama）；准备 S7b / 补真实 E1 |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面 P0/P1 修复已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **203 passed**（190 + 13 控制面修复测试） |
+| 已实现 | S1–S5 + hardening + S7a + S6；控制面：runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重 |
+| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b、Lab UI、API provider adapter；E1b 的 hmem/structmem/amem、event_sparse/community、cot、llm_summary 未注册/未支持；E4 只有 R0 一个 candidate 配置 |
+| 当前阶段 | **S6 离线筛选 + 控制面 P0/P1 修复完成**（E1b 已 gate；B 级 blocked_on_ollama）；准备 S7b / 补真实 E1 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -402,6 +402,11 @@ artifacts/
 - [x] S6：候选表（W/S/R/M/U/K）与 K 指标；复现差异 0.0；190 个测试通过
 - [x] S6：`docs/optimization/S6-REPORT.md` + `eval/archive/s6-e1-screening.json`
 - [x] S6：B 级/真实模型标记 blocked_on_ollama（本地无 Ollama），未 push upstream
+- [x] 控制面修复：compiler 对每个 plan 做 registry + 轻量 build；不能 build / 变 no-op 轴的 plan 默认不进正式矩阵
+- [x] 控制面修复：Runner 按每个 plan 的 `dataset` 选题；`--samples` 显式覆盖，`--limit` 只改题数
+- [x] 控制面修复：`completed()` 只认非 error metric；新增 `errored()` + `--retry-errors`
+- [x] 控制面修复：compiler 按 `config_hash` 去重并记录 aliases；E1a 23→22、E1b 102→74、E4 135→27
+- [x] 控制面修复：203 个测试通过；e2e offline 3 候选 × 10 题写 SQLite（0 error）
 
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
@@ -531,11 +536,55 @@ artifacts/
 **验收：** 36/36 run `complete`，0 error；同 run 独立 DB 重跑 10 题差异 **0.0**（≤0.01）；每模块 2–3 候选。  
 **边界：** 本地无 Ollama、无 API key、无 HF 网络、磁盘 3.9GB；B 级真实 F1/Judge/P95 全部 **blocked_on_ollama**；`requirements-optional.txt` 已声明 cross-encoder 依赖但本机无法安装；E1.2/E1.3 未跑；offline embedding 非语义。
 
+### 5.1.7 控制面 P0/P1 修复（审计 2026-11-09）
+
+> 范围：只改 S5 `compiler/runner/store/cli`，不改 W/S/R/M/U/K，不跑 E1 全量。测试 **203 passed**。完整验收见 [AUDIT-2026-11-09.md](AUDIT-2026-11-09.md) §3.1。
+
+**编译矩阵（去重后；`sweep` 默认只把 `valid` 写进正式矩阵）：**
+
+| spec | 因子 level 数 | 去重后 | `runnable=false` | no-op 因子 plan | `valid`（进矩阵） | aliases |
+|---|---:|---:|---:|---:|---:|---:|
+| E1.1 adoption | 23 | 22 | 0 | 0 | 22 | 1 |
+| E1.2/E1.3 screening | 102 | 74 | **10** | **3** | **61** | 28 |
+| E3 factorial | 16 | 16 | 0 | 0 | 16 | 0 |
+| E4 environment | 135 | 27 | 0 | 0 | 27 | 108 |
+
+**E1b `runnable=false` 明细（10 = 审计列出的 7 + 轻量 build 新发现 3）：**
+
+| 类别 | 数量 | 原因 |
+|---|---:|---|
+| `schema.impl=hmem/structmem/amem` | 3 | registry 未注册（`unknown schema`） |
+| `schema.params.cot=false/true` | 2 | `MetaSchemaExtractor` 不接受 `cot` |
+| `graph.repr.impl=event_sparse/community` | 2 | registry 未注册（`unknown graph.repr`） |
+| `post.mmr.impl=none` / `post.decay.impl=none` | 2 | derived_rules 给关闭阶段塞 `lambda`，`NoMMR`/`NoDecay` 不接受 |
+| `post.compress.impl=llm_summary` | 1 | registry 未注册（只有 `extractive/none`） |
+
+> 后 3 项是审计报告 §3 P0-2 未列出的真实 build 失败；本会话按同一条门禁处理，未静默放行。
+
+**no-op 轴（声明但代码不消费）：**
+
+| 轴 | 现状 | 处理 |
+|---|---|---|
+| `graph.retrieval.impl` | `retrieve.py` 只读 `graph.retrieval.params` | 变化的 3 个 plan 标 `no_op_factors`、`valid=false`；`dual_channel` 等于 R0 默认，折叠为 alias |
+| `post.dedupe` | `MergePipeline` 无 dedupe 阶段 | 静态列入 `compiler.NO_OP_AXES`，不进正式矩阵 |
+| `write.consolidator` | `WritePipeline` 无 consolidator 阶段 | 同上 |
+
+**其他验证：**
+
+- **Per-plan dataset**：`Runner.run` 对每个 plan 调 `load_questions(dataset=plan.dataset)`；只有显式 `questions` 才覆盖。E4 的 27 个唯一 plan 各自带 samples/question_limit。
+- **Resume**：`completed()` 只认 `metric!='error'`；纯 error 题默认 resume 不计完成、报告 `skipped_errors`；`--retry-errors` 重跑。run 状态为 `complete_with_errors`。
+- **Dedupe**：同 `config_hash` 保留一个，其余 run_id+factors 记为 `aliases`，重复的 no-op 轴写 note。
+- **E2E 冒烟（offline）**：3 个 fusion 候选 × 10 题（conv-26），3/3 run `complete`、0 error；写入 `answer_f1/evidence_recall/tokens/seconds/ndcg`。`_meta` 明确 `offline=True, llm=offline-extractive, embedding=offline-hash`，rerank 回退 `sentence_transformers` 缺失。**这是抽取式基线，不是 LLM 结论。**
+
 ### 5.2 未开始
 - [ ] E0 基线复现
 - [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
+- [ ] E1b 未实现变体：`schema=hmem/structmem/amem`、`graph.repr=event_sparse/community`、`schema.params.cot`、`post.compress=llm_summary`（需实现或从 spec 正式移除；当前标 `runnable=false`）
+- [ ] E1b `post.mmr=none` / `post.decay=none` 的 derived_rules 参数污染（可按 `params_allowed` 过滤或删掉反向规则）
+- [ ] E4 candidate 配置：`B0/CHEAP/QUALITY/E3_WINNER` 尚未定义，当前与 R0 同 config，已去重为 alias；补配置前 E4 的 candidate 轴不可解释
 - [ ] S7b：E2 耦合（读 S6 候选；S7a 已完成）
 - [ ] E2/E3/E4/E5
+- [ ] 正式 E1 的 run 顺序随机化 / bootstrap / 多重比较（analysis 仍只有 per-run 汇总）
 - [ ] Lab UI / 报告自动化
 - [ ] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；S9 前必须）
 - [ ] API key / 预算确认（S9 L3 与 S10 第二 Judge；当前未配置）
@@ -595,6 +644,24 @@ artifacts/
 ```
 
 ### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / 控制面 P0/P1 修复 / 会话
+- 本次完成：A `runnable` 门禁（registry + 真实构造路径轻量 build + no-op 轴）；B Runner 按 `plan.dataset` 选题；C `completed()` 区分 ok/error + `--retry-errors`；D `config_hash` 去重/aliases；E 13 个新测试；e2e offline 3 候选 × 10 题冒烟。
+- 改动文件：`memlab/experiments/{compiler,runner,store,cli}.py`；新增 `tests/test_experiments_repair.py`；更新 `tests/test_memlab_s5.py`（E1a 23→22）、HANDOFF、AUDIT-2026-11-09、S6-REPORT。`scripts/s6_e1.py`、`memlab/experiments/README.md`、`memwb/` 未改。
+- 测试：`python -m unittest discover -s tests -t .` → **203 passed**；未 push upstream。
+- 新增 run_id / 指标：无正式 E1 run；冒烟 3 个 `r-e1-repair-smoke-*`（临时 DB，未提交），0 error，指标全部写入。
+- Key 状态：**未使用**；offline/extractive；B 级仍 `blocked_on_ollama`。
+- 关键决策（新增/变更）：① 不能 build 的 plan 保留在编译产物、标 `runnable=false` 并带原因，不删；默认 `valid` 才进矩阵。② no-op 轴单独标 `no_op_factors`，不把“无差异”当结论。③ E4 的 4 个未定义 candidate 折叠为 alias，并写 warning，不冒充独立候选。④ planner=reaper / analyzer=llm 是 traced fallback：记 warning，不静默。
+- 未解决问题：
+  1. E1b 除审计 7 项外还有 3 个真实 build 失败（post.mmr/decay none 的 lambda、post.compress=llm_summary）；需实现或正式从 spec 移除。
+  2. E4 只有 R0 一个 candidate 配置；`B0/CHEAP/QUALITY/E3_WINNER` 是同一 config 的 alias。
+  3. `analysis` 仍只有 per-run 汇总；随机化/bootstrap/多重比较未做；B 级未跑。
+- 下一步 3 件事：
+  1. 决定 E1b 未实现变体的去留：实现到 registry，或在 spec 中显式移除并记录（不要静默删）。
+  2. 补 E4 candidate 配置，或把 candidate 轴正式标为 no-op 后再设计。
+  3. 有 Ollama/API 后先跑 B 级 2–3 候选，再开 S7b。
+- 下一步选择：A 本会话继续 S7b / B 新会话（用 SESSION-PROMPTS S7）；用户未选前不自动开始。
+- 下个会话先读：本文件 §1/§2/§5.1.7；`AUDIT-2026-11-09.md` §3.1；`S6-REPORT.md` §10；`memlab/experiments/compiler.py` 的 `NO_OP_AXES`/`probe_config`。
 
 ### 2026-11-09 / S6 / 会话
 - 本次完成：S6 前置 `e2e_executor`（R0 经 E2EPipeline，不静默回退 legacy）+ `--executor e2e --offline`；6 模块 × 3 候选 × 80 题 × 2 seeds（4 对话）离线筛选；36 runs、0 error、复现 0.0；候选表与报告。

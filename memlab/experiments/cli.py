@@ -19,18 +19,42 @@ def _load(path: str) -> spec_module.Spec:
     return spec_module.load(path)
 
 
+def partition_plans(plans):
+    """Split compiled plans into the formal matrix and the excluded reasons."""
+    valid = [plan for plan in plans if plan.valid]
+    unrunnable = [plan for plan in plans if not plan.runnable]
+    no_op = [plan for plan in plans if plan.runnable and plan.no_op_factors]
+    duplicates = sum(len(plan.aliases) for plan in plans)
+    return valid, unrunnable, no_op, duplicates
+
+
+def _summary(spec, plans, selected, *, out=None, dry_run=True) -> dict:
+    valid, unrunnable, no_op, duplicates = partition_plans(plans)
+    return {
+        "spec": spec.id, "design": spec.design,
+        "runs": len(plans), "valid_runs": len(valid), "selected_runs": len(selected),
+        "excluded_unrunnable": len(unrunnable), "excluded_no_op": len(no_op),
+        "duplicates": duplicates,
+        "out": out, "dry_run": bool(dry_run),
+    }
+
+
 def cmd_sweep(args) -> int:
     spec = _load(args.spec)
     plans = compiler.compile_spec(spec)
+    selected = plans if args.include_invalid else [plan for plan in plans if plan.valid]
     if args.out:
-        compiler.write_matrix(plans, args.out)
-    print(json.dumps({
-        "spec": spec.id, "design": spec.design, "runs": len(plans),
-        "out": args.out, "dry_run": bool(args.dry_run),
-    }, ensure_ascii=False, indent=2))
+        compiler.write_matrix(selected, args.out)
+    print(json.dumps(_summary(spec, plans, selected, out=args.out, dry_run=args.dry_run),
+                     ensure_ascii=False, indent=2))
     if args.verbose:
         for plan in plans[: args.show]:
             print(json.dumps({"run_id": plan.run_id, "factors": plan.factors,
+                              "runnable": plan.runnable, "valid": plan.valid,
+                              "runnable_reasons": list(plan.runnable_reasons),
+                              "no_op_factors": list(plan.no_op_factors),
+                              "warnings": list(plan.warnings),
+                              "aliases": len(plan.aliases),
                               "notes": list(plan.notes)}, ensure_ascii=False))
     return 0
 
@@ -38,17 +62,23 @@ def cmd_sweep(args) -> int:
 def cmd_run(args) -> int:
     spec = _load(args.spec)
     plans = compiler.compile_spec(spec)
+    selected = plans if args.include_invalid else [plan for plan in plans if plan.valid]
+    if not selected:
+        raise ValueError("no valid plans to run; compile with --include-invalid to inspect them")
     if args.dry_run:
-        print(json.dumps({"spec": spec.id, "runs": len(plans), "dry_run": True}, ensure_ascii=False, indent=2))
+        print(json.dumps(_summary(spec, plans, selected, dry_run=True), ensure_ascii=False, indent=2))
         return 0
-    questions = runner.load_questions(spec, limit=args.limit, samples=args.samples)
+    # Only an explicit --samples overrides per-plan datasets; --limit still lets
+    # each plan keep its own conversations while capping the question count.
+    questions = runner.load_questions(spec, limit=args.limit, samples=args.samples) if args.samples is not None else None
     executor = runner.make_executor(getattr(args, "executor", "legacy"),
                                     offline=getattr(args, "offline", False))
     with ResultStore(args.db) as store:
         machine = runner.Runner(store, executor=executor, limit=args.limit, shard=args.shard,
-                                shards=args.shards, resume=not args.no_resume, log=print)
-        results = machine.run(spec, plans, questions=questions)
-    print(json.dumps({"spec": spec.id, "runs": len(plans), "results": results}, ensure_ascii=False, indent=2))
+                                shards=args.shards, resume=not args.no_resume,
+                                retry_errors=args.retry_errors, log=print)
+        results = machine.run(spec, selected, questions=questions)
+    print(json.dumps({"spec": spec.id, "runs": len(selected), "results": results}, ensure_ascii=False, indent=2))
     return 0
 
 
@@ -69,16 +99,24 @@ def build_parser() -> argparse.ArgumentParser:
     sweep.add_argument("--dry-run", action="store_true")
     sweep.add_argument("--verbose", action="store_true")
     sweep.add_argument("--show", type=int, default=5)
+    sweep.add_argument("--include-invalid", action="store_true",
+                       help="write plans that are not runnable or vary a no-op axis")
     sweep.set_defaults(func=cmd_sweep)
 
     run = sub.add_parser("run", help="compile and execute a spec")
     run.add_argument("--spec", required=True)
     run.add_argument("--db", default="runs/s5.sqlite")
-    run.add_argument("--limit", type=int, default=None, help="questions per conversation")
-    run.add_argument("--samples", nargs="+", default=None)
+    run.add_argument("--limit", type=int, default=None,
+                     help="questions per conversation; overrides the plan dataset count but keeps its samples")
+    run.add_argument("--samples", nargs="+", default=None,
+                     help="explicit conversations; overrides every plan's dataset")
     run.add_argument("--shard", type=int, default=0)
     run.add_argument("--shards", type=int, default=1)
     run.add_argument("--no-resume", action="store_true")
+    run.add_argument("--retry-errors", action="store_true",
+                     help="re-run questions whose previous result was an error")
+    run.add_argument("--include-invalid", action="store_true",
+                     help="also run plans that are not runnable or vary a no-op axis (debug only)")
     run.add_argument("--dry-run", action="store_true")
     run.add_argument("--executor", choices=("legacy", "e2e"), default="legacy",
                      help="legacy = Runtime/legacy methods; e2e = S4 module pipeline")

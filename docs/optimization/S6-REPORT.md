@@ -150,3 +150,21 @@ python -m unittest discover -s tests -t .
 
 - 有 Ollama/API 后：`python scripts/s6_e1.py --online --questions 80 --seeds 13 17 --samples conv-26 conv-30 conv-43 conv-44`（脚本已支持 `--online`），先跑 B 级 2–3 候选，再补 E1.2/E1.3。
 - S7b 可读本报告的候选 run 做 Oracle/转化率分析，但真实归因仍需先补 B 级。
+
+## 10. 控制面修复后的口径（2026-11-09，不改本报告结论）
+
+> 本节只记录 S5 控制面修复对“哪些 plan 能进正式矩阵”的影响；§1–§9 的 offline 数字与 **A 级筛选**边界不变。
+
+| 项 | 修复前 | 修复后 |
+|---|---|---|
+| E1b 编译 | 102 个 plan 全部可能进矩阵 | 去重后 74；**10 个 `runnable=false`**（审计 7 + 新发现 3）、**3 个 no-op 因子**、**61 个 valid** |
+| E1a / E3 / E4 | 23 / 16 / 135 | 22 / 16 / 27（aliases 1 / 0 / 108；E4 的 4 个 candidate 目前无独立配置） |
+| resume | `error` 也当 completed | 只认非 error；`--retry-errors` 可重跑，`skipped_errors` 单列 |
+| dataset | Runner 用 spec 全局题集 | 每个 plan 用自己的 `dataset.samples/question_limit` |
+
+**对本报告的影响：**
+
+1. S6 的 36 个 run 由 `scripts/s6_e1.py` 显式构造候选，不依赖 E1b 的 102 个 plan，因此 §4 的候选表**不变**。
+2. 本报告仍是 **offline extractive**：`answer_f1` 不是 LLM F1；B 级 F1/Judge/P95 仍 `blocked_on_ollama`。
+3. 新增未解决项（控制面）：E1b 的 `hmem/structmem/amem`、`event_sparse/community`、`schema.params.cot`、`post.compress=llm_summary` 仍不可运行；`post.mmr=none`/`post.decay=none` 的 derived_rules 仍会注入不支持的 `lambda`；E4 candidate 配置缺失。
+4. 这些 plan 现在**不会静默进入正式均值**：`sweep/run` 默认只用 `valid`，`--include-invalid` 才显示/运行。
