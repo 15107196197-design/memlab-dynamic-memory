@@ -578,7 +578,7 @@ E3 是“模块间插拔”的组合层：每个模块的候选是插头，参�
 
 | 维度 | 水平 | 作用 |
 |---|---|---|
-| LLM | L1 7B / L2 27B / L3 72B 或 API | 必做；检验 LLM 混淆与条件最优 |
+| LLM | 本地 L1 7B / L2 27B / L3 72B（当前硬件不可执行，设计保留）；API 档位 T1/T2/T3（当前可执行） | 检验 LLM 混淆与条件最优；本地规模不可做时，用 API 档位做可执行替代 |
 | 数据规模 | S1 2 段 / S2 6 段 / S3 10 段 / S4 LongMemEval | 必做；小规模全文可能最强 |
 | 场景 | 个人助理 / 代码 / 客服 / 医疗教育 | 检验 Schema 插件与迁移 |
 | 查询分布 | 均衡 / 多跳重 / 时序重 / 开放域重 | 检验平均分掩盖的子集 |
@@ -599,6 +599,79 @@ s.t. tokens(c,e) <= B_token, p95(c,e) <= B_latency
 
 - 报告：全局最优 vs 条件最优、regret、热力图、Pareto、策略表。
 - 检验 `config × environment` 交互；如果显著，条件策略有价值。
+
+### 4.13.1 硬件限制：LLM 规模实验保留设计，但当前不可执行
+
+**当前机器：Windows 11 + Intel Arc 130V 集成显卡（共享内存，无独立显存）。**
+
+因此：
+
+- **不能做**：本地 7B / 27B / 72B 参数规模阶梯；本地 GPU 延迟/吞吐/显存实验；同家族规模消融。
+- **仍然保留**：实验问题、因子设计、评测标准、统计方法、报告结构；只是这些水平标记为 `blocked_on_local_gpu`，不是删除。
+- **可执行替代**：**API 档位实验**（provider/model capability tier），用来回答“换更强/更便宜的 API 模型，最优配置是否改变”。
+
+| 原设计 | 当前执行 | 结论边界 |
+|---|---|---|
+| 本地 L1 7B | API_T1_cheap | 只能写“API 便宜档”，不能写“7B” |
+| 本地 L2 27B | API_T2_mid | 只能写“API 中档”，不能写“27B” |
+| 本地 L3 72B | API_T3_strong | 只能写“API 强档”，不能写“72B” |
+| 本地 GPU P95 | API P95 | 含网络/服务端延迟，不是本地部署延迟 |
+| GPU 小时成本 | API USD/token | Pareto 成本轴改变 |
+
+### 4.13.2 API 档位实验（当前可执行）
+
+**机器可读规格：**
+
+- [e4-api-tier-grid.json](../../configs/experiments/e4-api-tier-grid.json)：3 API tier × 3 数据规模 × 4 候选 = **36 格**；
+- [e1-api-tier-grid.json](../../configs/experiments/e1-api-tier-grid.json)：3 API tier × 4 候选 = **12 格**（模块内/采纳的 API 档位替代）。
+
+**API tier 定义（示例，按 provider 控制台替换）：**
+
+| Tier | 语义 | 示例模型 | 用途 |
+|---|---|---|---|
+| `API_T1_cheap` | 便宜/弱档 | Qwen 7B/14B API 或 turbo | 成本优先 |
+| `API_T2_mid` | 中档 | Qwen 32B 或 deepseek-chat | 平衡 |
+| `API_T3_strong` | 强档 | Qwen 72B 或强模型 API | 质量优先 |
+
+**固定项（不可随 tier 变）：**
+
+- embedding：固定 `bge-m3`（API 或本地），换 embedding 不能横比；
+- Judge：固定同一 Judge；E5 第二 Judge 必须不同家族；
+- prompt、context budget、candidate budget、数据 split、seed；
+- 记录 `provider/model/base_url/date`；key 只从环境变量读。
+
+**设计：**
+
+```text
+3 API tiers × 3 data scales × 4 candidates (B0/R0/CHEAP/QUALITY)
+每格 60–120 题；先 sequential halving，再 2–3 个候选
+c*(e) = argmax_c metric(c,e)
+s.t. tokens(c,e) <= B_token, p95_api(c,e) <= B_latency, usd(c,e) <= B_usd
+```
+
+**必须报告：**
+
+- `answer_f1` / `judge_accuracy` / `state_accuracy` / recall/ndcg；
+- `tokens_per_query`、`p50/p95_latency_ms`、`api_cost_usd`；
+- `config × api_tier` 交互；
+- 条件最优、regret、Pareto、策略表；
+- **明确写“这是 API 部署结论，不是本地 GPU 部署结论”。**
+
+**威胁与限制：**
+
+1. **family confound**：T1/T2/T3 可能来自不同家族/不同训练配方，不是纯参数规模；只能解释为 capability tier。
+2. **model drift**：API 模型会更新；优先用带日期 snapshot，记录调用日期。
+3. **network latency**：P95 不是本地 GPU 延迟；不能和归档本地 27B 分数/延迟直接横比。
+4. **cost**：API 按 token 计费；全量 36 格可能很贵，先 2–3 个候选/小样本。
+5. **module LLM**：`planner.params.planner_model` / `logic.params.audit_model` 当前未 wire，仍标记 `blocked_on_module_llm_wiring_and_local_gpu`；不要把它们当有效因子。
+6. **cross-encoder**：无 GPU 时 CPU 大规模重排不现实；M2/M3 的真实 rerank 结论暂不可得，必须标回退或补 API rerank adapter。
+
+**与原始计划的关系：**
+
+- 原始 LLM 规模实验的**问题、假设、评测方法**全部保留；
+- 只是把“可执行轴”从 `local_llm_scale` 换成 `api_tier`；
+- 未来有 ≥24GB 显存的机器/远程 GPU endpoint 时，可重新启用本地 7B/27B/72B，并与 API 档位做对照；
+- 当前不得把 API 档位结果写成“本地规模结论”。
 
 ---
 

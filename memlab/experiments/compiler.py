@@ -479,7 +479,15 @@ class Compiler:
                 )
             env: dict[str, Any] = {}
             if isinstance(llm, Mapping) and llm.get("model"):
-                env = merge(env, {"llm": {"model": llm["model"], "provider": llm.get("provider", "ollama")}})
+                llm_block = {
+                    key: llm[key] for key in
+                    ("model", "provider", "base_url", "api_key_env", "temperature", "context", "timeout", "options")
+                    if llm.get(key) is not None
+                }
+                llm_block.setdefault("provider", "ollama")
+                env = merge(env, {"llm": llm_block})
+                if llm.get("level") is not None:
+                    env["llm_level"] = llm.get("level")
             if isinstance(scale, Mapping):
                 env["data_scale"] = scale.get("id") or scale.get("name")
             if isinstance(scene, Mapping):
@@ -492,10 +500,15 @@ class Compiler:
                     dataset["question_limit"] = int(scale["question_limit"])
             values = {
                 "llm": llm.get("id") if isinstance(llm, Mapping) else str(llm),
+                "api_tier": llm.get("id") if isinstance(llm, Mapping) else str(llm),
                 "data_scale": scale.get("id") if isinstance(scale, Mapping) else str(scale),
                 "scene": scene.get("id") if isinstance(scene, Mapping) else str(scene),
                 "candidate": candidate.get("id") if isinstance(candidate, Mapping) else str(candidate),
             }
+            if isinstance(llm, Mapping) and llm.get("id"):
+                notes = list(notes) + [
+                    f"api_tier={llm['id']}; this is a provider/capability tier, not a local parameter-count scale"
+                ]
             plans.append(self._plan(len(plans), base, factors=values, environment=env,
                                     dataset=dataset, notes=notes))
         return plans

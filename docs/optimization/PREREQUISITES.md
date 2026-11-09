@@ -59,6 +59,14 @@
 
 ---
 
+## 0.5 当前硬件边界（2026-11-09 起）
+
+- 目标机器：Windows 11 + **Intel Arc 130V 集成显卡（共享内存，无独立显存）**。
+- **本地 7B/27B/72B 规模实验不可执行**；相关 spec 标记 `blocked_on_local_gpu`，设计/评测方法保留。
+- 可执行替代：**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`）。
+- 不要用“本地 GPU 延迟/吞吐/显存”解释 API 结果；不要把 API tier 写成 7B/27B/72B。
+- 需要真实本地规模实验时：换 ≥24GB 独显机器，或接远程 GPU Ollama endpoint。
+
 ## 1. 总表（按 S）
 
 | S | 运行时/环境 | 包/模型 | 接口/凭据 | 数据/代码前置 | 缺失时首选动作 |
@@ -69,10 +77,10 @@
 | **S3** | Python；真实检索需 Ollama | `qwen3.8:27b-q4_K_M`、`bge-m3`；测试可 fake embedding | 无 key；Ollama `127.0.0.1:11434` | S2、`data/locomo10.json`、R0 配置 | 缺 Ollama：装/启动/拉模型；磁盘/网络不够：给远程 endpoint / 小模型 / 仅 fake 三选项 |
 | **S4** | Python；真实 M 需 Ollama | 同 S3 + `sentence-transformers>=3.0` + `BAAI/bge-reranker-v2-m3`（~2GB） | 无 key | S3 | `repo/.venv-memlab` 已装 torch/ST；还缺模型权重（放 U 盘，`HF_ENDPOINT=https://hf-mirror.com`）；不能装：问用户；回退必须标“未真实重排” |
 | **S5** | Python + SQLite（标准库） | 无 | 无 | S1–S4、`configs/experiments/*.json` | 先 dry-run；CLI 导入失败先修路径/依赖 |
-| **S6** | Python；B 级需 Ollama + 磁盘/网络 | qwen/bge；可选 cross-encoder | 无 API key；可选远程 Ollama / OpenAI-compatible（需 adapter） | S5 e2e executor、`scripts/s6_e1.py`、四对话数据 | 先尝试装/启动/拉模型；不行：问用户远程 endpoint / API key+adapter / offline A 级；不能只写 blocked |
+| **S6** | Python；B 级需 API key 或远程 Ollama | API 档位 T1/T2/T3 + bge-m3 embedding；本地 27B 不可用 | **API key**（DeepSeek/Qwen/SiliconFlow 等）；或远程 Ollama | S5 e2e executor、`scripts/s6_e1.py`、四对话数据 | 先 `preflight`；无 key 只跑 offline A 级并标 blocked；不要用 CPU 27B 冒充 |
 | **S7** | Python；S6 runs；可选 Ollama/API | 同 S6；L3 模型可选 | L3 API 可选；provider adapter 已实现，需 endpoint/key | S6 SQLite/manifests/候选 | 无 L3：本地 L1/L2 + 标 A 级；有 key 先跑 preflight；不要静默换模型 |
 | **S8** | Python；S6/S7 候选 | 可选 L3 | 可选 API | S6/S7 结果、E3 spec | 候选缺失：先跑最小 S6 子集或明示用 B0/R0；缺 L3：本地组合并标未验证 |
-| **S9** | Python；3 档 LLM；磁盘/网络 | 本地 7B/27B + L3 API/72B；统计包按 analysis 实现需要 | **L3 key + 真实 endpoint**（provider adapter 已实现） | S8、E4 spec、E3 winner、scene adapters（`coding`/`customer_service` 目前 planned） | 先跑 `scripts/preflight.py`；补 scene adapter；缺 key：给 provider/model/预算选项；无 key：L1/L2 2×3 子集并标 L3 未验证 |
+| **S9** | Python；API 档位；统计包 | **API T1/T2/T3**（本地 7B/27B/72B 不可用）；bge-m3 embedding | **API key + endpoint**（provider adapter 已实现） | `e4-api-tier-grid.json`、scene adapters（`coding`/`customer_service` planned） | 先 `preflight`；用 API 档位跑 2×3 子集；本地规模实验标 `blocked_on_local_gpu` |
 | **S10** | Python；统计；人工标注 | 第二 Judge（不同家族）；bootstrap/κ 所需包 | 第二 Judge key/provider；人工 | E1–E4 结果、留出集 | 缺第二 Judge：本地不同家族或问 key；缺人工：问用户安排；不要 answer=judge |
 
 > “已注册/目录里有”不等于“可运行/已 wire”。组件获取方式见 [COMPONENT-SOURCING.md](COMPONENT-SOURCING.md)；`graph.retrieval.impl`、`post.dedupe`、`write.consolidator` 等 no-op 轴不要当因子。

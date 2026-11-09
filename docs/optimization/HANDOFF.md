@@ -27,10 +27,10 @@
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **234 passed**（223 + Web 11） |
-| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **W2b 已完成（Web 侧）**：轴配置器、异步 job、批量多题 F1/Recall/按类别、实验详情四 tab、自动结论、评测归档页；W1 保留。下一步 W3（test 最终评测、截图、复现包、报告素材）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
+| 测试 | `python -m unittest discover -s tests -t .` → **237 passed**（234 + API tier 3） |
+| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight**；**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`） |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；**本地 7B/27B/72B 规模实验：硬件受限（Intel Arc 集显），设计保留但不可执行**；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 当前阶段 | **W2b 已完成（Web 侧）**；**API 档位实验已接入控制面**（E1 12 格 / E4 36 格，compiler + 测试）。下一步：有 API key 先跑 API 档位；W3 最终评测/复现包。本地 LLM 规模实验标记 `blocked_on_local_gpu`。见 [RUNBOOK.md](RUNBOOK.md)、[04-experiments.md](04-experiments.md) §4.13.1–4.13.2。 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -170,6 +170,8 @@ artifacts/
 | `docs/optimization/PREREQUISITES.md` | 每个 S 的环境/包/模型/接口/数据前置、检测命令、缺口处理阶梯与 A/B/C 模板 |
 | `docs/optimization/COMPONENT-SOURCING.md` | 模块内组件复用/安装/API/需实现的统计与安装顺序 |
 | `docs/optimization/RUNBOOK.md` | 模型接入后的 preflight、S6 B 级、E1.2/E1.3/E3/E4 命令与结果位置 |
+| `configs/experiments/e1-api-tier-grid.json` | E1 API 档位 × 候选（12 格；本地规模实验的替代） |
+| `configs/experiments/e4-api-tier-grid.json` | E4 API 档位 × 数据规模 × 候选（36 格） |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
 | `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令；§10.1 为控制面遗留项收尾 |
 | `docs/optimization/S7A-REPORT.md` | E2 耦合分析层（conversion/oracle/归因）完成报告 |
@@ -239,11 +241,11 @@ artifacts/
 
 | 项 | 状态 | 缺失时首选动作 |
 |---|---|---|
-| Python / 测试 | Python 3.14 下 **223 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
+| Python / 测试 | Python 3.14 下 **237 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
 | 本地 Ollama | **未安装/未运行**（S0 时 `127.0.0.1:11434` 连接失败；后续会话未见恢复） | 装/启动/`ollama pull`；磁盘/网络不够→给远程 endpoint / API / offline 选项 |
-| 本地模型 | `qwen3.8:27b-q4_K_M`、`bge-m3` 未验证/未拉取（约 17GB + 1GB 级） | 先 `ollama list`；缺则拉；磁盘不足→问用户清盘/换机/远程 |
+| 本地模型 | **不可用路线**：Windows + Intel Arc 130V 集显（共享内存，无独立显存），本地 27B/72B 不能做规模实验；`bge-m3`/cross-encoder 可 CPU 但不适合大规模 | 用 API 档位；有 ≥24GB 独显/远程 GPU 再恢复本地规模实验 |
 | 可选包 | `repo/.venv-memlab` 已装 torch/sentence-transformers；系统 Python 没有；reranker 权重未下载 | 用 `.venv-memlab/bin/python`；设 `HF_ENDPOINT=https://hf-mirror.com` + `HF_HOME` 到 U 盘；回退必须标“未真实重排” |
-| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） | 给 provider/model/预算选项并问；未确认不跑 API |
+| API keys | 用户可获取 DeepSeek/Qwen 等 key；当前环境变量仍未配置 | 用 `scripts/preflight.py`；key 只从 env 读，不写进配置 |
 | API provider adapter | **已实现**：`memlab/providers.py`（Ollama + OpenAI-compatible），`LLMClient/EmbeddingClient` 已路由；`scripts/preflight.py` 可检查 | 仍需真实 endpoint/key 验证；key 只从 env 读 |
 | 数据 | `data/locomo10.json` 等已跟踪；四对话可用 | 缺数据先查 `data/`/`git status`；不要重下未知来源 |
 | Scene adapter | `personal_assistant` 可用；`coding` / `customer_service` **planned** | 在 S9 前实现或问用户优先级；planned 不计入最优 |
@@ -258,14 +260,14 @@ artifacts/
 | S0 仓库/基线 | 否 | 只跑测试/归档 | 装 Python/git；Ollama 可选，缺则装/启动/拉模型或问用户 |
 | S1 契约/骨架 | 否 | 本地测试/mock | 缺包立即装；不改无关模块 |
 | S2 模型/缓存 | 否 | 本地迁移测试 | 缺包立即装；缓存目录可写 |
-| S3 W/S/R | 否 | 本地 Ollama 或 fake embedding | 装/启动 Ollama、拉 `bge-m3`；不行给远程/小模型/仅 fake 选项 |
-| S4 M/U/K | 否 | 本地 Ollama + 可选 cross-encoder | 装 `sentence-transformers` + 模型；不能装再回退并标未真实重排 |
+| S3 W/S/R | **建议** | API/本地 embedding；真实 dense | 有 key 用 API embedding；或 CPU `bge-m3`；fake 只做接口 |
+| S4 M/U/K | **建议** | API LLM + 可选 cross-encoder | 有 key 用 API；cross-encoder CPU 大规模不现实，回退要标 |
 | S5 实验控制面 | 否 | dry-run/小样本 | fake/mock；修环境 |
-| S6 E1 模块实验 | 否 | L1/L2 本地模型 | 装/启动/拉模型；不行给远程 endpoint / API+adapter / offline 选项 |
-| S7 E2 耦合 | **可选** | 强模型归因（L3） | 先实现 adapter、问 key/给选项；拒绝才 L1/L2 + 标 blocked |
-| S8 E3 组合 | **可选** | 强模型组合 | 同 S7；不能解决才本地组合并标 L3 未验证 |
-| S9 E4 环境 | **是（完整网格）** | L3 强模型 × 规模 × 场景 | 先实现 adapter/scene；问 provider/预算；拒绝才 L1/L2 2×3 子集 |
-| S10 E5 确认 | **可选/建议** | 第二 Judge、跨家族复核 | 问 key/provider；或本地不同家族 Judge + 人工；写限制+解除条件 |
+| S6 E1 模块实验 | **是（B 级）** | API 档位（T1/T2/T3）答案/Judge | 先 `preflight`；无 key 只能 offline A 级 |
+| S7 E2 耦合 | **建议** | API 档位归因 | 先 `preflight`；无 key 只做 S7b-A offline |
+| S8 E3 组合 | **建议** | API 档位组合 | 同 S7；先跑 2–3 候选子集 |
+| S9 E4 环境 | **是（API 档位网格）** | API tier × 规模 × 场景 | 先 `preflight` + API tier；本地规模实验 `blocked_on_local_gpu` |
+| S10 E5 确认 | **是/建议** | 第二 Judge、跨家族复核 | 不同家族 API + 人工；写限制 |
 
 ### 硬规则
 
@@ -713,14 +715,26 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 - 边界：报告目前基于单题/两条 Web run；`answer_f1/evidence_recall/state_accuracy` 无 gold 时为 `null`，不冒充统计结论。批量多题、跨 seed、CI、实验详情自动统计是 W2b/W3。`reports/experiments` 被 gitignore，最终归档 W3 处理。
 - 兼容：旧 `/api/*`、旧 tab 不变；W1 的 sync `/api/v2/runs` 保留。
 
+### 5.1.12 W3 最终离线评测（2026-11-09）
+
+- 协议：冻结 B0/R0；test `conv-41,conv-42`；每段每 seed 20 题（1–4 类分层），seeds 13/17；每配置 80 题；offline。
+- 结果：B0 F1 0.0354 / Recall 0.5435 / P95 23.73ms；R0 F1 0.0054 / Recall 0.4018 / P95 44.66ms；F1 delta −0.0300，pair bootstrap 95% CI [−0.0575,−0.0104]；结论 **not_supported**（offline R0 更差）。
+- 产物：`scripts/final_w3.py`、`eval/archive/final-w3.json`、`eval/archive/experiments/final-w3-test-offline.json`、`docs/optimization/W3-REPORT.md`；Web `#/evaluation2` 与 `#/experiments/final-w3-test-offline`。
+- 边界：offline extractive，不是 27B B 级；state_accuracy 未记录；bootstrap 按题而非对话 cluster。R0 的负结果只适用于该 offline 条件。
+- 测试：**234 passed**（未新增测试；脚本手动运行）。
+- 下一步：online 重跑、state_accuracy、slides/截图/复现包。
+
 ### 5.2 未开始
 - [x] W1 Web MVP：6 段入口、记忆库 v2、v2 JSON 下载、提问/状态页、基础实验台、系统页、旧 API 兼容（2026-11-09，229 tests）
 - [x] W2 核心 Web 实验台：轴配置器 + runnable gate + 异步 job + 实验详情四 tab + 评测归档页（2026-11-09，233 tests）
 - [x] W2b：批量多题/固定题集 + 真实 F1/Recall + 按类别 + 自动结论（2026-11-09，234 tests；CI/bootstrap 留 W3）
 - [ ] 实验报告器：`memlab/experiment-report@1`（results/comparisons/analysis/conclusion）落盘 + Web API；每次实验强制
-- [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）
+- [x] W3 offline：test 2 段、B0/R0、80 题、2 seeds、bootstrap、W3-REPORT（2026-11-09）
+- [ ] W3 收尾：online/B 级重跑、state_accuracy、slides/截图/复现包
 - [ ] E0 基线复现
-- [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
+- [ ] **API 档位实验（当前可执行替代）**：`e1-api-tier-grid`（12 格）、`e4-api-tier-grid`（36 格）；有 key 后先跑 20 题冒烟
+- [ ] **本地 LLM 规模实验（设计保留，当前不可执行）**：7B/27B/72B；标记 `blocked_on_local_gpu`，不得写成“无差异”
+- [ ] S6 B 级：真实 API/Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
 - [ ] E1b 延后变体（`deferred`，不是静默删除）：`schema=hmem/structmem/amem`、`graph.repr=community`（+`community_resolution`）、`schema.params.cot`、`post.compress=llm_summary`；重入条件见 e1-screening spec 的 `deferred`
 - [ ] 正式 S7b：Oracle 干预 run + LLM 归因（等 B 级；S7b-A 已完成，见 §5.1.9）
 - [ ] E0/E2/E3/E4/E5

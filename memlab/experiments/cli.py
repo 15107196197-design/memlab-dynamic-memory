@@ -50,11 +50,23 @@ def apply_model_args(spec: spec_module.Spec, args) -> None:
         environment["embedding"] = embedding
 
 
-def preflight(spec: spec_module.Spec) -> dict:
-    environment = spec.data.get("environment") or {}
-    llm = _block(environment.get("llm"))
-    embedding = _block(environment.get("embedding"))
-    return {"llm": providers.preflight(llm), "embedding": providers.preflight(embedding)}
+def preflight(spec: spec_module.Spec, plans=None) -> dict:
+    environments = []
+    if plans:
+        seen = set()
+        for plan in plans:
+            environment = plan.effective_config.get("environment") or {}
+            key = json.dumps(environment, sort_keys=True, ensure_ascii=False)
+            if key not in seen:
+                seen.add(key)
+                environments.append(environment)
+    else:
+        environments = [spec.data.get("environment") or {}]
+    llm_results, embedding_results = [], []
+    for environment in environments:
+        llm_results.append(providers.preflight(_block(environment.get("llm"))))
+        embedding_results.append(providers.preflight(_block(environment.get("embedding"))))
+    return {"llm": llm_results, "embedding": embedding_results}
 
 
 def partition_plans(plans):
@@ -110,15 +122,15 @@ def cmd_sweep(args) -> int:
 def cmd_run(args) -> int:
     spec = _load(args.spec)
     apply_model_args(spec, args)
+    plans = compiler.compile_spec(spec)
     if getattr(args, "preflight", False) and args.executor == "e2e" and not args.offline:
         try:
-            report = preflight(spec)
+            report = preflight(spec, [plan for plan in plans if plan.valid])
         except Exception as exc:
             print(json.dumps({"error": f"{type(exc).__name__}: {exc}", "ready": False},
                              ensure_ascii=False, indent=2))
             return 2
         print(json.dumps({"preflight": report}, ensure_ascii=False, indent=2))
-    plans = compiler.compile_spec(spec)
     selected = plans if args.include_invalid else [plan for plan in plans if plan.valid]
     if not selected:
         raise ValueError("no valid plans to run; compile with --include-invalid to inspect them")

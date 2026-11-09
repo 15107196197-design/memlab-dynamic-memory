@@ -531,9 +531,10 @@ K：
 
 **环境前置：**
 
-- B 级需要 Ollama + `qwen3.8:27b-q4_K_M` / `bge-m3`；先 `command -v ollama`、`ollama list`、`curl 127.0.0.1:11434`。
-- 缺：优先 `ollama serve` + `ollama pull`（磁盘足够时）；磁盘/网络不够时给用户四个选项：A 本地安装/清磁盘、B 远程 Ollama endpoint、C API key + 先实现 provider adapter、D 只跑 offline A 级。**不能只写 `blocked_on_ollama` 就停。**
-- M2/M3 的真实 rerank 需要 `sentence-transformers` + 模型；缺则安装/下载，不能装则标回退，不能把回退当真实重排。
+- 当前机器是 Windows + Intel Arc 集显，**本地 7B/27B/72B 规模实验不可执行**，标记 `blocked_on_local_gpu`，设计/评测方法保留。
+- 可执行路线：API key（DeepSeek/Qwen/SiliconFlow 等）+ `bge-m3` API/CPU embedding；先 `scripts/preflight.py`。
+- 缺 key：给 provider/model/预算选项；没有 key 只跑 offline A 级，不能把 offline extractive 写成 LLM F1。
+- M2/M3 的真实 rerank 需要 `sentence-transformers` + 模型；CPU 大规模不现实，缺则标回退或补 API rerank adapter。
 
 **边界：** offline `answer_f1` 是 extractive，不是 LLM F1；B 级未跑不能写“已完成”。
 
@@ -557,7 +558,7 @@ K：
    legacy_dynamic 冒充 R0。
 
 规则：
-1. 每个模块先 E1.1 插拔/选型，再 E1.2 参数，再 E1.3 模块 LLM；不要同时改多个模块。
+1. 每个模块先 E1.1 插拔/选型，再 E1.2 参数，再 E1.3 **API 档位**；本地 7B/27B/72B 规模实验标记 blocked_on_local_gpu，不执行、不伪造。
 2. 用 A 级评测（L1+L2+成本）筛选；只对 2–3 个候选跑 B 级（F1/Judge）。
 3. 记录每个 run 的 manifest、指标、失败分类。
 4. 每模块输出 2–3 个 Pareto 候选（质量/成本/平衡），写进 HANDOFF §5。
@@ -682,15 +683,16 @@ K：
 
 ### 前置条件（先检测，不满足先修）
 
-- 检查：S8、`e4-environment-grid.json`、3 档 LLM、`scripts/preflight.py`、API key、数据规模、scene adapter（`coding`/`customer_service` 目前 planned）。
-- 可自行修：跑 `scripts/preflight.py`；补 scene adapter；装统计包；先跑 L1/L2 子集。
-- 需问用户：provider/model/base_url/预算；系统安装/大下载；scene adapter 优先级；是否接受 L1/L2 子集。
-- 边界：planned scene 不计入最优；本地 27B 不冒充 L3；E3_WINNER 未选出时不能编译成 R0 假格。
+- 检查：S8、`e4-api-tier-grid.json`、API 档位 T1/T2/T3、`scripts/preflight.py`、API key、数据规模、scene adapter（`coding`/`customer_service` 目前 planned）。
+- 可自行修：跑 `scripts/preflight.py`；补 scene adapter；装统计包；先跑 API 档位小样本。
+- 需问用户：provider/model/base_url/预算；scene adapter 优先级；是否接受只跑 personal_assistant。
+- 边界：planned scene 不计入最优；API 档位不是本地 7B/27B/72B；本地规模实验 `blocked_on_local_gpu`；E3_WINNER 未选出时不能编译成 R0 假格。
 
 ### 先读
 
-- [04-experiments.md](04-experiments.md) 的 4.13
-- [e4-environment-grid.json](../../configs/experiments/e4-environment-grid.json)
+- [04-experiments.md](04-experiments.md) 的 4.13.1–4.13.2
+- [e4-api-tier-grid.json](../../configs/experiments/e4-api-tier-grid.json)
+- [e4-environment-grid.json](../../configs/experiments/e4-environment-grid.json)（原始设计，本地规模 blocked）
 - E3 冠军（仅当 E3 已跑；未跑则用 E3_WINNER 的 `deferred` 记录说明）
 
 ### 提示词

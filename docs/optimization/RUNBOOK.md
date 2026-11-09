@@ -14,7 +14,33 @@
 
 ---
 
-## 0. 先做 preflight（不跑实验）
+## 0. 先选路线：当前机器用 API 档位（无可用 GPU）
+
+当前机器是 Windows + Intel Arc 集显，**不要走本地 27B/72B**。可执行路线：
+
+- **API 档位实验**：`e1-api-tier-grid` / `e4-api-tier-grid`；
+- **S6 B 级**：API LLM + bge-m3 embedding + Judge；
+- **本地规模实验**：标记 `blocked_on_local_gpu`，设计保留，不执行。
+
+### 0.1 API 档位（推荐先跑）
+
+```bash
+export SILICONFLOW_API_KEY="sk-..."   # 或 DASHSCOPE_API_KEY / DEEPSEEK_API_KEY
+
+# 每个 tier 先单独 preflight（模型 ID 以控制台为准）
+python scripts/preflight.py --provider openai_compatible   --model Qwen/Qwen2.5-32B-Instruct   --base-url https://api.siliconflow.cn/v1   --api-key-env SILICONFLOW_API_KEY
+
+# E1 API 档位：12 格（B0/R0/CHEAP/QUALITY × T1/T2/T3）
+python -m memlab.experiments.cli run   --spec configs/experiments/e1-api-tier-grid.json   --executor e2e --preflight --limit 20   --db runs/e1-api/screening.sqlite
+
+# E4 API 档位：36 格；先小样本，再逐步加题
+python -m memlab.experiments.cli run   --spec configs/experiments/e4-api-tier-grid.json   --executor e2e --preflight --limit 20   --db runs/e4-api/screening.sqlite
+```
+
+> `--preflight` 会检查编译后每个 unique tier 的 provider/base_url/key env；缺 key 或模型错误会在写 DB 前退出。  
+> API 档位是 **capability tier**，报告里不要写 7B/27B/72B。
+
+## 0.2 先做 preflight（不跑实验）
 
 ### Ollama
 

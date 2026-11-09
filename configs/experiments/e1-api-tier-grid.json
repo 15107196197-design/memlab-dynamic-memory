@@ -1,0 +1,167 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1-api-tier-grid",
+  "title": "E1 adoption under API capability tiers (replaces local LLM-scale ladder)",
+  "design": "environment_grid",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H1",
+    "H9-api"
+  ],
+  "grid": {
+    "llm": [
+      {
+        "id": "API_T1_cheap",
+        "provider": "openai_compatible",
+        "model": "Qwen/Qwen2.5-7B-Instruct",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "level": "tier1_cheap"
+      },
+      {
+        "id": "API_T2_mid",
+        "provider": "openai_compatible",
+        "model": "Qwen/Qwen2.5-32B-Instruct",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "level": "tier2_mid"
+      },
+      {
+        "id": "API_T3_strong",
+        "provider": "openai_compatible",
+        "model": "Qwen/Qwen2.5-72B-Instruct",
+        "base_url": "https://api.siliconflow.cn/v1",
+        "api_key_env": "SILICONFLOW_API_KEY",
+        "level": "tier3_strong"
+      }
+    ],
+    "data_scale": [
+      {
+        "id": "S2_course6",
+        "samples": [
+          "conv-26",
+          "conv-30",
+          "conv-41",
+          "conv-42",
+          "conv-43",
+          "conv-44"
+        ],
+        "question_limit": 120,
+        "approx_tokens": 130000
+      }
+    ],
+    "scene": [
+      {
+        "id": "personal_assistant",
+        "adapter": "locomo",
+        "status": "ready"
+      }
+    ]
+  },
+  "candidates": [
+    {
+      "id": "B0",
+      "config": "B0_legacy",
+      "role": "control"
+    },
+    {
+      "id": "R0",
+      "config": "R0_reference",
+      "role": "reference"
+    },
+    {
+      "id": "CHEAP",
+      "config": "R0_cheap",
+      "role": "low_cost"
+    },
+    {
+      "id": "QUALITY",
+      "config": "R0_quality",
+      "role": "high_cost"
+    }
+  ],
+  "deferred": [
+    {
+      "id": "local_llm_scale",
+      "levels": [
+        "L1_7b",
+        "L2_27b",
+        "L3_72b"
+      ],
+      "status": "blocked_on_local_gpu",
+      "reason": "No usable local GPU. The original local 7B/27B/72B ladder is retained as design/evaluation method but cannot be executed here.",
+      "planned_in": "future machine with >=24GB VRAM or remote GPU endpoint"
+    },
+    {
+      "id": "module_llm_scale",
+      "levels": [
+        "planner_model=7B/27B",
+        "audit_model=7B/27B"
+      ],
+      "status": "blocked_on_module_llm_wiring_and_local_gpu",
+      "reason": "planner.params.planner_model and logic.params.audit_model are declared but not wired to an LLM client in the current runtime; running them would be a no-op. Also needs local models or an API adapter per module.",
+      "planned_in": "after module-LLM wiring; use API tiers first"
+    }
+  ],
+  "protocol": {
+    "minimum_cells": 6,
+    "full_cells": 12,
+    "questions_per_cell_screening": 60,
+    "fixed": {
+      "context_budget": 32768,
+      "query_mix": "balanced",
+      "seed": 13,
+      "candidate_budget": 15
+    },
+    "tier_semantics": "API_T1/T2/T3 are provider capability tiers, not parameter counts. Do not write 7B/27B/72B."
+  },
+  "selection": {
+    "objective": "maximize answer_f1/judge_accuracy subject to tokens_per_query <= 8000",
+    "report": [
+      "per_tier_best",
+      "conditional_gain",
+      "pareto_front",
+      "config_x_api_tier_interaction"
+    ]
+  },
+  "metrics": [
+    "answer_f1",
+    "judge_accuracy",
+    "state_accuracy",
+    "recall@15",
+    "ndcg@15",
+    "tokens_per_query",
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "error_rate",
+    "api_cost_usd"
+  ],
+  "analysis": {
+    "model": "mixed_effects",
+    "formula": "metric ~ config * api_tier + (1|question)",
+    "bootstrap_samples": 1000,
+    "correction": "holm"
+  },
+  "budget": {
+    "max_cells": 12,
+    "max_api_usd": 150
+  },
+  "output": {
+    "runs_dir": "runs/e1-api",
+    "report": "reports/e1-api-tier.html"
+  },
+  "reference_configs": {
+    "off": "../../configs/reference-b0.json",
+    "on": "../../configs/reference-r0.json",
+    "cheap": "../../configs/reference-cheap.json",
+    "quality": "../../configs/reference-quality.json"
+  },
+  "environment": {
+    "embedding": {
+      "provider": "openai_compatible",
+      "model": "BAAI/bge-m3",
+      "base_url": "https://api.siliconflow.cn/v1",
+      "api_key_env": "SILICONFLOW_API_KEY"
+    }
+  }
+}
