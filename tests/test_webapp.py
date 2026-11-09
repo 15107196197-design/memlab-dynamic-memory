@@ -182,6 +182,22 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("vector", data["qa"]["test"]["summary"])
         self.assertIn("test", data["split"])
 
+    def test_six_conversation_export_bundle(self):
+        bundle = webapp.get("/api/v2/export/all", {"schema": ["2"]})
+        self.assertEqual(bundle["schema"], "memlab/web-export-bundle@1")
+        self.assertEqual(len(bundle["documents"]), 6)
+        for sample_id in ("conv-26", "conv-30", "conv-43", "conv-44", "conv-41", "conv-42"):
+            self.assertIn(sample_id, bundle["documents"])
+
+    def test_final_w3_report_has_four_tabs_and_c_artifacts(self):
+        report = webapp.get("/api/v2/experiments/final-w3-test-offline/report")
+        for key in ("results", "comparisons", "analysis", "conclusion"):
+            self.assertIn(key, report)
+        self.assertEqual(report["dataset"]["split"], "test")
+        self.assertTrue(report["dataset"]["test_only"])
+        artifacts = webapp.get("/api/v2/artifacts")["artifacts"]
+        self.assertTrue(all(artifacts[key]["available"] for key in ("state_accuracy", "e1_adoption", "e3_offline", "planner_k")))
+
     def test_c_artifacts_and_project_reports_are_separate(self):
         art = webapp.get("/api/v2/artifacts")
         for key in ("state_accuracy", "e1_adoption", "e3_offline", "planner_k"):
