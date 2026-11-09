@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `git log -1 --oneline`；S6 后续 `d272184`（四对话离线筛选）+ 文档 `33a8ec2`；S6 executor `a8c6dfd` |
+| 当前 commit | `git log -1 --oneline`；前序 `29261f1`（控制面 P0/P1）、`33a8ec2`、`d272184`、`a8c6dfd` |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面 P0/P1 修复已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **203 passed**（190 + 13 控制面修复测试） |
-| 已实现 | S1–S5 + hardening + S7a + S6；控制面：runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重 |
-| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b、Lab UI、API provider adapter；E1b 的 hmem/structmem/amem、event_sparse/community、cot、llm_summary 未注册/未支持；E4 只有 R0 一个 candidate 配置 |
-| 当前阶段 | **S6 离线筛选 + 控制面 P0/P1 修复完成**（E1b 已 gate；B 级 blocked_on_ollama）；准备 S7b / 补真实 E1 |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **209 passed**（203 + 6 净新增：deferred 契约、E4 候选、event_sparse） |
+| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置 |
+| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b 正式结论、Lab UI、API provider adapter；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8，不是静默删除） |
+| 当前阶段 | **审计遗留项收尾完成**；E1b 0 个未解释 blocked；E4 4 个 candidate 可区分；S7b 决策：offline A 级先跑、B 级作结论（[S7B-DECISION.md](S7B-DECISION.md)）；B 级仍 `blocked_on_ollama` |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -169,9 +169,14 @@ artifacts/
 | `docs/optimization/GOAL-AUDIT.md` | 总体目标对齐审计：能力→实现→参数→组合→环境、10 个审计问题、红旗 |
 | `docs/optimization/COMPONENT-SOURCING.md` | 模块内组件复用/安装/API/需实现的统计与安装顺序 |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
-| `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令 |
+| `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令；§10.1 为控制面遗留项收尾 |
+| `docs/optimization/S7A-REPORT.md` | E2 耦合分析层（conversion/oracle/归因）完成报告 |
+| `docs/optimization/S7B-DECISION.md` | S7b/B 级决策：offline A 级先跑、B 级作结论，含只读可行性表 |
+| `docs/optimization/AUDIT-2026-11-09.md` | 产物整体审计 + P0/P1 修复验收 + §3.2 遗留项收尾 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
 | `configs/reference-r0.json` | R0 参考架构 |
+| `configs/reference-cheap.json` | E4 CHEAP 预设（03-variants §3.8；6 字段/1-hop/无重排） |
+| `configs/reference-quality.json` | E4 QUALITY 预设（03-variants §3.8；10 字段/DAG/交叉编码器） |
 | `configs/variants.json` | 变体目录与预设 |
 | `configs/experiments/e1-adoption.json` | 模块内插拔模板（B0+ / R0−） |
 | `configs/experiments/e1-merge.json` | M 合并模块：路线/融合/重排/后处理/顺序 |
@@ -227,7 +232,7 @@ artifacts/
 | 本地 Ollama | 需要时启动；S0 时 `127.0.0.1:11434` 未运行；主模型 `qwen3.8:27b-q4_K_M`，embedding `bge-m3` |
 | API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） |
 | API provider adapter | **未实现**：当前 `memlab.llm` 只走 Ollama；S9 前需要 `memlab/providers.py`（Ollama + OpenAI-compatible） |
-| 当前是否需要 key | **不需要**：S1–S8 的模块开发/本地实验都可以用 Ollama；S9 的 L3 强模型才需要 |
+| 当前是否需要 key | **不需要**：本会话与 S7b-A 均为 offline；S1–S8 的模块开发/本地实验可用 Ollama；S9 的 L3 强模型才需要 API key。B 级需要的是本地 Ollama 端点，不是 API key |
 
 ### 各阶段 key 需求
 
@@ -327,6 +332,10 @@ artifacts/
 | S4 K 矛盾定义 | 只把“同键同时 ACTIVE 的不同值”或 CONFLICT 状态算矛盾；历史版本不算 | 避免把正常版本链误报为矛盾 |
 | S4 K 归档 | archive/TTL 从活跃 store 移除，但把 unit 保留在 `MaintenanceResult.archived` | 维护不等于销毁 |
 | S4 运行边界 | 测试用 B0 preset + 显式 M/U 组件；`guards.require_runnable` 仍拒绝 R0 经 Runtime 启动 | S5 编译器/guard 放行前，R0 配置只可加载/单测，不可端到端跑 |
+| 不可运行 level 的处置 | **实现，或从 spec 移除并写入 `deferred`（id/levels/status/reason/planned_in）；不得静默删** | 声明≠可运行；静默删会让矩阵看起来“干净”但掩盖缺口 |
+| `event_sparse` 离线语义 | 用已有 `event` 字段建稀疏事件节点（≥2 facts 共享才建），无 LLM 抽取、无 event_window/link_threshold、无社区摘要 | 能在离线真实改变图结构；不把未消费参数伪装成已实现 |
+| E4 candidate 解析 | candidate 的 `config` 经 `CANDIDATE_REFERENCE_KEYS` 映射到 `reference_configs`（off/on/cheap/quality）；未定义 label 才 warning | B0/CHEAP/QUALITY 是独立配置，不再折叠成 R0 alias；E3_WINNER 等 E3 |
+| S7b 先 A 后 B | offline 只跑 S7b-A（转化率/瓶颈/pipeline 验证，标 A 级）；正式 S7b/Oracle/LLM 归因等 B 级 | extractive `answer_f1` 不能冒充 LLM 使用能力；见 [S7B-DECISION.md](S7B-DECISION.md) |
 
 
 
@@ -538,6 +547,8 @@ artifacts/
 
 ### 5.1.7 控制面 P0/P1 修复（审计 2026-11-09）
 
+> 历史记录（测试数 203、E1b 尚有 10 个 blocked）；遗留项已在 §5.1.8 收尾，现状以 §5.1.8 为准。
+
 > 范围：只改 S5 `compiler/runner/store/cli`，不改 W/S/R/M/U/K，不跑 E1 全量。测试 **203 passed**。完整验收见 [AUDIT-2026-11-09.md](AUDIT-2026-11-09.md) §3.1。
 
 **编译矩阵（去重后；`sweep` 默认只把 `valid` 写进正式矩阵）：**
@@ -576,14 +587,49 @@ artifacts/
 - **Dedupe**：同 `config_hash` 保留一个，其余 run_id+factors 记为 `aliases`，重复的 no-op 轴写 note。
 - **E2E 冒烟（offline）**：3 个 fusion 候选 × 10 题（conv-26），3/3 run `complete`、0 error；写入 `answer_f1/evidence_recall/tokens/seconds/ndcg`。`_meta` 明确 `offline=True, llm=offline-extractive, embedding=offline-hash`，rerank 回退 `sentence_transformers` 缺失。**这是抽取式基线，不是 LLM 结论。**
 
+### 5.1.8 审计遗留项收尾 + S7b/B 决策（2026-11-09 第二修复会话）
+
+> 范围：只改控制面/配置/文档，不跑 E1 全量、不跑 B 级、不用 legacy 冒充 R0、不跑 L3。测试 **209 passed**（203 + 6 净新增）。
+
+**E1b 10 个 `runnable=false` 的处置（3 实现/修复 + 7 正式延后）：**
+
+| 原 blocked | 数量 | 处置 | 结果 |
+|---|---:|---|---|
+| `post.mmr.impl=none` / `post.decay.impl=none` | 2 | 删除 `derived_rules` 中给关闭阶段注入 `lambda` 的反向规则；`set_impl` 已按 `params_allowed` 清参 | runnable |
+| `graph.repr.impl=event_sparse` | 1 | 在 `memlab/store.py` 实现离线确定性版：共享 `event` 的 facts 经稀疏事件节点相连（≥2 才建）；不宣称 `event_window`/`link_threshold` | runnable |
+| `schema.impl=hmem/structmem/amem` | 3 | 从 E1b 因子 levels 移除，写入 `deferred`（`blocked_on_llm_extraction`） | 延后 |
+| `schema.params.cot` | 2 | 整个因子移除，写入 `deferred`（离线 extractor 没有 CoT 字段，接受即 no-op） | 延后 |
+| `graph.repr.impl=community` + `community_resolution` | 1 | 移除 community level 及其参数因子，写入 `deferred`（缺 Leiden/Louvain 图库 + 社区摘要模型） | 延后 |
+| `post.compress.impl=llm_summary` | 1 | 移除该 level，写入 `deferred`（`blocked_on_ollama`） | 延后 |
+
+`deferred` 是 spec 的机器可读字段：`sweep` 每次都输出 `deferred_factors` 和每条的 `id/levels/status/reason`；不是静默删除。清单见 [e1-screening.json](../../configs/experiments/e1-screening.json)。
+
+**编译矩阵（`sweep --dry-run`；`unrunnable` 全为 0）：**
+
+| spec | runs | valid | excluded_unrunnable | excluded_no_op | duplicates | deferred |
+|---|---:|---:|---:|---:|---:|---:|
+| E1.1 adoption | 22 | 22 | 0 | 0 | 1 | 0 |
+| E1.2/E1.3 screening | 67 | 64 | **0** | 3 | 28 | 5 |
+| E3 factorial | 16 | 16 | 0 | 0 | 0 | 0 |
+| E4 environment | 108 | 108 | 0 | 0 | 0 | 1 |
+
+- E1b 剩余 3 个 `excluded_no_op` 是 `graph.retrieval.impl`（`vector_only`/`entity_subgraph`/`community_summary`），已在 `NO_OP_AXES` 里解释，不是未解释 blocked。
+- E4 的 candidate 轴现在可解释：`B0=reference-b0`、`R0=reference-r0`、`CHEAP=reference-cheap`、`QUALITY=reference-quality`，各 27 格、108 个唯一 `config_hash`、0 alias。`E3_WINNER` 正式延后到 E3（`deferred`，`blocked_on_E3`），不再用 `pending_e3` 折叠成 R0。
+- CHEAP/QUALITY 配置按 [03-variants.md](03-variants.md) §3.8 落地；QUALITY 的 `cross_encoder` 在缺 `sentence-transformers` 时回退并记 `fallbacks`，不冒充真实重排。
+
+**S7b/B 决策（详见 [S7B-DECISION.md](S7B-DECISION.md)）：**
+
+- S7b 先用 offline 候选跑 **S7b-A**（只读、A 级：conversion/bottleneck/pipeline 验证）；正式 S7b 结论、Oracle 差距、LLM 归因等 B 级。
+- 已用 `runs/s6/e1.sqlite` 做只读可行性核验：36 runs 的 per-question 指标可算 `P(answer_f1>0 | evidence_recall=1)`；`state_accuracy` 尚未写入，`P(A|S=1)` 标 `not_available`。
+- B 级仍 **blocked_on_ollama**；没有把 offline extractive 的 F1 写成 LLM F1。
+
 ### 5.2 未开始
 - [ ] E0 基线复现
 - [ ] S6 B 级：真实 Ollama F1/Judge、E1.2 参数、E1.3 模块 LLM
-- [ ] E1b 未实现变体：`schema=hmem/structmem/amem`、`graph.repr=event_sparse/community`、`schema.params.cot`、`post.compress=llm_summary`（需实现或从 spec 正式移除；当前标 `runnable=false`）
-- [ ] E1b `post.mmr=none` / `post.decay=none` 的 derived_rules 参数污染（可按 `params_allowed` 过滤或删掉反向规则）
-- [ ] E4 candidate 配置：`B0/CHEAP/QUALITY/E3_WINNER` 尚未定义，当前与 R0 同 config，已去重为 alias；补配置前 E4 的 candidate 轴不可解释
-- [ ] S7b：E2 耦合（读 S6 候选；S7a 已完成）
-- [ ] E2/E3/E4/E5
+- [ ] E1b 延后变体（`deferred`，不是静默删除）：`schema=hmem/structmem/amem`、`graph.repr=community`（+`community_resolution`）、`schema.params.cot`、`post.compress=llm_summary`；重入条件见 e1-screening spec 的 `deferred`
+- [ ] **S7b-A**：offline A 级 conversion/bottleneck/pipeline 验证（读 `runs/s6/e1.sqlite`；不写因果结论）
+- [ ] 正式 S7b：Oracle 干预 run + LLM 归因（等 B 级）
+- [ ] E0/E2/E3/E4/E5
 - [ ] 正式 E1 的 run 顺序随机化 / bootstrap / 多重比较（analysis 仍只有 per-run 汇总）
 - [ ] Lab UI / 报告自动化
 - [ ] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；S9 前必须）
@@ -644,6 +690,24 @@ artifacts/
 ```
 
 ### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / 审计遗留项收尾 + S7b/B 决策 / 会话
+- 本次完成：A E1b 10 个 `runnable=false` 清零（2 个 derived_rules 修复 + 1 个 `event_sparse` 实现 + 7 个正式延后）；B E4 补 B0/CHEAP/QUALITY 配置（108 个唯一 plan、0 alias），E3_WINNER 正式延后；C 新增 spec `deferred` 契约与 sweep 报告；D S7b 决策（offline A 级先跑、B 级作结论）与只读可行性核验；E 6 个净新增测试。
+- 改动文件：`memlab/store.py`（event_sparse）；`memlab/experiments/{compiler,spec,cli}.py`（candidate→reference 映射、`deferred` 校验/报告）；`configs/experiments/{e1-screening,e4-environment-grid}.json`；新增 `configs/reference-{cheap,quality}.json`、`docs/optimization/S7B-DECISION.md`；更新 `tests/test_experiments_repair.py`、`tests/test_memlab_s3.py`、HANDOFF、AUDIT-2026-11-09、S6-REPORT、SESSION-PROMPTS、PHASE-CHECKLIST。`memwb/`、`server.py`、`web/` 未改。
+- 测试：`python -m unittest discover -s tests -t .` → **209 passed**（203 + 6 净新增）；未 push upstream。
+- 新增 run_id / 指标：无正式 E1 run；event_sparse 单 plan × 2 题 offline 冒烟（临时 DB，未提交）`attempted=2, errors=0`，`graph_nodes/edges` 正常写入。
+- Key 状态：**未使用**；offline/extractive；B 级仍 `blocked_on_ollama`。
+- 关键决策（新增/变更）：① 不能实现的 level 从 spec 移除时必须写 `deferred`（id/levels/status/reason/planned_in），sweep 报告，不能静默删；② `event_sparse` 只做离线确定性事件节点，不冒充 `event_window`/`community`；③ E4 candidate 用 `reference_configs` 解析，未定义才 warning；E3_WINNER 等 E3；④ S7b-A 只做 A 级转化率/瓶颈，正式结论等 B。
+- 未解决问题：
+  1. B 级真实 F1/Judge/P95 仍 `blocked_on_ollama`；community/hmem/structmem/amem/cot/llm_summary 仍延后。
+  2. E4 的 `scene=coding/customer_service` 仍是 planned adapter；矩阵可编译不等于可跑，B 级前要补 adapter 或缩 scene。
+  3. S7b 的 `state_accuracy` 未写入、Oracle run 未实现；S7b-A 只能报可计算子集。
+- 下一步 3 件事：
+  1. 跑 S7b-A（offline，标 A 级），只产出 conversion/bottleneck 与 B 级缺口清单。
+  2. 有 Ollama 后先补 B 级 2–3 候选，再重跑正式 S7b。
+  3. 补 E4 非 personal_assistant scene 的 adapter/可用性门禁（否则矩阵含不可跑 cell）。
+- 下一步选择：A 本会话继续 S7b-A / B 新会话（用 SESSION-PROMPTS S7）；用户未选前不自动开始。
+- 下个会话先读：本文件 §1/§2/§5.1.8/§10；`S7B-DECISION.md`；`AUDIT-2026-11-09.md` §3.2；`S6-REPORT.md` §10；`memlab/experiments/compiler.py` 的 `NO_OP_AXES`/`CANDIDATE_REFERENCE_KEYS`/`probe_config`。
 
 ### 2026-11-09 / 控制面 P0/P1 修复 / 会话
 - 本次完成：A `runnable` 门禁（registry + 真实构造路径轻量 build + no-op 轴）；B Runner 按 `plan.dataset` 选题；C `completed()` 区分 ok/error + `--retry-errors`；D `config_hash` 去重/aliases；E 13 个新测试；e2e offline 3 候选 × 10 题冒烟。
@@ -805,13 +869,16 @@ artifacts/
 
 ## 10. 建议的下一步（S7b / 补真实 S6）
 
+**决策已定（[S7B-DECISION.md](S7B-DECISION.md)）：S7b-A offline 先跑，正式 S7b 等 B 级。**
+
 **前置（按优先级）：**
 
-1. 有 Ollama 后跑真实 B 级：`python scripts/s6_e1.py --online --questions 80 --seeds 13 17`，只对 §5.1.6 的 2–3 候选/模块；把 `answer_f1/Judge/P95` 与 offline 对照。
-2. 补 E1.2/E1.3 小矩阵（W 字段数、M λ、R k；模块 LLM 档位），仍按模块单因子。
-3. S7b：读 S6 run → oracle/转化率 → `coupling_cli`；S7a 已合并但只有合成测试。
+1. **S7b-A（现在可做，A 级）**：读 `runs/s6/e1.sqlite` 的 36 个 run → conversion/bottleneck/pipeline 验证；只报可计算子集，不写因果/LLM 归因。`state_accuracy` 缺失时明确 `not_available`。
+2. **B 级（有 Ollama 后）**：`python scripts/s6_e1.py --online --questions 80 --seeds 13 17`，只对 §5.1.6 的 2–3 候选/模块；把 `answer_f1/Judge/P95` 与 offline 对照。
+3. **正式 S7b（B 级后）**：补 Oracle 干预 run + 多模型归因；S7a 的 `coupling_cli` 已就绪。
+4. 补 E1.2/E1.3 小矩阵（W 字段数、M λ、R k；模块 LLM 档位），仍按模块单因子。
 
-**验收：** 全量测试通过；真实 S6 候选表；S7b 至少一张 `P(A|R=1)` 表与一个 Oracle 差距；不跑 E3/E4。
+**验收：** 全量测试通过；S7b-A 至少一张 `P(A|R)` 表（标 A 级）；正式 S7b 至少一个 Oracle 差距 + 一个 LLM 归因；不跑 E3/E4 全量。
 
 ---
 

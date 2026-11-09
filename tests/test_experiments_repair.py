@@ -64,42 +64,70 @@ def scale_spec(directory: Path) -> Path:
 
 
 class RunnableGateTests(unittest.TestCase):
-    def test_e1_screening_blocks_the_audited_seven(self):
-        blocked = [plan for plan in plans_for(E1_SCREENING) if not plan.runnable]
-        schema = [plan for plan in blocked
-                  if plan.factors.get("schema.impl") in {"hmem", "structmem", "amem"}]
-        cot = [plan for plan in blocked if "schema.params.cot" in plan.factors]
-        graph = [plan for plan in blocked
-                 if plan.factors.get("graph.repr.impl") in {"event_sparse", "community"}]
-        self.assertEqual((len(schema), len(cot), len(graph)), (3, 2, 2))
-        for plan in schema:
-            self.assertIn("unknown schema", plan.runnable_reasons[0])
-        for plan in cot:
-            self.assertIn("cot", plan.runnable_reasons[0])
-            self.assertIn("does not accept", plan.runnable_reasons[0])
-        for plan in graph:
-            self.assertIn("unknown graph.repr", plan.runnable_reasons[0])
+    def test_e1_screening_has_no_unrunnable_plans_left(self):
+        plans = plans_for(E1_SCREENING)
+        blocked = [plan for plan in plans if not plan.runnable]
+        self.assertEqual(blocked, [])
+        # The 10 blocked plans from the audit session were closed by one of two
+        # legitimate moves: implement (event_sparse, post.mmr/decay=none) or remove
+        # from the executable factors with a recorded deferral (the rest).
+        event_sparse = [plan for plan in plans
+                        if plan.factors.get("graph.repr.impl") == "event_sparse"]
+        self.assertEqual(len(event_sparse), 1)
+        self.assertTrue(event_sparse[0].valid)
 
-    def test_additional_build_failures_are_also_gated(self):
-        """The light build is stricter than the audit: it also catches post stages."""
-        blocked = [plan for plan in plans_for(E1_SCREENING) if not plan.runnable]
-        reasons = {tuple(sorted(plan.factors.items())): plan.runnable_reasons[0] for plan in blocked}
-        self.assertEqual(sum(1 for plan in blocked
-                             if plan.factors.get("post.mmr.impl") == "none"), 1)
-        self.assertEqual(sum(1 for plan in blocked
-                             if plan.factors.get("post.decay.impl") == "none"), 1)
-        self.assertEqual(sum(1 for plan in blocked
-                             if plan.factors.get("post.compress.impl") == "llm_summary"), 1)
-        self.assertIn("lambda", reasons[(("post.mmr.impl", "none"),)])
-        self.assertIn("lambda", reasons[(("post.decay.impl", "none"),)])
-        self.assertIn("unknown post.compress", reasons[(("post.compress.impl", "llm_summary"),)])
-        # 7 audited + 3 discovered by the real construction path.
-        self.assertEqual(len(blocked), 10)
+    def test_deferred_levels_are_recorded_and_absent_from_factors(self):
+        spec = spec_module.load(E1_SCREENING)
+        deferred = spec.deferred
+        self.assertTrue(deferred)
+        factors = {factor["id"]: factor for factor in spec.factors}
+        for item in deferred:
+            self.assertTrue(item["reason"], item)
+            self.assertTrue(item["status"], item)
+            self.assertTrue(item["planned_in"], item)
+            factor = factors.get(item["id"])
+            if factor is not None:
+                overlap = set(item["levels"]) & set(factor.get("levels") or [])
+                self.assertEqual(overlap, set(), f"{item['id']} still has deferred levels")
+        plans = plans_for(E1_SCREENING)
+        for item in deferred:
+            for plan in plans:
+                if item["id"] in plan.factors:
+                    self.assertNotIn(plan.factors[item["id"]], item["levels"])
+        statuses = {item["status"] for item in deferred}
+        self.assertIn("deferred_blocked_on_llm_extraction", statuses)
+        self.assertIn("deferred_blocked_on_ollama", statuses)
+
+    def test_deferred_entry_without_reason_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            payload = minimal_spec(deferred=[{"id": "schema.impl", "levels": ["hmem"],
+                                              "status": "deferred"}])
+            path = write_spec(Path(directory), payload)
+            with self.assertRaises(spec_module.SpecError) as caught:
+                spec_module.load(path)
+            self.assertTrue(any("reason" in problem for problem in caught.exception.problems))
+
+    def test_disabled_stage_params_are_not_injected(self):
+        """post.mmr=none / post.decay=none used to get a lambda they reject."""
+        plans = plans_for(E1_SCREENING)
+        for factor, path in (("post.mmr.impl", "post.mmr.params.lambda"),
+                             ("post.decay.impl", "post.decay.params.lambda")):
+            plan = next(plan for plan in plans if plan.factors.get(factor) == "none")
+            with self.subTest(factor=factor):
+                self.assertTrue(plan.runnable, plan.runnable_reasons)
+                self.assertTrue(plan.valid)
+                self.assertIsNone(compiler.get_path(plan.effective_config, path))
+                self.assertFalse(any("lambda" in note for note in plan.notes))
+
+    def test_event_sparse_does_not_keep_three_layer_params(self):
+        plan = next(plan for plan in plans_for(E1_SCREENING)
+                    if plan.factors.get("graph.repr.impl") == "event_sparse")
+        self.assertEqual(plan.effective_config["graph"]["repr"], {"impl": "event_sparse", "params": {}})
 
     def test_e1a_e3_e4_are_buildable(self):
         self.assertEqual(len(plans_for(E1_ADOPTION)), 22)
         self.assertEqual(len(plans_for(E3_FACTORIAL)), 16)
-        self.assertEqual(len(plans_for(E4_GRID)), 27)
+        self.assertEqual(len(plans_for(E4_GRID)), 108)
         for path in (E1_ADOPTION, E3_FACTORIAL, E4_GRID):
             for plan in plans_for(path):
                 with self.subTest(spec=path.name, run=plan.run_id):
@@ -132,12 +160,14 @@ class RunnableGateTests(unittest.TestCase):
             code = cli.main(["sweep", "--spec", str(E1_SCREENING), "--dry-run"])
         self.assertEqual(code, 0)
         payload = json.loads(buffer.getvalue())
-        self.assertEqual(payload["runs"], 74)
-        self.assertEqual(payload["valid_runs"], 61)
-        self.assertEqual(payload["selected_runs"], 61)
-        self.assertEqual(payload["excluded_unrunnable"], 10)
+        self.assertEqual(payload["runs"], 67)
+        self.assertEqual(payload["valid_runs"], 64)
+        self.assertEqual(payload["selected_runs"], 64)
+        self.assertEqual(payload["excluded_unrunnable"], 0)
         self.assertEqual(payload["excluded_no_op"], 3)
         self.assertEqual(payload["duplicates"], 28)
+        self.assertEqual(payload["deferred_factors"], 5)
+        self.assertTrue(all(item["reason"] for item in payload["deferred"]))
 
 
 class DedupeTests(unittest.TestCase):
@@ -151,16 +181,36 @@ class DedupeTests(unittest.TestCase):
     def test_aliases_record_dropped_duplicates(self):
         adoption = plans_for(E1_ADOPTION)
         self.assertEqual(sum(len(plan.aliases) for plan in adoption), 1)
+        # E4 candidates now resolve to real reference files, so none is an alias.
         grid = plans_for(E4_GRID)
-        self.assertEqual(len(grid), 27)
-        self.assertEqual(sum(len(plan.aliases) for plan in grid), 108)
-        for plan in grid:
-            self.assertEqual(len(plan.aliases), 4)
-            # The keeper must be the candidate whose label matches the R0 config;
-            # B0/CHEAP/QUALITY/E3_WINNER are aliases, not independent candidates.
-            self.assertEqual(plan.factors["candidate"], "R0")
-        self.assertTrue(any("is not defined" in note for plan in grid for note in plan.notes))
-        self.assertTrue(any("candidate" in alias for alias in grid[0].aliases))
+        self.assertEqual(len(grid), 108)
+        self.assertEqual(sum(len(plan.aliases) for plan in grid), 0)
+        self.assertEqual({plan.factors["candidate"] for plan in grid},
+                         {"B0", "R0", "CHEAP", "QUALITY"})
+        self.assertFalse(any("is not defined" in note for plan in grid for note in plan.notes))
+        self.assertFalse(any(note.startswith("warning:") for plan in grid for note in plan.notes))
+
+    def test_e4_candidates_use_distinct_reference_configs(self):
+        grid = plans_for(E4_GRID)
+        self.assertEqual({plan.config["preset"] for plan in grid},
+                         {"B0", "R0", "CHEAP", "QUALITY"})
+        self.assertEqual(len({plan.config_hash for plan in grid}), 108)
+        cheap = next(plan for plan in grid if plan.factors["candidate"] == "CHEAP")
+        quality = next(plan for plan in grid if plan.factors["candidate"] == "QUALITY")
+        r0 = next(plan for plan in grid if plan.factors["candidate"] == "R0")
+        self.assertEqual(cheap.config["schema"]["params"]["fields"], 6)
+        self.assertEqual(quality.config["schema"]["params"]["fields"], 10)
+        self.assertNotEqual(cheap.config_hash, r0.config_hash)
+        self.assertNotEqual(quality.config_hash, r0.config_hash)
+        self.assertEqual({plan.config["schema"]["impl"] for plan in grid
+                          if plan.factors["candidate"] == "B0"}, {"legacy_flat"})
+
+    def test_e3_winner_is_deferred_not_silently_dropped(self):
+        spec = spec_module.load(E4_GRID)
+        entry = next(item for item in spec.deferred if item["id"] == "candidate")
+        self.assertIn("E3_WINNER", entry["levels"])
+        self.assertEqual(entry["status"], "deferred_blocked_on_E3")
+        self.assertNotIn("E3_WINNER", {plan.factors["candidate"] for plan in plans_for(E4_GRID)})
 
     def test_duplicate_alias_on_noop_axis_is_annotated(self):
         plans = plans_for(E1_SCREENING)

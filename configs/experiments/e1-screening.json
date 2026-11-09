@@ -103,28 +103,11 @@
           "planner.params.parallelism": 1
         },
         "reason": "Granularity/parallelism have no effect without a planner."
-      },
-      {
-        "when": {
-          "post.mmr.impl": "none"
-        },
-        "set": {
-          "post.mmr.params.lambda": 0.7
-        },
-        "reason": "MMR lambda has no effect when MMR is off."
-      },
-      {
-        "when": {
-          "post.decay.impl": "none"
-        },
-        "set": {
-          "post.decay.params.lambda": 0.0
-        },
-        "reason": "Decay lambda has no effect when decay is off."
       }
     ],
     "dependency_closure": true,
-    "note": "Apply derived_rules in order after overriding one factor; record the effective config and config_hash. Factors with applies_when are skipped when the condition does not hold."
+    "note": "Apply derived_rules in order after overriding one factor; record the effective config and config_hash. Factors with applies_when are skipped when the condition does not hold. Levels listed under deferred were removed from the executable factor list, not silently deleted: sweep reports them with their blocker.",
+    "derived_rules_note": "Removed the post.mmr=none and post.decay=none rules: they injected a lambda into a disabled stage, and NoMMR/NoDecay reject it. Disabled stages now receive no stage parameters (set_impl drops params the new implementation does not declare)."
   },
   "factors": [
     {
@@ -133,9 +116,6 @@
       "axis": "schema",
       "levels": [
         "legacy_flat",
-        "hmem",
-        "structmem",
-        "amem",
         "meta_schema"
       ],
       "hypothesis": "H1",
@@ -235,22 +215,6 @@
       }
     },
     {
-      "id": "schema.params.cot",
-      "tier": "tier1",
-      "axis": "schema",
-      "levels": [
-        false,
-        true
-      ],
-      "metrics": [
-        "answer_f1",
-        "field_completeness"
-      ],
-      "applies_when": {
-        "schema.impl": "meta_schema"
-      }
-    },
-    {
       "id": "graph.repr.impl",
       "tier": "tier0",
       "axis": "graph.repr",
@@ -258,8 +222,7 @@
         "none",
         "entity_triple",
         "event_sparse",
-        "three_layer",
-        "community"
+        "three_layer"
       ],
       "hypothesis": "H5",
       "metrics": [
@@ -269,25 +232,6 @@
         "tokens_per_query",
         "p95_latency_ms"
       ]
-    },
-    {
-      "id": "graph.repr.params.community_resolution",
-      "tier": "tier0",
-      "axis": "graph.repr",
-      "levels": [
-        0.5,
-        1.0,
-        2.0
-      ],
-      "hypothesis": "H5",
-      "metrics": [
-        "recall@15",
-        "ndcg@15",
-        "tokens_per_query"
-      ],
-      "applies_when": {
-        "graph.repr.impl": "community"
-      }
     },
     {
       "id": "graph.retrieval.impl",
@@ -552,8 +496,7 @@
       "axis": "post.compress",
       "levels": [
         "none",
-        "extractive",
-        "llm_summary"
+        "extractive"
       ],
       "metrics": [
         "tokens_per_query",
@@ -726,6 +669,63 @@
         "faithfulness",
         "citation_precision"
       ]
+    }
+  ],
+  "deferred": [
+    {
+      "id": "schema.impl",
+      "levels": [
+        "hmem",
+        "structmem",
+        "amem"
+      ],
+      "status": "deferred_blocked_on_llm_extraction",
+      "reason": "H-MEM/StructMem/A-MEM are LLM-extraction schemas. Deriving them offline from legacy facts would not preserve their semantics and would create a fake factor; P1 in 03-variants §3.9.",
+      "planned_in": "B-level S6 follow-up (Ollama qwen3.8:27b)",
+      "source": "docs/optimization/03-variants.md §3.2"
+    },
+    {
+      "id": "schema.params.cot",
+      "levels": [
+        false,
+        true
+      ],
+      "status": "deferred_blocked_on_llm_extraction",
+      "reason": "MetaSchemaExtractor has no chain-of-thought field on the offline path; accepting the parameter without consuming it would be a no-op factor.",
+      "planned_in": "when an LLM extractor can emit and score CoT",
+      "source": "docs/optimization/03-variants.md §3.2.1"
+    },
+    {
+      "id": "graph.repr.impl",
+      "levels": [
+        "community"
+      ],
+      "status": "deferred_blocked_on_graph_algorithm_and_summary_model",
+      "reason": "Declared variant needs Leiden/Louvain plus a community summary model (GraphRAG). No graph library (networkx absent) and no LLM summary client; a label-propagation stand-in would not be the declared variant.",
+      "planned_in": "after a graph library + Ollama are available",
+      "source": "docs/optimization/03-variants.md §3.3.1"
+    },
+    {
+      "id": "graph.repr.params.community_resolution",
+      "levels": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "status": "deferred_with_graph_repr_community",
+      "reason": "Parameter only applies to graph.repr.impl=community, which is deferred; it produced zero plans once community was removed.",
+      "planned_in": "with graph.repr.impl=community",
+      "source": "docs/optimization/03-variants.md §3.3.1"
+    },
+    {
+      "id": "post.compress.impl",
+      "levels": [
+        "llm_summary"
+      ],
+      "status": "deferred_blocked_on_ollama",
+      "reason": "LLM summary compression needs a model client; offline extractive is the only runnable compressor and is already a factor level.",
+      "planned_in": "B-level S6 follow-up (Ollama)",
+      "source": "docs/optimization/03-variants.md §3.6"
     }
   ],
   "metrics": [

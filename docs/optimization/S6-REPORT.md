@@ -157,8 +157,8 @@ python -m unittest discover -s tests -t .
 
 | 项 | 修复前 | 修复后 |
 |---|---|---|
-| E1b 编译 | 102 个 plan 全部可能进矩阵 | 去重后 74；**10 个 `runnable=false`**（审计 7 + 新发现 3）、**3 个 no-op 因子**、**61 个 valid** |
-| E1a / E3 / E4 | 23 / 16 / 135 | 22 / 16 / 27（aliases 1 / 0 / 108；E4 的 4 个 candidate 目前无独立配置） |
+| E1b 编译 | 102 个 plan 全部可能进矩阵 | 去重后 67；**0 个 `runnable=false`**、**3 个 no-op 因子**、**64 个 valid**、5 条 `deferred`（7 个原 blocked level 正式延后、1 个 `event_sparse` 实现、2 个 derived_rules 修复；见 §10.1） |
+| E1a / E3 / E4 | 23 / 16 / 135 | 22 / 16 / 108（aliases 1 / 0 / 0；E4 的 B0/R0/CHEAP/QUALITY 已有独立配置，E3_WINNER 延后） |
 | resume | `error` 也当 completed | 只认非 error；`--retry-errors` 可重跑，`skipped_errors` 单列 |
 | dataset | Runner 用 spec 全局题集 | 每个 plan 用自己的 `dataset.samples/question_limit` |
 
@@ -166,5 +166,17 @@ python -m unittest discover -s tests -t .
 
 1. S6 的 36 个 run 由 `scripts/s6_e1.py` 显式构造候选，不依赖 E1b 的 102 个 plan，因此 §4 的候选表**不变**。
 2. 本报告仍是 **offline extractive**：`answer_f1` 不是 LLM F1；B 级 F1/Judge/P95 仍 `blocked_on_ollama`。
-3. 新增未解决项（控制面）：E1b 的 `hmem/structmem/amem`、`event_sparse/community`、`schema.params.cot`、`post.compress=llm_summary` 仍不可运行；`post.mmr=none`/`post.decay=none` 的 derived_rules 仍会注入不支持的 `lambda`；E4 candidate 配置缺失。
+3. 控制面遗留项（`hmem/structmem/amem`、`event_sparse/community`、`schema.params.cot`、`post.compress=llm_summary`、`post.mmr/decay=none` 的 lambda、E4 candidate）已在 §10.1 收尾：能实现的实现，不能实现的正式延后并记录。
 4. 这些 plan 现在**不会静默进入正式均值**：`sweep/run` 默认只用 `valid`，`--include-invalid` 才显示/运行。
+
+### 10.1 遗留项收尾（2026-11-09 第二修复会话，不改本报告 §1–§9）
+
+| 原遗留项 | 处置 | 对 S6 的影响 |
+|---|---|---|
+| `post.mmr=none` / `post.decay=none` 被 derived_rules 注入 `lambda` | 删除两条反向规则；2 个 plan 变为 runnable | 无：S6 36 runs 由脚本显式构造 |
+| `graph.repr=event_sparse` 未注册 | 实现离线确定性事件节点（≥2 facts 共享 event 才建）；单 plan × 2 题冒烟 0 error | 无：S6 候选固定 `three_layer` |
+| `hmem/structmem/amem`、`schema.params.cot`、`community`、`llm_summary` | 从 E1b 因子移除；写入 spec `deferred`（id/levels/status/reason/planned_in），`sweep` 每次报告 | 无：本报告不使用这些 level |
+| E4 candidate 无独立配置 | 新增 `reference-cheap.json` / `reference-quality.json`；B0/R0/CHEAP/QUALITY 可区分；E3_WINNER 延后 | 无：E4 尚未跑 |
+| S7b 是否等 B 级 | 决策：offline 先跑 S7b-A（A 级 conversion/bottleneck），正式结论等 B；见 [S7B-DECISION.md](S7B-DECISION.md) | S7b-A 只读本报告对应的 `runs/s6/e1.sqlite`，不新增 E1 run |
+
+**边界不变：** 本报告全部数字仍是 offline extractive + A 级接口筛选；新增的 `event_sparse` 与 E4 配置没有产生任何新 E1 结论。测试 **209 passed**。

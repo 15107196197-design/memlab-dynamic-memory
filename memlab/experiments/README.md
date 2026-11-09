@@ -44,6 +44,14 @@ is the result of applying the spec's `derived_rules` (for example
 overrides. `config_hash` is the digest of the effective config, so two runs with
 the same hash are the same point even if one was requested differently.
 
+A level that cannot run is removed from the executable factor list and recorded in
+the spec's top-level `deferred` array (`id`, `levels`, `status`, `reason`,
+`planned_in`). `sweep` reports `deferred_factors` plus each entry, so removing a
+variant is never silent. Plans that still build are kept with
+`runnable=false`/`runnable_reasons`; plans that vary a declared-but-unconsumed axis
+get `no_op_factors`. Only `valid = runnable and not no_op_factors` enters the
+default matrix.
+
 ## Store
 
 SQLite tables:
@@ -54,9 +62,10 @@ SQLite tables:
   queries;
 - `artifacts`: run_id, kind, path, hash.
 
-`Runner.resume=True` skips a question only when at least one metric row for
+`Runner.resume=True` skips a question only when a non-error metric row for
 `(run_id, qid)` exists. Errors are stored as `metric=error` with a type/message,
-not silently dropped.
+not silently dropped: resume reports them as `skipped_errors`, and
+`--retry-errors` re-runs them.
 
 ## Runner
 
@@ -81,8 +90,10 @@ not silently dropped.
   processes.
 - **Fractional factorial** supports only the half-fraction used by E3; other
   fractions fail rather than silently generating a wrong design.
-- **Environment grid** maps candidate IDs to B0/R0 reference configs; full preset
-  resolution is a later concern.
+- **Environment grid** maps each candidate's `config` through
+  `CANDIDATE_REFERENCE_KEYS` to the spec's `reference_configs` (`off`/`on`/`cheap`/
+  `quality`). A candidate with no referenced config is still compiled from the
+  default reference and flagged with a warning; it is not treated as independent.
 - **API provider adapter** is not part of S5; S9 will add it. Default executor is
   local Ollama.
 - **Offline e2e**: hashing embeddings are not semantic; use only for interface,

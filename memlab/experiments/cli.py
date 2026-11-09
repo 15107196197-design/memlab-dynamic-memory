@@ -30,11 +30,20 @@ def partition_plans(plans):
 
 def _summary(spec, plans, selected, *, out=None, dry_run=True) -> dict:
     valid, unrunnable, no_op, duplicates = partition_plans(plans)
+    deferred = spec.deferred
     return {
         "spec": spec.id, "design": spec.design,
         "runs": len(plans), "valid_runs": len(valid), "selected_runs": len(selected),
         "excluded_unrunnable": len(unrunnable), "excluded_no_op": len(no_op),
         "duplicates": duplicates,
+        # A removed level is never silent: sweep always reports what left the
+        # matrix, why, and which blocked resource it waits on.
+        "deferred_factors": len(deferred),
+        "deferred": [
+            {"id": item.get("id"), "levels": list(item.get("levels") or []),
+             "status": item.get("status"), "reason": item.get("reason")}
+            for item in deferred
+        ],
         "out": out, "dry_run": bool(dry_run),
     }
 

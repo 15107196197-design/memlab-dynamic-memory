@@ -7,7 +7,7 @@ compiler produce a reproducible matrix and the runner store one row per point.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -43,6 +43,7 @@ class Spec:
     reference: Path | None
     reference_off: Path | None
     reference_on: Path | None
+    references: dict[str, Path] = field(default_factory=dict)
 
     @property
     def id(self) -> str:
@@ -55,6 +56,16 @@ class Spec:
     @property
     def title(self) -> str:
         return str(self.data.get("title") or self.id)
+
+    @property
+    def deferred(self) -> list[dict[str, Any]]:
+        """Factor levels removed from the executable matrix, with a reason.
+
+        A level that cannot run must not silently disappear from a spec: the
+        removed levels are recorded here so ``sweep`` can report them and the next
+        session can decide when they re-enter.
+        """
+        return [dict(item) for item in self.data.get("deferred") or [] if isinstance(item, Mapping)]
 
     @property
     def environment(self) -> dict[str, Any]:
@@ -84,7 +95,10 @@ class Spec:
         return lab_config.digest(self.data)
 
     def reference_config(self, which: str = "default") -> dict[str, Any]:
-        path = {"default": self.reference, "off": self.reference_off, "on": self.reference_on}.get(which)
+        path = self.references.get(which)
+        if path is None:
+            path = {"default": self.reference, "off": self.reference_off,
+                    "on": self.reference_on}.get(which)
         if path is None:
             raise SpecError([f"spec has no reference config for {which!r}"])
         return json.loads(path.read_text(encoding="utf-8"))
@@ -128,6 +142,24 @@ def validate(data: Any, *, base: Path | None = None) -> list[str]:
                 problems.append(f"modules[{index}] needs an id")
             elif "off" not in module or "on" not in module:
                 problems.append(f"modules[{index}] needs off and on")
+    if "deferred" in data:
+        deferred = data.get("deferred")
+        if not isinstance(deferred, list):
+            problems.append("deferred must be a list")
+        else:
+            for index, item in enumerate(deferred):
+                if not isinstance(item, Mapping):
+                    problems.append(f"deferred[{index}] must be an object")
+                    continue
+                if not isinstance(item.get("id"), str) or not item["id"].strip():
+                    problems.append(f"deferred[{index}] needs a non-empty id")
+                levels = item.get("levels")
+                if not isinstance(levels, list) or not levels:
+                    problems.append(f"deferred[{index}].levels must be a non-empty list")
+                if not isinstance(item.get("reason"), str) or not item["reason"].strip():
+                    problems.append(f"deferred[{index}] needs a reason")
+                if not isinstance(item.get("status"), str) or not item["status"].strip():
+                    problems.append(f"deferred[{index}] needs a status")
     if design == "environment_grid" and not isinstance(data.get("grid"), Mapping):
         problems.append("environment_grid requires grid")
     if base is not None:
@@ -156,10 +188,19 @@ def load(path: str | Path) -> Spec:
     if problems:
         raise SpecError(problems)
     refs = data.get("reference_configs") if isinstance(data.get("reference_configs"), Mapping) else {}
+    references: dict[str, Path] = {}
+    for key, value in refs.items():
+        resolved = _resolve(path.parent, str(value))
+        if resolved is not None:
+            references[str(key)] = resolved
+    default = _resolve(path.parent, data.get("reference_config"))
+    if default is not None:
+        references.setdefault("default", default)
     return Spec(
         path=path,
         data=dict(data),
         reference=_resolve(path.parent, data.get("reference_config")),
         reference_off=_resolve(path.parent, refs.get("off")),
         reference_on=_resolve(path.parent, refs.get("on")),
+        references=references,
     )

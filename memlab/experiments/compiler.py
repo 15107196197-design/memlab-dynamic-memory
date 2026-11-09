@@ -32,6 +32,16 @@ NO_OP_AXES: dict[str, str] = {
     "write.consolidator": "WritePipeline has no consolidator stage",
 }
 
+# E4 candidate label -> named reference config in the spec's ``reference_configs``.
+# Keeping the mapping here (instead of special-casing labels) means a new candidate
+# is a data change, and a label with no config is still reported as undefined.
+CANDIDATE_REFERENCE_KEYS: dict[str, str] = {
+    "R0": "on", "R0_REFERENCE": "on", "R0_ON": "on",
+    "B0": "off", "B0_LEGACY": "off", "B0_OFF": "off",
+    "R0_CHEAP": "cheap", "CHEAP": "cheap",
+    "R0_QUALITY": "quality", "QUALITY": "quality",
+}
+
 
 def get_path(data: Mapping[str, Any], path: str, default: Any = None) -> Any:
     current: Any = data
@@ -444,24 +454,20 @@ class Compiler:
             notes: list[str] = []
             default_base = self._base()
             default_preset = str(default_base.get("preset") or "").upper()
+            reference_key = CANDIDATE_REFERENCE_KEYS.get(normalized)
             defined = True
-            if normalized in ("R0", "R0_REFERENCE", "R0_ON"):
-                if self.spec.reference_on is not None:
-                    base = self._base("on")
-                elif default_preset == "R0":
-                    base = default_base
-                else:
-                    defined = False
-                    base = default_base
-            elif normalized in ("B0", "B0_LEGACY", "B0_OFF"):
-                if self.spec.reference_off is not None:
-                    base = self._base("off")
-                elif default_preset == "B0":
-                    base = default_base
-                else:
-                    defined = False
-                    base = default_base
-            elif normalized in ("", "DEFAULT"):
+            if normalized in ("", "DEFAULT"):
+                base = default_base
+            elif reference_key and self.spec.references.get(reference_key) is not None:
+                # B0/CHEAP/QUALITY are real reference files, not aliases of R0.
+                base = self._base(reference_key)
+                if reference_key in ("cheap", "quality"):
+                    notes.append(
+                        f"candidate {candidate.get('id')!r} uses reference_configs.{reference_key}"
+                    )
+            elif normalized in ("R0", "R0_REFERENCE", "R0_ON") and default_preset == "R0":
+                base = default_base
+            elif normalized in ("B0", "B0_LEGACY", "B0_OFF") and default_preset == "B0":
                 base = default_base
             else:
                 defined = False

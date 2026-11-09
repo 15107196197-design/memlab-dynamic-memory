@@ -4,7 +4,8 @@ The store holds :class:`MemoryUnit` records and exposes four index families:
 
 * lexical (BM25 over unit text + structured fields);
 * dense (vectors supplied by a client; cached by text in :class:`ArtifactCache`);
-* graph (``state_slot`` / ``entity_triple`` / ``three_layer`` representations);
+* graph (``state_slot`` / ``entity_triple`` / ``event_sparse`` / ``three_layer``
+  representations);
 * temporal (``valid_interval`` filtering for as-of queries).
 
 It also computes the retrieval ceiling: whether the gold evidence turns are even
@@ -204,6 +205,49 @@ class ThreeLayerGraph:
                 if event:
                     graph.link(unit.memory_id, f"event:{str(event)[:80]}")
             _link_evidence(graph, unit, turns)
+        _link_relations(graph, relations, unit_ids)
+        return graph
+
+
+@register("graph.repr", "event_sparse")
+class EventSparseGraph:
+    """Sparse event nodes: facts that share an event meet through one node.
+
+    This is the offline, deterministic half of the ``event_sparse`` variant in
+    ``docs/optimization/03-variants.md`` §3.3.1: the event string already present
+    in the extracted records is the node key, and an event node is created only
+    when at least two facts share it (hence *sparse*).  There is no LLM event
+    extraction, no ``event_window``/``link_threshold`` parameter and no community
+    summary; those remain unimplemented and must not be treated as consumed.
+    Evidence-turn links are the same as in the other representations, so the
+    graph is still traceable when a fact has no event.
+    """
+
+    def build(self, units: Sequence[MemoryUnit], relations: Sequence[Relation]) -> GraphIndex:
+        graph = GraphIndex("event_sparse")
+        units = list(units)
+        turns = _turn_lookup(units)
+        unit_ids = {unit.memory_id for unit in units}
+        events: dict[str, list[MemoryUnit]] = defaultdict(list)
+        for unit in units:
+            graph.add_node(unit.memory_id)
+            if unit.kind == "fact":
+                fields = fact_fields(unit)
+                event = fields.get("event")
+                if event not in (None, ""):
+                    key = " ".join(str(event).split()).casefold()
+                    if key:
+                        events[key].append(unit)
+            _link_evidence(graph, unit, turns)
+        for key, group in events.items():
+            if len(group) < 2:
+                # A single-fact event node only adds a dangling hub; leave the
+                # fact linked to its evidence turns instead.
+                continue
+            event_node = f"event:{key[:80]}"
+            graph.add_node(event_node)
+            for unit in group:
+                graph.link(event_node, unit.memory_id)
         _link_relations(graph, relations, unit_ids)
         return graph
 

@@ -106,11 +106,18 @@
       "id": "QUALITY",
       "config": "R0_quality",
       "role": "high_cost"
-    },
+    }
+  ],
+  "deferred": [
     {
-      "id": "E3_WINNER",
-      "config": "pending_e3",
-      "role": "interaction_winner"
+      "id": "candidate",
+      "levels": [
+        "E3_WINNER"
+      ],
+      "status": "deferred_blocked_on_E3",
+      "reason": "The interaction winner is defined by E3, which has not run. Keeping a pending_e3 label would have silently compiled to R0 (a fake cell); it returns after E3 selects a winner.",
+      "planned_in": "after S8/E3",
+      "source": "configs/experiments/e3-factorial.json"
     }
   ],
   "protocol": {
@@ -178,5 +185,11 @@
   "output": {
     "runs_dir": "runs/e4",
     "report": "reports/e4-environment.html"
+  },
+  "reference_configs": {
+    "off": "../../configs/reference-b0.json",
+    "on": "../../configs/reference-r0.json",
+    "cheap": "../../configs/reference-cheap.json",
+    "quality": "../../configs/reference-quality.json"
   }
 }

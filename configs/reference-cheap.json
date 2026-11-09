@@ -1,0 +1,148 @@
+{
+  "schema": {
+    "impl": "meta_schema",
+    "params": {
+      "fields": 6,
+      "evidence": true,
+      "bitemporal": false,
+      "scene_plugin": "none"
+    }
+  },
+  "preset": "CHEAP",
+  "description": "Low-cost preset materializing docs/optimization/03-variants.md §3.8 (meta_schema fields=6, entity graph, 1-hop, rule router, RRF, no rerank/MMR/decay/compression). Deviations from the catalogue preset R0_cheap: write resolver=append and auditor=none (the catalogue preset inherits R0 write stages, which would defeat \"cheap\"); actual graph retrieval still reads graph.retrieval.params only, so the entity_subgraph impl switch is declared but not consumed (known no-op axis).",
+  "environment": {
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "temperature": 0,
+      "context": 32768,
+      "digest": null
+    },
+    "embedding": {
+      "provider": "ollama",
+      "model": "bge-m3",
+      "digest": null
+    },
+    "judge": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "prompt_hash": null
+    },
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "noise": 0.0,
+    "update_rate": "static",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "question_limit": 120,
+    "stratify": "category",
+    "repeat": 2
+  },
+  "write": {
+    "resolver": {
+      "impl": "append"
+    },
+    "auditor": {
+      "impl": "none"
+    }
+  },
+  "graph": {
+    "repr": {
+      "impl": "entity_triple"
+    },
+    "retrieval": {
+      "impl": "entity_subgraph",
+      "params": {
+        "k_hop": 1
+      }
+    }
+  },
+  "planner": {
+    "impl": "rule_router",
+    "params": {
+      "granularity": "coarse",
+      "parallelism": 2,
+      "dynamic_decision": false
+    }
+  },
+  "retrieval": {
+    "channels": [
+      "dense",
+      "bm25",
+      "graph",
+      "temporal"
+    ],
+    "k": 15,
+    "depth": 30
+  },
+  "fusion": {
+    "impl": "rrf",
+    "params": {
+      "rrf_k": 60
+    }
+  },
+  "rerank": {
+    "impl": "none"
+  },
+  "post": {
+    "mmr": {
+      "impl": "none"
+    },
+    "filter": {
+      "impl": "none"
+    },
+    "decay": {
+      "impl": "none"
+    },
+    "compress": {
+      "impl": "none"
+    }
+  },
+  "temporal": {
+    "model": "record_time",
+    "params": {
+      "conflict_policy": "keep_both"
+    }
+  },
+  "logic": {
+    "state_resolver": "query_llm",
+    "audit": "none",
+    "consistency": "none",
+    "evidence_chain": false
+  },
+  "answer": {
+    "impl": "valid_history",
+    "params": {}
+  },
+  "evaluation": {
+    "metrics": [
+      "recall@5",
+      "recall@10",
+      "recall@15",
+      "ndcg@15",
+      "state_accuracy",
+      "valid_set_exact",
+      "relation_accuracy",
+      "as_of_accuracy",
+      "answer_f1",
+      "judge_accuracy",
+      "faithfulness",
+      "citation_precision",
+      "tokens_per_query",
+      "p50_latency_ms",
+      "p95_latency_ms",
+      "error_rate"
+    ],
+    "judge_model": "qwen3.8:27b-q4_K_M",
+    "bootstrap_samples": 1000,
+    "cluster_by": "conversation"
+  },
+  "forgetting": {
+    "policy": "none"
+  }
+}

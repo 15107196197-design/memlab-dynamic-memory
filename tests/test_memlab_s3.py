@@ -243,7 +243,7 @@ class StoreTests(unittest.TestCase):
         units = [turn_unit("t1"), fact_unit("f1", source_turn="D1:1"),
                  fact_unit("f2", value="engineer", source_turn="D2:1")]
         relations = [Relation("r1", "f1", "f2", "UPDATE")]
-        for representation in ("state_slot", "entity_triple", "three_layer"):
+        for representation in ("state_slot", "entity_triple", "event_sparse", "three_layer"):
             store = store_module.MemoryStore(units)
             store.apply(WriteDecision([], [], [], [], relations, [], {}))
             graph = store.ensure_graph(representation)
@@ -251,6 +251,20 @@ class StoreTests(unittest.TestCase):
             self.assertGreater(graph.stats()["edges"], 0)
             store.ensure_graph()  # keeps the built representation
             self.assertEqual(store.graph.representation, representation)
+
+    def test_event_sparse_links_only_shared_events(self):
+        first = fact_unit("f1", source_turn="D1:1")
+        second = fact_unit("f2", value="engineer", source_turn="D2:1")
+        single = fact_unit("f3", attribute="hobby", value="painting", source_turn="D3:1")
+        first.structured["event"] = "promotion"
+        second.structured["event"] = "Promotion"   # normalized casefold
+        single.structured["event"] = "holiday"     # one fact -> no sparse node
+        store = store_module.MemoryStore([first, second, single])
+        graph = store.ensure_graph("event_sparse")
+        event_nodes = sorted(node for node in graph.nodes if node.startswith("event:"))
+        self.assertEqual(event_nodes, ["event:promotion"])
+        self.assertEqual(set(graph.neighbors(event_nodes[0])), {"f1", "f2"})
+        self.assertNotIn("f3", graph.neighbors(event_nodes[0]))
 
 
 class AnalyzerPlannerTests(unittest.TestCase):

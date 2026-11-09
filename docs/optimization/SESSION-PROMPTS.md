@@ -477,6 +477,9 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 0. Key 检查：默认用本地 L1/L2；只有要做 L3 强模型归因时才需要 API。
    需要时先按 §0.1 询问用户；缺 key 就把 L3 标为 blocked_on_key，不要静默换模型。
 
+0.5 若 Ollama 仍不可用：允许先跑 S7b-A（只读 runs/s6/e1.sqlite；A 级 conversion/bottleneck/pipeline 验证），
+    但禁止写 Oracle 差距、LLM 归因或模块因果；正式 S7b 等 B 级。决策与边界见 docs/optimization/S7B-DECISION.md。
+
 实现/运行：
 1. 质量传播：对每个 run 记录 q=[write,store_ceiling,retrieval_recall,merge_ndcg,state,answer]；
    计算 P(A|R=1)、P(A|R=1,C=1)、P(A|R=1,S=1)。
@@ -489,8 +492,8 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 
 验收：
 - 至少一张 P(A|R) 转化率表；
-- 至少一个 Oracle 差距；
-- 至少一个 LLM 归因结论（增益稳定/消失/只在强模型）；
+- 至少一个 Oracle 差距（B 级；S7b-A offline 可只交转化率表并标 A 级）；
+- 至少一个 LLM 归因结论（B 级；offline 不写）；
 - HANDOFF 更新。
 
 不要做：不要重跑 S6 的全部配置；不要改评测标准。
@@ -545,7 +548,7 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 
 - [04-experiments.md](04-experiments.md) 的 4.13
 - [e4-environment-grid.json](../../configs/experiments/e4-environment-grid.json)
-- E3 冠军（HANDOFF §5）
+- E3 冠军（仅当 E3 已跑；未跑则用 E3_WINNER 的 `deferred` 记录说明）
 
 ### 提示词
 
@@ -559,7 +562,8 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
    - 不要静默用本地 27B 冒充 L3，也不要把不同家族当同一档。
 
 运行：
-1. 3 LLM × 3 数据规模；每格 4–6 个候选（B0/R0/cheap/quality/E3 冠军）；
+1. 3 LLM × 3 数据规模；每格 4 个已定义候选（B0/R0/CHEAP/QUALITY）；
+   E3_WINNER 只在 E3 选出冠军后加入（当前在 E4 spec 的 `deferred` 里，不能编译成 R0 假格）；
 2. sequential halving；每格 60–120 题；
 3. 条件最优 c*(e)；regret；热力图；Pareto；
 4. 检验 config×environment 交互；输出策略表。
@@ -568,6 +572,7 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 - 至少 2 个格子的最优配置不同；
 - 条件策略相对全局最优的 regret 有 CI；
 - 给出部署策略表；
+- 非 `personal_assistant` 场景若 adapter 仍是 planned，必须标明不可跑，不能算进最优；
 - HANDOFF 更新。
 
 不要做：不要全量 27 格；不要用测试集调参。

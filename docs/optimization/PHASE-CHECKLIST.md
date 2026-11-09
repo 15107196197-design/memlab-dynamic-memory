@@ -124,6 +124,8 @@ git remote -v
 
 **如果本阶段新增了因子/配置，必须证明它真的被 wire；no-op 因子按 P1 处理。**
 
+**如果本阶段从 spec 移除因子/level，必须写 `deferred`（id/levels/status/reason/planned_in）并让 `sweep` 报告；静默删除按 P0 处理。**
+
 ### 1.9 下一步选择（不要自动继续）
 
 完成报告后，给用户 A/B：
