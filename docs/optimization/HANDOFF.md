@@ -167,6 +167,7 @@ artifacts/
 | `docs/optimization/05-color-focus.md` | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 |
 | `docs/optimization/PHASE-CHECKLIST.md` | 每个会话的 Startup Audit / Completion Audit / 分配模板 |
 | `docs/optimization/GOAL-AUDIT.md` | 总体目标对齐审计：能力→实现→参数→组合→环境、10 个审计问题、红旗 |
+| `docs/optimization/PREREQUISITES.md` | 每个 S 的环境/包/模型/接口/数据前置、检测命令、缺口处理阶梯与 A/B/C 模板 |
 | `docs/optimization/COMPONENT-SOURCING.md` | 模块内组件复用/安装/API/需实现的统计与安装顺序 |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
 | `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令；§10.1 为控制面遗留项收尾 |
@@ -224,59 +225,75 @@ artifacts/
 
 ---
 
-## 1.3 API key / 外部模型检查点
+## 1.3 前置条件 / API key / 外部模型检查点
 
-> 这一节是给**每个新会话**看的：任务跑到需要外部模型时，必须主动停下来问用户，而不是猜一个模型、静默降级，或把 key 写进配置。
+> 这一节是给**每个新会话**看的：任务开始前先检测环境、Python 包、模型、本地服务、接口凭据、数据和代码前置；跑到需要外部模型/接口时，必须主动解决或给选项，而不是猜一个模型、静默降级、把 key 写进配置，或直接停在“做不了”。
+>
+> 完整矩阵、检测命令、分阶段卡片和缺口模板见 [PREREQUISITES.md](PREREQUISITES.md)。本节只记**当前状态 + 硬规则**。
 
-### 当前状态
+### 当前状态（2026-11-09）
 
-| 项 | 状态 |
-|---|---|
-| 本地 Ollama | 需要时启动；S0 时 `127.0.0.1:11434` 未运行；主模型 `qwen3.8:27b-q4_K_M`，embedding `bge-m3` |
-| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） |
-| API provider adapter | **未实现**：当前 `memlab.llm` 只走 Ollama；S9 前需要 `memlab/providers.py`（Ollama + OpenAI-compatible） |
-| 当前是否需要 key | **不需要**：本会话与 S7b-A 均为 offline；S1–S8 的模块开发/本地实验可用 Ollama；S9 的 L3 强模型才需要 API key。B 级需要的是本地 Ollama 端点，不是 API key |
+| 项 | 状态 | 缺失时首选动作 |
+|---|---|---|
+| Python / 测试 | Python 3.14 下 **212 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
+| 本地 Ollama | **未安装/未运行**（S0 时 `127.0.0.1:11434` 连接失败；后续会话未见恢复） | 装/启动/`ollama pull`；磁盘/网络不够→给远程 endpoint / API / offline 选项 |
+| 本地模型 | `qwen3.8:27b-q4_K_M`、`bge-m3` 未验证/未拉取（约 17GB + 1GB 级） | 先 `ollama list`；缺则拉；磁盘不足→问用户清盘/换机/远程 |
+| 可选包 | `sentence-transformers` **未安装**；cross-encoder 回退 | `pip install -r requirements-optional.txt`；不能装→问用户；回退必须标“未真实重排” |
+| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） | 先实现 adapter，再给 provider/model/预算选项并问；未确认不跑 API |
+| API provider adapter | **未实现**：当前 `memlab.llm` 只走 Ollama；S9 前需要 `memlab/providers.py`（Ollama + OpenAI-compatible） | 这是可修代码前置：先实现 + 冒烟，不要只写 blocked |
+| 数据 | `data/locomo10.json` 等已跟踪；四对话可用 | 缺数据先查 `data/`/`git status`；不要重下未知来源 |
+| Scene adapter | `personal_assistant` 可用；`coding` / `customer_service` **planned** | 在 S9 前实现或问用户优先级；planned 不计入最优 |
+| E1b 变体 | `post.mmr/decay=none`、`event_sparse` 已修/实现；`hmem/structmem/amem`、`community`、`cot`、`llm_summary` **deferred** | 按 `e1-screening.json` 的 `deferred.planned_in` 重入；不要当 blocked 或静默删 |
+| E4 candidate 配置 | `B0/R0/CHEAP/QUALITY` 已独立（各 27 格）；`E3_WINNER` **deferred** | E3 选出冠军后启用；不要用 `pending_e3` 折叠成 R0 |
+| 当前是否需要 key | **不需要**（S1–S8 本地/offline 可做）；S9 完整网格/S10 第二 Judge **需要** | 先按 PREREQUISITES 解决环境/包/adapter，再问 key |
 
 ### 各阶段 key 需求
 
-| 阶段 | 是否需要 key | 用途 | 缺失时的 fallback |
+| 阶段 | 是否需要 key | 用途 | 缺失 key/前置时先做什么 |
 |---|---|---|---|
-| S0 仓库/基线 | 否 | 只跑测试/归档 | — |
-| S1 契约/骨架 | 否 | 本地测试/mock | — |
-| S2 模型/缓存 | 否 | 本地迁移测试 | — |
-| S3 W/S/R | 否 | 本地 Ollama 或 fake embedding | 可以离线跑固定输入 |
-| S4 M/U/K | 否 | 本地 Ollama | 可以离线跑固定输入 |
-| S5 实验控制面 | 否 | dry-run/小样本 | fake/mock |
-| S6 E1 模块实验 | 否 | L1/L2 本地模型 | 只跑本地两档 |
-| S7 E2 耦合 | **可选** | 强模型归因（L3） | 先做 L1/L2，L3 标记待补 |
-| S8 E3 组合 | **可选** | 强模型组合 | 先做本地组合 |
-| S9 E4 环境 | **是（完整网格）** | L3 强模型 × 规模 × 场景 | 只跑 L1/L2 的 2×3 子集，并在报告写“L3 未验证” |
-| S10 E5 确认 | **可选/建议** | 第二 Judge、跨家族复核 | 本地 Judge + 人工；没有第二 Judge 就明确写限制 |
+| S0 仓库/基线 | 否 | 只跑测试/归档 | 装 Python/git；Ollama 可选，缺则装/启动/拉模型或问用户 |
+| S1 契约/骨架 | 否 | 本地测试/mock | 缺包立即装；不改无关模块 |
+| S2 模型/缓存 | 否 | 本地迁移测试 | 缺包立即装；缓存目录可写 |
+| S3 W/S/R | 否 | 本地 Ollama 或 fake embedding | 装/启动 Ollama、拉 `bge-m3`；不行给远程/小模型/仅 fake 选项 |
+| S4 M/U/K | 否 | 本地 Ollama + 可选 cross-encoder | 装 `sentence-transformers` + 模型；不能装再回退并标未真实重排 |
+| S5 实验控制面 | 否 | dry-run/小样本 | fake/mock；修环境 |
+| S6 E1 模块实验 | 否 | L1/L2 本地模型 | 装/启动/拉模型；不行给远程 endpoint / API+adapter / offline 选项 |
+| S7 E2 耦合 | **可选** | 强模型归因（L3） | 先实现 adapter、问 key/给选项；拒绝才 L1/L2 + 标 blocked |
+| S8 E3 组合 | **可选** | 强模型组合 | 同 S7；不能解决才本地组合并标 L3 未验证 |
+| S9 E4 环境 | **是（完整网格）** | L3 强模型 × 规模 × 场景 | 先实现 adapter/scene；问 provider/预算；拒绝才 L1/L2 2×3 子集 |
+| S10 E5 确认 | **可选/建议** | 第二 Judge、跨家族复核 | 问 key/provider；或本地不同家族 Judge + 人工；写限制+解除条件 |
 
 ### 硬规则
 
-1. **每个会话开头先判断**：本会话是否需要 API key；不要等到跑了一半才发现。
-2. **需要 key 且环境变量缺失**：停止 API 调用，向用户询问；不要猜 provider/model，不要硬编码 key，不要静默换成另一个模型。
-3. **询问必须包含**：provider、model、base_url、环境变量名、用途、预计调用次数/token、粗略成本、fallback。
-4. **key 只从环境变量读**：配置里只写 `api_key_env`（例如 `DEEPSEEK_API_KEY`），绝不写 key 本身。
-5. **manifest 只记身份**：provider / model / base_url / api_key_env / 调用日期；绝不记 key。
-6. **API 模型会漂移**：`deepseek-chat` 这类别名可能指向新版本；优先用带日期的 snapshot；没有 snapshot 就记录调用日期，并在短时间内跑完同一批实验。
-7. **未确认前不要跑 API**：可以先跑本地子集，并在 HANDOFF 标记 `blocked_on_key`；不要把“没跑”写成“无差异”。
+1. **每个会话开头先检测六类前置**：运行时 / Python 包 / 模型 / 本地服务 / 接口凭据 / 数据与代码；不要等到跑了一半才发现。
+2. **能本机修的先修**：装包、启动服务、拉模型、补 adapter、改配置——修完必须验证并记录（HANDOFF §1.3/§5.4）。
+3. **需要授权/选择时给选项**：系统级安装、>1GB 下载、API 费用、凭据、换模型/数据边界，给 A/B/C + 命令 + 成本/磁盘/时间/影响 + 推荐；不要只问“怎么办”。
+4. **需要 key 且环境变量缺失**：先检查/实现 provider adapter；再问 provider/model/base_url/env/预算/fallback；不要猜、不要硬编码、不要静默换模型。
+5. **key 只从环境变量读**：配置里只写 `api_key_env`（例如 `DEEPSEEK_API_KEY`），绝不写 key 本身；manifest 只记 provider/model/base_url/api_key_env/调用日期。
+6. **API 模型会漂移**：优先带日期 snapshot；没有就记录调用日期，并在短时间内跑完同一批实验。
+7. **未确认前不要跑 API**：可以先做不依赖 key 的部分；不要把“没跑”写成“无差异”。
+8. **blocked 只在尝试后使用**：写 `blocked_on_<x>` + 已尝试命令/结果 + 解除条件 + 仍可做子集 + 触发条件；没有这些不算完成。
+9. **可修缺口不允许延后**：本会话能补的补；不能补的必须给同日可执行动作/负责人/触发条件，不接受无期限“以后补”。
 
-### 询问模板（会话可直接用）
+### 询问模板（会话可直接用，必须带选项）
 
 ```text
-本会话进行到 <阶段/实验>，需要 <provider> 的 <model> 做 <用途>。
-预计 <N> 次调用 / 约 <tokens>，粗略成本 <range>。
-请提供环境变量 <ENV_NAME>（不要把 key 发在聊天里，建议在本机 export）。
-如果没有 key，我建议 fallback：<本地模型/子集>。
-在你确认前，我不会调用 API。
+本会话进行到 <阶段/实验>，需要 <项>：<检查结果>；影响 <哪个指标/结论>。
+请选一个（回复 A/B/C）：
+A. <方案>：<命令/步骤>；成本 <¥/$/0>；磁盘 <GB>；时间 <分钟>；影响 <能跑/不能跑什么>
+B. <方案>：...
+C. <降级子集>：...；结果只能标 <A 级/未验证>
+推荐 A，因为 <理由>。
+在您选择前，我先做 <不依赖该项的部分>；不会用 fallback 冒充真实。
 ```
+
+如果没有 key：先说明“provider adapter 是否已实现/能否先补”，再给 provider/model/base_url/env/预算/fallback 选项；不要只问“有没有 key”。
 
 ### 相关文档
 
-- [SESSION-PROMPTS.md](SESSION-PROMPTS.md) §0.1 有每个会话的 key 检查清单与提示词。
-- S9/S10 的提示词已内置“先问 key，再跑 API”。
+- [PREREQUISITES.md](PREREQUISITES.md)：每个 S 的前置矩阵、检测命令、缺口处理模板。
+- [SESSION-PROMPTS.md](SESSION-PROMPTS.md) §0.1/§0.2 有每个会话的 Key/前置门禁与提示词。
+- S9/S10 的提示词已内置“先实现 adapter、先问 key/给选项，再跑 API”。
 
 ---
 
@@ -667,6 +684,24 @@ artifacts/
 |---|---|---|---|---|---|---|
 | — | — | — | — | — | — | — |
 
+### 5.4 前置条件与阻塞台账（每次会话更新）
+
+> 这不是“以后补”清单，而是“下一步动作”清单。每项必须有：影响阶段、当前状态、已尝试、解除条件/首选动作、需要用户什么、触发/验收。
+> 规则：能本机修的当次修；需要授权的给 A/B/C 选项；只有尝试后仍不可解才 `blocked_on_<x>`。
+
+| # | 缺口 | 影响阶段/结论 | 当前状态 | 首选动作（可执行） | 需要用户 | 触发/验收 |
+|---|---|---|---|---|---|---|
+| 1 | 本地 Ollama + qwen/bge 未装/未跑 | S3 真实检索、S6 B 级、S7/S8/S9 | `blocked_on_ollama_install` | `ollama serve` + `ollama pull qwen3.8:27b-q4_K_M` + `ollama pull bge-m3`；或接远程 endpoint | 允许安装/清磁盘/给远程 URL | `ollama list` 有模型；curl tags 成功 |
+| 2 | `sentence-transformers` + reranker 模型 | S4 真实重排、S6 M2/M3 | `blocked_on_cross_encoder` | `pip install -r requirements-optional.txt`；首次下载模型 | 网络/磁盘/是否接受回退 | `import sentence_transformers` + 模型 cache 存在 |
+| 3 | `memlab/providers.py` 未实现 | S7 L3、S9、S10 | 可修代码前置 | 实现 OpenAI-compatible adapter + 1 次冒烟 | 选 provider/model/base_url | 冒烟返回 JSON；key 只从 env 读 |
+| 4 | API keys 未配置 | S9 L3、S10 第二 Judge | `blocked_on_key`（未尝试前） | 先完成 #3，再给 provider/model/预算选项询问 | export 环境变量（不在聊天发 key） | 环境变量存在；1 次小请求成功 |
+| 5 | E1b 延后变体（`hmem/structmem/amem`、`community`、`cot`、`llm_summary`） | E1b 正式矩阵 | **5 组 `deferred`**（不是完成；`event_sparse`、`post.mmr/decay=none` 已修/实现） | 按 `e1-screening.json` 的 `deferred.planned_in` 重入：LLM extraction / 图库+摘要模型 / CoT 字段 | 优先级/是否本轮实现 | `sweep` 的 `deferred_factors` 与计划一致；实现后 runnable |
+| 6 | E4 candidate 轴 | E4 环境结论 | **B0/R0/CHEAP/QUALITY 已独立（108 格，0 alias）**；`E3_WINNER` deferred | E3 选出冠军后启用；不要用 `pending_e3` 折叠成 R0 | E3 结果 | 5 个 candidate 独立 `config_hash`，无假格 |
+| 7 | `coding`/`customer_service` scene adapter planned | S9 场景结论 | 未实现 | 实现 adapter 或明确只跑 `personal_assistant` | 场景优先级/数据来源 | adapter 冒烟；planned 不计入最优 |
+| 8 | 第二 Judge / 人工标注 | S10 跨家族复核 | 未准备 | 问 key/provider；或本地不同家族 Judge + 人工 | 人/时间/预算 | 一致率/κ 有数据；限制写清 |
+| 9 | 统计包（mixed effects/κ/bootstrap 如需） | S9/S10 | 未验证 | 检测 import；缺则装并跑小样本 | 是否允许安装 | 小样本分析跑通 |
+| 10 | S7b-B Oracle / LLM 归因 | S7b 正式结论 | **S7b-A 完成；Oracle/归因 `not_available`** | 补 Oracle executor + B 级 S6，再跑 S7b-B；不要用 offline 代理指标 | Ollama/API 预算 | Oracle gap/归因有真实指标，不是代理 |
+
 ---
 
 ## 6. 新会话启动清单（复制到新对话开头）
@@ -676,16 +711,21 @@ artifacts/
 ```text
 请先读：
 1. docs/optimization/HANDOFF.md（本文件，先读 §1、§1.3、§2、§5）
-2. docs/optimization/SESSION-PROMPTS.md 的对应会话（Sx）
+2. docs/optimization/SESSION-PROMPTS.md 的对应会话（Sx）+ §0.1/§0.2
 3. docs/optimization/PHASE-CHECKLIST.md（开场/收尾自检）
 4. docs/optimization/GOAL-AUDIT.md（总体目标对齐）
-5. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
-6. docs/optimization/04-experiments.md 的对应模块章节
-7. 相关 configs/experiments/*.json
+5. docs/optimization/PREREQUISITES.md（本 S 的前置条件与缺口处理）
+6. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
+7. docs/optimization/04-experiments.md 的对应模块章节
+8. 相关 configs/experiments/*.json
 
-0. 先做 Startup Audit（PHASE-CHECKLIST §0）：报告 branch/commit、git status、worktree、测试基线、当前阶段、key 状态、将改文件、验收。
-   先判断本会话是否需要 API key（见 HANDOFF §1.3）。
-   需要且环境变量缺失：先向用户询问 provider/model/env/预算/fallback，未确认前不跑 API。
+0. 先做 Startup Audit（PHASE-CHECKLIST §0）：报告 branch/commit、git status、worktree、测试基线、
+   当前阶段、前置条件表、key 状态、将改文件、验收。
+   前置条件按 PREREQUISITES §0 处理：
+   - 能本机修（装包/启动服务/拉模型/补 adapter/改配置）→ 立即修 + 验证 + 记录；
+   - 需要授权/选择（系统安装、>1GB 下载、API 费用、凭据、换模型）→ 给 A/B/C + 命令 + 成本/磁盘/时间/影响 + 推荐；
+   - 只有尝试后仍不可解 → blocked_on_<x> + 已尝试 + 解除条件 + 仍可做子集，写 HANDOFF §5.4。
+   不要把可修前置留到以后，不要停在“做不了”，不要用 fallback 冒充真实。
 
 当前任务：<写清楚>
 验收标准：<写清楚>
@@ -930,5 +970,5 @@ artifacts/
 
 ## 11. 一句话
 
-> 不要问“上下文够不够”，要问“状态有没有落盘”。  
+> 不要问“上下文够不够”，要问“状态有没有落盘”。
 > 只要 HANDOFF 是最新的，任何新会话都能在 10 分钟内接上；反之，上下文再大也会在压缩时丢关键决策。

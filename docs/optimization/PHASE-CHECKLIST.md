@@ -2,13 +2,13 @@
 
 > 用途：每个会话不要“写完代码就说完成”。开始前报告状态，结束时做一次**集成自检**，确认没有把上一阶段的成果弄坏、没有把未实现的东西标成已完成、没有在缺 key 时伪造 API 结果。
 >
-> 配套文档：[HANDOFF.md](HANDOFF.md)（状态/契约）、[GOAL-AUDIT.md](GOAL-AUDIT.md)（总体目标对齐）、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)（任务剧本）。
+> 配套文档：[HANDOFF.md](HANDOFF.md)（状态/契约）、[PREREQUISITES.md](PREREQUISITES.md)（前置条件/缺口处理）、[GOAL-AUDIT.md](GOAL-AUDIT.md)（总体目标对齐）、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)（任务剧本）。
 
 ---
 
 ## 0. 会话开始：Startup Audit
 
-新会话在做任何修改前，先报告这 8 项：
+新会话在做任何修改前，先报告这 10 项：
 
 | # | 检查 | 命令/来源 | 期望 |
 |---|---|---|---|
@@ -17,10 +17,11 @@
 | 3 | worktree | `git worktree list` | 知道有没有并行工作区/分支 |
 | 4 | 测试基线 | `python -m unittest discover -s tests -t .` | 先记录通过数；失败先修，不开始新功能 |
 | 5 | 当前阶段 | HANDOFF §1、§5 | 知道自己接的是 S3 还是 S4 |
-| 6 | Key 状态 | HANDOFF §1.3 | 需要 key 且缺失时先问用户 |
-| 7 | 文件所有权 | HANDOFF §1.3/COORDINATION（如存在） | 不碰别人正在改的文件 |
-| 8 | 本会话验收 | SESSION-PROMPTS 对应 § | 能一句话复述“做什么、验收是什么” |
-| 9 | 总体目标 | GOAL-AUDIT §1 | 知道本任务服务于哪个模块/阶段，而不是“优化系统” |
+| 6 | **前置条件** | [PREREQUISITES.md](PREREQUISITES.md) §0/§2 + HANDOFF §1.3 | 六类逐项：运行时/包/模型/服务/接口/数据；每项写结果+处置（A已修/B待选/C blocked） |
+| 7 | Key/接口 | HANDOFF §1.3 | 需要 key 且缺失时先实现 adapter、给选项并问用户 |
+| 8 | 文件所有权 | HANDOFF §1.3/COORDINATION（如存在） | 不碰别人正在改的文件 |
+| 9 | 本会话验收 | SESSION-PROMPTS 对应 § | 能一句话复述“做什么、验收是什么” |
+| 10 | 总体目标 | GOAL-AUDIT §1 | 知道本任务服务于哪个模块/阶段，而不是“优化系统” |
 
 **Startup Report 模板：**
 
@@ -31,13 +32,27 @@ Startup audit:
 - worktree:
 - tests (before):
 - current phase:
-- key status: 不需要 / 本地 / API 已配置 / blocked_on_key
+- prerequisites: <六类逐项：结果 + A已修/B待选/C blocked>
+- key status: 不需要 / 本地 / API 已配置 / blocked_on_key + 解除条件
 - files I will touch:
 - acceptance:
 - risks:
 ```
 
 > 如果 tests 在开始前就失败，先停在“修基线”，不要叠新功能。
+
+### 0.1 前置条件门禁（Startup Audit 的一部分）
+
+1. **检测**：按 [PREREQUISITES.md](PREREQUISITES.md) §2 跑命令，填上面 `prerequisites` 行。
+2. **分类**：A 本机可修 / B 需用户授权或选择 / C 尝试后仍阻塞。
+3. **处置**：
+   - A：立即修（装包/启动服务/拉模型/补 adapter/改配置）→ 复检 → 记 HANDOFF §1.3/§5.4；
+   - B：给 2–3 个选项 + 命令 + 成本/磁盘/时间/影响 + 推荐；等用户选，同时做不依赖该项的部分；
+   - C：`blocked_on_<x>` + 已尝试 + 解除条件 + 仍可做子集；写 HANDOFF §5.4。
+4. **禁止**：只写“做不了/环境不允许”；把可修项留到以后；用 fallback 冒充真实；缺 key 跑 L3。
+5. **复检**：修完必须重跑基线/冒烟；blocked 项必须有下一次触发条件。
+
+> 详细模板（询问/blocked）见 [PREREQUISITES.md](PREREQUISITES.md) §3。
 
 ---
 
@@ -54,7 +69,8 @@ python -m unittest discover -s tests -t .
 - 旧测试 + 本阶段新测试全部通过；
 - 记录通过数（如 136 passed）；
 - 新增功能必须有新测试；
-- 如果只跑了 mock，明确写“真实模型未跑”。
+- 如果只跑了 mock/offline，明确写“真实模型/服务未跑”，并写清原因、已尝试、解除条件；
+- 本会话修过前置条件（装包/拉模型/补 adapter）的，必须有复检命令与结果。
 
 ### 1.2 集成
 
@@ -66,6 +82,7 @@ python -m unittest discover -s tests -t .
 | 缓存键 | 换 prompt/schema/impl/code 版本后 key 必须变 | 否则会复用旧产物 |
 | LLM 参数 | `temperature/context/options` 真的进请求体 | 否则 LLM 规模实验是假的 |
 | 时序过滤 | HISTORICAL 未知端点不被当作有效 | 否则 as-of 结果偏乐观 |
+| 前置服务/模型 | `ollama list`、`import sentence_transformers`、provider adapter 冒烟 | 前置没通就开跑，结果是假的 |
 | 端到端冒烟 | 10 题或 dry-run | 模块接不起来 |
 
 ### 1.3 回归
@@ -80,6 +97,8 @@ python -m unittest discover -s tests -t .
 
 - HANDOFF §1 当前 commit/测试数/阶段；
 - HANDOFF §5 已完成/未开始；
+- HANDOFF §5.4 前置条件/阻塞台账（每项有动作/解除条件/触发）；
+- 如果本会话发现新的前置/安装步骤，更新 [PREREQUISITES.md](PREREQUISITES.md) 对应 S 卡片；
 - HANDOFF §7 交接记录（最新在上）；
 - Key 状态写清楚（未使用/本地/API/blocked）；
 - 新增/变更的决策写进 HANDOFF §3；
@@ -107,10 +126,19 @@ git remote -v
 
 ### 1.7 已知缺口
 
-结束时必须列 3 条：
+结束时必须列 3 条，每条都写：
 1. 本阶段没做什么；
 2. 什么还没验证；
 3. 下阶段最可能踩的坑。
+
+并且每条缺口必须有：
+- **已尝试**（命令/结果）；
+- **分类**：可修未修 / 需用户授权 / 真 blocked；
+- **解除条件或下一步动作**（可执行，不只写“以后补”）；
+- **仍可做的子集**（如果有）；
+- **触发条件/负责人**。
+
+> 可修缺口不允许只写“以后补”；本次能修就修，不能修就给同日可执行动作。
 
 ### 1.8 总体目标对齐（Goal Alignment）
 
@@ -120,11 +148,12 @@ git remote -v
 - 它对 E0–E5 的哪个问题有贡献？
 - 它是否让“能力 → 实现 → 参数 → 组合 → 环境”更清楚，还是只是让测试变绿？
 - 有没有“声明但未实现/配置但不消费/静默 fallback/LLM 混淆”的红旗？
+- **前置条件是否真的通了**：装过的包/模型/adapter 是否冒烟？blocked 项是否有解除动作？
 - 每个 P0/P1 是否写了“影响的实验阶段”和“验收测试”？
 
 **如果本阶段新增了因子/配置，必须证明它真的被 wire；no-op 因子按 P1 处理。**
 
-**如果本阶段从 spec 移除因子/level，必须写 `deferred`（id/levels/status/reason/planned_in）并让 `sweep` 报告；静默删除按 P0 处理。**
+**如果本阶段从 spec 移除因子/level，必须写 `deferred`（id/levels/status/reason/planned_in）并让 `sweep` 报告；静默删除按 P0 处理。`deferred` 不是“完成”：每个 deferred 必须有 `planned_in` 和解除条件；能在本会话实现的优先实现，不允许无限期停在那里。**
 
 ### 1.9 下一步选择（不要自动继续）
 
@@ -156,7 +185,11 @@ B. 新会话继续 S<x+1>：我给出可直接复制的启动提示词。
 - 只让测试变绿，却留下声明未实现/配置不消费的因子；
 - 只报“系统提升”，没有区分 LLM 能力；
 - 只给全局最优，没有环境条件；
-- 未跑/缺 key 却写成“无差异/已完成”。
+- 未跑/缺 key 却写成“无差异/已完成”；
+- **可本机修的前置条件没修，直接写“做不了/环境不允许”**；
+- **把可安装的包、可启动的服务、可写的 adapter、可补的配置留成“以后补”，没有解除动作**；
+- **blocked 没有“已尝试/解除条件/仍可做子集/触发条件”**；
+- **装完/拉完模型/补完 adapter 没跑冒烟就宣布前置已解决**。
 
 ---
 
@@ -167,18 +200,24 @@ Completion audit:
 - phase/session:
 - commit:
 - tests: <n> passed / <n> failed
+- prerequisites:
+  - detected: <六类：runtime/packages/models/services/interfaces/data>
+  - fixed this session: <项 + 命令 + 验证>
+  - waiting on user: <项 + 选项 A/B/C>
+  - still blocked: <项 + 已尝试 + 解除条件 + 仍可做子集>
 - integration:
   - runtime guard: pass/fail
   - config validation: pass/fail
   - cache key: pass/fail
   - LLM params: pass/fail
   - temporal validity: pass/fail
+  - prerequisite smoke (ollama/import/adapter): pass/fail
   - end-to-end smoke: pass/fail
-- key status: not needed / local / API / blocked_on_key
+- key status: not needed / local / API / blocked_on_key (+解除条件)
 - files changed:
-- docs updated: HANDOFF §1/§5/§7 ; SESSION-PROMPTS (if needed)
+- docs updated: HANDOFF §1/§1.3/§5/§5.4/§7 ; SESSION-PROMPTS (if needed)
 - goal alignment: 模块/轴 + E 阶段 + 是否新增 no-op 因子 + 红旗
-- known gaps:
+- known gaps（每条含 已尝试/分类/解除动作/触发）:
   1.
   2.
   3.
@@ -191,6 +230,18 @@ Completion audit:
 ## 4. 常用命令
 
 ```bash
+# 前置条件（详见 PREREQUISITES.md §2）
+python -V
+git --version
+command -v ollama && ollama list
+curl -s --max-time 3 http://127.0.0.1:11434/api/tags >/dev/null && echo ollama-up || echo ollama-down
+python -c "import sentence_transformers; print(sentence_transformers.__version__)" 2>/dev/null || echo "no cross-encoder"
+python - <<'PY'
+import os
+for name in ("DEEPSEEK_API_KEY","OPENAI_API_KEY","DASHSCOPE_API_KEY","OPENROUTER_API_KEY"):
+    print(name, "set" if os.environ.get(name) else "missing")
+PY
+
 # 全量测试
 python -m unittest discover -s tests -t .
 

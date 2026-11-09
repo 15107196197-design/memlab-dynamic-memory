@@ -2,7 +2,7 @@
 
 > 用途：检查“代码/测试/实验”时，不只问“有没有 bug”，还要问“这个改动是否服务于项目的总体目标”。  
 > 适用：阶段收尾、修复会话、S6–S10 的实验设计评审。  
-> 配套：[HANDOFF.md](HANDOFF.md)、[PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)。
+> 配套：[HANDOFF.md](HANDOFF.md)、[PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)、[PREREQUISITES.md](PREREQUISITES.md)、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)。
 
 ---
 
@@ -82,6 +82,9 @@
 - **错误被当 0 分/已完成**：error run 进入均值，或 resume 跳过失败题；
 - **只给全局最优**：没有条件策略/环境交互；
 - **指标混用**：不同 Judge/不同基准分数直接横比；
+- **可修前置条件被延后**：能装的包、能启动的服务、能写的 adapter、能补的配置被写成 `blocked` 或“以后补”；
+- **只报“做不了”**：缺环境/模型/接口时没有检测命令、没有 A/B/C 选项、没有已尝试记录、没有解除条件；
+- **装完不验**：装了包/拉了模型/补了 adapter，但没跑冒烟就宣布前置已解决；
 - **文档漂移**：HANDOFF 的 commit/测试数/阶段与实际不符。
 
 ---
@@ -91,7 +94,7 @@
 | 级别 | 定义 | 例子 |
 |---|---|---|
 | **P0** | 让实验结论无效，或产品无法端到端跑 | R0 无执行器；声明未实现变体进入正式矩阵；静默 fallback |
-| **P1** | 让归因/比较有偏，或结果不可复现 | 因子 no-op；Runner 用错 dataset；error 当 completed；LLM 混淆 |
+| **P1** | 让归因/比较有偏，或结果不可复现 | 因子 no-op；Runner 用错 dataset；error 当 completed；LLM 混淆；可修前置被延后导致阶段停摆 |
 | **P2** | 影响效率/可用性/文档，但不直接推翻结论 | 无 dedupe；analysis 太粗；HANDOFF 过期 |
 
 ---
@@ -103,6 +106,8 @@ Finding:
 - 现象/证据:
 - 影响的能力/模块:
 - 影响的实验阶段（E0–E5）:
+- 前置条件（环境/包/模型/接口/数据）:
+- 已尝试的修复/选项:
 - 严重度: P0/P1/P2
 - 是否让某个结论无效:
 - 修复建议:
@@ -121,6 +126,8 @@ Finding:
 4. **不要扩大范围**：修 P0/P1，不顺手做新模块/新实验。
 5. **不要覆盖在途工作**：先看 `git status`/worktree；S6 未提交时用隔离 worktree。
 6. **修完必须给 A/B 选择**：本会话继续下一阶段 / 新会话提示词。
+7. **前置条件先解决**：缺包/模型/服务/接口/adapter 时，先按 [PREREQUISITES.md](PREREQUISITES.md) 尝试本机修复；需要授权就给 A/B/C 选项+命令；只有尝试后仍不可解才 blocked，并写解除条件与仍可做子集。可修缺口不允许延后。
+8. **装完必须验**：安装/拉取/补 adapter 后跑冒烟；没验证不算解决。
 
 ---
 
