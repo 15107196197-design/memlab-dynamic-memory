@@ -24,11 +24,11 @@
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
 | 当前 commit | S0 `420ed0b`；S1 见 `git log -1 --oneline` |
 | 分支 | `main` |
-| 工作区状态 | S1 新增 `memlab/` 与 `tests/test_memlab.py` 并已提交；`memwb/`、`server.py`、`web/` 未改 |
-| 测试 | `python -m unittest discover -s tests -t .` → **77 passed**（旧 38 + 新增 39） |
-| 已实现 | `memwb` 原型（四方法、BM25/向量/RRF、状态槽/版本链、评测、Web）+ `memlab` S1 骨架（contracts/registry/config/manifest/LLM 包装/legacy 适配） |
-| 未实现 | MemoryUnit v2 迁移、图/规划/重排/双时间/审计、实验控制面、Lab UI |
-| 当前阶段 | **S1 完成**：契约/注册表/config/manifest/legacy 适配已落地，旧测试全过、legacy 行为不变；准备进入 S2 |
+| 工作区状态 | S1 `memlab` 骨架 + S2 v2 模型/导出/缓存已提交；`memwb/`、`server.py`、`web/` 未改 |
+| 测试 | `python -m unittest discover -s tests -t .` → **102 passed**（旧 38 + S1 39 + S2 25） |
+| 已实现 | `memwb` 原型 + `memlab` S1 骨架 + S2 `model.py`（MemoryUnit v2 视图）/`export.py`（memory-export@2）/`cache.py`（内容寻址） |
+| 未实现 | 图/规划/重排/双时间/审计、实验控制面、Lab UI；Web 仍走 v1 export |
+| 当前阶段 | **S2 完成**：v1→v2 非破坏迁移、export v2、缓存键含 prompt/schema/model；准备进入 S3 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -172,7 +172,7 @@ artifacts/
 | `configs/experiments/e3-factorial.json` | E3 模块间组合 + E3b/E3c |
 | `configs/experiments/e4-environment-grid.json` | LLM × 规模 × 场景环境网格 |
 
-### 1.2.1 S1 代码资产（`memlab/`）
+### 1.2.1 memlab 代码资产（S1–S2）
 
 | 文件 | 内容 | 后续会话怎么用 |
 |---|---|---|
@@ -183,7 +183,11 @@ artifacts/
 | `memlab/llm.py` | `LLMClient`/`EmbeddingClient`：`fingerprint()`、tokens/latency 记账，生成行为不变 | S2 缓存键用 `fingerprint()` |
 | `memlab/legacy.py` | `legacy_full/vector/hybrid/dynamic` 适配器，转发 `memwb.pipeline.answer` | B0 对照，永久保留 |
 | `memlab/runtime.py` | `Runtime`：config + 两个 client + method 适配器 + manifest | S3 起作为 `ctx` 扩展 |
+| `memlab/model.py` | 非破坏 v1→v2 视图：turns/facts/states → `MemoryUnit` + `Relation`；未知时间显式 `unknown`；`to_legacy` 回归用 | S3/S4 的规范记忆输入 |
+| `memlab/export.py` | `memory-export@2` + 形状校验；`schema="v1"` 原样委托 `memwb.export` | export/报告；Web 切换留到 S5 |
+| `memlab/cache.py` | `ArtifactCache`：7 字段内容寻址、原子写、hit/miss 计数 | S3 起缓存抽取/状态/检索/答案 |
 | `tests/test_memlab.py` | 39 个 S1 测试（含 10 题 × 4 方法 legacy 对照） | 回归门禁 |
+| `tests/test_memlab_s2.py` | 25 个 S2 测试（往返/未知时间/export schema/缓存失效） | 回归门禁 |
 
 
 ---
@@ -221,6 +225,11 @@ artifacts/
 | 配置校验依据 | `configs/variants.json` 是“已声明目录”，注册表是“本版本已实现” | S1 只实现 legacy，但必须能加载已声明 R0 配置；实现缺失留给后续会话报错 |
 | token 记账方式 | 包装层临时代理 `memwb.llm.post` 读取 `prompt_eval_count`/`eval_count` | 不改 `memwb` 生成行为；mock 时 tokens 记 `None`，不编造 |
 | legacy 适配验收口径 | 输出 JSON 去掉 `steps[].ms` 后逐字节一致；10 题 × 4 方法 | 计时天然不同，其余必须 0 差异 |
+| v2 时间语义 | turn 的 `t_event=t_ingest=会话时间`；fact 的 `t_event` 只来自 `resolved_date`，否则 `precision=unknown` | 不把录音时间伪造成事件时间；turn 的“说话时刻”就是事件时刻 |
+| `valid_interval` 端点 | 失效边优先取后继 fact 的 `t_event`，缺失则退 `t_ingest`；`provenance.validity.endpoint` 记录来源 | 文档允许的兜底；无失效边且状态 HISTORICAL 时标 `unknown`，不硬编结束时间 |
+| export v2 切换范围 | `memlab.export` 默认 v2；Web `/api/export` 继续 v1，S5/Lab UI 再切 | 旧 38 测试与既有前端不变；v1 由 `schema="v1"` 保留 |
+| 缓存键字段 | `stage/input/impl/params/prompt_hash/model_fingerprint/schema_version` 全进键 | 换提示词/换 Schema/换模型必须 miss；S3 直接复用 |
+
 
 
 ---
@@ -267,6 +276,10 @@ artifacts/
 - [x] S1：`RunManifest` 记录 commit/config/dataset/model/seed/judge/prompt/created_at
 - [x] S1：四个 legacy 适配器注册到 `method` 轴，10 题 × 4 方法与旧版 0 差异
 - [x] S1：77 个测试通过（2026-11-09），未 push upstream
+- [x] S2：`memlab/model.py` 非破坏 v1→v2 视图（conv-26：419 turn + 335 fact + 228 关系）
+- [x] S2：`memlab/export.py` 输出 `memory-export@2` 并通过契约校验；`schema="v1"` 仍与旧 exporter 逐字段一致
+- [x] S2：`memlab/cache.py` 内容寻址（prompt/schema/impl/params/model 变化必 miss；原子写）
+- [x] S2：102 个测试通过（旧 38 + S1 39 + S2 25），未 push upstream
 
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
@@ -295,8 +308,32 @@ artifacts/
 
 结论：S1 适配层未改变 legacy 行为（答案、`valid_memory_ids`、状态、检索轮次、关系、`steps` 名称/描述全部一致；仅耗时不同）。F1/Recall 数值只用于对照，不代表 B0 真实效果；真实指标仍以 §5.1.1 归档值为准。
 
+### 5.1.3 S2 迁移记录：10 条记忆的 v1 → v2 字段差异
+
+> 来源：`memlab.model.from_legacy` 生成的只读视图（不写 `data/`，旧文件原样保留）。表中 `∅` 表示 null；时间为本地无时区 ISO。测试：`tests/test_memlab_s2.py::ModelTests`。
+
+| 记忆 | v1 时间字段 | v2 `t_event` | v2 `t_ingest` | v2 `valid_interval` | 证据 / 失效端点 |
+|---|---|---|---|---|---|
+| `conv26_D1_1`（turn） | 无 | 2023-05-08 13:56（session） | 同左 | — | `D1:1` [0:44] |
+| `conv26_D19_1`（turn） | 无 | 2023-10-22 09:55（session） | 同左 | — | `D19:1` [0:152] |
+| `conv26_D1_3`（turn） | 文本 “yesterday” → 2023-05-07（存 provenance） | 2023-05-08 13:56（session） | 同左 | — | `D1:3` [0:65] |
+| `conv26_D1_2_f0`（fact） | 无 | ∅ → ∅（unknown） | 2023-05-08 13:56（session） | ∅ → ∅（unknown） | `D1:2`；未失效 |
+| `conv26_D1_3_f0`（fact） | resolved 2023-05-07 | 2023-05-07 00:00（day） | 2023-05-08 13:56（session） | 2023-05-07 → ∅（day） | `D1:3`；未失效 |
+| `conv26_D2_1_f0`（fact） | resolved 2023-05-20 | 2023-05-20 00:00（day） | 2023-05-25 13:14（session） | 2023-05-20 → ∅（day） | `D2:1` [81:117]；未失效 |
+| `conv26_D2_8_f0`（fact, HISTORICAL） | 无 | ∅ → ∅（unknown） | 2023-05-25 13:14（session） | ∅ → 2023-07-14（day） | `D2:8` [0:29]；端点 `t_event` |
+| `conv26_D4_13_f2`（fact, HISTORICAL） | resolved 2023-06-23 | 2023-06-23 00:00（day） | 2023-06-27 10:37（session） | 2023-06-23 → ∅（day） | `D4:13` [176:202]；无失效边，端点 unknown |
+| `conv26_D5_4_f0`（fact, HISTORICAL） | resolved 2023-07-02 | 2023-07-02 00:00（day） | 2023-07-03 13:36（session） | 2023-07-02 → 2023-07-03 13:36（day） | `D5:4` [52:65]；端点 `t_ingest` |
+| `conv30_D1_20_f0`（fact, CONFLICT） | 无 | ∅ → ∅（unknown） | 2023-01-20 16:04（session） | ∅ → ∅（unknown） | `D1:20` [58:70]；未失效（CONFLICT 不关区间） |
+
+**差异总结：**
+
+- 新增 8 个信封字段：`entity_ids`、`t_event`、`t_ingest`、`valid_interval`、`evidence`、`confidence`、`provenance`、`schema_version`；`type/content/entity` 改为 `kind/text/structured`。
+- 未丢字段：`timestamp`、`session_time`、`source`、`slot_key`、`state`、`resolved_date`、`time_expression`、`relations` 都在 `structured`/`provenance` 或 `Relation` 中保留；`to_legacy` 可还原核心字段（S2 测试逐条比对 40 条 fact + 20 条 turn）。
+- 时间规则：fact 的 `t_event` 只来自 `resolved_date`；缺失时为 null + `precision=unknown`，不拿 session 时间冒充。turn 的 `t_event=t_ingest=会话时间`（说话时刻即观察时刻）。
+- 有效性：旧 fact 的区间按 UPDATE/SUPERSEDE 后继关闭；端点优先后继 `t_event`，缺失退 `t_ingest`；无失效边且状态 HISTORICAL 时显式 `unknown`，不硬编结束时间。
+- 规模：conv-26 迁移出 754 个 unit（419 turn + 335 fact）与 228 条去重关系；`memory-export@2` 契约校验通过。
+
 ### 5.2 未开始
-- [ ] MemoryUnit v2 迁移 / export v2 / 内容寻址缓存（S2）
 - [ ] W/S/R 六模块实现与测试（S3，M/U/K 在 S4）
 - [ ] 实验 runner / SQLite / analysis（S5）
 - [ ] E0 基线复现
@@ -351,6 +388,22 @@ artifacts/
 
 ### 7.1 交接记录（最新在上）
 
+### 2026-11-09 / S2 / 会话
+- 本次完成：`memlab/model.py`（MemoryUnit v2 只读视图 + `to_legacy`）、`memlab/export.py`（memory-export@2 + 契约校验 + v1 委托）、`memlab/cache.py`（7 字段内容寻址、原子写、hit/miss）；25 个 S2 测试；10 条记忆迁移对照。
+- 改动文件：新增 `memlab/model.py`、`memlab/export.py`、`memlab/cache.py`、`tests/test_memlab_s2.py`；更新本 HANDOFF。`memwb/`、`server.py`、`web/` 零改动；未删除/改写任何 `data/` 文件。
+- 测试：`python -m unittest discover -s tests -t .` → **102 passed**（旧 38 + S1 39 + S2 25）；未 push upstream。
+- 新增 run_id / 指标：无真实 run。迁移规模：conv-26 → 754 unit（419 turn + 335 fact）+ 228 关系；缓存键/失效行为测试见 `tests/test_memlab_s2.py::CacheTests`。
+- 关键决策（新增/变更）：fact 的 `t_event` 只取 `resolved_date`，缺失显式 unknown；turn 的 `t_event=t_ingest=会话时间`；`valid_interval` 端点 `t_event → t_ingest` 兜底并记录 `provenance.validity.endpoint`；`memlab.export` 默认 v2、Web 仍 v1；缓存键必须含 prompt/schema/model。
+- 未解决问题：
+  1. Web `/api/export` 仍是 v1，待 S5/Lab UI 切换；`memlab.export` 已可就绪。
+  2. 缓存尚未接入实际阶段（S3 W/S/R 才用 `get_or_compute`）。
+  3. `CONFLICT` fact 的 `valid_interval` 语义只记为不关区间，冲突区间精度留待 E 轴/S4 细化。
+- 下一步 3 件事：
+  1. S3：W 抽取器（`legacy_flat`、`meta_schema`）、S 存储/索引、R 分析/规划/检索最小闭环。
+  2. S3 用 `ArtifactCache` 缓存抽取与检索，键接 `RunConfig`/`LLMClient.fingerprint()`，并记录 hit/miss。
+  3. 10 题 W→S→R 冒烟，与 `legacy_dynamic` 对照，记录差异。
+- 下个会话先读：本文件 §1、§2、§3；`02-architecture.md` 2.6–2.8；`04-experiments.md` 4.5–4.7；`reference-r0.json`、`e1-adoption.json`；`memlab/model.py` 与 `pipeline.py`/`retrieval.py`。
+
 ### 2026-11-09 / S1 / 会话
 - 本次完成：`memlab` 骨架全部落地——contracts、registry、config（canonical hash + 三重校验）、manifest、LLM/Embedding 包装、四个 legacy 适配器、Runtime；39 个新测试。
 - 改动文件：新增 `memlab/{__init__,contracts,registry,config,manifest,llm,legacy,runtime}.py`、`tests/test_memlab.py`；更新本 HANDOFF。`memwb/`、`server.py`、`web/` 零改动。
@@ -404,15 +457,15 @@ artifacts/
 
 ---
 
-## 10. 建议的下一步（S2）
+## 10. 建议的下一步（S3）
 
-1. `memlab/model.py`：把现有 turns/facts/states 适配为 `MemoryUnit` v2（缺时间标 `unknown`，不伪造）。
-2. `memlab/export.py`：`memory-export@2`，保留 v1 读取（`?schema=v1` 或 legacy 函数）。
-3. `memlab/cache.py`：`ArtifactCache`，键 = stage/input/impl/params/prompt_hash/model_fingerprint/schema_version。
-4. 测试：v1↔v2 往返、换 prompt/schema 缓存 miss、同输入二次读取 hit、旧 export 可读。
-5. 前置检查：确认 S1 的 `RunConfig.config_hash` 与 `LLMClient.fingerprint()` 直接进入缓存键，不再另造哈希。
+1. `memlab/modules/`（或按轴拆分）：W `legacy_flat`/`meta_schema` 抽取器，输出 `MemoryUnit` v2。
+2. S：turn/fact 存储 + BM25/dense 索引；R：`analyzer=none/rule`、`planner=none/rule_router`、retriever `dense`/`bm25`，输出 `Candidate`。
+3. 用 `ArtifactCache.get_or_compute` 缓存抽取与检索；键含 `prompt_hash`、`LLMClient.fingerprint()`、`schema_version`。
+4. 10 题 W→S→R 冒烟 + 与 `legacy_dynamic` 对照；记录每阶段 trace 与差异。
+5. 前置检查：复用 `RunConfig` 的校验/哈希，不另造配置格式；不改变 legacy 指标。
 
-**验收：** 旧 77 个测试全过；新增缓存失效测试；10 条记忆迁移前后字段差异写进 HANDOFF §5。
+**验收：** 旧 102 个测试全过；新测试覆盖每个 extractor/retriever；10 题冒烟通过；不实现 M/U/K 新逻辑。
 
 ---
 
