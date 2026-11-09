@@ -449,6 +449,126 @@
   }
 
   const PLAN_STATUS = { done: "已完成", partial: "部分完成", pending: "待做", blocked: "阻塞", no_op: "未接线 / no-op", blocked_on_code: "代码阻塞", blocked_on_hardware: "硬件/模型阻塞", not_wired: "未接线", unknown: "未知" };
+  const HEAT_ROWS = [["W", "W 写入"], ["S", "S 存储"], ["R", "R 检索"], ["M", "M 合并"], ["U", "U 使用"], ["K", "K 维护"], ["E2", "E2 耦合"], ["E3", "E3 组合"], ["E4", "E4 环境"], ["E5", "E5 确认"]];
+  const HEAT_COLS = [["E1.1", "E1.1 实现"], ["E1.2", "E1.2 参数"], ["E1.3", "E1.3 LLM"], ["E2", "E2"], ["E3", "E3"], ["E4", "E4"], ["E5", "E5"]];
+  const HEAT = {
+    data: { shape: "●", label: "有数据" },
+    limited: { shape: "▲", label: "受限" },
+    missing: { shape: "◇", label: "缺实现" },
+    pending: { shape: "○", label: "待跑" },
+  };
+  const planKind = (status) => {
+    if (["done", "partial"].includes(status)) return "data";
+    if (["blocked_on_hardware", "blocked_on_model", "blocked"].includes(status)) return "limited";
+    if (["blocked_on_code", "not_wired", "no_op"].includes(status)) return "missing";
+    return "pending";
+  };
+  const planStage = (stage) => (stage === "E3b" || stage === "E3c" ? "E3" : stage);
+  const planRow = (item) => (HEAT_ROWS.some(([row]) => row === item.module) ? item.module : null);
+  const planCol = (item) => (HEAT_COLS.some(([col]) => col === planStage(item.stage)) ? planStage(item.stage) : null);
+
+  function planHeatmap(items) {
+    const matrix = new Map();
+    const counted = [];
+    (items || []).forEach((item) => {
+      const row = planRow(item), col = planCol(item);
+      if (!row || !col) return;
+      counted.push(item);
+      const key = `${row}|${col}`;
+      if (!matrix.has(key)) matrix.set(key, []);
+      matrix.get(key).push(item);
+    });
+    const counts = { data: 0, limited: 0, missing: 0, pending: 0 };
+    counted.forEach((item) => { counts[planKind(item.status)] += 1; });
+    const total = counted.length;
+    const cells = [];
+    HEAT_ROWS.forEach(([row]) => HEAT_COLS.forEach(([col]) => {
+      const cellItems = matrix.get(`${row}|${col}`) || [];
+      if (!cellItems.length) { cells.push(`<span class="v6-empty">·</span>`); return; }
+      const kinds = cellItems.map((x) => planKind(x.status));
+      const kind = ["data", "limited", "missing", "pending"].find((k) => kinds.includes(k)) || "pending";
+      cells.push(`<button class="v6-cell" data-row="${row}" data-col="${col}" title="${cellItems.length} 项"><span class="v6-shape ${kind}">${HEAT[kind].shape}</span><b>${cellItems.length}</b></button>`);
+    }));
+    const dataItems = counted.filter((x) => planKind(x.status) === "data");
+    const segments = Object.entries(counts).filter(([, n]) => n > 0).map(([kind, n]) => `<span class="v6-seg ${kind}" style="width:${(n / Math.max(1, total)) * 100}%"></span>`).join("");
+    return `<div class="v6-top">
+      <div class="v6-stack">${segments || `<span class="v6-seg pending" style="width:100%"></span>`}</div>
+      <div class="v6-counts"><b>已覆盖 ${counts.data}</b><span>受限 ${counts.limited}</span><span>缺实现 ${counts.missing}</span><span>待跑 ${counts.pending}</span><button id="v6-export" class="btn small">导出 JSON</button></div>
+      <div class="v6-legend">${Object.entries(HEAT).map(([k, v]) => `<span><i class="v6-shape ${k}">${v.shape}</i>${v.label} ${counts[k]}</span>`).join("")}<span class="muted">共 ${total} 项（矩阵内）</span></div>
+    </div>
+    <div class="v6-toolbar"><label class="small"><input type="checkbox" id="v6-filter" checked> 未完成 + 受限</label><span class="muted small">默认隐藏已完成项；点单元格看明细</span><button id="v6-view-table" class="btn small">表格视图</button></div>
+    <div id="v6-heat-view"><div class="v6-grid" style="grid-template-columns: 92px repeat(7, minmax(0,1fr))">
+      <div class="v6-corner"></div>${HEAT_COLS.map(([, label]) => `<div class="v6-col">${esc(label)}</div>`).join("")}
+      ${HEAT_ROWS.map(([row, label], i) => `<div class="v6-row">${esc(label)}</div>${HEAT_COLS.map(([col]) => cells[i * HEAT_COLS.length + HEAT_COLS.findIndex(([c]) => c === col)]).join("")}`).join("")}
+    </div></div>
+    <div id="v6-table-view" class="hidden"></div>
+    <button id="v6-completed" class="v6-completed">已完成 ${dataItems.length} 项（展开）</button>
+    <div id="v6-completed-body" class="v6-completed-body hidden">${dataItems.map((x) => `<div class="v6-mini"><b>${esc(x.id)}</b> ${esc(x.title || "")}</div>`).join("") || `<div class="muted small">not_available</div>`}</div>
+    <aside id="v6-drawer" class="v6-drawer"><button id="v6-close" class="v6-close">关闭</button><div id="v6-drawer-body"></div></aside>`;
+  }
+
+  function wireHeatmap(items) {
+    const matrix = new Map();
+    const dataItems = [];
+    (items || []).forEach((item) => {
+      const row = planRow(item), col = planCol(item);
+      if (!row || !col) return;
+      const key = `${row}|${col}`;
+      if (!matrix.has(key)) matrix.set(key, []);
+      matrix.get(key).push(item);
+      if (planKind(item.status) === "data") dataItems.push(item);
+    });
+    const drawer = document.getElementById("v6-drawer");
+    const body = document.getElementById("v6-drawer-body");
+    const filter = document.getElementById("v6-filter");
+    let current = [];
+    const renderDrawer = () => {
+      const visible = filter?.checked ? current.filter((x) => planKind(x.status) !== "data") : current;
+      const completedNote = filter?.checked && visible.length < current.length ? `<p class="muted small">已完成项已隐藏；取消“未完成 + 受限”可看全部。</p>` : "";
+      body.innerHTML = `<h3>${esc(drawer.dataset.row || "")} × ${esc(drawer.dataset.col || "")}</h3>${completedNote}
+        ${visible.length ? visible.map((x) => {
+          const kind = planKind(x.status);
+          return `<div class="v6-drawer-item"><div class="row"><span class="v6-shape ${kind}">${HEAT[kind].shape}</span><b>${esc(x.title || x.id)}</b></div>
+            <div class="small">${esc(HEAT[kind].label)} · ${esc(x.id)}</div>
+            <div class="small">缺口：${esc(x.reason || (x.missing || []).join("；") || "not_available")}</div>
+            <div class="small">证据：${esc(x.evidence || x.report || x.link || "not_available")}</div></div>`;
+        }).join("") : `<p class="muted">该格没有未完成/受限项；可取消筛选查看已完成。</p>`}`;
+      drawer.classList.add("open");
+    };
+    $$(".v6-cell").forEach((cell) => (cell.onclick = () => {
+      drawer.dataset.row = cell.dataset.row;
+      drawer.dataset.col = cell.dataset.col;
+      current = matrix.get(`${cell.dataset.row}|${cell.dataset.col}`) || [];
+      renderDrawer();
+    }));
+    document.getElementById("v6-close").onclick = () => drawer.classList.remove("open");
+    if (filter) filter.onchange = () => { if (drawer.classList.contains("open")) renderDrawer(); };
+    document.getElementById("v6-completed").onclick = () => {
+      const el = document.getElementById("v6-completed-body");
+      el.classList.toggle("hidden");
+      document.getElementById("v6-completed").textContent = el.classList.contains("hidden") ? `已完成 ${dataItems.length} 项（展开）` : `已完成 ${dataItems.length} 项（收起）`;
+    };
+    const table = document.getElementById("v6-table-view");
+    document.getElementById("v6-view-table").onclick = () => {
+      const heat = document.getElementById("v6-heat-view");
+      const isHidden = table.classList.contains("hidden");
+      table.classList.toggle("hidden", !isHidden);
+      heat.classList.toggle("hidden", isHidden);
+      document.getElementById("v6-view-table").textContent = isHidden ? "热力图视图" : "表格视图";
+      if (isHidden && !table.dataset.wired) { table.innerHTML = planPanel(items, "v6-table"); wirePlan(items, "v6-table"); table.dataset.wired = "1"; }
+    };
+    document.getElementById("v6-export").onclick = () => {
+      const cells = [];
+      HEAT_ROWS.forEach(([row]) => HEAT_COLS.forEach(([col]) => {
+        const cellItems = matrix.get(`${row}|${col}`) || [];
+        cells.push({ row, col, count: cellItems.length, items: cellItems });
+      }));
+      const counts = { data: dataItems.length, limited: 0, missing: 0, pending: 0 };
+      (items || []).forEach((item) => { if (planRow(item) && planCol(item)) counts[planKind(item.status)] += 1; });
+      download("experiment-plan-heatmap.json", { rows: HEAT_ROWS, columns: HEAT_COLS, counts, cells });
+    };
+  }
+
   function planTable(items) {
     return `<table class="v2-table"><thead><tr><th>ID</th><th>阶段</th><th>模块</th><th>实验（要回答什么）</th><th>指标</th><th>状态</th><th>证据/去向</th></tr></thead><tbody>
       ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "not_available")}</div></td><td class="small">${(x.metrics || []).length ? (x.metrics || []).map((m) => esc(m)).join(" / ") : "not_available"}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "not_available")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">没有匹配的实验。</td></tr>`}
@@ -547,7 +667,7 @@
           <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
       }
       if (tab === "plan") {
-        return `<p class="muted small">来自 04-experiments 的固定实验清单；状态是当前仓库的覆盖情况，不是统计结论。</p>${planPanel(plan.items, "v2-rep-plan")}`;
+        return planHeatmap(plan.items);
       }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
         <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
@@ -562,7 +682,7 @@
     $$("#v2-rep-tabs button").forEach((b) => (b.onclick = () => {
       $$("#v2-rep-tabs button").forEach((x) => x.classList.toggle("on", x === b));
       $("#v2-rep-body").innerHTML = tabBody(b.dataset.tab);
-      if (b.dataset.tab === "plan") wirePlan(plan.items, "v2-rep-plan");
+      if (b.dataset.tab === "plan") wireHeatmap(plan.items);
     }));
   }
 
@@ -735,7 +855,7 @@
     const body = $("#v5-tab-body");
     $$(".v5-tabs button").forEach((b) => (b.onclick = () => {
       $$(".v5-tabs button").forEach((x) => x.classList.toggle("on", x === b));
-      if (b.dataset.tab === "plan") { body.innerHTML = `${planPanel(plan.items, "v5-plan")}`; wirePlan(plan.items, "v5-plan"); }
+      if (b.dataset.tab === "plan") { body.innerHTML = planHeatmap(plan.items); wireHeatmap(plan.items); }
       else body.innerHTML = cArtifactsHtml(art.artifacts);
     }));
   }
