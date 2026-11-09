@@ -2,6 +2,15 @@
 
 > 前提：代码已准备好（provider adapter、preflight、judge、S5 runner、E2E executor）。  
 > 你只需要提供 **Ollama 端点** 或 **OpenAI-compatible endpoint + key**；下面命令按顺序执行即可。
+>
+> **环境：** `repo/.venv-memlab` 已装 `torch 2.15` / `sentence-transformers 6.2`（系统 Python 没有）。需要真实 cross-encoder 时，用 `.venv-memlab/bin/python` 跑命令，并设置：
+>
+> ```bash
+> export HF_ENDPOINT=https://hf-mirror.com
+> export HF_HOME=/Volumes/UDISK/memlab/hf   # 2.27GB 权重，别放系统盘
+> ```
+>
+> 当前模型权重尚未下载；没有权重时 M2/M3 仍会回退。
 
 ---
 
@@ -54,7 +63,9 @@ ollama pull bge-m3
 先小样本确认链路：
 
 ```bash
-python scripts/s6_e1.py \
+PY=.venv-memlab/bin/python
+
+$PY scripts/s6_e1.py \
   --online --judge \
   --questions 20 --seeds 13 --samples conv-26 \
   --db runs/s6/smoke.sqlite \
@@ -64,7 +75,7 @@ python scripts/s6_e1.py \
 确认 `errors=0` 后跑正式 B 级：
 
 ```bash
-python scripts/s6_e1.py \
+$PY scripts/s6_e1.py \
   --online --judge \
   --questions 80 --seeds 13 17 \
   --samples conv-26 conv-30 conv-43 conv-44 \
@@ -88,13 +99,13 @@ python -m memlab.experiments.cli sweep \
   --spec configs/experiments/e1-screening.json --dry-run
 
 # 小样本跑参数/模块 LLM（e2e executor 默认走真实模型）
-python -m memlab.experiments.cli run \
+$PY -m memlab.experiments.cli run \
   --spec configs/experiments/e1-screening.json \
   --executor e2e --preflight \
   --limit 20 --db runs/e1/screening.sqlite
 
 # 续跑/重试 error
-python -m memlab.experiments.cli run \
+$PY -m memlab.experiments.cli run \
   --spec configs/experiments/e1-screening.json \
   --executor e2e --preflight --limit 20 \
   --db runs/e1/screening.sqlite --retry-errors
@@ -103,7 +114,7 @@ python -m memlab.experiments.cli run \
 ### 1.4 查看结果
 
 ```bash
-python -m memlab.experiments.cli analyze \
+$PY -m memlab.experiments.cli analyze \
   --db runs/e1/screening.sqlite --metric answer_f1
 ```
 

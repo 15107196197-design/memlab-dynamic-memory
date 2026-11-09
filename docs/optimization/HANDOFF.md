@@ -239,7 +239,7 @@ artifacts/
 | Python / 测试 | Python 3.14 下 **223 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
 | 本地 Ollama | **未安装/未运行**（S0 时 `127.0.0.1:11434` 连接失败；后续会话未见恢复） | 装/启动/`ollama pull`；磁盘/网络不够→给远程 endpoint / API / offline 选项 |
 | 本地模型 | `qwen3.8:27b-q4_K_M`、`bge-m3` 未验证/未拉取（约 17GB + 1GB 级） | 先 `ollama list`；缺则拉；磁盘不足→问用户清盘/换机/远程 |
-| 可选包 | `sentence-transformers` **未安装**；cross-encoder 回退 | `pip install -r requirements-optional.txt`；不能装→问用户；回退必须标“未真实重排” |
+| 可选包 | `repo/.venv-memlab` 已装 torch/sentence-transformers；系统 Python 没有；reranker 权重未下载 | 用 `.venv-memlab/bin/python`；设 `HF_ENDPOINT=https://hf-mirror.com` + `HF_HOME` 到 U 盘；回退必须标“未真实重排” |
 | API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） | 给 provider/model/预算选项并问；未确认不跑 API |
 | API provider adapter | **已实现**：`memlab/providers.py`（Ollama + OpenAI-compatible），`LLMClient/EmbeddingClient` 已路由；`scripts/preflight.py` 可检查 | 仍需真实 endpoint/key 验证；key 只从 env 读 |
 | 数据 | `data/locomo10.json` 等已跟踪；四对话可用 | 缺数据先查 `data/`/`git status`；不要重下未知来源 |

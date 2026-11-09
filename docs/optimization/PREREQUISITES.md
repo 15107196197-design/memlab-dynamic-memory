@@ -67,7 +67,7 @@
 | **S1** | Python 3.10+、git | 标准库 | 无 | S0 tag、`memwb/`、`tests/` | 先跑基线；缺包立即装；不改无关模块 |
 | **S2** | Python 3.10+ | 标准库 | 无 | S1 `memlab/`、`data/facts|states` | 先跑测试；缓存目录可写 |
 | **S3** | Python；真实检索需 Ollama | `qwen3.8:27b-q4_K_M`、`bge-m3`；测试可 fake embedding | 无 key；Ollama `127.0.0.1:11434` | S2、`data/locomo10.json`、R0 配置 | 缺 Ollama：装/启动/拉模型；磁盘/网络不够：给远程 endpoint / 小模型 / 仅 fake 三选项 |
-| **S4** | Python；真实 M 需 Ollama | 同 S3 + `sentence-transformers>=3.0` + `BAAI/bge-reranker-v2-m3`（~2GB） | 无 key | S3 | 缺 cross-encoder：`pip install -r requirements-optional.txt` 并下载；不能装：问用户；继续用回退必须标“未真实重排” |
+| **S4** | Python；真实 M 需 Ollama | 同 S3 + `sentence-transformers>=3.0` + `BAAI/bge-reranker-v2-m3`（~2GB） | 无 key | S3 | `repo/.venv-memlab` 已装 torch/ST；还缺模型权重（放 U 盘，`HF_ENDPOINT=https://hf-mirror.com`）；不能装：问用户；回退必须标“未真实重排” |
 | **S5** | Python + SQLite（标准库） | 无 | 无 | S1–S4、`configs/experiments/*.json` | 先 dry-run；CLI 导入失败先修路径/依赖 |
 | **S6** | Python；B 级需 Ollama + 磁盘/网络 | qwen/bge；可选 cross-encoder | 无 API key；可选远程 Ollama / OpenAI-compatible（需 adapter） | S5 e2e executor、`scripts/s6_e1.py`、四对话数据 | 先尝试装/启动/拉模型；不行：问用户远程 endpoint / API key+adapter / offline A 级；不能只写 blocked |
 | **S7** | Python；S6 runs；可选 Ollama/API | 同 S6；L3 模型可选 | L3 API 可选；provider adapter 已实现，需 endpoint/key | S6 SQLite/manifests/候选 | 无 L3：本地 L1/L2 + 标 A 级；有 key 先跑 preflight；不要静默换模型 |
