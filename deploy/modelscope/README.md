@@ -41,11 +41,11 @@ license: Apache License 2.0
 
 ## 运行
 
-Docker Studio，服务监听 `0.0.0.0:7860`，入口 `server.py`；运行时仅依赖 Python 标准库。
+Docker Studio，服务监听 `0.0.0.0:7860`，入口 `server.py`；本空间只走 Web / 检索 / 报告等路径，不启用需要 `sentence-transformers` 的 cross-encoder 重排。
 
 ## 源码与复现
 
-- GitHub 仓库：https://github.com/15107196197-design/memlab-dynamic-memory
-- 部署记录：`deploy/modelscope/DEPLOYED.md`（端点、验证命令、注意事项）
-- 更新流程：`python deploy/modelscope/build_bundle.py` → `deploy/modelscope/publish.sh A1211JOY/dynamic-memory-workbench`
+- 源码仓库：`15107196197-design/memlab-dynamic-memory`（Private，需要授权访问）。
+- 部署记录：`deploy/modelscope/DEPLOYED.md`（端点、验证命令、注意事项）。
+- 更新流程：`python deploy/modelscope/build_bundle.py` → `deploy/modelscope/publish.sh A1211JOY/dynamic-memory-workbench`。
 - 本空间是只读演示，不会写回仓库；数据与报告为 2026-11-09 快照。
