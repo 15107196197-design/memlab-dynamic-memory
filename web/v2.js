@@ -482,18 +482,21 @@
   const planStage = (stage) => (stage === "E3b" || stage === "E3c" ? "E3" : stage);
   const planRow = (item) => (HEAT_ROWS.some(([row]) => row === item.module) ? item.module : null);
   const planCol = (item) => (HEAT_COLS.some(([col]) => col === planStage(item.stage)) ? planStage(item.stage) : null);
-
-  function planHeatmap(items) {
-    const matrix = new Map();
-    const counted = [];
+  const buildPlanMatrix = (items) => {
+    const m = new Map();
     (items || []).forEach((item) => {
       const row = planRow(item), col = planCol(item);
       if (!row || !col) return;
-      counted.push(item);
       const key = `${row}|${col}`;
-      if (!matrix.has(key)) matrix.set(key, []);
-      matrix.get(key).push(item);
+      if (!m.has(key)) m.set(key, []);
+      m.get(key).push(item);
     });
+    return m;
+  };
+
+  function planHeatmap(items) {
+    const matrix = buildPlanMatrix(items);
+    const counted = [...matrix.values()].flat();
     const catalogItems = items || [];
     const counts = { data: 0, limited: 0, missing: 0, pending: 0 };
     catalogItems.forEach((item) => { counts[planKind(item.status)] += 1; });
@@ -525,7 +528,7 @@
   }
 
   function wireHeatmap(items) {
-    const matrix = new Map();
+    const matrix = buildPlanMatrix(items);
     const dataItems = (items || []).filter((item) => planKind(item.status) === "data");
     const drawer = document.getElementById("v6-drawer");
     const body = document.getElementById("v6-drawer-body");
@@ -533,15 +536,20 @@
     let current = [];
     const renderDrawer = () => {
       const visible = filter?.checked ? current.filter((x) => planKind(x.status) !== "data") : current;
-      const completedNote = filter?.checked && visible.length < current.length ? `<p class="muted small">已完成项已隐藏；取消“未完成 + 受限”可看全部。</p>` : "";
-      body.innerHTML = `<h3>${esc(drawer.dataset.row || "")} × ${esc(drawer.dataset.col || "")}</h3>${completedNote}
+      const completedNote = filter?.checked && visible.length < current.length && visible.length ? `<p class="muted small">已完成项已隐藏；取消“未完成 + 受限”可看全部。</p>` : "";
+      const emptyNote = current.length
+        ? `<p class="muted">该格 ${current.length} 项均已完成；取消筛选查看已完成。</p>`
+        : `<p class="muted">该格没有登记实验。</p>`;
+      const rowLabel = HEAT_ROWS.find(([row]) => row === drawer.dataset.row)?.[1] || drawer.dataset.row || "";
+      const colLabel = HEAT_COLS.find(([col]) => col === drawer.dataset.col)?.[1] || drawer.dataset.col || "";
+      body.innerHTML = `<h3>${esc(rowLabel)} × ${esc(colLabel)}</h3>${completedNote}
         ${visible.length ? visible.map((x) => {
           const kind = planKind(x.status);
           return `<div class="v6-drawer-item"><div class="row"><span class="v6-shape ${kind}">${HEAT[kind].shape}</span><b>${esc(x.title || x.id)}</b></div>
             <div class="small">${esc(HEAT[kind].label)} · ${esc(x.id)}</div>
             <div class="small">缺口：${esc(x.reason || (x.missing || []).join("；") || "not_available")}</div>
             <div class="small">证据：${esc(x.evidence || x.report || x.link || "not_available")}</div></div>`;
-        }).join("") : `<p class="muted">该格没有未完成/受限项；可取消筛选查看已完成。</p>`}`;
+        }).join("") : emptyNote}`;
       drawer.classList.add("open");
     };
     $$(".v6-cell").forEach((cell) => (cell.onclick = () => {
