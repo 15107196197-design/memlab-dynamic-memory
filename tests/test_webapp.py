@@ -92,6 +92,18 @@ class WebAppTests(unittest.TestCase):
         self.assertTrue(report["web"]["published"])
         self.assertEqual(webapp.get("/api/v2/experiments/w1-test/report")["experiment_id"], "w1-test")
 
+    def test_batch_run_reports_f1_and_recall(self):
+        out = webapp.post("/api/v2/runs", {
+            "sample": "conv-26", "preset": "B0", "batch": True,
+            "questions": 6, "seed": 13, "offline": True,
+        })
+        self.assertEqual(out["kind"], "batch")
+        self.assertEqual(out["questions"], 6)
+        self.assertIn("answer_f1", out["metrics"])
+        self.assertIn("evidence_recall", out["metrics"])
+        self.assertEqual(len(out["rows"]), 6)
+        self.assertTrue(out["by_category"])
+
     def test_evaluation_archive_is_available(self):
         data = webapp.get("/api/v2/evaluation")
         self.assertTrue(data["available"])

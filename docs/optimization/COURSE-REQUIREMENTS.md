@@ -88,10 +88,10 @@
 | Web 查看记忆/证据 | 旧 `web/` + W1 `#/memories` | **W1 有** | v2 详情/evidence/关系/JSON 已接 |
 | 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | **W1/W2 有** | `#/ask2` 单题 + `#/lab` 异步 + 实验详情四 tab |
 | 当前有效 Memory + 回答 | `StateView` + U AnswerResult + legacy dynamic | 有 | Web 未展示新 StateView/引用/拒答 |
-| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | **W2 有归档页** | `#/evaluation2` 展示 test 归档；Web 单题报告 F1/Recall 为 null，不冒充 |
+| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | **W2b 有批量** | Web 批量报告计算 F1/Recall/按类别；状态准确率仍 `not_available`（无模块标注） |
 | Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
 | Web 交付 / 源码 / JSON / 结果 / 报告 | 旧 UI + W1/W2 `/api/v2` | **W2 部分** | 已交付记忆/提问/实验台/报告四 tab/评测归档；W3 补 test 最终评测/报告/复现 |
-| 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；W2 report API + `#/experiments` 四 tab | **W2 有** | 单题报告默认 `inconclusive`；批量多题/CI 待 W2b |
+| 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；W2b batch + report API + `#/experiments` 四 tab | **W2b 有** | 批量 ≥10 题给 descriptive 结论；CI/bootstrap 待 W3 |
 | Bonus：图/多跳/合并/时间/冲突 | S3/S4 已实现多数 | 超出 | 需在 Lab 中可插拔呈现 |
 
 **结论：** 能力层“只多不少”；**交付层目前少 5 项**（6 段/default、v2 JSON 下载、v2 记忆/证据页、状态 trace 页、Lab/对照/最终交付页）。W1–W3 补齐后，严格满足并超过 PDF。

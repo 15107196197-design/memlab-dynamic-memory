@@ -10,22 +10,25 @@ system status. Experiment jobs/queue and the four-tab report page are W2.
 from __future__ import annotations
 
 import json
+import random
 import re
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from collections import Counter
+from collections import Counter, defaultdict
 from functools import lru_cache
 from typing import Any
 from urllib.parse import unquote
 
 from memlab import cache as lab_cache
+from memwb import evaluation
 from memlab import registry
 from memlab import config as lab_config
 from memlab import export as lab_export
 from memlab import manifest as lab_manifest, model
 from memlab.e2e import E2EPipeline
+from memlab.merge import unit_turns as merge_unit_turns
 from memlab.experiments import compiler
 from memlab.experiments import executor as e2e_executor
 from memwb import config as legacy_config
@@ -320,13 +323,121 @@ def _persist(payload: dict[str, Any]) -> None:
         pass
 
 
+def _select_questions(sample_id: str, limit: int, seed: int) -> list[tuple[int, dict[str, Any]]]:
+    sample = _sample(sample_id)
+    eligible = evaluation.answerable(sample.get("qa", []))
+    groups: dict[int, list[tuple[int, dict[str, Any]]]] = defaultdict(list)
+    for index, qa in eligible:
+        groups[qa.get("category")].append((index, qa))
+    rng = random.Random(seed)
+    for values in groups.values():
+        rng.shuffle(values)
+    chosen: list[tuple[int, dict[str, Any]]] = []
+    categories = sorted(groups)
+    while len(chosen) < min(limit, len(eligible)):
+        progressed = False
+        for category in categories:
+            if groups[category] and len(chosen) < min(limit, len(eligible)):
+                chosen.append(groups[category].pop(0))
+                progressed = True
+        if not progressed:
+            break
+    return sorted(chosen)
+
+
+def _p95(values: list[float]) -> float | None:
+    if not values:
+        return None
+    values = sorted(values)
+    return values[min(len(values) - 1, int(round(0.95 * (len(values) - 1))))]
+
+
+def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
+               limit: int, seed: int) -> dict[str, Any]:
+    plan = _plan(cfg, question_limit=limit)
+    ctx, pipeline = _context(plan, sample_id, offline)
+    questions = _select_questions(sample_id, limit, seed)
+    rows: list[dict[str, Any]] = []
+    f1s: list[float] = []
+    recalls: list[float] = []
+    latencies: list[float] = []
+    by_category: dict[str, dict[str, Any]] = defaultdict(lambda: {"n": 0, "f1": [], "recall": []})
+    stages: dict[str, list[float]] = defaultdict(list)
+    for index, qa in questions:
+        started = time.perf_counter()
+        gold_turns = evaluation.evidence_turns(qa)
+        result = pipeline.run(qa.get("question", ""), k=15, gold_turns=gold_turns)
+        latency = round((time.perf_counter() - started) * 1000, 3)
+        prediction = result.answer.answer
+        f1 = evaluation.answer_f1(prediction, qa.get("answer"), qa.get("category"))
+        turns: set[str] = set()
+        for unit in result.merge.units:
+            turns |= merge_unit_turns(unit)
+        rec = evaluation.recall(gold_turns, sorted(turns))
+        category = str(qa.get("category") or "unknown")
+        row = {
+            "qid": f"{sample_id}:{index}", "category": category,
+            "question": qa.get("question"), "gold": qa.get("answer"),
+            "prediction": prediction, "answer_f1": f1, "evidence_recall": rec,
+            "tokens": result.tokens, "latency_ms": latency,
+            "candidates": len(result.merge.units), "refused": int(result.answer.refused),
+        }
+        rows.append(row)
+        if f1 is not None:
+            f1s.append(float(f1))
+            by_category[category]["f1"].append(float(f1))
+        if rec is not None:
+            recalls.append(float(rec))
+            by_category[category]["recall"].append(float(rec))
+        latencies.append(latency)
+        by_category[category]["n"] += 1
+        for step in result.trace:
+            if step.get("ms") is not None:
+                stages[str(step.get("stage") or "unknown")].append(float(step["ms"]))
+    metrics = {
+        "answer_f1": round(sum(f1s) / len(f1s), 4) if f1s else None,
+        "evidence_recall": round(sum(recalls) / len(recalls), 4) if recalls else None,
+        "state_accuracy": None,
+        "tokens": round(sum(float(r["tokens"] or 0) for r in rows) / len(rows), 2) if rows else None,
+        "p95_latency_ms": _p95(latencies),
+        "error_rate": round(sum(1 for r in rows if r["refused"] and not r["prediction"]) / len(rows), 4) if rows else 0.0,
+        "questions": len(rows),
+    }
+    categories = []
+    for name, values in sorted(by_category.items()):
+        categories.append({
+            "category": name, "n": values["n"],
+            "answer_f1": round(sum(values["f1"]) / len(values["f1"]), 4) if values["f1"] else None,
+            "evidence_recall": round(sum(values["recall"]) / len(values["recall"]), 4) if values["recall"] else None,
+        })
+    run_id = f"batch-{time.strftime('%Y%m%d-%H%M%S')}-{cfg.config_hash.split(':')[-1][:8]}-s{seed}"
+    payload = {
+        "kind": "batch", "run_id": run_id, "sample": sample_id, "preset": cfg.preset,
+        "config_hash": cfg.config_hash, "offline": bool(offline), "seed": seed,
+        "questions": len(rows), "metrics": metrics, "rows": rows,
+        "by_category": categories,
+        "config": cfg.to_dict(),
+        "stage_waterfall": [{"stage": k, "ms": round(sum(v) / len(v), 3)} for k, v in sorted(stages.items())],
+        "model": {"llm": "offline-extractive" if offline else getattr(ctx.llm, "effective_model", None),
+                  "embedding": "offline-hash" if offline else getattr(ctx.embedding, "effective_model", None),
+                  "offline": bool(offline)},
+        "trace": [],
+    }
+    _persist(payload)
+    return payload
+
+
 def _run(body: dict[str, Any]) -> dict[str, Any]:
     sample_id = str(body.get("sample") or "")
     _sample(sample_id)
+    cfg_data, cfg = _body_config(body)
+    if body.get("batch"):
+        limit = max(1, min(50, int(body.get("questions", 10) or 10)))
+        seed = int(body.get("seed", 13) or 13)
+        return _run_batch(sample_id, cfg, bool(body.get("offline", True)), limit, seed)
     question = str(body.get("question") or "").strip()
     if not question:
         raise WebError("question is required", 400)
-    cfg_data, cfg = _body_config(body)
     k = max(1, min(50, int(body.get("k", 15) or 15)))
     as_of = body.get("as_of") or None
     mode = str(body.get("mode") or "module").lower()
@@ -430,57 +541,110 @@ def _load_runs(run_ids: list[str]) -> list[dict[str, Any]]:
     return runs
 
 
+def _run_metrics(run: dict[str, Any]) -> dict[str, Any]:
+    if run.get("kind") == "batch":
+        return dict(run.get("metrics") or {})
+    return {
+        "answer_f1": None, "evidence_recall": None, "state_accuracy": None,
+        "tokens": run.get("tokens"), "p95_latency_ms": run.get("latency_ms"),
+        "error_rate": 0.0, "questions": 1,
+    }
+
+
+def _derive_conclusion(baseline: dict[str, Any], candidate: dict[str, Any]) -> dict[str, Any]:
+    b, c = _run_metrics(baseline), _run_metrics(candidate)
+    n = min(int(c.get("questions") or 1), int(b.get("questions") or 1))
+    f1b, f1c = b.get("answer_f1"), c.get("answer_f1")
+    rb, rc = b.get("evidence_recall"), c.get("evidence_recall")
+    base = {
+        "status": "inconclusive", "claims": [], "conditions": [],
+        "limitations": [], "next_actions": [],
+    }
+    if baseline.get("kind") != "batch" or candidate.get("kind") != "batch":
+        base["claims"] = ["Single-question Web smoke; no statistical conclusion."]
+        base["limitations"] = ["Only one question; no F1/Recall or CI."]
+        base["next_actions"] = ["Run a fixed multi-question batch (W2b) and rebuild the report."]
+        return base
+    if n < 10:
+        base["claims"] = [f"Only {n} questions; too small for a comparison claim."]
+        base["limitations"] = ["Small sample; no CI."]
+        base["next_actions"] = ["Increase to at least 20 questions per config."]
+        return base
+    if f1b is None or f1c is None:
+        base["claims"] = ["F1 unavailable (gold-free or empty answers)."]
+        base["limitations"] = ["Cannot compare quality without gold answers."]
+        return base
+    df1 = round(float(f1c) - float(f1b), 4)
+    drec = None if rb is None or rc is None else round(float(rc) - float(rb), 4)
+    if df1 > 0.02 and (drec is None or drec >= -0.02):
+        status = "supported"
+        claims = [f"F1 +{df1:.4f} over baseline on {n} questions" + (f"; Recall {drec:+.4f}" if drec is not None else "")]
+    elif df1 < -0.02:
+        status = "not_supported"
+        claims = [f"Candidate F1 {df1:+.4f} vs baseline on {n} questions"]
+    else:
+        status = "inconclusive"
+        claims = [f"F1 delta {df1:+.4f} is within the ±0.02 descriptive band"]
+    return {
+        "status": status,
+        "claims": claims,
+        "conditions": ["Same fixed question set, seed and provider for both runs.",
+                       "Offline extractive runs are not LLM-quality claims."],
+        "limitations": ["Descriptive comparison; no bootstrap CI or significance test yet."],
+        "next_actions": ["Repeat with 2–3 seeds and add paired bootstrap CI (W3)."],
+    }
+
+
 def _build_report(experiment_id: str, body: dict[str, Any]) -> dict[str, Any]:
     run_ids = body.get("run_ids") or []
     if not isinstance(run_ids, list) or len(run_ids) < 2:
         raise WebError("run_ids must contain at least a baseline and a candidate", 422)
     runs = _load_runs([str(r) for r in run_ids])
     baseline, candidate = runs[0], runs[-1]
-    def metric(run, key):
-        if key == "tokens":
-            return run.get("tokens")
-        if key == "latency_ms":
-            return run.get("latency_ms")
-        if key == "candidates":
-            return len(run.get("candidates") or [])
-        return None
+    bmetrics, cmetrics = _run_metrics(baseline), _run_metrics(candidate)
     comparisons = []
-    for key in ("tokens", "latency_ms", "candidates"):
-        b, c = metric(baseline, key), metric(candidate, key)
+    for key in ("answer_f1", "evidence_recall", "tokens", "p95_latency_ms"):
+        b, c = bmetrics.get(key), cmetrics.get(key)
         delta = None if b is None or c is None else round(float(c) - float(b), 4)
         comparisons.append({"baseline": baseline.get("run_id"), "candidate": candidate.get("run_id"),
                             "metric": key, "baseline_value": b, "candidate_value": c,
                             "delta": delta, "paired": False, "significant": False})
-    stages: dict[str, float] = {}
-    for step in candidate.get("trace") or []:
-        stage = str(step.get("stage") or "unknown")
-        stages[stage] = round(stages.get(stage, 0.0) + float(step.get("ms") or 0.0), 3)
-    conclusion = body.get("conclusion") if isinstance(body.get("conclusion"), dict) else {
-        "status": "inconclusive",
-        "claims": ["This is a single-question Web smoke, not a statistical experiment."],
-        "conditions": ["Needs a multi-question run with a fixed baseline and CI before a claim."],
-        "limitations": ["answer_f1 is not recorded for a gold-free Web run; no significance test."],
-        "next_actions": ["Run the same config on a fixed question set (W2 batch) and rebuild this report."],
-    }
+    if candidate.get("kind") == "batch":
+        split = legacy_config.split_of(str(candidate.get("sample")))
+        dataset = {"split": split, "samples": [candidate.get("sample")],
+                   "questions": candidate.get("questions"), "seeds": [candidate.get("seed")],
+                   "test_only": split == "test"}
+        run_rows = [{"run_id": r.get("run_id"), "sample": r.get("sample"), "questions": r.get("questions"),
+                     "metrics": _run_metrics(r), "config_hash": r.get("config_hash")} for r in runs]
+        analysis = {"main_effects": [], "interactions": [], "pareto": [],
+                    "by_category": candidate.get("by_category") or [],
+                    "stage_waterfall": candidate.get("stage_waterfall") or [],
+                    "failure_breakdown": []}
+    else:
+        dataset = {"split": "single_question", "samples": [candidate.get("question")],
+                   "questions": 1, "seeds": [], "test_only": False}
+        run_rows = [{"run_id": r.get("run_id"), "question": r.get("question"),
+                     "config_hash": r.get("config_hash"), "tokens": r.get("tokens"),
+                     "latency_ms": r.get("latency_ms"), "candidates": len(r.get("candidates") or []),
+                     "answer": (r.get("answer") or {}).get("answer")} for r in runs]
+        stages: dict[str, float] = {}
+        for step in candidate.get("trace") or []:
+            stage = str(step.get("stage") or "unknown")
+            stages[stage] = round(stages.get(stage, 0.0) + float(step.get("ms") or 0.0), 3)
+        analysis = {"main_effects": [], "interactions": [], "pareto": [],
+                    "by_category": [], "stage_waterfall": [{"stage": k, "ms": v} for k, v in stages.items()],
+                    "failure_breakdown": []}
+    conclusion = body.get("conclusion") if isinstance(body.get("conclusion"), dict) else _derive_conclusion(baseline, candidate)
     report = {
         "schema": "memlab/experiment-report@1",
         "experiment_id": _safe_id(experiment_id),
         "created_at": datetime.now().isoformat(timespec="seconds"),
         "manifest": {"git_commit": lab_manifest.git_commit(), "config_hash": candidate.get("config_hash"),
                      "model": candidate.get("model"), "offline": candidate.get("offline")},
-        "dataset": {"split": "single_question", "samples": [candidate.get("question")],
-                    "questions": 1, "seeds": [], "test_only": False},
-        "results": {"runs": [{"run_id": r.get("run_id"), "question": r.get("question"),
-                               "config_hash": r.get("config_hash"), "tokens": r.get("tokens"),
-                               "latency_ms": r.get("latency_ms"), "candidates": len(r.get("candidates") or []),
-                               "answer": (r.get("answer") or {}).get("answer")} for r in runs],
-                    "metrics": {"answer_f1": None, "evidence_recall": None, "state_accuracy": None,
-                                "tokens": candidate.get("tokens"), "p95_latency_ms": candidate.get("latency_ms"),
-                                "error_rate": 0.0}},
+        "dataset": dataset,
+        "results": {"runs": run_rows, "metrics": cmetrics},
         "comparisons": comparisons,
-        "analysis": {"main_effects": [], "interactions": [], "pareto": [],
-                     "stage_waterfall": [{"stage": k, "ms": v} for k, v in stages.items()],
-                     "failure_breakdown": []},
+        "analysis": analysis,
         "conclusion": conclusion,
         "web": {"route": f"#/experiments/{_safe_id(experiment_id)}", "published": True},
     }

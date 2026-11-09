@@ -368,7 +368,7 @@ UI 选择轴
 
 ### W2 · 实验台 + 评测对照（P0/P1）
 
-> **状态（2026-11-09）：核心已实现。** 13 轴配置器、异步 job、实验详情四 tab、`experiment-report@1`、`#/evaluation2` 归档对照；批量多题/CI 仍属 W2b。
+> **状态（2026-11-09）：W2/W2b 已实现（Web 侧）。** 13 轴配置器、异步 job、批量多题 F1/Recall/按类别、实验详情四 tab、自动结论、`#/evaluation2` 归档对照；CI/bootstrap 留 W3。
 
 **依赖：** W1、S5（Store/Runner/compiler）、S6（候选）、S7a（耦合）。
 

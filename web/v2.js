@@ -155,6 +155,27 @@
       </div>`;
   }
 
+  function renderBatch(out) {
+    const m = out.metrics || {};
+    return `<div class="card pad"><div class="row"><span class="pill ${out.offline ? "historical" : "active"}">${out.offline ? "offline extractive" : "online"}</span><span class="muted small">${esc(out.run_id)}</span></div>
+      <h3 style="margin-top:12px">批量结果 · ${esc(out.questions)} 题 · seed ${esc(out.seed)}</h3>
+      <table class="v2-table"><tbody>
+        <tr><th>answer_f1</th><td>${esc(m.answer_f1 ?? "—")}</td></tr>
+        <tr><th>evidence_recall</th><td>${esc(m.evidence_recall ?? "—")}</td></tr>
+        <tr><th>state_accuracy</th><td>${esc(m.state_accuracy ?? "not_available")}</td></tr>
+        <tr><th>tokens / question</th><td>${esc(m.tokens ?? "—")}</td></tr>
+        <tr><th>p95 latency</th><td>${esc(m.p95_latency_ms ?? "—")} ms</td></tr>
+        <tr><th>error rate</th><td>${esc(m.error_rate ?? "—")}</td></tr>
+      </tbody></table>
+      <h3 style="margin-top:14px">按类别</h3>
+      <table class="v2-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>
+      ${(out.by_category || []).map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(c.answer_f1 ?? "—")}</td><td>${esc(c.evidence_recall ?? "—")}</td></tr>`).join("")}
+      </tbody></table>
+      <h3 style="margin-top:14px">逐题</h3>
+      <div class="v2-cands">${(out.rows || []).map((r) => `<div class="v2-step"><span class="mono">${esc(r.qid)}</span> <span class="muted small">F1 ${esc(r.answer_f1 ?? "—")} · R ${esc(r.evidence_recall ?? "—")}</span><div class="small">${esc(r.question)}</div><div class="muted small">pred: ${esc((r.prediction || "").slice(0, 120))}</div></div>`).join("")}</div>
+      </div>`;
+  }
+
   async function presets() {
     if (!window.__v2presets) window.__v2presets = (await api("/api/v2/config/presets")).presets;
     return window.__v2presets;
@@ -237,7 +258,11 @@
         <div class="card pad">
           <h3>运行</h3>
           <p class="muted small">当前 ${esc(app.sampleId)}；单题异步运行，服务端串行，可轮询状态。</p>
-          <textarea id="v2-lab-question" class="field" placeholder="问题"></textarea>
+          <textarea id="v2-lab-question" class="field" placeholder="单题问题；批量模式可留空"></textarea>
+          <div class="row"><label class="small"><input type="checkbox" id="v2-lab-batch"> 批量多题</label>
+            <label class="small">题数 <input id="v2-lab-questions" class="field" type="number" min="1" max="50" value="10" style="width:70px;padding:5px"></label>
+            <label class="small">seed <input id="v2-lab-seed" class="field" type="number" value="13" style="width:75px;padding:5px"></label>
+          </div>
           <label class="small"><input type="checkbox" id="v2-lab-offline" checked> offline 演示</label>
           <div class="row" style="margin-top:10px"><button id="v2-lab-run" class="btn primary">运行</button><span id="v2-lab-status" class="muted small"></span></div>
           <div id="v2-lab-link" class="note"></div>
@@ -291,20 +316,25 @@
       } catch (err) { checkEl.textContent = err.message; }
     };
     $("#v2-lab-run").onclick = async () => {
+      const batch = $("#v2-lab-batch").checked;
       const q = $("#v2-lab-question").value.trim();
-      if (!q) return;
+      if (!batch && !q) return;
       $("#v2-lab-status").textContent = "提交…";
       $("#v2-lab-run").disabled = true;
       try {
         const cfg = JSON.parse(configEl.value);
-        const job = await api("/api/v2/jobs", { sample: app.sampleId, question: q, config: cfg, offline: $("#v2-lab-offline").checked });
+        const body = { sample: app.sampleId, config: cfg, offline: $("#v2-lab-offline").checked };
+        if (batch) Object.assign(body, { batch: true, questions: Number($("#v2-lab-questions").value), seed: Number($("#v2-lab-seed").value) });
+        else body.question = q;
+        const job = await api("/api/v2/jobs", body);
         $("#v2-lab-status").innerHTML = `<span class="spinner"></span> ${esc(job.status)}`;
         const done = await waitJob(job.job_id);
         if (done.status !== "done") throw new Error(done.error || done.status);
         const out = done.result;
-        $("#v2-lab-out").innerHTML = renderRun(out);
-        $("#v2-lab-status").textContent = `完成 · ${out.latency_ms ?? "?"} ms`;
-        window.__v2lastRuns = [out.run_id];
+        $("#v2-lab-out").innerHTML = out.kind === "batch" ? renderBatch(out) : renderRun(out);
+        $("#v2-lab-status").textContent = out.kind === "batch" ? `完成 · ${out.questions} 题` : `完成 · ${out.latency_ms ?? "?"} ms`;
+        window.__v2runs = [...(window.__v2runs || []), out.run_id].slice(-6);
+        window.__v2lastRuns = window.__v2runs;
         $("#v2-lab-link").innerHTML = `run: <span class="mono">${esc(out.run_id)}</span> · <a href="#/experiments/${esc(out.run_id)}">生成/查看实验报告 →</a>`;
       } catch (err) {
         $("#v2-lab-out").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
@@ -322,7 +352,7 @@
       try { report = await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`); } catch (err) { report = null; }
     }
     if (!report) {
-      const runs = window.__v2lastRuns || [];
+      const runs = window.__v2runs || [];
       root.innerHTML = `${header("EXPERIMENT REPORT", "实验详情", "报告必须有 Results / Comparison / Analysis / Conclusion 四段；单题冒烟会标 inconclusive，不冒充统计结论。")}
         <div class="card pad">
           <h3>${id ? "生成报告" : "已有报告"}</h3>
@@ -360,7 +390,9 @@
         </tbody></table>`;
       }
       if (tab === "analysis") {
-        return `<h3>Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(s.ms)} ms</span></div>`).join("") || `<p class="muted">—</p>`}
+        const cats = report.analysis.by_category || [];
+        return `<h3>By category</h3>${cats.length ? `<table class="v2-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>${cats.map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(c.answer_f1 ?? "—")}</td><td>${esc(c.evidence_recall ?? "—")}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">—</p>`}
+          <h3 style="margin-top:14px">Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(s.ms)} ms</span></div>`).join("") || `<p class="muted">—</p>`}
           <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
       }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>

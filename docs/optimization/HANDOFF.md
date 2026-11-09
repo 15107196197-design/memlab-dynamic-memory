@@ -27,10 +27,10 @@
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **233 passed**（223 + Web 10） |
+| 测试 | `python -m unittest discover -s tests -t .` → **234 passed**（223 + Web 11） |
 | 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
 | 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **W2 核心已完成**：轴配置器 + runnable gate、异步 job、实验详情 Results/Comparison/Analysis/Conclusion、评测归档页；W1 记忆/JSON/提问保留。下一步 W2b（批量多题实验报告）/ W3（test 最终评测、截图、复现包）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
+| 当前阶段 | **W2b 已完成（Web 侧）**：轴配置器、异步 job、批量多题 F1/Recall/按类别、实验详情四 tab、自动结论、评测归档页；W1 保留。下一步 W3（test 最终评测、截图、复现包、报告素材）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -708,14 +708,15 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
   - `GET/POST /api/v2/experiments/{id}/report`：`memlab/experiment-report@1`，四段 results/comparisons/analysis/conclusion；无 conclusion 显示 `not_analyzed`；单题报告明确标 `inconclusive`。
   - `#/experiments/<id>`：四个 tab；可从 baseline/candidate run_id 生成报告；`GET /api/v2/experiments` 列表。
   - `GET /api/v2/evaluation` + `#/evaluation2`：test 归档 Full/Vector/Hybrid/Dynamic F1/Recall/状态/latency，标明 `eval/results.json` 27B 来源。
-- 测试：**233 passed**；新增 axes/async job/report/evaluation 测试。
+- 测试：**234 passed**；新增 axes/async job/report/evaluation/batch 测试。
+- W2b 追加：`POST /api/v2/runs {batch:true, questions, seed}` → 批量 F1/Recall/按类别/逐题；report builder 自动比较 baseline/candidate（≥10 题为 descriptive，<10 题 inconclusive）；Lab 批量勾选/题数/seed；实验详情 Analysis 显示 by_category。
 - 边界：报告目前基于单题/两条 Web run；`answer_f1/evidence_recall/state_accuracy` 无 gold 时为 `null`，不冒充统计结论。批量多题、跨 seed、CI、实验详情自动统计是 W2b/W3。`reports/experiments` 被 gitignore，最终归档 W3 处理。
 - 兼容：旧 `/api/*`、旧 tab 不变；W1 的 sync `/api/v2/runs` 保留。
 
 ### 5.2 未开始
 - [x] W1 Web MVP：6 段入口、记忆库 v2、v2 JSON 下载、提问/状态页、基础实验台、系统页、旧 API 兼容（2026-11-09，229 tests）
 - [x] W2 核心 Web 实验台：轴配置器 + runnable gate + 异步 job + 实验详情四 tab + 评测归档页（2026-11-09，233 tests）
-- [ ] W2b：批量多题/固定题集 + 真实 F1/Recall/状态指标写入报告 + CI/结论状态自动判定
+- [x] W2b：批量多题/固定题集 + 真实 F1/Recall + 按类别 + 自动结论（2026-11-09，234 tests；CI/bootstrap 留 W3）
 - [ ] 实验报告器：`memlab/experiment-report@1`（results/comparisons/analysis/conclusion）落盘 + Web API；每次实验强制
 - [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）
 - [ ] E0 基线复现
