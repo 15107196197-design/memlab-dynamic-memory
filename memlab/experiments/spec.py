@@ -17,6 +17,7 @@ SPEC_SCHEMA = "memlab/experiment@1"
 DESIGNS = {
     "single_factor", "single_factor_adoption", "single_factor_variant_and_parameter",
     "full_factorial", "fractional_factorial", "environment_grid", "nested_factorial",
+    "coupling_analysis",
 }
 
 

@@ -31,6 +31,7 @@ python -m memlab.experiments.cli analyze --db runs/s5.sqlite --metric answer_f1
 | `fractional_factorial` | ✅ (limited) | only `2^(k-1)` half-fraction; `p>1` raises a clear error |
 | `environment_grid` | ✅ | LLM × data scale × scene × candidate |
 | `nested_factorial` | ❌ | out of S5 scope |
+| `coupling_analysis` | ✅ analysis-only | `sweep` rejects it; use `memlab.experiments.coupling_cli` |
 
 Every plan records both `requested_config` and `effective_config`. `effective_config`
 is the result of applying the spec's `derived_rules` (for example
