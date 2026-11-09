@@ -632,8 +632,9 @@
     const showNode = async (id, data) => {
       const panel = $("#v2-graph-detail");
       if (id.startsWith("entity:") || id.startsWith("topic:") || id.startsWith("event:")) {
+        const byId = new Map((data.nodes || []).map((n) => [n.id, n]));
         const neighbors = (data.edges || []).filter((e) => e.source === id || e.target === id).map((e) => e.source === id ? e.target : e.source);
-        panel.innerHTML = `<div class="mono">${esc(id)}</div><p>${esc(id.split(":").slice(1).join(":"))}</p><p class="muted small">邻居 ${neighbors.length} 个</p>${neighbors.slice(0, 12).map((x) => `<div class="mono small">${esc(x)}</div>`).join("")}`;
+        panel.innerHTML = `<div class="v1-title">${esc(id.split(":").slice(1).join(":"))}</div><p class="muted small">邻居 ${neighbors.length} 个</p>${neighbors.slice(0, 12).map((x) => { const n = byId.get(x); return `<div class="small">${esc(n?.label || x)}</div>`; }).join("")}`;
         return;
       }
       try {

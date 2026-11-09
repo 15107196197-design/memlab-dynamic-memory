@@ -213,3 +213,4 @@
 .v3-event { position: relative; width: 4px; height: 4px; border-radius: 50%; background: var(--muted); display: block; }
 .v3-cursor { position: absolute; top: 0; bottom: 0; border-left: 1px dashed var(--ink); opacity: .5; pointer-events: none; }
 @media (max-width: 720px) { .v3-row { grid-template-columns: 110px minmax(0, 1fr); } }
+html, body { max-width: 100%; overflow-x: hidden; }
