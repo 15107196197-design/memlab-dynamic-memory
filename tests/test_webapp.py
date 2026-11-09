@@ -259,6 +259,14 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("this_project", data["provenance"])
         self.assertTrue(any("final-w3" in item["path"] for item in data["provenance"]["this_project"]["items"]))
 
+    def test_health_reports_model_state(self):
+        data = webapp.get("/api/v2/health")
+        model = data["model"]
+        for key in ("provider", "base_url", "available", "model", "embedding"):
+            self.assertIn(key, model)
+        self.assertIsInstance(model["available"], bool)
+        self.assertEqual(model["provider"], "ollama")
+
     def test_deep_link_static_guards(self):
         js = (Path(__file__).resolve().parents[1] / "web" / "v2.js").read_text(encoding="utf-8")
         self.assertIn("g2-tip", js)

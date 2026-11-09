@@ -142,6 +142,17 @@ Web 的提问页预设固定读取 `configs/reference-*.json`（默认 Ollama）
 
 `environment.embedding` 可以用同样的结构；如果该服务没有 `/embeddings`，把 embedding 保留为本地 Ollama `bge-m3` 即可。Web 顶部的模型健康检查只探测 Ollama，因此 API 配置是否可用以 `scripts/preflight.py` 或实际 run 的返回为准。
 
+## 在线演示（ModelScope 创空间）
+
+**https://www.modelscope.cn/studios/A1211JOY/dynamic-memory-workbench**
+
+免安装的演示环境。空间本身跑在免费 CPU 实例上，**问答的推理走作者自己的 GPU 服务器**（L20 + `qwen3.8:27b-q4_K_M` + `bge-m3`），所以记忆浏览、图谱、评测对照、实验报告和「提问与状态」都能用。
+
+- 站内 `/api/v2/health` 会探测后端：能连上就把提问页默认切到「在线模型 · qwen3.8:27b」，连不上则自动退回「离线演示」并在页面上标注。
+- 一次提问约 20–40 秒（含 21 次 embedding 和一次 27B 生成）；免费 CPU 实例空闲会休眠，首次打开可能要等一会。
+- 后端是作者的机器，只有演示期间在线；关机或网关停机时，问答会退化为离线演示，其他页面不受影响。
+- 架构、网关服务、环境变量和安全边界见 [deploy/modelscope/DEPLOYED.md](deploy/modelscope/DEPLOYED.md)。
+
 ## 数据
 
 `data/locomo10.json` 是 SNAP LoCoMo 官方 10 段对话（数据许可见 [DATA-SOURCE.md](DATA-SOURCE.md) 与 [LOCOMO-LICENSE.txt](LOCOMO-LICENSE.txt)）。课程子集按对话 ID 固定划分：

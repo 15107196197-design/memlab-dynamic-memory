@@ -2015,6 +2015,16 @@
     return window.__v2presets;
   }
 
+  // Ask page defaults to the real model when the backend can reach one
+  // (local Ollama, or the GPU host behind the ModelScope Studio).
+  async function probeModel() {
+    try {
+      return await api("/api/v2/health");
+    } catch (err) {
+      return null;
+    }
+  }
+
   function modelUnavailableHtml(err) {
     const e = asError(err);
     return `<div class="v2-model-error card pad">
@@ -2043,11 +2053,24 @@
         <textarea id="v2-question" class="v2-question" placeholder="例如：Caroline 现在的心情是什么？"></textarea>
         <div id="v2-ask-qmeta" class="v2-qmeta"></div>
         <div class="v2-ask-actions"><select id="v2-preset" class="field small">${options}</select>
-          <label class="small"><input type="checkbox" id="v2-ask-offline" checked> 离线演示（offline）</label>
+          <label class="small"><input type="checkbox" id="v2-ask-offline" checked> <span id="v2-ask-offline-label">离线演示（offline）</span></label>
           <button id="v2-run" class="btn primary">提问</button><span id="v2-run-status" class="muted small"></span></div>
       </div>
       <div id="v2-run-out"></div>`;
     const picker = wireQuestionBank("v2-ask", bank, $("#v2-question"));
+    probeModel().then((health) => {
+      const box = $("#v2-ask-offline");
+      const label = $("#v2-ask-offline-label");
+      const model = health && health.model;
+      if (!box || !model) return;
+      if (model.available) {
+        box.checked = false;
+        if (label) label.textContent = `在线模型 · ${model.model}`;
+      } else {
+        box.checked = true;
+        if (label) label.textContent = "离线演示（offline）";
+      }
+    });
     const run = async (forceOffline) => {
       const q = $("#v2-question").value.trim();
       if (!q) return;

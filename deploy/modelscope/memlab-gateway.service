@@ -1,0 +1,16 @@
+[Unit]
+Description=MemLab Ollama token gateway (127.0.0.1:11434 -> 0.0.0.0:8443)
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/memlab-deploy
+ExecStart=/usr/bin/python3 /root/memlab-deploy/ollama_gateway.py --host 0.0.0.0 --port 8443 --token-file /root/memlab-deploy/gateway.token
+Restart=always
+RestartSec=3
+StandardOutput=append:/root/memlab-deploy/gateway.log
+StandardError=append:/root/memlab-deploy/gateway.log
+
+[Install]
+WantedBy=multi-user.target

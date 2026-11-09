@@ -16,6 +16,7 @@ import socket
 import threading
 import time
 import urllib.error
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from collections import Counter, defaultdict
@@ -397,6 +398,14 @@ def _body_config(body: dict[str, Any]) -> tuple[dict[str, Any], lab_config.RunCo
         data = body["config"]
     else:
         data = _preset(str(body.get("preset") or "B0")).to_dict()
+        # The interactive Web demo uses the richer offline_qa extractor.  This
+        # is a demo-only preset default: callers that need the frozen offline
+        # (extractive_v1) semantics pass an explicit config, which is never
+        # rewritten here.
+        if bool(body.get("offline", True)):
+            use = data.setdefault("use", {})
+            if isinstance(use, dict):
+                use.setdefault("offline_answerer", lab_config.OFFLINE_ANSWERER_OFFLINE_QA)
     check = _validate(data)
     if not check["valid"]:
         raise WebError("invalid config", 422, problems=check["problems"])
@@ -478,6 +487,7 @@ def _run_module(sample_id: str, question: str, cfg: lab_config.RunConfig,
         "model": {
             "llm": getattr(ctx.llm, "effective_model", None) if not offline else "offline-extractive",
             "embedding": getattr(ctx.embedding, "effective_model", None) if not offline else "offline-hash",
+            "offline_answerer": getattr(ctx.llm, "offline_answerer", None) if offline else None,
             "offline": bool(offline),
         },
     }
@@ -676,6 +686,7 @@ def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
         "stage_waterfall": [{"stage": k, "ms": round(sum(v) / len(v), 3)} for k, v in sorted(stages.items())],
         "model": {"llm": "offline-extractive" if offline else getattr(ctx.llm, "effective_model", None),
                   "embedding": "offline-hash" if offline else getattr(ctx.embedding, "effective_model", None),
+                  "offline_answerer": getattr(ctx.llm, "offline_answerer", None) if offline else None,
                   "offline": bool(offline)},
         "trace": [],
         "graph": ctx.store.ensure_graph(cfg.impl("graph.repr") or "state_slot").stats(),
@@ -1517,6 +1528,42 @@ def _project_reports() -> list[dict[str, Any]]:
     return out
 
 
+_HEALTH_CACHE: dict[str, Any] = {"at": 0.0, "value": None}
+
+
+def _model_health(force: bool = False) -> dict[str, Any]:
+    """Probe the configured Ollama endpoint so the Web can default to online.
+
+    The public ModelScope deployment points ``OLLAMA_URL`` at a GPU box; a plain
+    local checkout points at 127.0.0.1.  Either way the ask page asks this route
+    whether a real model is reachable and only then preselects the online run.
+    The probe is cached so refreshing the page does not hammer the endpoint.
+    """
+    now = time.time()
+    cached = _HEALTH_CACHE.get("value")
+    if not force and isinstance(cached, dict) and now - float(_HEALTH_CACHE.get("at") or 0.0) < 30:
+        return cached
+    base = legacy_config.ollama_url()
+    value: dict[str, Any] = {
+        "provider": "ollama",
+        "base_url": base,
+        "available": False,
+        "model": legacy_config.answer_model(),
+        "embedding": legacy_config.embed_model(),
+        "checked_at": datetime.now().isoformat(timespec="seconds"),
+    }
+    try:
+        request = urllib.request.Request(f"{base}/api/tags", headers={"Accept": "application/json"})
+        with urllib.request.urlopen(request, timeout=2.5) as response:
+            payload = json.loads(response.read().decode("utf8"))
+        names = [str(item.get("name") or "") for item in payload.get("models") or []]
+        value.update(available=True, models=[name for name in names if name][:20])
+    except Exception as exc:  # noqa: BLE001 - a health probe must never break the page
+        value["error"] = str(exc)[:200]
+    _HEALTH_CACHE.update(at=now, value=value)
+    return value
+
+
 def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     args = args or {}
     route = path[len("/api/v2"):] if path.startswith("/api/v2") else path
@@ -1542,6 +1589,10 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
 
     if route == "/config/axes":
         return axes()
+
+    if route == "/health":
+        refresh = str(_one(args, "refresh", "") or "").lower() in ("1", "true", "yes")
+        return {"model": _model_health(refresh), "offline_fallback": True}
 
     if route == "/experiments":
         return _report_list()
