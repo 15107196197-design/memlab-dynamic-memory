@@ -257,3 +257,12 @@ html, body { max-width: 100%; overflow-x: hidden; }
 #v2-force-canvas:active { cursor: grabbing; }
 .force-legend { display: flex; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: 11.5px; margin: 10px 0 0; }
 @media (max-width: 900px) { .graph-canvas-wrap { height: 520px; } }
+/* Graph hover tooltip */
+.graph-canvas-wrap { position: relative; }
+.g2-tip { position: absolute; display: none; pointer-events: none; z-index: 5; max-width: 320px; background: #fff; border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.07); padding: 9px 11px; color: var(--ink-2); font-size: 12px; line-height: 1.55; }
+.g2-tip b { display: block; color: var(--ink); font-size: 12.5px; margin-bottom: 2px; }
+.g2-tip .muted { color: var(--muted); font-size: 11px; margin-top: 3px; }
+.v1-targetbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line-2); padding: 8px 0; margin: 0 0 8px; font-size: 13px; }
+.v1-targetbar button { border: 0; background: none; color: var(--muted); font-size: 16px; cursor: pointer; line-height: 1; }
+.v1-row.pinned { background: #fcfbf7; }
+.v1-pin { margin-left: auto; font-style: normal; font-size: 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 0 5px; }

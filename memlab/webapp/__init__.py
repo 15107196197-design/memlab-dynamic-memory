@@ -936,10 +936,16 @@ def _graph_view(sample_id: str, mode: str = "changed", limit: int = 400) -> dict
         ent_id = f"e:{entity.casefold()}"
         slot_id = f"s:{entity}::{slot}"
         add_node({"id": ent_id, "kind": "entity", "label": entity, "state": None, "r": 11})
+        slot_units = [u for u in facts if _unit_summary(u)["entity"] == entity and (_unit_summary(u)["attribute"] or "event") == slot]
+        active = [u for u in slot_units if (_unit_summary(u)["state"] or "") == "ACTIVE"]
+        latest = max(active, key=lambda u: ((_unit_summary(u)["t_ingest"] or {}).get("start") or ""), default=None)
         add_node({"id": slot_id, "kind": "slot", "label": slot, "state": None,
+                  "entity": entity, "attribute": slot,
+                  "memory_id": latest.memory_id if latest is not None else None,
                   "r": 5 + min(5, versions_by_slot.get(slot_id, 1) / 2)})
         add_node({"id": unit.memory_id, "kind": "fact", "label": f"{summary['value'] or summary['event'] or unit.text}",
                   "state": summary["state"] or "UNRESOLVED", "r": 3.6,
+                  "entity": summary["entity"], "attribute": summary["attribute"] or "event",
                   "source_turn": summary["source_turn"], "t_ingest": summary["t_ingest"]})
         for source, target, kind in ((ent_id, slot_id, "member"), (slot_id, unit.memory_id, "member")):
             key = (source, target, kind)
@@ -1121,30 +1127,26 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         sample_id = str(_one(args, "sample", ""))
         _sample(sample_id)
         view = _view(sample_id)
-        kind = str(_one(args, "kind", "") or "")
         type_filter = str(_one(args, "type", "") or "")
+        kind = str(_one(args, "kind", "") or "")
         state = str(_one(args, "state", "") or "")
         entity_filter = str(_one(args, "entity", "") or "")
+        attribute_filter = str(_one(args, "attribute", "") or "")
         query = str(_one(args, "q", "") or "").strip().lower()
         page = max(1, int(_one(args, "page", 1) or 1))
         size = min(100, max(1, int(_one(args, "page_size", 40) or 40)))
+        all_facts = [_unit_summary(unit) for unit in view.units if unit.kind == "fact"]
+        counts = {"turn": sum(1 for unit in view.units if unit.kind == "turn"),
+                  "fact": len(all_facts),
+                  "fact_only": sum(1 for x in all_facts if not x["event"]),
+                  "event": sum(1 for x in all_facts if x["event"])}
+        entity_counts = Counter(x["entity"] or "未知人物" for x in all_facts)
+        base = [x for x in all_facts
+                if (not entity_filter or (x["entity"] or "未知人物") == entity_filter)
+                and (not attribute_filter or (x["attribute"] or "event") == attribute_filter)]
+        status_counts = Counter(x["state"] or "UNRESOLVED" for x in base)
         units = []
-        counts = {"turn": 0, "fact": 0, "fact_only": 0, "event": 0}
-        status_counts = Counter()
-        entity_counts = Counter()
-        for unit in view.units:
-            summary = _unit_summary(unit)
-            if summary["kind"] == "turn":
-                counts["turn"] += 1
-                continue
-            counts["fact"] += 1
-            status_counts[summary["state"] or "UNRESOLVED"] += 1
-            if summary["entity"]:
-                entity_counts[summary["entity"]] += 1
-            if summary["event"]:
-                counts["event"] += 1
-            else:
-                counts["fact_only"] += 1
+        for summary in base:
             wanted = type_filter or kind
             if wanted == "event":
                 if not summary["event"]:
@@ -1152,17 +1154,13 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             elif wanted in ("fact", "事实"):
                 if summary["event"]:
                     continue
-            elif wanted in ("turn",):
+            elif wanted == "turn":
                 continue
-            elif wanted in ("all", "全部", ""):
-                pass
-            elif wanted:
+            elif wanted not in ("all", "全部", ""):
                 continue
             if state and summary["state"].upper() != state.upper():
                 continue
-            if entity_filter and summary["entity"] != entity_filter:
-                continue
-            haystack = f"{unit.text} {summary['entity']} {summary['attribute']} {summary['value']} {summary['event']}".lower()
+            haystack = f"{summary['text']} {summary['entity']} {summary['attribute']} {summary['value']} {summary['event']}".lower()
             if query and query not in haystack:
                 continue
             units.append(summary)
@@ -1174,7 +1172,8 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             "counts": counts,
             "facets": {
                 "status": {key: status_counts.get(key, 0) for key in ("ACTIVE", "HISTORICAL", "CONFLICT", "UNRESOLVED")},
-                "kind": {"fact": counts["fact"], "event": counts["event"], "fact_only": counts["fact_only"]},
+                "kind": {"fact": len(base), "event": sum(1 for x in base if x["event"]),
+                         "fact_only": sum(1 for x in base if not x["event"])},
                 "entities": entities,
             },
             "memories": units[start:start + size],

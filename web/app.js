@@ -761,7 +761,14 @@ async function boot() {
   const first = app.samples.find((s) => s.id === "conv-26") || app.samples[0];
   fillSamples(first.id);
   await loadSample(first.id);
-  $("#sample").onchange = async () => { await loadSample($("#sample").value); render(); };
+  $("#sample").onchange = async () => {
+    const id = $("#sample").value;
+    await loadSample(id);
+    if (location.hash.startsWith("#/memories")) {
+      history.replaceState(null, "", `#/memories?sample=${encodeURIComponent(id)}`);
+    }
+    render();
+  };
   $("#open-search").onclick = openSearch;
   $("#more").onclick = openData;
   window.addEventListener("hashchange", render);

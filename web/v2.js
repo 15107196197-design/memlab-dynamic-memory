@@ -77,10 +77,31 @@
 
   async function renderMemories(root) {
     root.classList.add("v1-page");
+    const params = new URLSearchParams(location.hash.split("?")[1] || "");
+    const wantedSample = params.get("sample") || app.sampleId;
+    if (wantedSample !== app.sampleId) {
+      await loadSample(wantedSample);
+      const select = document.getElementById("sample");
+      if (select) select.value = wantedSample;
+    }
     const s = v2sample();
+    let stateFilter = "";
+    let typeFilter = "all";
+    let entityFilter = params.get("entity") || "";
+    let attributeFilter = params.get("attribute") || "";
+    let memoryParam = params.get("memory") || "";
+    let viaParam = params.get("via") || "";
+    let facets = null;
+    let entries = [];
+    let pinned = null;
+    let selectedId = null;
+    let currentSummary = null;
+    let total = 0;
+
     root.innerHTML = `${header("MEMORY EXPLORER · 记忆库", "记忆库", "先选左边的状态或人物，再在中间选一条记忆；右边是它的原文与时间。")}
       <div class="v1-sub">${esc(app.sampleId)} · <span id="v1-sub-counts">事实 — · 事件 — · 轮次 —</span>${s.split === "test" ? `<span class="v1-test">测试集 · 只读/不调参</span>` : ""}</div>
       <div class="v1-tabs"><button class="on">记录 Records</button><button id="v1-timeline">时间轴 Timeline</button></div>
+      <div id="v1-target"></div>
       <div class="v1-layout">
         <aside class="v1-left" id="v1-left"></aside>
         <section class="v1-center">
@@ -89,15 +110,47 @@
         </section>
         <aside class="v1-right" id="v1-detail"><div class="empty">选一条记忆，查看它的原文与时间。</div></aside>
       </div>
-      <div class="v1-provenance">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）</div>`;
+      <div class="v1-provenance">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）。</div>`;
 
-    let stateFilter = "";
-    let typeFilter = "all";
-    let entityFilter = window.__memEntityFilter || "";
-    delete window.__memEntityFilter;
-    let facets = null;
-    let entries = [];
-    let selectedId = null;
+    const syncUrl = (memory = "") => {
+      const q = new URLSearchParams({ sample: app.sampleId });
+      if (entityFilter) q.set("entity", entityFilter);
+      if (attributeFilter) q.set("attribute", attributeFilter);
+      if (memory) q.set("memory", memory);
+      if (viaParam) q.set("via", viaParam);
+      history.replaceState(null, "", `#/memories${q.toString() ? "?" + q : ""}`);
+    };
+
+    const targetHtml = () => {
+      if (!memoryParam && !entityFilter && !attributeFilter) return "";
+      let text = "";
+      if (memoryParam && viaParam !== "slot") {
+        const st = currentSummary;
+        text = st ? `已定位：${esc(refLabel(st.source_turn))} · ${esc(st.entity || "未知人物")} · ${esc(attrLabel(st.attribute || "event"))}` : "已定位：目标记忆不在当前样本";
+        return `<div class="v1-targetbar"><span>${text}</span><button data-clear="memory" title="清除定位">×</button></div>`;
+      }
+      if (attributeFilter) {
+        text = `${esc(entityFilter || "未知人物")} · ${esc(attrLabel(attributeFilter))}${total ? `（${total} 条）` : ""}`;
+        return `<div class="v1-targetbar"><span>${text}</span><button data-clear="slot" title="清除类型">×</button></div>`;
+      }
+      const count = total ? `（${total} 条）` : "";
+      text = `人物：${esc(entityFilter)}${count}`;
+      return `<div class="v1-targetbar"><span>${text}</span><button data-clear="entity" title="清除人物">×</button></div>`;
+    };
+
+    const renderTarget = () => { $("#v1-target").innerHTML = targetHtml(); bindTarget(); };
+    const bindTarget = () => {
+      const btn = $("#v1-target [data-clear]");
+      if (!btn) return;
+      const clear = btn.dataset.clear;
+      btn.onclick = () => {
+        if (clear === "memory") { memoryParam = ""; viaParam = ""; }
+        else if (clear === "slot") { attributeFilter = ""; memoryParam = ""; viaParam = ""; }
+        else { entityFilter = ""; attributeFilter = ""; memoryParam = ""; viaParam = ""; }
+        syncUrl();
+        load();
+      };
+    };
 
     const leftHtml = () => {
       if (!facets) return `<div class="muted small">加载中…</div>`;
@@ -114,15 +167,29 @@
     };
 
     const bindLeft = () => {
-      $$("#v1-left [data-state]").forEach((b) => (b.onclick = () => { stateFilter = stateFilter === b.dataset.state ? "" : b.dataset.state; load(); }));
-      $$("#v1-left [data-type]").forEach((b) => (b.onclick = () => { typeFilter = b.dataset.type; load(); }));
-      $$("#v1-left [data-entity]").forEach((b) => (b.onclick = () => { entityFilter = entityFilter === b.dataset.entity ? "" : b.dataset.entity; load(); }));
+      $$("#v1-left [data-state]").forEach((b) => (b.onclick = () => { stateFilter = stateFilter === b.dataset.state ? "" : b.dataset.state; memoryParam = ""; viaParam = ""; syncUrl(); load(); }));
+      $$("#v1-left [data-type]").forEach((b) => (b.onclick = () => { typeFilter = b.dataset.type; memoryParam = ""; viaParam = ""; syncUrl(); load(); }));
+      $$("#v1-left [data-entity]").forEach((b) => (b.onclick = () => {
+        const next = entityFilter === b.dataset.entity ? "" : b.dataset.entity;
+        entityFilter = next; attributeFilter = ""; memoryParam = ""; viaParam = ""; syncUrl(); load();
+      }));
+    };
+
+    const rowHtml = (m, isPinned = false, outOfFilter = false) => {
+      const label = m.attribute ? attrLabel(m.attribute) : "事件";
+      const value = m.value || m.event || m.text;
+      return `<button class="v1-row ${selectedId === m.memory_id ? "on" : ""} ${isPinned ? "pinned" : ""}" data-mid="${esc(m.memory_id)}">
+        <div class="v1-row-head"><span class="v1-shape">${shapeFor(m.state)}</span><b>${esc(m.entity || "未知人物")}</b><span class="v1-attr">${esc(label)}</span>${isPinned ? `<em class="v1-pin">${outOfFilter ? "不在当前筛选内" : "定位"}</em>` : ""}</div>
+        <div class="v1-value">${esc(value)}</div>
+        <div class="v1-meta">${esc(dateOf(m.t_ingest) || "时间未知")} · 来源 ${esc(refLabel(m.source_turn))} · 证据 ${esc(m.evidence_count ?? 0)}</div>
+      </button>`;
     };
 
     const load = async () => {
       const p = new URLSearchParams({ sample: app.sampleId, page_size: "80", type: typeFilter });
       if (stateFilter) p.set("state", stateFilter);
       if (entityFilter) p.set("entity", entityFilter);
+      if (attributeFilter) p.set("attribute", attributeFilter);
       const q = $("#v1-q").value.trim();
       if (q) p.set("q", q);
       $("#v1-list").innerHTML = `<div class="empty">加载中…</div>`;
@@ -130,74 +197,100 @@
         const data = await api(`/api/v2/memories?${p}`);
         facets = data.facets || null;
         entries = data.memories || [];
+        total = data.total || 0;
         $("#v1-left").innerHTML = leftHtml();
         bindLeft();
         $("#v1-sub-counts").textContent = `事实 ${data.counts?.fact ?? 0} · 事件 ${data.counts?.event ?? 0} · 轮次 ${data.counts?.turn ?? 0}`;
-        $("#v1-list").innerHTML = entries.length ? entries.map((m) => {
-          const label = m.display_kind === "event" ? "事件" : attrLabel(m.attribute || "event");
-          const value = m.value || m.event || m.text;
-          return `<button class="v1-row ${selectedId === m.memory_id ? "on" : ""}" data-mid="${esc(m.memory_id)}">
-            <div class="v1-row-head"><span class="v1-shape">${shapeFor(m.state)}</span><b>${esc(m.entity || "未知人物")}</b><span class="v1-attr">${esc(label)}</span></div>
-            <div class="v1-value">${esc(value)}</div>
-            <div class="v1-meta">${esc(dateOf(m.t_ingest) || "时间未知")} · 来源 ${esc(refLabel(m.source_turn))} · 证据 ${esc(m.evidence_count ?? 0)}</div>
-          </button>`;
-        }).join("") : `<div class="empty">没有匹配的记忆。</div>`;
-        $$("#v1-list [data-mid]").forEach((b) => (b.onclick = () => show(b.dataset.mid)));
-        const wanted = window.__memOpen || null;
-        delete window.__memOpen;
-        const first = wanted ? entries.find((x) => x.memory_id === wanted) || entries[0] : entries[0];
-        if (first) show(first.memory_id, false);
-        else $("#v1-detail").innerHTML = `<div class="empty">没有可展示的对象。</div>`;
+        pinned = null;
+        if (memoryParam) {
+          const hit = entries.find((x) => x.memory_id === memoryParam);
+          if (hit) pinned = { ...hit, __inFilter: true };
+          else {
+            try {
+              const d = await api(`/api/v2/memories/${encodeURIComponent(memoryParam)}?sample=${encodeURIComponent(app.sampleId)}`);
+              pinned = { ...d.summary, __inFilter: false };
+            } catch (err) {
+              pinned = null;
+            }
+          }
+        }
+        const listRows = [];
+        if (pinned) listRows.push(rowHtml(pinned, true, !pinned.__inFilter));
+        entries.forEach((m) => { if (!pinned || m.memory_id !== pinned.memory_id) listRows.push(rowHtml(m)); });
+        $("#v1-list").innerHTML = listRows.length ? listRows.join("") : `<div class="empty">没有匹配的记忆。</div>`;
+        $$("#v1-list [data-mid]").forEach((b) => (b.onclick = () => selectRow(b.dataset.mid)));
+        renderTarget();
+        if (memoryParam) {
+          if (pinned) { currentSummary = pinned; show(memoryParam, false); }
+          else {
+            selectedId = null; currentSummary = null;
+            $("#v1-detail").innerHTML = `<p class="note warn">该记忆不在当前样本。</p>`;
+          }
+        } else if (entries.length) {
+          show(entries[0].memory_id, false);
+        } else {
+          currentSummary = null;
+          $("#v1-detail").innerHTML = `<div class="empty">没有可展示的对象。</div>`;
+        }
       } catch (err) {
         $("#v1-list").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
       }
     };
 
+    const selectRow = (id) => {
+      memoryParam = id;
+      viaParam = "";
+      syncUrl(id);
+      show(id);
+    };
+
     const show = async (id, mark = true) => {
       selectedId = id;
       $$("#v1-list [data-mid]").forEach((b) => b.classList.toggle("on", b.dataset.mid === id));
+      const row = $(`#v1-list [data-mid="${CSS.escape(id)}"]`);
+      if (row) row.scrollIntoView({ block: "nearest" });
       try {
         const d = await api(`/api/v2/memories/${encodeURIComponent(id)}?sample=${encodeURIComponent(app.sampleId)}`);
         const m = d.memory, st = d.summary;
+        currentSummary = st;
         const state = st.state || "UNRESOLVED";
-        const attr = st.display_kind === "event" ? "事件" : attrLabel(st.attribute || "event");
+        const attr = st.attribute ? attrLabel(st.attribute) : "事件";
         const value = st.value || st.event || m.text || "";
         const eventStart = dateOf(st.t_event);
         const ingest = dateOf(st.t_ingest) || "not_available";
         const source = refLabel(st.source_turn);
         const evidence = d.source_turns?.[0];
-        $("#v1-detail").innerHTML = `
-          <div class="v1-detail-inner">
-            <div class="v1-title">${esc(st.entity || "未知人物")} · ${esc(attr)} · ${esc(STATE_LABEL[state] || state)}</div>
-            <p class="v1-sentence">${esc(st.entity || "未知人物")}的${esc(attr)}：${esc(value)}</p>
-            <div class="v1-facts">
-              <div><span>事件时间</span><b>${esc(eventStart || "未知")}</b></div>
-              <div><span>写入时间</span><b>${esc(ingest)}</b></div>
-              <div><span>来源</span><b>${esc(source)}</b></div>
-              <div><span>证据</span><b>${esc(st.evidence_count ?? 0)} 条</b></div>
-            </div>
-            <div class="v1-times">
-              <div class="v1-time-row"><span>事件时间</span>${eventStart ? `<i class="v1-dot"></i><em>${esc(eventStart)}</em>` : `<i class="v1-dash"></i><em>未知 · 用写入时间近似</em>`}</div>
-              <div class="v1-time-row"><span>写入时间</span><i class="v1-dot"></i><em>${esc(ingest)}</em></div>
-            </div>
-            <div class="v1-evidence">
-              <div class="v1-label">原文证据</div>
-              <blockquote>${esc(evidence?.text || "not_available")}</blockquote>
-              <div class="v1-cite">${esc(evidence ? refLabel(evidence.turn_id) : "not_available")}</div>
-            </div>
-            ${state === "HISTORICAL" ? `<div class="v1-why"><b>为什么失效</b><span>${esc(source)} → UPDATE → 后续会话（关系未接入）</span></div>` : ""}
-            <details class="v1-tech"><summary>▸ 技术细节</summary>
-              <div class="mono">memory_id: ${esc(m.memory_id)}</div>
-              <div class="mono">t_event: ${esc(JSON.stringify(st.t_event ?? null))}</div>
-              <div class="mono">t_ingest: ${esc(JSON.stringify(st.t_ingest ?? null))}</div>
-              <div class="mono">valid_interval: ${esc(JSON.stringify(st.valid_interval ?? null))}</div>
-              <div class="mono">attribute / slot: ${esc(st.attribute || "not_available")}</div>
-            </details>
-          </div>`;
-      } catch (err) { $("#v1-detail").innerHTML = `<p class="note warn">${esc(err.message)}</p>`; }
+        $("#v1-detail").innerHTML = `<div class="v1-detail-inner">
+          <div class="v1-title">${esc(st.entity || "未知人物")} · ${esc(attr)} · ${esc(STATE_LABEL[state] || state)}</div>
+          <p class="v1-sentence">${esc(st.entity || "未知人物")}的${esc(attr)}：${esc(value)}</p>
+          <div class="v1-facts">
+            <div><span>事件时间</span><b>${esc(eventStart || "未知")}</b></div>
+            <div><span>写入时间</span><b>${esc(ingest)}</b></div>
+            <div><span>来源</span><b>${esc(source)}</b></div>
+            <div><span>证据</span><b>${esc(st.evidence_count ?? 0)} 条</b></div>
+          </div>
+          <div class="v1-times">
+            <div class="v1-time-row"><span>事件时间</span>${eventStart ? `<i class="v1-dot"></i><em>${esc(eventStart)}</em>` : `<i class="v1-dash"></i><em>未知 · 用写入时间近似</em>`}</div>
+            <div class="v1-time-row"><span>写入时间</span><i class="v1-dot"></i><em>${esc(ingest)}</em></div>
+          </div>
+          <div class="v1-evidence"><div class="v1-label">原文证据</div><blockquote>${esc(evidence?.text || "not_available")}</blockquote><div class="v1-cite">${esc(evidence ? refLabel(evidence.turn_id) : "not_available")}</div></div>
+          ${state === "HISTORICAL" ? `<div class="v1-why"><b>为什么失效</b><span>${esc(source)} → UPDATE → 后续会话（关系未接入）</span></div>` : ""}
+          <details class="v1-tech"><summary>▸ 技术细节</summary>
+            <div class="mono">memory_id: ${esc(m.memory_id)}</div>
+            <div class="mono">t_event: ${esc(JSON.stringify(st.t_event ?? null))}</div>
+            <div class="mono">t_ingest: ${esc(JSON.stringify(st.t_ingest ?? null))}</div>
+            <div class="mono">valid_interval: ${esc(JSON.stringify(st.valid_interval ?? null))}</div>
+            <div class="mono">attribute / slot: ${esc(st.attribute || "not_available")}</div>
+          </details>
+        </div>`;
+        renderTarget();
+      } catch (err) {
+        currentSummary = null;
+        $("#v1-detail").innerHTML = `<p class="note warn">该记忆不在当前样本。</p>`;
+      }
     };
 
-    $("#v1-q").onkeydown = (e) => { if (e.key === "Enter") load(); };
+    $("#v1-q").onkeydown = (e) => { if (e.key === "Enter") { memoryParam = ""; viaParam = ""; syncUrl(); load(); } };
     $("#v1-timeline").onclick = () => renderTimeline(root);
     await load();
   }
@@ -708,6 +801,7 @@
       id: n.id, kind: n.kind, label: n.kind === "slot" ? attrLabel(n.label) : n.label,
       state: n.state, r: n.r || (n.kind === "entity" ? 11 : n.kind === "slot" ? 7 : 3.6),
       source_turn: n.source_turn, t_ingest: n.t_ingest,
+      entity: n.entity, attribute: n.attribute, memory_id: n.memory_id,
     }));
     const index = new Map(nodes.map((n, i) => [n.id, i]));
     const edges = (data.edges || []).map((e) => ({ a: index.get(e.source), b: index.get(e.target), kind: e.type }))
@@ -731,6 +825,51 @@
     });
     const neighbours = nodes.map(() => new Set());
     edges.forEach((e) => { neighbours[e.a].add(e.b); neighbours[e.b].add(e.a); });
+    const tip = canvas.parentElement.querySelector(".g2-tip");
+    const factsByEntity = new Map(), factsBySlot = new Map(), slotsByEntity = new Map();
+    nodes.forEach((n) => {
+      if (n.kind !== "fact") return;
+      const ek = n.entity || "未知人物";
+      const sk = `${ek}|${n.attribute || "event"}`;
+      if (!factsByEntity.has(ek)) factsByEntity.set(ek, []);
+      if (!factsBySlot.has(sk)) factsBySlot.set(sk, []);
+      factsByEntity.get(ek).push(n); factsBySlot.get(sk).push(n);
+    });
+    nodes.forEach((n) => {
+      if (n.kind === "entity") {
+        const ek = n.label || "未知人物";
+        slotsByEntity.set(ek, [...new Set(nodes.filter((x) => x.kind === "fact" && (x.entity || "未知人物") === ek).map((x) => x.attribute || "event"))]);
+      }
+    });
+    const tipHtml = (n) => {
+      if (n.kind === "entity") {
+        const facts = factsByEntity.get(n.label) || [];
+        const active = facts.filter((x) => x.state === "ACTIVE").length;
+        const old = facts.filter((x) => x.state === "HISTORICAL").length;
+        return `<b>实体 · ${esc(n.label)}</b><div>${slotsByEntity.get(n.label)?.length || 0} 个类型 · ${facts.length} 条事实（● ${active} / ○ ${old}）</div><div class="muted">点击查看这个人的记忆</div>`;
+      }
+      if (n.kind === "slot") {
+        const facts = factsBySlot.get(`${n.entity}|${n.attribute}`) || [];
+        const active = facts.filter((x) => x.state === "ACTIVE").length;
+        const old = facts.filter((x) => x.state === "HISTORICAL").length;
+        return `<b>类型 · ${esc(attrLabel(n.attribute))}</b><div>${esc(n.entity)} · ${facts.length} 条（● ${active} / ○ ${old}）</div><div class="muted">点击查看这个类型的记忆</div>`;
+      }
+      const state = ({ ACTIVE: "● 有效", HISTORICAL: "○ 已过时", CONFLICT: "◇ 冲突", UNRESOLVED: "◌ 未解析" })[n.state] || "◌ 未解析";
+      return `<b>事实 · ${esc(attrLabel(n.attribute))} + ${state}</b><div>${esc(n.entity || "未知人物")} · ${esc(attrLabel(n.attribute))}</div><div>${esc(refLabel(n.source_turn))} · 写入 ${esc(dateOf(n.t_ingest) || "未知")}</div><div>${esc((n.label || "").slice(0, 120))}</div><div class="muted">点击打开这条记忆</div>`;
+    };
+    const moveTip = (i, ev) => {
+      if (!tip) return;
+      if (i < 0) { tip.style.display = "none"; return; }
+      const wrap = canvas.parentElement.getBoundingClientRect();
+      const x = ev.clientX - wrap.left, y = ev.clientY - wrap.top;
+      tip.innerHTML = tipHtml(nodes[i]);
+      tip.style.display = "block";
+      const w = tip.offsetWidth, h = tip.offsetHeight;
+      const left = x + w + 14 > wrap.width ? x - w - 14 : x + 14;
+      const top = y + h + 14 > wrap.height ? y - h - 14 : y + 14;
+      tip.style.left = `${Math.max(6, Math.min(wrap.width - w - 6, left))}px`;
+      tip.style.top = `${Math.max(6, Math.min(wrap.height - h - 6, top))}px`;
+    };
     const resize = () => { const rect = canvas.getBoundingClientRect(); width = rect.width; height = rect.height; canvas.width = width * dpr; canvas.height = height * dpr; };
     const fit = () => {
       const xs = nodes.map((n) => n.x), ys = nodes.map((n) => n.y);
@@ -796,11 +935,14 @@
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2);
         if (n.kind === "fact" && n.state === "HISTORICAL") { ctx.fillStyle = "#fff"; ctx.fill(); ctx.strokeStyle = "#b8b8b8"; ctx.lineWidth = 1.3; ctx.stroke(); }
         else { ctx.fillStyle = n.kind === "slot" ? "#8c8c8c" : "#111"; ctx.fill(); }
-        if (n.kind === "entity" || n.kind === "slot") {
+        const factLit = n.kind === "fact" && (i === hover || (focus && focus.has(i)));
+        const showLabel = n.kind === "entity" || (n.kind === "slot" && (view.k > 0.6 || i === hover)) || factLit;
+        if (showLabel) {
           ctx.fillStyle = n.kind === "entity" ? "#111" : "#444";
           ctx.font = `${n.kind === "entity" ? "600 13px" : "11.5px"} Inter, "PingFang SC", "Microsoft YaHei", sans-serif`;
           ctx.textAlign = "center";
-          ctx.fillText(String(n.label || "").slice(0, 42), x, y + r + 13);
+          const label = n.kind === "fact" ? String(n.label || "").slice(0, 24) : String(n.label || "").slice(0, 42);
+          ctx.fillText(label, x, y + r + 13);
         }
       });
       ctx.globalAlpha = 1;
@@ -818,12 +960,19 @@
         nodes[drag].x = (ev.clientX - rect.left - width / 2 - view.x) / view.k;
         nodes[drag].y = (ev.clientY - rect.top - height / 2 - view.y) / view.k;
         alpha = Math.max(alpha, 0.3);
-      } else if (pan) { view.x = pan.vx + ev.clientX - pan.x; view.y = pan.vy + ev.clientY - pan.y; }
-      else hover = pick(ev);
+        canvas.style.cursor = "grabbing";
+      } else if (pan) {
+        view.x = pan.vx + ev.clientX - pan.x; view.y = pan.vy + ev.clientY - pan.y;
+        canvas.style.cursor = "grabbing";
+      } else {
+        hover = pick(ev);
+        canvas.style.cursor = hover >= 0 ? "pointer" : "grab";
+        moveTip(hover, ev);
+      }
     };
-    canvas.onmousedown = (ev) => { touched = true; downAt = [ev.clientX, ev.clientY]; const i = pick(ev); if (i >= 0) drag = i; else pan = { x: ev.clientX, y: ev.clientY, vx: view.x, vy: view.y }; };
-    canvas.onmouseup = (ev) => { const moved = downAt && Math.hypot(ev.clientX - downAt[0], ev.clientY - downAt[1]) > 4; if (!moved && drag >= 0) onPick(nodes[drag]); drag = -1; pan = null; };
-    canvas.onmouseleave = () => { hover = -1; drag = -1; pan = null; };
+    canvas.onmousedown = (ev) => { touched = true; downAt = [ev.clientX, ev.clientY]; const i = pick(ev); if (i >= 0) drag = i; else pan = { x: ev.clientX, y: ev.clientY, vx: view.x, vy: view.y }; canvas.style.cursor = "grabbing"; };
+    canvas.onmouseup = (ev) => { const moved = downAt && Math.hypot(ev.clientX - downAt[0], ev.clientY - downAt[1]) > 4; if (!moved && drag >= 0) onPick(nodes[drag]); drag = -1; pan = null; canvas.style.cursor = "grab"; };
+    canvas.onmouseleave = () => { hover = -1; drag = -1; pan = null; if (tip) tip.style.display = "none"; canvas.style.cursor = "grab"; };
     canvas.onwheel = (ev) => { ev.preventDefault(); touched = true; const k = Math.min(5, Math.max(0.25, view.k * (ev.deltaY < 0 ? 1.12 : 0.89))); view.x *= k / view.k; view.y *= k / view.k; view.k = k; };
     resize();
     window.addEventListener("resize", resize);
@@ -839,7 +988,7 @@
     root.classList.add("v1-page");
     root.innerHTML = `${header("RELATION GRAPH · 关系图", "关系图", "实体 → 类型 → 事实；默认只看发生变化的事。拖动画布平移，滚轮缩放。")}
       <div class="force-toolbar"><div class="seg"><button data-mode="changed" class="on">只看变化</button><button data-mode="all">全部</button></div><span id="g2-count" class="muted small"></span></div>
-      <div class="graph-canvas-wrap"><canvas id="v2-force-canvas"></canvas></div>
+      <div class="graph-canvas-wrap"><canvas id="v2-force-canvas"></canvas><div class="g2-tip"></div></div>
       <div class="force-legend"><span>● 当前有效</span><span>○ 已过时</span><span>━━ 推进·替换</span><span>┅ 矛盾</span><span>拖动画布平移，滚轮缩放</span></div>
       <div class="v1-provenance">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）</div>`;
     let mode = "changed";
@@ -850,13 +999,21 @@
       const graph = buildForceGraph(data);
       $("#g2-count").textContent = `${graph.nodes.length} 个节点 · ${graph.edges.length} 条边`;
       sim = forceGraphV2($("#v2-force-canvas"), graph, (node) => {
-        if (node.kind === "fact") {
-          window.__memOpen = node.id;
-          location.hash = "#/memories";
-        } else if (node.kind === "entity") {
-          window.__memEntityFilter = node.label;
-          location.hash = "#/memories";
+        const q = new URLSearchParams({ sample: app.sampleId });
+        if (node.kind === "entity") {
+          q.set("entity", node.label);
+        } else if (node.kind === "fact") {
+          if (node.entity) q.set("entity", node.entity);
+          if (node.attribute) q.set("attribute", node.attribute);
+          q.set("memory", node.id);
+          q.set("via", "fact");
+        } else if (node.kind === "slot") {
+          if (node.entity) q.set("entity", node.entity);
+          if (node.attribute) q.set("attribute", node.attribute);
+          if (node.memory_id) q.set("memory", node.memory_id);
+          if (node.memory_id) q.set("via", "slot");
         }
+        location.hash = "#/memories?" + q.toString();
       });
     };
     $$(".force-toolbar [data-mode]").forEach((b) => (b.onclick = () => {

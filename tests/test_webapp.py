@@ -154,6 +154,14 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(len(out["rows"]), 6)
         self.assertTrue(out["by_category"])
 
+    def test_memory_entity_attribute_filter_and_deep_link_support(self):
+        data = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "entity": ["Caroline"], "attribute": ["event"], "page_size": ["5"]})
+        self.assertGreater(data["total"], 0)
+        for row in data["memories"]:
+            self.assertEqual(row["entity"], "Caroline")
+            self.assertEqual(row["attribute"] or "event", "event")
+        self.assertEqual(data["facets"]["status"]["CONFLICT"], 0)
+
     def test_memory_facets_and_timeline(self):
         data = webapp.get("/api/v2/memories", {"sample": ["conv-26"], "page_size": ["1"]})
         self.assertEqual(data["counts"]["fact"], 335)
@@ -175,6 +183,12 @@ class WebAppTests(unittest.TestCase):
         self.assertTrue({e["type"] for e in graph["edges"]} & {"RETAIN", "UPDATE", "SUPERSEDE", "CONFLICT"})
         self.assertLessEqual(graph["stats"]["facts_shown"], 400)
         self.assertGreater(graph["stats"]["nodes"], 0)
+        slot = next(n for n in graph["nodes"] if n["kind"] == "slot")
+        fact = next(n for n in graph["nodes"] if n["kind"] == "fact")
+        for node in (slot, fact):
+            self.assertIn("entity", node)
+            self.assertIn("attribute", node)
+        self.assertIn("memory_id", slot)
 
     def test_experiment_catalog_covers_modules_and_stages(self):
         data = webapp.get("/api/v2/experiments/plan")
@@ -230,6 +244,13 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("inherited", data["provenance"])
         self.assertIn("this_project", data["provenance"])
         self.assertTrue(any("final-w3" in item["path"] for item in data["provenance"]["this_project"]["items"]))
+
+    def test_deep_link_static_guards(self):
+        js = (Path(__file__).resolve().parents[1] / "web" / "v2.js").read_text(encoding="utf-8")
+        self.assertIn("g2-tip", js)
+        self.assertIn('qs.get("memory")'.replace("qs", "params"), js)
+        self.assertNotIn("window.__memOpen", js)
+        self.assertNotIn("window.__memEntityFilter", js)
 
     def test_static_shell_has_v2_navigation(self):
         html = (Path(__file__).resolve().parents[1] / "web" / "index.html").read_text(encoding="utf-8")
