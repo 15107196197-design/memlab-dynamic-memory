@@ -82,6 +82,8 @@ class Handler(BaseHTTPRequestHandler):
             if config.WEB_DIR.resolve() in target.parents and target.is_file():
                 return self.send_file(target)
             self.send_json({"error": "not found"}, 404)
+        except webapp.ModelUnavailableError as exc:
+            self.send_json({"error": exc.as_payload()}, exc.status)
         except webapp.WebError as exc:
             self.send_json({"error": str(exc), **exc.details}, exc.status)
         except KeyError as exc:
@@ -94,8 +96,14 @@ class Handler(BaseHTTPRequestHandler):
         try:
             if not (self.path in ("/api/ask", "/api/import") or self.path.startswith("/api/v2/")):
                 return self.send_json({"error": "not found"}, 404)
-            if self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower() != "application/json":
-                return self.send_json({"error": "Expected application/json"}, 415)
+            content_type = self.headers.get("Content-Type", "").split(";", 1)[0].strip().lower()
+            if content_type != "application/json":
+                # Local acceptance uses `curl -d '{...}'`, which defaults to
+                # application/x-www-form-urlencoded while the body is still JSON.
+                # Keep the strict check for legacy /api/* endpoints.
+                if not (self.path.startswith("/api/v2/")
+                        and content_type in ("application/x-www-form-urlencoded", "")):
+                    return self.send_json({"error": "Expected application/json"}, 415)
             length = int(self.headers.get("Content-Length", "0"))
             limit = MAX_IMPORT_BYTES if self.path == "/api/import" else MAX_ASK_BYTES
             if length <= 0 or length > limit:
@@ -107,6 +115,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send_json({"imported": dataset.store().import_samples(body)})
             k = min(50, max(1, int(body.get("k", 15))))
             self.send_json(pipeline.answer(body["sample"], body.get("question", ""), body.get("method", "dynamic"), k, body.get("as_of") or None))
+        except webapp.ModelUnavailableError as exc:
+            self.send_json({"error": exc.as_payload()}, exc.status)
         except webapp.WebError as exc:
             self.send_json({"error": str(exc), **exc.details}, exc.status)
         except KeyError as exc:

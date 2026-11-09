@@ -12,8 +12,10 @@ from __future__ import annotations
 import json
 import random
 import re
+import socket
 import threading
 import time
+import urllib.error
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from collections import Counter, defaultdict
@@ -66,6 +68,18 @@ STATUS_LEGEND = {
     "hardware_limited": "可小样本/回退；正式实验受限",
     "not_implemented": "代码未实现（不是硬件原因）",
     "deferred": "按计划延后（不是硬件原因）",
+}
+CATEGORY_LABELS = {
+    1: "多跳",
+    2: "时间",
+    3: "常识推断",
+    4: "单跳",
+    5: "对抗",
+}
+MODEL_UNAVAILABLE = {
+    "code": "model_unavailable",
+    "message": "本地模型不可用：请勾选“离线演示”，或启动 Ollama / 配置 API。",
+    "hint": "offline=true 或 OLLAMA_URL/API provider",
 }
 COURSE_IDS = legacy_config.SPLIT["development"] + legacy_config.SPLIT["test"]
 _SHARED_CACHE = lab_cache.ArtifactCache(ROOT / "cache" / "web")
@@ -158,6 +172,30 @@ class WebError(ValueError):
         self.status = status
         self.details = details
         super().__init__(message)
+
+
+class ModelUnavailableError(WebError):
+    """Friendly 502 for a missing local model / unreachable provider."""
+
+    code = "model_unavailable"
+
+    def __init__(self, cause: BaseException | None = None):
+        self.cause = cause
+        super().__init__(MODEL_UNAVAILABLE["message"], 502)
+
+    def as_payload(self) -> dict[str, Any]:
+        return dict(MODEL_UNAVAILABLE)
+
+
+def _is_model_unavailable(exc: BaseException) -> bool:
+    if isinstance(exc, (urllib.error.URLError, ConnectionRefusedError, TimeoutError, socket.timeout)):
+        return True
+    reason = getattr(exc, "reason", None)
+    return isinstance(reason, (ConnectionRefusedError, TimeoutError, socket.timeout))
+
+
+def _model_unavailable_error(exc: BaseException) -> ModelUnavailableError:
+    return ModelUnavailableError(exc)
 
 
 def _one(args: Any, name: str, default: Any = None) -> Any:
@@ -507,6 +545,59 @@ def _select_questions(sample_id: str, limit: int, seed: int) -> list[tuple[int, 
     return sorted(chosen)
 
 
+def _category_label(value: Any) -> str:
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return f"category {value}" if value not in (None, "") else "category unknown"
+    return CATEGORY_LABELS.get(number, f"category {number}")
+
+
+def _question_items(sample_id: str, category: str = "", limit: int = 50,
+                    seed: int | str | None = None) -> dict[str, Any]:
+    """LoCoMo QA catalogue for the experiment workbench.
+
+    Reuses the same ``data/locomo10.json`` store as the legacy ``/api/questions``
+    route.  ``index`` is the original QA index, so ``qid`` stays stable across
+    category filters, limits and shuffles.
+    """
+    sample = _sample(sample_id)
+    wanted = str(category or "").strip()
+    items: list[dict[str, Any]] = []
+    for index, qa in enumerate(sample.get("qa", [])):
+        if not qa.get("question"):
+            continue
+        raw_category = qa.get("category")
+        if wanted and str(raw_category) != wanted:
+            continue
+        items.append({
+            "qid": f"{sample_id}-q{index}",
+            "index": index,
+            "question": qa.get("question"),
+            "answer": qa.get("answer"),
+            "category": raw_category,
+            "category_label": _category_label(raw_category),
+            "evidence": list(qa.get("evidence") or []),
+        })
+    total = len(items)
+    if seed not in (None, ""):
+        try:
+            random.Random(int(seed)).shuffle(items)
+        except (TypeError, ValueError):
+            random.Random(str(seed)).shuffle(items)
+    size = max(1, min(500, int(limit if limit not in (None, "") else 50)))
+    questions = items[:size]
+    return {
+        "sample": sample_id,
+        "split": legacy_config.split_of(sample_id),
+        "category": wanted or None,
+        "seed": seed if seed not in (None, "") else None,
+        "total": total,
+        "count": len(questions),
+        "questions": questions,
+    }
+
+
 def _p95(values: list[float]) -> float | None:
     if not values:
         return None
@@ -592,6 +683,16 @@ def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
 
 
 def _run(body: dict[str, Any]) -> dict[str, Any]:
+    """Run boundary: translate network/model failures into a friendly 502."""
+    try:
+        return _run_impl(body)
+    except (ModelUnavailableError, WebError):
+        raise
+    except (urllib.error.URLError, ConnectionRefusedError, TimeoutError, socket.timeout) as exc:
+        raise _model_unavailable_error(exc) from exc
+
+
+def _run_impl(body: dict[str, Any]) -> dict[str, Any]:
     sample_id = str(body.get("sample") or "")
     _sample(sample_id)
     cfg_data, cfg = _body_config(body)
@@ -609,6 +710,8 @@ def _run(body: dict[str, Any]) -> dict[str, Any]:
         try:
             return _run_legacy(sample_id, question, cfg, str(body.get("method") or cfg.method), k, as_of)
         except Exception as exc:
+            if _is_model_unavailable(exc):
+                raise _model_unavailable_error(exc) from exc
             raise WebError(f"legacy run failed (is Ollama running?): {type(exc).__name__}: {exc}", 502) from exc
     return _run_module(sample_id, question, cfg, bool(body.get("offline", True)), k, as_of)
 
@@ -661,10 +764,25 @@ def _job_work(job_id: str, body: dict[str, Any]) -> None:
         result = _run(body)
         with _JOBS_LOCK:
             _JOBS[job_id].update({"status": "done", "result": result, "updated_at": datetime.now().isoformat(timespec="seconds")})
-    except Exception as exc:  # noqa: BLE001 - job boundary must report, not kill the queue
+    except ModelUnavailableError as exc:
+        detail = exc.as_payload()
         with _JOBS_LOCK:
-            _JOBS[job_id].update({"status": "error", "error": f"{type(exc).__name__}: {exc}",
-                                  "updated_at": datetime.now().isoformat(timespec="seconds")})
+            _JOBS[job_id].update({
+                "status": "error", "error": detail["message"],
+                "error_code": detail["code"], "error_detail": detail,
+                "updated_at": datetime.now().isoformat(timespec="seconds"),
+            })
+    except Exception as exc:  # noqa: BLE001 - job boundary must report, not kill the queue
+        detail = _model_unavailable_error(exc).as_payload() if _is_model_unavailable(exc) else None
+        with _JOBS_LOCK:
+            update = {
+                "status": "error",
+                "error": (detail["message"] if detail else f"{type(exc).__name__}: {exc}"),
+                "updated_at": datetime.now().isoformat(timespec="seconds"),
+            }
+            if detail is not None:
+                update.update({"error_code": detail["code"], "error_detail": detail})
+            _JOBS[job_id].update(update)
 
 
 def _job_get(job_id: str) -> dict[str, Any]:
@@ -824,6 +942,352 @@ def _build_report(experiment_id: str, body: dict[str, Any]) -> dict[str, Any]:
     directory.mkdir(parents=True, exist_ok=True)
     (directory / f"{_safe_id(experiment_id)}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     return report
+
+
+def _run_errors(run: dict[str, Any]) -> int:
+    if run.get("kind") == "batch":
+        errors = 0
+        for row in run.get("rows") or []:
+            if row.get("error"):
+                errors += 1
+            elif row.get("refused") and not str(row.get("prediction") or "").strip():
+                errors += 1
+        return errors
+    answer = run.get("answer") or {}
+    return 1 if answer.get("refused") else 0
+
+
+def _report_metrics(run: dict[str, Any]) -> dict[str, Any]:
+    """Normalise single-question and batch runs to the same metric keys."""
+    metrics = dict(run.get("metrics") or {})
+    if run.get("kind") != "batch":
+        answer = run.get("answer") or {}
+        metrics.setdefault("answer_f1", None)
+        metrics.setdefault("evidence_recall", None)
+        metrics.setdefault("state_accuracy", None)
+        metrics["tokens"] = run.get("tokens", metrics.get("tokens"))
+        metrics["p95_latency_ms"] = run.get("latency_ms", metrics.get("p95_latency_ms"))
+        metrics["error_rate"] = 1.0 if answer.get("refused") else 0.0
+        metrics["questions"] = 1
+    metrics["errors"] = _run_errors(run)
+    return metrics
+
+
+def _row_index(run: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    if run.get("kind") != "batch":
+        return {}
+    return {str(row.get("qid")): row for row in run.get("rows") or [] if row.get("qid") is not None}
+
+
+def _paired_values(baseline: dict[str, Any], candidate: dict[str, Any],
+                   key: str) -> list[tuple[float, float]]:
+    bindex, cindex = _row_index(baseline), _row_index(candidate)
+    pairs: list[tuple[float, float]] = []
+    for qid in sorted(set(bindex) & set(cindex)):
+        bvalue, cvalue = bindex[qid].get(key), cindex[qid].get(key)
+        if bvalue is None or cvalue is None:
+            continue
+        pairs.append((float(bvalue), float(cvalue)))
+    return pairs
+
+
+def _mean(values: list[float]) -> float:
+    return sum(values) / len(values)
+
+
+def _comparison(baseline: dict[str, Any], candidate: dict[str, Any], key: str,
+                bmetrics: dict[str, Any], cmetrics: dict[str, Any],
+                *, pair: bool = True) -> dict[str, Any]:
+    pairs = _paired_values(baseline, candidate, key) if pair else []
+    paired = bool(pairs)
+    if pairs:
+        bvalue = round(_mean([pair[0] for pair in pairs]), 4)
+        cvalue = round(_mean([pair[1] for pair in pairs]), 4)
+        delta = round(cvalue - bvalue, 4)
+        count = len(pairs)
+    else:
+        bvalue, cvalue = bmetrics.get(key), cmetrics.get(key)
+        if bvalue is None or cvalue is None:
+            bvalue, cvalue, delta = bvalue, cvalue, None
+        else:
+            bvalue, cvalue = round(float(bvalue), 4), round(float(cvalue), 4)
+            delta = round(cvalue - bvalue, 4)
+        count = 0
+    return {
+        "baseline": baseline.get("run_id"),
+        "candidate": candidate.get("run_id"),
+        "metric": key,
+        "baseline_value": bvalue,
+        "candidate_value": cvalue,
+        "delta": delta,
+        "ci95": None,
+        "paired": paired,
+        "pairs": count,
+        "significant": None,
+        "note": ("Descriptive candidate - baseline; paired by qid; no bootstrap CI."
+                 if paired else "Descriptive candidate - baseline; run-level (no per-qid pair)."),
+    }
+
+
+def _report_by_category(baseline: dict[str, Any], candidate: dict[str, Any]) -> list[dict[str, Any]]:
+    bindex, cindex = _row_index(baseline), _row_index(candidate)
+    if not bindex or not cindex:
+        return list(candidate.get("by_category") or [])
+    categories = sorted({str(row.get("category")) for row in bindex.values()
+                         if row.get("category") is not None})
+    rows: list[dict[str, Any]] = []
+    for category in categories:
+        qids = sorted(qid for qid in set(bindex) & set(cindex)
+                      if str(bindex[qid].get("category")) == category)
+        if not qids:
+            continue
+        entry: dict[str, Any] = {
+            "category": category,
+            "category_label": _category_label(category),
+            "n": len(qids),
+        }
+        for side, index in (("baseline", bindex), ("candidate", cindex)):
+            entry[side] = {}
+            for metric in ("answer_f1", "evidence_recall", "tokens"):
+                values = [float(index[qid][metric]) for qid in qids
+                          if index[qid].get(metric) is not None]
+                entry[side][metric] = round(_mean(values), 4) if values else None
+        entry["delta"] = {
+            metric: (None if entry["baseline"].get(metric) is None
+                     or entry["candidate"].get(metric) is None
+                     else round(entry["candidate"][metric] - entry["baseline"][metric], 4))
+            for metric in ("answer_f1", "evidence_recall", "tokens")
+        }
+        rows.append(entry)
+    return rows
+
+
+def _stage_totals(run: dict[str, Any]) -> dict[str, float]:
+    totals: dict[str, float] = {}
+    waterfall = run.get("stage_waterfall")
+    if waterfall:
+        for item in waterfall:
+            stage = str(item.get("stage") or "unknown")
+            totals[stage] = round(totals.get(stage, 0.0) + float(item.get("ms") or 0.0), 3)
+        return totals
+    for step in run.get("trace") or []:
+        if step.get("ms") is None:
+            continue
+        stage = str(step.get("stage") or "unknown")
+        totals[stage] = round(totals.get(stage, 0.0) + float(step["ms"]), 3)
+    return totals
+
+
+def _report_stage_waterfall(baseline: dict[str, Any], candidate: dict[str, Any]) -> list[dict[str, Any]]:
+    btotals, ctotals = _stage_totals(baseline), _stage_totals(candidate)
+    if not btotals and not ctotals:
+        return []
+    rows = []
+    for stage in sorted(set(btotals) | set(ctotals)):
+        bvalue, cvalue = btotals.get(stage), ctotals.get(stage)
+        delta = None if bvalue is None or cvalue is None else round(cvalue - bvalue, 3)
+        rows.append({"stage": stage, "baseline_ms": bvalue, "candidate_ms": cvalue,
+                     "ms": cvalue, "delta_ms": delta})
+    return rows
+
+
+def _report_conclusion(baseline: dict[str, Any], candidate: dict[str, Any],
+                       comparisons: list[dict[str, Any]],
+                       bmetrics: dict[str, Any], cmetrics: dict[str, Any]) -> dict[str, Any]:
+    f1 = next((item for item in comparisons if item.get("metric") == "answer_f1"), {})
+    delta = f1.get("delta")
+    pairs = int(f1.get("pairs") or 0)
+    n = pairs or min(int(bmetrics.get("questions") or 1), int(cmetrics.get("questions") or 1))
+    limitations = [
+        "single-question/batch; no bootstrap CI; offline/online labeled.",
+        "No paired bootstrap interval is computed, so the status remains descriptive.",
+        "Offline extractive runs are not LLM-quality claims.",
+        "Only the two supplied runs are compared; no seed or provider sweep.",
+    ]
+    conclusion: dict[str, Any] = {
+        "status": "inconclusive",
+        "direction": "flat",
+        "f1_delta": delta,
+        "paired_questions": pairs,
+        "ci95": None,
+        "claims": [],
+        "conditions": [
+            "Same question set/qids and the same seed are required for a paired comparison.",
+            "Candidate and baseline are read from the persisted runs/web JSON; nothing is re-run.",
+        ],
+        "limitations": limitations,
+        "next_actions": [
+            "Run at least 10 paired questions (20+ recommended) per configuration.",
+            "Repeat with 2–3 seeds and add a paired bootstrap CI before a causal claim.",
+        ],
+    }
+    if n < 10:
+        conclusion["claims"] = [f"Only {n} paired question(s) (<10); no comparison claim."]
+        conclusion["status_reason"] = "sample_too_small"
+        return conclusion
+    if delta is None:
+        conclusion["claims"] = ["answer_f1 delta unavailable (gold-free run or no matched qids)."]
+        conclusion["status_reason"] = "delta_unavailable"
+        return conclusion
+    delta = float(delta)
+    if abs(delta) < 0.02:
+        conclusion["claims"] = [f"answer_f1 delta {delta:+.4f} is within the ±0.02 descriptive band."]
+        conclusion["status_reason"] = "delta_below_threshold"
+        return conclusion
+    direction = "candidate_better" if delta > 0 else "candidate_worse"
+    conclusion.update({
+        "status": "partial",
+        "direction": direction,
+        "status_reason": "no_bootstrap_ci",
+        "claims": [
+            f"answer_f1 delta {delta:+.4f} on {n} paired questions; direction={direction}; "
+            "no bootstrap CI, so status=partial."
+        ],
+    })
+    return conclusion
+
+
+def _unique_report_path(experiment_id: str) -> tuple[str, Any]:
+    directory = _report_dir()
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / f"{experiment_id}.json"
+    if not path.exists():
+        return experiment_id, path
+    stamp = time.strftime("%Y%m%d-%H%M%S")
+    report_id = f"{experiment_id}-{stamp}"
+    path = directory / f"{report_id}.json"
+    counter = 2
+    while path.exists():
+        report_id = f"{experiment_id}-{stamp}-{counter}"
+        path = directory / f"{report_id}.json"
+        counter += 1
+    return report_id, path
+
+
+def _dataset_from_runs(baseline: dict[str, Any], candidate: dict[str, Any],
+                       bmetrics: dict[str, Any], cmetrics: dict[str, Any]) -> dict[str, Any]:
+    samples = sorted({str(run.get("sample")) for run in (baseline, candidate) if run.get("sample")})
+    splits = {legacy_config.split_of(sample) for sample in samples}
+    seeds = sorted({run.get("seed") for run in (baseline, candidate)
+                    if run.get("seed") is not None})
+    is_batch = baseline.get("kind") == "batch" and candidate.get("kind") == "batch"
+    return {
+        "split": next(iter(splits)) if len(splits) == 1 else ("mixed" if splits else "single_question"),
+        "mode": "batch" if is_batch else "single_question",
+        "samples": samples,
+        "questions": min(int(bmetrics.get("questions") or 1), int(cmetrics.get("questions") or 1)),
+        "questions_per_run": {"baseline": bmetrics.get("questions"),
+                              "candidate": cmetrics.get("questions")},
+        "seeds": seeds,
+        "test_only": bool(samples) and all(split == "test" for split in splits),
+    }
+
+
+def _report_from_runs(body: dict[str, Any]) -> dict[str, Any]:
+    baseline_id = body.get("baseline_run_id")
+    candidate_id = body.get("candidate_run_id")
+    run_ids = body.get("run_ids")
+    if (not baseline_id or not candidate_id) and isinstance(run_ids, list) and len(run_ids) >= 2:
+        baseline_id, candidate_id = run_ids[0], run_ids[-1]
+    if not baseline_id or not candidate_id:
+        raise WebError("baseline_run_id and candidate_run_id are required", 422)
+    baseline, candidate = _load_runs([str(baseline_id), str(candidate_id)])
+    bmetrics, cmetrics = _report_metrics(baseline), _report_metrics(candidate)
+    comparisons = [
+        _comparison(baseline, candidate, key, bmetrics, cmetrics, pair=key in ("answer_f1", "evidence_recall", "tokens"))
+        for key in ("answer_f1", "evidence_recall", "state_accuracy", "tokens", "p95_latency_ms", "errors")
+    ]
+    commit = lab_manifest.git_commit()
+
+    def run_entry(run: dict[str, Any], role: str) -> dict[str, Any]:
+        metrics = _report_metrics(run)
+        entry = {
+            "run_id": run.get("run_id"),
+            "role": role,
+            "kind": run.get("kind") or "single_question",
+            "sample": run.get("sample"),
+            "preset": run.get("preset"),
+            "config_hash": run.get("config_hash"),
+            "offline": bool(run.get("offline")),
+            "model": run.get("model"),
+            "git_commit": run.get("git_commit") or commit,
+            "questions": metrics.get("questions") or 1,
+            "metrics": {
+                "answer_f1": metrics.get("answer_f1"),
+                "evidence_recall": metrics.get("evidence_recall"),
+                "state_accuracy": metrics.get("state_accuracy"),
+                "tokens": metrics.get("tokens"),
+                "p95_latency_ms": metrics.get("p95_latency_ms"),
+                "errors": metrics.get("errors"),
+                "error_rate": metrics.get("error_rate"),
+                "questions": metrics.get("questions") or 1,
+            },
+        }
+        for key in ("answer_f1", "evidence_recall", "state_accuracy", "tokens",
+                    "p95_latency_ms", "errors", "error_rate"):
+            entry[key] = entry["metrics"][key]
+        if run.get("kind") != "batch":
+            entry["question"] = run.get("question")
+        return entry
+
+    def metadata_entry(run: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "run_id": run.get("run_id"),
+            "config_hash": run.get("config_hash"),
+            "preset": run.get("preset"),
+            "offline": bool(run.get("offline")),
+            "model": run.get("model"),
+            "git_commit": run.get("git_commit") or commit,
+        }
+
+    experiment_id = _safe_id(str(body.get("experiment_id") or f"lab-{time.strftime('%Y%m%d-%H%M%S')}"))
+    report_id, path = _unique_report_path(experiment_id)
+    web_path = f"#/experiments/{report_id}"
+    report = {
+        "schema": "memlab/experiment-report@1",
+        "experiment_id": report_id,
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+        "module": body.get("module"),
+        "stage": body.get("stage"),
+        "title": body.get("title") or report_id,
+        "dataset": _dataset_from_runs(baseline, candidate, bmetrics, cmetrics),
+        "results": {
+            "runs": [run_entry(baseline, "baseline"), run_entry(candidate, "candidate")],
+            "metrics": cmetrics,
+            "baseline_metrics": bmetrics,
+            "candidate_metrics": cmetrics,
+        },
+        "comparisons": comparisons,
+        "analysis": {
+            "main_effects": [],
+            "interactions": [],
+            "pareto": [],
+            "by_category": _report_by_category(baseline, candidate),
+            "stage_waterfall": _report_stage_waterfall(baseline, candidate),
+            "failure_breakdown": [],
+        },
+        "conclusion": _report_conclusion(baseline, candidate, comparisons, bmetrics, cmetrics),
+        "metadata": {
+            "git_commit": commit,
+            "dataset_hash": lab_manifest.dataset_hash(),
+            "baseline": metadata_entry(baseline),
+            "candidate": metadata_entry(candidate),
+        },
+        "manifest": {
+            "git_commit": commit,
+            "config_hashes": {
+                "baseline": baseline.get("config_hash"),
+                "candidate": candidate.get("config_hash"),
+            },
+            "dataset_hash": lab_manifest.dataset_hash(),
+            "model": {"baseline": baseline.get("model"), "candidate": candidate.get("model")},
+            "offline": {"baseline": bool(baseline.get("offline")),
+                        "candidate": bool(candidate.get("offline"))},
+        },
+        "web": {"route": web_path, "published": True},
+    }
+    path.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return {"report_id": report_id, "web_path": web_path, "report": report}
 
 
 def _report_list() -> dict[str, Any]:
@@ -1055,6 +1519,16 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     args = args or {}
     route = path[len("/api/v2"):] if path.startswith("/api/v2") else path
 
+    if route == "/questions":
+        sample_id = str(_one(args, "sample", "") or "")
+        category = str(_one(args, "category", "") or "")
+        limit = _one(args, "limit", 50)
+        try:
+            limit = int(limit if limit not in (None, "") else 50)
+        except (TypeError, ValueError) as exc:
+            raise WebError("limit must be an integer", 400) from exc
+        return _question_items(sample_id, category, limit, _one(args, "seed", None))
+
     if route in ("/course", "/samples"):
         ids = COURSE_IDS if route == "/course" else dataset.store().ids()
         items = []
@@ -1284,6 +1758,8 @@ def post(path: str, body: dict[str, Any]) -> dict[str, Any]:
         else:
             raise WebError("config or preset is required", 400)
         return _validate(data)
+    if route == "/reports/from-runs":
+        return _report_from_runs(body)
     if route == "/runs":
         return _run(body)
     if route == "/jobs":
