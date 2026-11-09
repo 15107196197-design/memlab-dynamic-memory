@@ -2,6 +2,8 @@
 
 > 范围：只做决策与只读可行性核验。本会话没有跑 E1 全量、没有跑 S7b 结论、没有用 legacy 冒充 R0、没有 L3、没有伪造 B 级指标。
 > 相关：HANDOFF §5.1.6 / §5.1.8 / §10；S6-REPORT §10；AUDIT-2026-11-09 §3.2；S7A-REPORT。
+>
+> **2026-11-09 更新：S7b-A 已执行**，结果见 [S7B-A-REPORT.md](S7B-A-REPORT.md) 与 `eval/archive/s7b-a-offline.json`；本文件保留决策记录，B 级结论仍未开始。
 
 ## 0. 决策
 
@@ -70,7 +72,7 @@
 
 ## 5. 下一步 A/B
 
-- **A（推荐）**：新会话做 S7b-A：读 `runs/s6/e1.sqlite` → 生成 conversion/bottleneck 报告（标 A 级）→ 列出 B 级缺口；不改评测标准，不跑 E1。
-- **B**：等 Ollama 后直接做 B 级 S6 + 正式 S7b；A 级只保留本文件的可行性表。
+- **A（已完成）**：S7b-A 已执行，结果见 [S7B-A-REPORT.md](S7B-A-REPORT.md)；A 级只做 conversion/seed 波动/B 级缺口，不改评测标准。
+- **B（下一步）**：等 Ollama 后做 B 级 S6 + 正式 S7b-B（Oracle + LLM 归因）；S7b-A 的数字必须重跑覆盖，不能叠加。
 
 > 选择 A 不阻塞 B：S7b-A 的任何数字在 B 级到位后都必须重跑覆盖，不能叠加。

@@ -38,13 +38,18 @@ class Conversion:
         }
 
 
-def _by_question(store: ResultStore, run_id: str) -> dict[str, dict[str, float]]:
+def question_metrics(store: ResultStore, run_id: str) -> dict[str, dict[str, float]]:
+    """Per-question metric map: ``qid -> {metric: value}`` (null values skipped)."""
     out: dict[str, dict[str, float]] = {}
     for row in store.metrics(run_id=run_id):
         if row.get("value") is None:
             continue
         out.setdefault(str(row["qid"]), {})[str(row["metric"])] = float(row["value"])
     return out
+
+
+def _by_question(store: ResultStore, run_id: str) -> dict[str, dict[str, float]]:
+    return question_metrics(store, run_id)
 
 
 def conversion(store: ResultStore, run_id: str, *, gate: str = "evidence_recall",
@@ -155,4 +160,168 @@ def bottleneck(store: ResultStore, run_id: str, *,
     return {
         "run_id": run_id, "gate_mean": gate_mean, "outcome_mean": outcome_mean,
         "conversion": conv.to_dict(), "diagnosis": diagnosis,
+    }
+
+
+# ---- S7b-A offline screen ------------------------------------------------
+# The functions below add a descriptive, A-level screen on top of the existing
+# conversion math.  They deliberately do not call a model, build an oracle run or
+# label a module as causal: they only report P(outcome | gate) and how much data
+# supports it.  S7b-B uses the same rows once real LLM metrics exist.
+
+SCREEN_METRICS = (
+    "answer_f1", "evidence_recall", "context_precision", "ndcg",
+    "state_accuracy", "judge_accuracy", "tokens", "seconds",
+)
+
+
+def _mean_of(values: Iterable[float]) -> float | None:
+    values = [float(value) for value in values]
+    return round(sum(values) / len(values), 4) if values else None
+
+
+def _rate(numerator: int, denominator: int) -> float | None:
+    return round(numerator / denominator, 4) if denominator else None
+
+
+def run_screen(store: ResultStore, run_id: str, *,
+               gate: str = "evidence_recall", gate_min: float = 1.0,
+               outcome: str = "answer_f1", outcome_min: float = 0.0) -> dict[str, Any]:
+    """One run's descriptive gate → outcome screen.
+
+    ``p_outcome`` is unconditional; ``p_outcome_given_gate`` conditions on the
+    gate, so the denominator is ``n_gated`` rather than all questions.  ``lift`` is
+    their difference and must not be read as a causal effect.
+    """
+    run = store.get_run(run_id) or {}
+    factors = run.get("factors") or {}
+    questions = question_metrics(store, run_id)
+    observed = {qid: values for qid, values in questions.items() if outcome in values}
+    gated = {qid: values for qid, values in observed.items()
+             if values.get(gate) is not None and values[gate] >= gate_min}
+    success = {qid for qid, values in gated.items() if values[outcome] > outcome_min}
+    outcome_success = sum(1 for values in observed.values() if values[outcome] > outcome_min)
+    p_outcome = _rate(outcome_success, len(observed))
+    p_given_gate = _rate(len(success), len(gated))
+    if not observed:
+        status = "outcome_not_recorded"
+    elif not gated:
+        status = "no_gated_questions"
+    else:
+        status = "ok"
+    return {
+        "run_id": run_id,
+        "module": factors.get("module"),
+        "candidate": factors.get("candidate"),
+        "seed": factors.get("seed"),
+        "n_questions": len(questions),
+        "n_observed": len(observed),
+        "n_gated": len(gated),
+        "n_success": len(success),
+        "n_outcome_success": outcome_success,
+        "p_gate": _rate(len(gated), len(observed)),
+        "p_outcome": p_outcome,
+        "p_outcome_given_gate": p_given_gate,
+        "lift": (round(p_given_gate - p_outcome, 4)
+                 if p_given_gate is not None and p_outcome is not None else None),
+        "mean_outcome": _mean_of(values[outcome] for values in observed.values()),
+        "mean_outcome_gated": _mean_of(values[outcome] for values in gated.values()),
+        "mean_gate": _mean_of(values[gate] for values in observed.values()
+                              if values.get(gate) is not None),
+        "status": status,
+    }
+
+
+def aggregate_screens(rows: Sequence[Mapping[str, Any]], *, key: str) -> list[dict[str, Any]]:
+    """Pool run screens by a factor label, keeping both pooled and run-level views."""
+    groups: dict[str, list[Mapping[str, Any]]] = {}
+    for row in rows:
+        label = row.get(key)
+        groups.setdefault(str(label) if label is not None else "unknown", []).append(row)
+    out: list[dict[str, Any]] = []
+    for label, group in sorted(groups.items()):
+        usable = [row for row in group if row.get("status") == "ok"]
+        n_observed = sum(int(row.get("n_observed") or 0) for row in group)
+        n_gated = sum(int(row.get("n_gated") or 0) for row in group)
+        n_success = sum(int(row.get("n_success") or 0) for row in group)
+        n_outcome_success = sum(int(row.get("n_outcome_success") or 0) for row in group)
+        conversions = [row["p_outcome_given_gate"] for row in usable
+                       if row.get("p_outcome_given_gate") is not None]
+        lifts = [row["lift"] for row in usable if row.get("lift") is not None]
+        out.append({
+            key: label,
+            "runs": len(group),
+            "runs_with_gate": len(usable),
+            "n_observed": n_observed,
+            "n_gated": n_gated,
+            "p_gate": _rate(n_gated, n_observed),
+            "p_outcome": _rate(n_outcome_success, n_observed),
+            "p_outcome_given_gate": _rate(n_success, n_gated),
+            "conversion_run_mean": _mean_of(conversions),
+            "conversion_run_min": min(conversions) if conversions else None,
+            "conversion_run_max": max(conversions) if conversions else None,
+            "lift_mean": _mean_of(lifts),
+        })
+    return out
+
+
+def gate_availability(store: ResultStore, metrics: Sequence[str] = SCREEN_METRICS) -> list[dict[str, Any]]:
+    """Which screen metrics are actually recorded, and for how many runs."""
+    out: list[dict[str, Any]] = []
+    for metric in metrics:
+        rows = store.metrics(metric=metric)
+        observed = sum(1 for row in rows if row.get("value") is not None)
+        out.append({
+            "metric": metric,
+            "rows": len(rows),
+            "observed": observed,
+            "runs": len({row["run_id"] for row in rows}),
+            "status": "ok" if observed else "missing",
+        })
+    return out
+
+
+def screen(store: ResultStore, *, gate: str = "evidence_recall", gate_min: float = 1.0,
+           outcome: str = "answer_f1", outcome_min: float = 0.0) -> dict[str, Any]:
+    """Descriptive S7b-A payload over every run in ``store``.
+
+    No Oracle gap and no LLM attribution are produced here; both need runs this
+    database does not contain.  The ``oracle_gap``/``llm_attribution`` statuses
+    say so instead of substituting a proxy.
+    """
+    runs = [run_screen(store, row["run_id"], gate=gate, gate_min=gate_min,
+                       outcome=outcome, outcome_min=outcome_min)
+            for row in store.runs()]
+    models = sorted({
+        str(((store.get_run(row["run_id"]) or {}).get("environment") or {})
+            .get("llm", {}).get("model") or "unknown")
+        for row in store.runs()
+    })
+    limits = [
+        "answer_f1 is the offline extractive baseline, not an LLM answer",
+        "environment.llm metadata names the intended model; the runs were offline (notes=offline_extractive)",
+        "no Oracle run: oracle_gap is not_available rather than a proxy",
+        "state_accuracy/judge_accuracy are not recorded: P(A|S=1) cannot be computed",
+        "two seeds only; run-level min/max is dispersion, not a confidence interval",
+    ]
+    return {
+        "schema": "memlab/s7b-a@1",
+        "level": "A-offline-descriptive",
+        "gate": {"metric": gate, "min": gate_min},
+        "outcome": {"metric": outcome, "min": outcome_min},
+        "runs": runs,
+        "by_module": aggregate_screens(runs, key="module"),
+        "by_candidate": aggregate_screens(runs, key="candidate"),
+        "by_seed": aggregate_screens(runs, key="seed"),
+        "gate_availability": gate_availability(store),
+        "oracle_gap": {
+            "status": "not_available",
+            "reason": "No Oracle run and no retrieval-ceiling metric are stored in this DB; building an Oracle executor/run is S7b-B work.",
+        },
+        "llm_attribution": {
+            "status": "not_available",
+            "reason": "S6 runs are offline extractive; one environment label is not an LLM comparison.",
+            "environment_models": models,
+        },
+        "limits": limits,
     }
