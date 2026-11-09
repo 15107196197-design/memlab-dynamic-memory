@@ -5,7 +5,7 @@
   "design": "single_factor_adoption",
   "reference_configs": {
     "off": "../../configs/reference-b0.json",
-    "on": "../../configs/reference-r0.json"
+    "on": "../../configs/reference-r0-original.json"
   },
   "hypotheses": [
     "H1",

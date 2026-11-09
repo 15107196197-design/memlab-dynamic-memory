@@ -60,7 +60,7 @@ class ConfigTests(unittest.TestCase):
     def test_reference_configs_load_and_validate(self):
         b0 = lab_config.RunConfig.load(REFERENCE_B0)
         r0 = lab_config.RunConfig.load(REFERENCE_R0)
-        self.assertEqual((b0.preset, r0.preset), ("B0", "R0"))
+        self.assertEqual((b0.preset, r0.preset), ("B0", "R0-fixed"))
         self.assertTrue(b0.config_hash.startswith("sha256:"))
         self.assertNotEqual(b0.config_hash, r0.config_hash)
         self.assertEqual(b0.method, "legacy_dynamic")

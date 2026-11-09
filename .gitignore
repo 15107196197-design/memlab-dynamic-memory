@@ -1,12 +1,17 @@
 __pycache__/
+**/__pycache__/
 *.pyc
 *.tmp
 *.log
 .env
 .DS_Store
+**/._*
 cache/
 data/imported/
 runs/
 reports/
 artifacts/
 eval/*.tmp
+.venv-memlab/
+activity-dashboard/
+reports/_build/__pycache__/

@@ -10,7 +10,7 @@
       "strict_json": true
     }
   },
-  "preset": "R0",
+  "preset": "R0-fixed",
   "description": "Reference architecture: all five optimisation axes wired, with defaults chosen from the literature review. This is a hypothesis, not the final best configuration.",
   "environment": {
     "llm": {
@@ -130,20 +130,13 @@
     }
   },
   "rerank": {
-    "impl": "cross_encoder",
-    "params": {
-      "model": "BAAI/bge-reranker-v2-m3",
-      "top_n": 50,
-      "batch_size": 16
-    }
+    "impl": "none",
+    "params": {}
   },
   "post": {
     "mmr": {
-      "impl": "mmr",
-      "params": {
-        "lambda": 0.7,
-        "similarity": "cosine"
-      }
+      "impl": "none",
+      "params": {}
     },
     "dedupe": {
       "impl": "dedupe",
@@ -152,26 +145,16 @@
       }
     },
     "decay": {
-      "impl": "time_decay",
-      "params": {
-        "lambda": 0.005,
-        "unit": "day",
-        "except_history": true
-      }
+      "impl": "none",
+      "params": {}
     },
     "compress": {
-      "impl": "extractive",
-      "params": {
-        "budget_tokens": 4000
-      }
+      "impl": "none",
+      "params": {}
     },
     "filter": {
-      "impl": "threshold",
-      "params": {
-        "min_relevance": 0.2,
-        "drop_stale": true,
-        "drop_conflicting": false
-      }
+      "impl": "none",
+      "params": {}
     }
   },
   "temporal": {

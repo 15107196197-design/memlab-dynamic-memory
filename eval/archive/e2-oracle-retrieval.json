@@ -1,0 +1,20 @@
+{
+  "schema": "memlab/e2-oracle@1",
+  "experiment_id": "e2-oracle-retrieval",
+  "samples": [
+    "conv-26",
+    "conv-30",
+    "conv-43",
+    "conv-44"
+  ],
+  "questions": 80,
+  "seed": 13,
+  "metrics": {
+    "answer_f1": 0.2437,
+    "evidence_recall": 0.6611,
+    "tokens": 232.15,
+    "latency_ms": 2217.14
+  },
+  "elapsed_seconds": 195.2,
+  "run_id": "e2-oracle-retrieval"
+}

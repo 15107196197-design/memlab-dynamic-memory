@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>实验设计可视化 · 5 个备选方案</title>
+<style>
+  :root{
+    --paper:#F7F3EA; --ink:#22303A; --mut:#6E6A60; --line:#E2DACA;
+    --card:#FFFDF8;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Source Han Sans SC",sans-serif;}
+  .wrap{width:1600px;margin:0 auto;padding:72px 80px 90px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;
+    border-bottom:1px solid var(--line);padding-bottom:30px;margin-bottom:44px}
+  .eyebrow{font-size:11px;letter-spacing:3px;color:#9A8F7C;font-weight:600}
+  h1{font-size:44px;margin:14px 0 12px;letter-spacing:1px}
+  .sub{font-size:13.5px;color:var(--mut);line-height:1.7}
+  .meta{text-align:right;font-size:11.5px;color:#8A8172;line-height:1.9}
+  .meta b{display:block;font-size:26px;color:var(--ink);letter-spacing:1px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    overflow:hidden;box-shadow:0 8px 26px rgba(80,64,40,.07);display:flex;flex-direction:column}
+  .thumb{display:block;position:relative;background:#0d1526;border-bottom:1px solid var(--line)}
+  .thumb img{display:block;width:100%;height:auto}
+  .num{position:absolute;left:18px;top:16px;width:34px;height:34px;border-radius:50%;
+    background:rgba(20,28,36,.72);color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;letter-spacing:0;backdrop-filter:blur(4px)}
+  .body{padding:22px 24px 24px;display:flex;flex-direction:column;flex:1}
+  h2{font-size:20px;margin:0 0 8px;letter-spacing:.5px}
+  .desc{font-size:12.5px;line-height:1.75;color:#4E5A66;margin:0 0 16px}
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+  .tag{font-size:10.5px;padding:5px 9px;border-radius:999px;background:#F2EDE1;
+    color:#6E6555;border:1px solid #E4DCCB}
+  .tag.good{background:#EDF3EC;color:#4C7A55;border-color:#D6E4D6}
+  .tag.warn{background:#F8EEE9;color:#A05B45;border-color:#EED9CF}
+  .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center}
+  a.open{font-size:11.5px;color:#3F5F86;text-decoration:none;border-bottom:1px solid #B9C9DA;
+    padding-bottom:2px;letter-spacing:.5px}
+  a.open:hover{color:#22303A;border-color:#22303A}
+  .file{font-size:10px;color:#A79C88;font-family:"SF Mono",Menlo,monospace}
+  .rec{grid-column:1 / -1;background:#22303A;color:#F3EFE4;border-radius:16px;
+    padding:34px 38px;display:grid;grid-template-columns:280px 1fr;gap:36px;align-items:center}
+  .rec .k{font-size:11px;letter-spacing:3px;color:#C9B98F}
+  .rec h2{color:#FFFDF8;font-size:22px;margin:10px 0 0}
+  .rec p{font-size:12.5px;line-height:1.85;color:#C9D2D0;margin:0}
+  .rec b{color:#F2D48A;font-weight:600}
+  footer{margin-top:40px;display:flex;justify-content:space-between;font-size:11px;color:#9A8F7C}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">04 · EXPERIMENTS  /  VISUAL OPTIONS</div>
+      <h1>实验设计 · 五个可视化备选</h1>
+      <div class="sub">同一份实验思路，五种看法：结构、逻辑、时间、关联、判定。<br>
+      每张图都是独立 HTML（矢量，可直接改字），旁边是同尺寸 PNG。</div>
+    </div>
+    <div class="meta">
+      <b>5</b>
+      方案 / 同一套内容<br>
+      源文档：04-experiments.md<br>
+      画布：1600 × 1000 · 2× PNG
+    </div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <a class="thumb" href="01-isometric-stack.html"><span class="num">01</span><img src="01-isometric-stack.png" alt="立体分层总览"></a>
+      <div class="body">
+        <h2>立体分层总览</h2>
+        <p class="desc">把 E0→E5 做成自下而上堆叠的六层“地层”，E1 层横向展开六个模块卡。一眼看出“先模块内、再模块间、最后确认”的推进顺序。</p>
+        <div class="tags"><span class="tag good">最适合：汇报首页 / 全局</span><span class="tag">立体感强</span><span class="tag warn">细节靠文字</span></div>
+        <div class="foot"><span class="file">01-isometric-stack</span><a class="open" href="01-isometric-stack.html">打开矢量图 ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb" href="02-radial-mindmap.html"><span class="num">02</span><img src="02-radial-mindmap.png" alt="逻辑思维导图"></a>
+      <div class="body">
+        <h2>逻辑思维导图</h2>
+        <p class="desc">以“模块化实验设计”为中心，向五个方向长出原则、模块、阶段、评测、归因。适合讲“为什么这样组织”，而不是“第几周做什么”。</p>
+        <div class="tags"><span class="tag good">最适合：讨论 / 立项</span><span class="tag">层次清楚</span><span class="tag warn">时间信息弱</span></div>
+        <div class="foot"><span class="file">02-radial-mindmap</span><a class="open" href="02-radial-mindmap.html">打开矢量图 ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb" href="03-metro-map.html"><span class="num">03</span><img src="03-metro-map.png" alt="实验线路图"></a>
+      <div class="body">
+        <h2>实验线路图</h2>
+        <p class="desc">六条模块线并行，五个阶段竖带汇合；实心站是 E1 实验，空心环是进入下一阶段的候选。时间、并行、换乘一卡通。</p>
+        <div class="tags"><span class="tag good">最适合：排期 / 进度</span><span class="tag">信息密度高</span><span class="tag warn">需要读法</span></div>
+        <div class="foot"><span class="file">03-metro-map</span><a class="open" href="03-metro-map.html">打开矢量图 ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb" href="04-hex-contract-ring.html"><span class="num">04</span><img src="04-hex-contract-ring.png" alt="模块契约环"></a>
+      <div class="body">
+        <h2>模块契约环</h2>
+        <p class="desc">六个模块沿环流动，六个编号对应六条接口契约；右侧列出 E2 只做的六组 2×2。适合回答“模块之间靠什么接上、谁配谁”。</p>
+        <div class="tags"><span class="tag good">最适合：讲接口 / 关联</span><span class="tag">几何感强</span><span class="tag warn">阶段顺序弱</span></div>
+        <div class="foot"><span class="file">04-hex-contract-ring</span><a class="open" href="04-hex-contract-ring.html">打开矢量图 ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <a class="thumb" href="05-diagnosis-tree.html"><span class="num">05</span><img src="05-diagnosis-tree.png" alt="瓶颈诊断树"></a>
+      <div class="body">
+        <h2>瓶颈诊断树</h2>
+        <p class="desc">结果不理想时，按上限 → 召回 → P(A|R) → oracle context → LLM 归因的顺序问五个问题，每条“否”都落到该修的模块。</p>
+        <div class="tags"><span class="tag good">最适合：结果分析 / 复盘</span><span class="tag">可操作</span><span class="tag warn">不是全景</span></div>
+        <div class="foot"><span class="file">05-diagnosis-tree</span><a class="open" href="05-diagnosis-tree.html">打开矢量图 ↗</a></div>
+      </div>
+    </div>
+
+    <div class="card" style="align-items:center;justify-content:center;padding:30px;text-align:center;background:#FBF7EE">
+      <div style="font-size:11px;letter-spacing:3px;color:#9A8F7C">HOW TO CHOOSE</div>
+      <div style="font-size:15px;line-height:2;color:#4E5A66;margin-top:12px">
+        讲全局 → <b>01</b><br>
+        讲时间与并行 → <b>03</b><br>
+        讲模块与接口 → <b>04</b><br>
+        讲判定逻辑 → <b>05</b><br>
+        讲设计动机 → <b>02</b>
+      </div>
+      <div style="font-size:11px;color:#A79C88;margin-top:16px">也可以 01 做主图、05 做附页</div>
+    </div>
+
+    <div class="rec">
+      <div>
+        <div class="k">RECOMMENDED SET</div>
+        <h2>推荐组合</h2>
+      </div>
+      <p>主图用 <b>01 立体分层总览</b>，一页交代“六模块 × 四步 × 六阶段”；汇报进度配 <b>03 线路图</b>；讲模块接口用 <b>04 契约环</b>；结果复盘用 <b>05 诊断树</b>。<b>02 思维导图</b> 留作讨论稿——它最能解释“为什么不是全局 2^k”。</p>
+    </div>
+  </div>
+
+  <footer>
+    <span>源文档：docs/optimization/04-experiments.md · 2026-11</span>
+    <span>5 张矢量图 + 5 张 3200×2000 PNG</span>
+  </footer>
+</div>
+</body>
+</html>

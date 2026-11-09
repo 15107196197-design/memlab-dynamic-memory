@@ -44,11 +44,26 @@ def unit_turn_ids(unit: MemoryUnit) -> list[str]:
     return turns
 
 
-def _context_lines(units: Sequence[MemoryUnit]) -> str:
+def _interval_text(interval) -> str:
+    if interval is None:
+        return "none"
+    start = interval.start.isoformat() if interval.start else "?"
+    end = interval.end.isoformat() if interval.end else "now"
+    return f"{start}..{end}"
+
+
+def _context_lines(units: Sequence[MemoryUnit], time_context: bool = False) -> str:
     lines = []
     for unit in units:
         turns = ",".join(unit_turn_ids(unit)) or "none"
-        lines.append(f"[{unit.memory_id}] ({unit.kind}; turns={turns}) {unit.text}")
+        if time_context:
+            lines.append(
+                f"[{unit.memory_id}] ({unit.kind}; turns={turns}; "
+                f"t_event={_interval_text(unit.t_event)}; "
+                f"t_ingest={_interval_text(unit.t_ingest)}; "
+                f"valid={_interval_text(unit.valid_interval)}) {unit.text}")
+        else:
+            lines.append(f"[{unit.memory_id}] ({unit.kind}; turns={turns}) {unit.text}")
     return "\n".join(lines)
 
 
@@ -187,11 +202,21 @@ class Answerer(Parametrised):
               store: Any, ctx: Any) -> DraftAnswer:
         raise NotImplementedError
 
-    def _ask(self, prompt: str, units: Sequence[MemoryUnit], ctx: Any) -> DraftAnswer:
+    def _ask(self, prompt: str, units: Sequence[MemoryUnit], ctx: Any, *,
+             query: str = "", answer_units: Sequence[MemoryUnit] | None = None) -> DraftAnswer:
         allowed_turns = {turn for unit in units for turn in unit_turn_ids(unit)}
         llm = getattr(ctx, "llm", None)
         if llm is None or not hasattr(llm, "generate"):
             return DraftAnswer("unknown", [], True, {"error": "no LLM client", "tokens": estimate_tokens(prompt)})
+        if getattr(llm, "is_offline", False) and query:
+            # The offline client is a deterministic extractive baseline.  It needs
+            # the structured units (temporal provenance, fact attributes), not the
+            # flattened prompt, so route it through the local extractor.
+            from .offline_qa import answer as extractive_answer
+            text, citations, refused, meta = extractive_answer(query, list(answer_units or units))
+            allowed = [citation for citation in citations if citation in allowed_turns]
+            return DraftAnswer(text, allowed, refused,
+                               {**meta, "tokens": estimate_tokens(prompt) + estimate_tokens(text)})
         result = llm.generate(prompt, json_mode=True)
         if isinstance(result, dict):
             answer = str(result.get("answer", "")).strip()
@@ -217,28 +242,34 @@ class DirectAnswerer(Answerer):
     def draft(self, query, state, units, store, ctx):
         prompt = (f"{ANSWER_STYLE}\nReturn JSON {{\"answer\":\"...\",\"citations\":[\"<turn_id>\"]}}.\n"
                   f"Question: {query}\nEvidence:\n{_context_lines(units)}")
-        return self._ask(prompt, units, ctx)
+        return self._ask(prompt, units, ctx, query=query, answer_units=state.valid)
 
 
-def _valid_history_prompt(query: str, state: StateView) -> str:
+def _valid_history_prompt(query: str, state: StateView, time_context: bool = False) -> str:
     conflicts = ", ".join(f"{head}/{tail}" for head, tail in state.conflicts) or "none"
+    time_rule = ("When the question asks when, convert relative expressions such as "
+                 "yesterday/last week/today to an absolute date using t_event, t_ingest or "
+                 "the session timestamp in the evidence; answer the absolute date when possible.\n"
+                 if time_context else "")
     return (
-        f"{ANSWER_STYLE}\n"
+        f"{ANSWER_STYLE}\n{time_rule}"
         f"Valid memories are current or still-true evidence; superseded memories are earlier versions "
         f"and may be used only when the question asks about the past. Disclose unresolved conflicts.\n"
         f"Return JSON {{\"answer\":\"...\",\"citations\":[\"<turn_id>\"],\"refused\":false}}.\n"
         f"Question: {query}\n"
         f"As of: {state.as_of.isoformat() if state.as_of else 'latest'}\n"
-        f"Valid memories:\n{_context_lines(state.valid)}\n"
-        f"Superseded memories:\n{_context_lines(state.superseded)}\n"
+        f"Valid memories:\n{_context_lines(state.valid, time_context)}\n"
+        f"Superseded memories:\n{_context_lines(state.superseded, time_context)}\n"
         f"Unresolved conflicts: {conflicts}"
     )
 
 
 @register(AXIS_ANSWER, "valid_history")
 class ValidHistoryAnswerer(Answerer):
+    params_allowed = frozenset({"verifier", "max_tokens", "abstain_when_unsupported", "time_context"})
+
     def draft(self, query, state, units, store, ctx):
-        return self._ask(_valid_history_prompt(query, state), units, ctx)
+        return self._ask(_valid_history_prompt(query, state, bool(self.params.get("time_context", False))), units, ctx, query=query, answer_units=state.valid)
 
 
 @register(AXIS_ANSWER, "evidence_chain")
@@ -248,16 +279,16 @@ class EvidenceChainAnswerer(Answerer):
         chain = [relation for relation in getattr(store, "relations", [])
                  if relation.head_id in ids and relation.tail_id in ids]
         chain_text = "\n".join(f"{relation.head_id} -{relation.type}-> {relation.tail_id}" for relation in chain)
-        prompt = (_valid_history_prompt(query, state) +
+        prompt = (_valid_history_prompt(query, state, bool(self.params.get("time_context", False))) +
                   f"\nEvidence chain:\n{chain_text or 'none'}\n"
                   f"Use the chain to order the evidence, then answer.")
-        return self._ask(prompt, units, ctx)
+        return self._ask(prompt, units, ctx, query=query, answer_units=state.valid)
 
 
 @register(AXIS_ANSWER, "citation_required")
 class CitationAnswerer(Answerer):
     def draft(self, query, state, units, store, ctx):
-        draft = self._ask(_valid_history_prompt(query, state), units, ctx)
+        draft = self._ask(_valid_history_prompt(query, state, bool(self.params.get("time_context", False))), units, ctx, query=query, answer_units=state.valid)
         if not draft.refused and not draft.citations:
             draft.refused = True
             draft.answer = "unknown"

@@ -1,0 +1,70 @@
+{
+  "schema": "memlab/m2-rerank@1",
+  "experiment_id": "m2-rerank-deadline",
+  "runs": [
+    {
+      "run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "status": "complete",
+      "factors": {
+        "rerank.impl": "none"
+      },
+      "metrics": {
+        "answer_f1": 0.2844,
+        "candidates": 13.2,
+        "channels": 2.0,
+        "citations": 0.175,
+        "conflict_pairs": 0.125,
+        "context_precision": 0.1062,
+        "evidence_recall": 0.5785,
+        "field_completeness": 1.0,
+        "graph_edges": 1301.5,
+        "graph_nodes": 937.75,
+        "latency_ms": 13032.5241,
+        "ndcg": 0.4315,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0648,
+        "refused": 0.175,
+        "seconds": 13.3734,
+        "store_facts": 222.75,
+        "store_turns": 535.75,
+        "store_units": 758.5,
+        "superseded_units": 3.025,
+        "tokens": 376.475,
+        "tokens_total": 1043.425,
+        "valid_units": 10.175
+      }
+    },
+    {
+      "run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "status": "complete",
+      "factors": {
+        "rerank.impl": "cross_encoder"
+      },
+      "metrics": {
+        "answer_f1": 0.2373,
+        "candidates": 2.225,
+        "channels": 2.0,
+        "citations": 0.025,
+        "conflict_pairs": 0.025,
+        "context_precision": 0.3351,
+        "evidence_recall": 0.3498,
+        "field_completeness": 1.0,
+        "graph_edges": 1301.5,
+        "graph_nodes": 937.75,
+        "latency_ms": 3488.7321,
+        "ndcg": 0.5123,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1234,
+        "refused": 0.55,
+        "seconds": 3.8277,
+        "store_facts": 222.75,
+        "store_turns": 535.75,
+        "store_units": 758.5,
+        "superseded_units": 0.4,
+        "tokens": 47.25,
+        "tokens_total": 286.85,
+        "valid_units": 1.825
+      }
+    }
+  ]
+}

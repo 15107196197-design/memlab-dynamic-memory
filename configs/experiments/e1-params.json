@@ -1,0 +1,292 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1.2-parameter-layer",
+  "title": "E1.2 parameter layer: W4 / S2 / R4 / M4 / M6 single-factor response curves",
+  "module": "W/S/R/M",
+  "design": "single_factor",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H4",
+    "H5",
+    "H6",
+    "H7"
+  ],
+  "environment": {
+    "llm_level": "A0",
+    "llm": "offline-extractive",
+    "embedding": "offline-hash",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category"
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "one_factor_at_a_time": true,
+    "full_factorial": false,
+    "stop_rules": {
+      "max_error_rate": 0.0,
+      "min_completed_questions": 60
+    },
+    "note": "Every factor changes exactly one dotted config path from reference-r0.json. Levels equal to the reference value are deduplicated by the compiler into one shared baseline run; the analysis maps every requested level back to that run by config_hash, so a curve still reports every level.",
+    "wiring_note": "Two requested paths do not exist as consumed knobs in this checkout. R4: planner.params.k is never read, and retrieve._k reads retrieval.k only when no explicit k is passed; the e2e executor passes k=15 explicitly (memlab/experiments/executor.py:143), so the CLI run cannot vary k. The R4 factor below still sweeps retrieval.k to measure and expose that harness block. S2 max_neighbors is accepted by config but GraphIndex.expand never reads it; its three levels are still run to show the expected no-difference curve and are flagged wired=false in the artifact."
+  },
+  "factors": [
+    {
+      "id": "schema.params.fields",
+      "module": "W4",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        6,
+        12
+      ],
+      "hypothesis": "H1",
+      "metrics": [
+        "field_completeness",
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query"
+      ],
+      "note": "MetaSchemaExtractor records the value in structured.schema.fields; the offline extractor derives the same fact set for every value, so the A-level curve is expected to be flat."
+    },
+    {
+      "id": "schema.params.evidence",
+      "module": "W4",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        false,
+        true
+      ],
+      "hypothesis": "H1",
+      "metrics": [
+        "field_completeness",
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query"
+      ],
+      "note": "false = evidence off, true = evidence on. Offline meta_schema always emits unit.evidence and never reads the flag, so the parameter is interface-only on this path.",
+      "wired": false
+    },
+    {
+      "id": "graph.retrieval.params.k_hop",
+      "module": "S2",
+      "tier": "tier0",
+      "axis": "graph.retrieval",
+      "levels": [
+        1,
+        2,
+        3
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "redundancy_rate"
+      ],
+      "applies_when": {
+        "graph.retrieval.impl": [
+          "entity_subgraph",
+          "dual_channel"
+        ]
+      },
+      "note": "Read by GraphKHopRetriever via graph.retrieval.params.k_hop and passed to GraphIndex.expand."
+    },
+    {
+      "id": "graph.retrieval.params.max_neighbors",
+      "module": "S2",
+      "tier": "tier0",
+      "axis": "graph.retrieval",
+      "levels": [
+        10,
+        40,
+        80
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "redundancy_rate"
+      ],
+      "applies_when": {
+        "graph.retrieval.impl": [
+          "entity_subgraph",
+          "dual_channel"
+        ]
+      },
+      "wired": false,
+      "note": "Declared parameter, not consumed: GraphIndex.expand(seeds, k_hop) has no max_neighbors argument. Kept in the matrix so the no-difference result is measured rather than assumed."
+    },
+    {
+      "id": "retrieval.k",
+      "module": "R4",
+      "tier": "tier0",
+      "axis": "retrieval",
+      "levels": [
+        10,
+        15,
+        25
+      ],
+      "hypothesis": "H4",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "p95_latency_ms"
+      ],
+      "note": "R4 planner k. retrieve._k reads retrieval.k only when no explicit k is passed; the e2e executor passes k=15 at executor.py:143, so this factor is measured as harness-blocked. planner.params.k is not read anywhere and is recorded in deferred.",
+      "requested_path": "planner.params.k"
+    },
+    {
+      "id": "post.mmr.params.lambda",
+      "module": "M4",
+      "tier": "tier0",
+      "axis": "post.mmr",
+      "levels": [
+        0.5,
+        0.7,
+        0.9
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "redundancy_rate",
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query"
+      ],
+      "applies_when": {
+        "post.mmr.impl": "mmr"
+      }
+    },
+    {
+      "id": "post.decay.params.lambda",
+      "module": "M4",
+      "tier": "tier0",
+      "axis": "post.decay",
+      "levels": [
+        0.001,
+        0.01,
+        0.05
+      ],
+      "hypothesis": "H7",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "redundancy_rate"
+      ],
+      "applies_when": {
+        "post.decay.impl": "time_decay"
+      }
+    },
+    {
+      "id": "post.compress.params.budget_tokens",
+      "module": "M4",
+      "tier": "tier0",
+      "axis": "post.compress",
+      "levels": [
+        500,
+        1000,
+        2000
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "redundancy_rate"
+      ],
+      "applies_when": {
+        "post.compress.impl": "extractive"
+      }
+    },
+    {
+      "id": "rerank.params.top_n",
+      "module": "M6",
+      "tier": "tier0",
+      "axis": "rerank",
+      "levels": [
+        20,
+        50,
+        100
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query",
+        "p95_latency_ms"
+      ],
+      "applies_when": {
+        "rerank.impl": "cross_encoder"
+      },
+      "note": "Cross-encoder is optional; when sentence-transformers/model weights are absent the stage records a fallback and keeps the incoming order, so top_n is not applied. The offline curve is expected to be flat above the fixed candidate budget of 15.",
+      "effective_in_e2e": false
+    }
+  ],
+  "deferred": [
+    {
+      "id": "planner.params.k",
+      "levels": [
+        10,
+        15,
+        25
+      ],
+      "status": "not_consumed_by_pipeline",
+      "reason": "No code path reads planner.params.k. retrieve._k reads retrieval.k only when no explicit k is passed, and the e2e executor passes k=15 at executor.py:143, so both the declared path and the nominal retrieval.k path are inert in this harness. Running planner.params.k as its own factor would be a fake factor with identical behaviour at all levels; retrieval.k is swept above to quantify the harness block.",
+      "planned_in": "only if a planner starts reading a per-plan k override; then re-add and compare against retrieval.k"
+    }
+  ],
+  "metrics": [
+    "recall@5",
+    "recall@10",
+    "recall@15",
+    "ndcg@15",
+    "context_precision",
+    "redundancy_rate",
+    "tokens_per_query",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "subgroups": [
+      "category",
+      "temporal_intent",
+      "multi_hop"
+    ],
+    "note": "A-level interface metrics only. answer_f1/judge are not reported for this offline run; offline-extractive is not an LLM answer and must not be read as a 27B result."
+  },
+  "budget": {
+    "max_configs": 25,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/params",
+    "report": "eval/archive/params-curves.md"
+  }
+}

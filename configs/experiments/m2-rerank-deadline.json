@@ -1,0 +1,14 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "M2-rerank-deadline",
+  "title": "M2 rerank: none vs cross_encoder, 4 development conversations",
+  "design": "single_factor",
+  "reference_config": "../../configs/reference-r0.json",
+  "environment": {"llm": {"context": 8192}},
+  "dataset": {"samples": ["conv-26", "conv-30", "conv-43", "conv-44"], "question_limit": 10},
+  "factors": [
+    {"id": "rerank.impl", "levels": ["none", "cross_encoder"]}
+  ],
+  "protocol": {"questions_per_cell": 40},
+  "metrics": ["answer_f1", "evidence_recall", "ndcg", "tokens", "seconds"]
+}

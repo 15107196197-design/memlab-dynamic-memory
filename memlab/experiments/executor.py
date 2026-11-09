@@ -35,6 +35,7 @@ class OfflineLLM:
     """Deterministic stand-in used only when no model server is available."""
 
     model = OFFLINE_MODEL
+    is_offline = True
 
     def __init__(self):
         self.calls = 0
@@ -119,6 +120,16 @@ def build_context(plan: Any, sample_id: str, *, offline: bool = False,
     return ctx
 
 
+def retrieval_k(plan: Any, default: int = 15) -> int:
+    """Read the per-plan retrieval budget; never hardcode the e2e k."""
+    config = getattr(plan, "effective_config", None) or getattr(plan, "config", None) or {}
+    value = lab_config.get_path(config, "retrieval.k", default) if hasattr(config, "get") else default
+    try:
+        return max(1, int(value))
+    except (TypeError, ValueError):
+        return default
+
+
 def make_e2e_executor(*, offline: bool = False, cache: Any | None = None,
                       cache_root: str | Path | None = None, prompts: dict[str, str] | None = None):
     """Return a Runner-compatible executor using E2EPipeline."""
@@ -140,7 +151,7 @@ def make_e2e_executor(*, offline: bool = False, cache: Any | None = None,
             gold = evaluation.evidence_turns(question.qa)
         except Exception:
             pass
-        result = pipeline.run(question.qa["question"], k=15, gold_turns=gold)
+        result = pipeline.run(question.qa["question"], k=retrieval_k(plan), gold_turns=gold)
         final = result.merge.waterfall[-1] if result.merge.waterfall else {}
         turns = set()
         for unit in result.merge.units:

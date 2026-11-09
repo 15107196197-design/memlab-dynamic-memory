@@ -1,0 +1,319 @@
+diff --git a/configs/experiments/e1-order.json b/configs/experiments/e1-order.json
+new file mode 100644
+index 0000000..9930c07
+--- /dev/null
++++ b/configs/experiments/e1-order.json
+@@ -0,0 +1,50 @@
++{
++  "schema": "memlab/experiment@1",
++  "id": "E1.2-order-layer",
++  "title": "M3 stage-order ablation: fusion/rerank/filter/MMR/decay/compress",
++  "module": "M3",
++  "design": "single_factor",
++  "reference_config": "../../configs/reference-r0.json",
++  "environment": {
++    "llm_level": "A0",
++    "llm": "offline-extractive",
++    "embedding": "offline-hash",
++    "data_scale": "S2",
++    "scene": "personal_assistant",
++    "context_budget": 32768,
++    "query_mix": "balanced",
++    "seed": 13
++  },
++  "dataset": {
++    "adapter": "locomo",
++    "split": "development",
++    "samples": ["conv-26", "conv-30", "conv-43", "conv-44"],
++    "question_limit": 60,
++    "stratify": "category"
++  },
++  "protocol": {
++    "paired": true,
++    "same_questions_across_configs": true,
++    "fixed_candidate_budget": 15,
++    "note": "One factor: post.order. Every level is a permutation of the same six stages, so token and candidate budgets stay fixed."
++  },
++  "factors": [
++    {
++      "id": "post.order",
++      "module": "M3",
++      "axis": "post.order",
++      "levels": [
++        ["fusion", "rerank", "filter", "mmr", "decay", "compress"],
++        ["rerank", "fusion", "filter", "mmr", "decay", "compress"],
++        ["fusion", "rerank", "filter", "decay", "mmr", "compress"],
++        ["fusion", "rerank", "filter", "compress", "mmr", "decay"]
++      ],
++      "hypothesis": "H2",
++      "metrics": ["evidence_recall", "ndcg", "redundancy", "tokens"]
++    }
++  ],
++  "metrics": ["recall@15", "ndcg@15", "redundancy_rate", "tokens_per_query", "error_rate"],
++  "analysis": {"unit": "question", "paired": true, "cluster_by": "conversation"},
++  "budget": {"max_configs": 4, "max_questions_per_config": 60, "max_gpu_hours": 0, "max_api_usd": 0},
++  "output": {"runs_dir": "runs/order", "report": "eval/archive/order-offline.json"}
++}
+diff --git a/memlab/config.py b/memlab/config.py
+index c3595d9..ae105ec 100644
+--- a/memlab/config.py
++++ b/memlab/config.py
+@@ -126,6 +126,24 @@ def _impl_value(data: Mapping[str, Any], path: str) -> Any:
+     return None
+ 
+ 
++POST_STAGES = frozenset({"fusion", "rerank", "filter", "mmr", "decay", "compress"})
++
++
++def _post_order_problems(value: Any) -> list[str]:
++    """Validate post.order as a list or {"stages": [...]}; both are accepted."""
++    if isinstance(value, Mapping):
++        value = value.get("stages")
++    if not isinstance(value, list) or not value:
++        return ["post.order must be a non-empty list or an object with a non-empty stages list"]
++    problems = []
++    for index, stage in enumerate(value):
++        if not isinstance(stage, str) or stage not in POST_STAGES:
++            problems.append(f"post.order[{index}]={stage!r} is not one of {sorted(POST_STAGES)}")
++    if len(set(value)) != len(value):
++        problems.append("post.order must not contain duplicate stages")
++    return problems
++
++
+ def _structure_problems(data: Mapping[str, Any]) -> list[str]:
+     problems: list[str] = []
+     for key in MODULE_BLOCKS:
+@@ -135,6 +153,9 @@ def _structure_problems(data: Mapping[str, Any]) -> list[str]:
+         value = data.get(block)
+         if isinstance(value, Mapping):
+             for sub, item in value.items():
++                if block == "post" and sub == "order":
++                    problems.extend(_post_order_problems(item))
++                    continue
+                 if not isinstance(item, Mapping):
+                     problems.append(f"{block}.{sub} must be an object, got {type(item).__name__}")
+     environment = data.get("environment")
+diff --git a/memlab/merge.py b/memlab/merge.py
+index 0fc6b05..aa62f23 100644
+--- a/memlab/merge.py
++++ b/memlab/merge.py
+@@ -583,6 +583,10 @@ class MergePipeline:
+         order = overrides.pop("order", None)
+         if order is None and config is not None:
+             order = config.get("post.order")
++        if isinstance(order, Mapping):
++            order = order.get("stages")
++        if order is not None:
++            order = [str(stage) for stage in order]
+         return cls(
+             overrides.pop("fusion", impl("fusion", "rrf")),
+             overrides.pop("rerank", impl("rerank", "none")),
+diff --git a/scripts/e1_order_analyze.py b/scripts/e1_order_analyze.py
+new file mode 100644
+index 0000000..054fb28
+--- /dev/null
++++ b/scripts/e1_order_analyze.py
+@@ -0,0 +1,145 @@
++#!/usr/bin/env python3
++"""Analyze the M3 post.order ablation (A-level offline)."""
++from __future__ import annotations
++
++import argparse
++import json
++import random
++import sqlite3
++import statistics
++import sys
++from datetime import datetime
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parent.parent
++if str(ROOT) not in sys.path:
++    sys.path.insert(0, str(ROOT))
++
++METRICS = ["evidence_recall", "ndcg", "tokens", "redundancy", "context_precision"]
++LOWER_BETTER = {"tokens", "redundancy"}
++
++
++def mean(values):
++    return statistics.fmean(values) if values else None
++
++
++def pct(values, q):
++    if not values:
++        return None
++    ordered = sorted(values)
++    index = min(len(ordered) - 1, max(0, int(round(q * (len(ordered) - 1)))))
++    return ordered[index]
++
++
++def read_store(path):
++    con = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
++    con.row_factory = sqlite3.Row
++    runs = {row["run_id"]: {"factors": json.loads(row["factors_json"] or "{}"),
++                            "status": row["status"]}
++            for row in con.execute("SELECT run_id, factors_json, status FROM runs")}
++    per_run = {run_id: {metric: {} for metric in METRICS} for run_id in runs}
++    for row in con.execute("SELECT run_id, qid, metric, value FROM metrics WHERE metric IN (%s)"
++                           % ",".join("?" for _ in METRICS), METRICS):
++        per_run[row["run_id"]][row["metric"]][row["qid"]] = row["value"]
++    errors = {row["run_id"]: row["n"] for row in con.execute(
++        "SELECT run_id, COUNT(*) AS n FROM metrics WHERE metric='error' GROUP BY run_id")}
++    con.close()
++    return runs, per_run, errors
++
++
++def conv_means(per_run):
++    out = {}
++    for run_id, metrics in per_run.items():
++        out[run_id] = {}
++        for metric, values in metrics.items():
++            grouped = {}
++            for qid, value in values.items():
++                grouped.setdefault(qid.split(":", 1)[0], []).append(value)
++            out[run_id][metric] = {conv: mean(items) for conv, items in grouped.items()}
++    return out
++
++
++def deltas(run_c, base_c, conversations, samples=1000, seed=13):
++    rng = random.Random(seed)
++    draws = []
++    for _ in range(samples):
++        picked = [rng.choice(conversations) for _ in conversations]
++        diffs = [run_c[c] - base_c[c] for c in picked
++                 if run_c.get(c) is not None and base_c.get(c) is not None]
++        if diffs:
++            draws.append(mean(diffs))
++    return draws
++
++
++def main(argv=None):
++    parser = argparse.ArgumentParser()
++    parser.add_argument("--db", default="runs/order/order.sqlite")
++    parser.add_argument("--out", default="eval/archive/order-offline.json")
++    args = parser.parse_args(argv)
++    runs, per_run, errors = read_store(Path(args.db))
++    cmeans = conv_means(per_run)
++    rmeans = {
++        run_id: {metric: mean(list(values.values())) for metric, values in metrics.items()}
++        for run_id, metrics in per_run.items()
++    }
++    conversations = sorted({qid.split(":", 1)[0] for metrics in per_run.values()
++                            for values in metrics.values() for qid in values})
++    ordered = sorted(runs, key=lambda run_id: runs[run_id]["factors"].get("post.order", []))
++    canonical = next(run_id for run_id in ordered
++                     if runs[run_id]["factors"].get("post.order") ==
++                     ["fusion", "rerank", "filter", "mmr", "decay", "compress"])
++    rows = []
++    for run_id in ordered:
++        order = runs[run_id]["factors"].get("post.order")
++        entry = {"run_id": run_id, "order": order, "status": runs[run_id]["status"],
++                 "errors": errors.get(run_id, 0),
++                 "n_questions": len(per_run[run_id]["tokens"]), "metrics": {}}
++        for metric in METRICS:
++            candidate = rmeans[run_id][metric]
++            base = rmeans[canonical][metric]
++            draw = deltas(cmeans[run_id][metric], cmeans[canonical][metric], conversations)
++            low, high = pct(draw, 0.025), pct(draw, 0.975)
++            delta = candidate - base if candidate is not None and base is not None else None
++            entry["metrics"][metric] = {
++                "value": round(candidate, 6) if candidate is not None else None,
++                "canonical": round(base, 6) if base is not None else None,
++                "delta_vs_canonical": round(delta, 6) if delta is not None else None,
++                "ci95": [round(low, 6) if low is not None else None,
++                         round(high, 6) if high is not None else None],
++                "ci_excludes_zero": bool(low is not None and high is not None and not (low <= 0 <= high)),
++                "direction": "lower_is_better" if metric in LOWER_BETTER else "higher_is_better",
++            }
++        rows.append(entry)
++    payload = {
++        "schema": "memlab/e1-order@1",
++        "experiment_id": "E1.2-order-layer",
++        "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
++        "offline": True,
++        "level": "A-interface",
++        "answer_f1_policy": "not reported: offline extractive is not an LLM answer",
++        "judge_policy": "not reported: no judge in offline A-level run",
++        "source_db": str(args.db),
++        "dataset": {"samples": conversations,
++                    "questions_per_run": len(per_run[canonical]["tokens"]),
++                    "question_limit_per_conversation": 60},
++        "protocol": {"factor": "post.order", "levels": len(rows),
++                     "ci": "95% conversation-cluster paired bootstrap vs canonical"},
++        "rows": rows,
++        "limitations": [
++            "Offline hash embedding is not semantic; offline extractive answer is not an LLM answer.",
++            "A-level interface metrics only; no answer F1, no Judge.",
++            "cross-encoder is absent in this environment, so rerank-first vs canonical may be a fallback no-op.",
++            "MMR after decay is the only order change expected to expose a real MMR reordering; the canonical order erases MMR via decay.",
++        ],
++    }
++    out = Path(args.out)
++    out.parent.mkdir(parents=True, exist_ok=True)
++    out.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
++    print(f"wrote {out}")
++    for row in rows:
++        print(row["order"], {m: row["metrics"][m]["delta_vs_canonical"] for m in ("evidence_recall", "ndcg", "tokens")})
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/tests/test_post_order.py b/tests/test_post_order.py
+new file mode 100644
+index 0000000..2788a40
+--- /dev/null
++++ b/tests/test_post_order.py
+@@ -0,0 +1,52 @@
++"""post.order is a first-class pipeline-order knob, not a post stage block."""
++from __future__ import annotations
++
++import copy
++import json
++import unittest
++from pathlib import Path
++from types import SimpleNamespace
++
++from memlab import config as lab_config
++from memlab import merge
++
++ROOT = Path(__file__).resolve().parent.parent
++R0 = json.loads((ROOT / "configs" / "reference-r0.json").read_text(encoding="utf-8"))
++DEFAULT = ["fusion", "rerank", "filter", "mmr", "decay", "compress"]
++
++
++class PostOrderTests(unittest.TestCase):
++    def _config(self, order):
++        data = copy.deepcopy(R0)
++        data["post"]["order"] = order
++        return lab_config.RunConfig.from_dict(data)
++
++    def test_list_order_is_valid_and_loaded(self):
++        config = self._config(["rerank", "fusion", "filter", "mmr", "decay", "compress"])
++        self.assertEqual(config.get("post.order"), ["rerank", "fusion", "filter", "mmr", "decay", "compress"])
++        pipeline = merge.MergePipeline.from_config(SimpleNamespace(config=config))
++        self.assertEqual(pipeline.order, ("rerank", "fusion", "filter", "mmr", "decay", "compress"))
++
++    def test_mapping_order_is_unwrapped(self):
++        config = self._config({"stages": ["fusion", "rerank", "filter", "decay", "mmr", "compress"]})
++        pipeline = merge.MergePipeline.from_config(SimpleNamespace(config=config))
++        self.assertEqual(pipeline.order, ("fusion", "rerank", "filter", "decay", "mmr", "compress"))
++
++    def test_unknown_stage_is_rejected(self):
++        with self.assertRaises(lab_config.ConfigError):
++            self._config(["fusion", "nope"])
++
++    def test_empty_and_duplicate_orders_are_rejected(self):
++        with self.assertRaises(lab_config.ConfigError):
++            self._config([])
++        with self.assertRaises(lab_config.ConfigError):
++            self._config(["fusion", "fusion"])
++
++    def test_default_order_is_unchanged_when_absent(self):
++        config = lab_config.RunConfig.from_dict(copy.deepcopy(R0))
++        pipeline = merge.MergePipeline.from_config(SimpleNamespace(config=config))
++        self.assertEqual(pipeline.order, tuple(DEFAULT))
++
++
++if __name__ == "__main__":
++    unittest.main()

@@ -1,0 +1,28 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1.2-param-ext-fusion-filter",
+  "title": "E1.2 extension: fusion rrf_k and post.filter threshold",
+  "module": "M4/R4",
+  "design": "single_factor",
+  "reference_config": "../../configs/reference-r0.json",
+  "environment": {
+    "llm_level": "A0", "llm": "offline-extractive", "embedding": "offline-hash",
+    "data_scale": "S2", "scene": "personal_assistant", "context_budget": 32768,
+    "query_mix": "balanced", "seed": 13
+  },
+  "dataset": {"adapter": "locomo", "split": "development",
+    "samples": ["conv-26", "conv-30", "conv-43", "conv-44"],
+    "question_limit": 60, "stratify": "category"},
+  "protocol": {"paired": true, "same_questions_across_configs": true, "fixed_candidate_budget": 15},
+  "factors": [
+    {"id": "fusion.params.rrf_k", "module": "M1", "axis": "fusion",
+     "levels": [10, 30, 60, 100], "hypothesis": "H2",
+     "metrics": ["recall@15", "ndcg@15", "tokens_per_query"]},
+    {"id": "post.filter.impl", "module": "M4", "axis": "post.filter",
+     "levels": ["none", "threshold"], "hypothesis": "H2",
+     "metrics": ["recall@15", "ndcg@15", "tokens_per_query", "redundancy_rate"]}
+  ],
+  "metrics": ["recall@15", "ndcg@15", "tokens_per_query", "error_rate"],
+  "budget": {"max_configs": 6, "max_questions_per_config": 60, "max_gpu_hours": 0, "max_api_usd": 0},
+  "output": {"runs_dir": "runs/params", "report": "eval/archive/e1-params-ext.json"}
+}

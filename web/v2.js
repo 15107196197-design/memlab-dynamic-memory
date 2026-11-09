@@ -1941,6 +1941,7 @@
       <div class="row"><b>批量运行 Batch</b><span class="badge">${esc(out.questions ?? rows.length)} 题</span><span class="badge ${out.offline ? "offline" : "online"}">${out.offline ? "offline 离线" : "online 在线"}</span><span class="mono small">${esc(shortHash(out.config_hash))}</span></div>
       <div class="v2-run-meta">
         <span><b>answer_f1</b> ${esc(na(metrics.answer_f1))}</span>
+        <span><b>命中率</b> ${metrics.answer_hit_rate == null ? "not_available" : `${(Number(metrics.answer_hit_rate) * 100).toFixed(1)}%`}</span>
         <span><b>evidence_recall</b> ${esc(na(metrics.evidence_recall))}</span>
         <span><b>tokens</b> ${esc(na(metrics.tokens))}</span>
         <span><b>latency_ms</b> ${esc(na(metrics.p95_latency_ms))}</span>
@@ -2568,6 +2569,59 @@
   const reportLink = (id, label = "查看报告 →") => (id
     ? `<a class="ev-report-link" href="#/experiments/${encodeURIComponent(id)}">${esc(label)}</a>` : "not_available");
   const pctText = (v) => (Number.isFinite(Number(v)) ? `${(Number(v) * 100).toFixed(1)}%` : "not_available");
+  const metricText = (m, key, digits = 4, suffix = "") => {
+    const v = m && m[key];
+    return v === null || v === undefined || v === "" || !Number.isFinite(Number(v)) ? "not_available" : `${Number(v).toFixed(digits)}${suffix}`;
+  };
+
+  // Shared by the Evaluation page and the report Conclusion tab.  The test
+  // before/fixed rows deliberately keep different n/seed labels: they are not a
+  // paired sample and must not be read as one.
+  function beforeAfterTable(analysis) {
+    const ba = analysis && analysis.before_after;
+    if (!ba) return "";
+    const dev = ba.dev || {};
+    const test = ba.test || {};
+    const row = (label, m) => {
+      if (!m) return "";
+      return `<tr><td>${esc(label)}</td><td class="mono">${metricText(m, "answer_f1")}</td><td class="mono">${metricText(m, "evidence_recall")}</td><td class="mono">${metricText(m, "refused_rate")}</td><td class="mono">${metricText(m, "answered_f1")}</td></tr>`;
+    };
+    const devRows = [
+      row(`before · ${(dev.before && dev.before.label) || "R0 original"}`, dev.before),
+      row(`after · ${(dev.after && dev.after.label) || "R0-fixed"}`, dev.after),
+    ].filter(Boolean).join("");
+    const testRows = [
+      row("before · B0（80 q/配置，2 seeds）", test.before && test.before.B0),
+      row("before · R0（80 q/配置，2 seeds）", test.before && test.before.R0),
+      row("after · B0（20 q/配置，1 seed，post-hoc）", test.after && test.after.B0),
+      row("after · R0-fixed（20 q/配置，1 seed，post-hoc）", test.after && test.after.R0),
+    ].filter(Boolean).join("");
+    return `<h3>Before / After 前后对照</h3>
+      <h4>Dev（20 题 · seed 13）</h4>
+      <table class="v2-table ev-analysis-table"><thead><tr><th>阶段</th><th>F1</th><th>Recall</th><th>refused</th><th>answered F1</th></tr></thead><tbody>${devRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>
+      ${dev.paired_note ? `<p class="muted small">${esc(dev.paired_note)}</p>` : ""}
+      <h4 style="margin-top:16px">Test（before 80 q/配置 · fixed 20 q/配置）</h4>
+      <table class="v2-table ev-analysis-table"><thead><tr><th>阶段</th><th>F1</th><th>Recall</th><th>refused</th><th>answered F1</th></tr></thead><tbody>${testRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>
+      <p class="note warn">test 已使用；fixed 是 post-hoc，不是干净 held-out。before 80 q/配置（2 seeds）vs fixed 20 q/配置（1 seed），题目数量与 seed 都不同，不能直接配对做显著性结论。</p>
+      ${test.paired_note ? `<p class="muted small">${esc(test.paired_note)}</p>` : ""}
+      <p class="muted small">Judge: not_run · state_accuracy: not_available（fixed 报告未运行 LLM-as-Judge；state_accuracy 无冻结标注）。</p>`;
+  }
+
+  function diagnosisTable(analysis, opts = {}) {
+    const d = analysis && analysis.diagnosis;
+    if (!d) return "";
+    const wanted = opts.ids || ["r0", "filteroff", "fixed"];
+    const variants = (Array.isArray(d.dev_variants) ? d.dev_variants : []).filter((v) => wanted.includes(v.id));
+    const rows = variants.map((v) => `<tr><td><b>${esc(v.label || v.id)}</b></td><td class="mono">${metricText(v, "answer_f1")}</td><td class="mono">${metricText(v, "evidence_recall")}</td><td class="mono">${metricText(v, "refused_rate")}</td><td class="mono">${metricText(v, "answered_f1")}</td></tr>`).join("");
+    return `<h3>为什么之前差 / dev 诊断</h3>
+      <p class="muted small">dev 20 题（4 段 × 5 题，seed 13）· online 27B；R0 original 与两个修复变体同题对照。</p>
+      <table class="v2-table ev-analysis-table"><thead><tr><th>variant</th><th>F1</th><th>Recall</th><th>refused</th><th>answered F1</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>
+      <p><b>结论：</b>filter 过度剪枝 + 拒答是主因；MMR/decay/compress 在 filter 后已无候选可作用；time prompt 更差；CE 降 Recall。</p>
+      <p class="muted small">关键对照：R0 original → filter=none → filter=none + rerank=none；R0-fixed 取最后一行，并关闭 mmr/decay/compress。</p>
+      ${opts.all ? `<p class="muted small">${esc(d.root_cause || "")}</p><p class="muted small">time_context：${esc(d.time_context || "not_available")}</p><p class="muted small">rerank：${esc(d.rerank || "not_available")}</p>` : ""}
+      <p class="muted small">R0-fixed = filter=none + mmr/decay/compress=none + rerank=none；time_context 默认 false，不启用。</p>
+      ${d.test_reused ? `<p class="note warn">test 已使用；fixed 是 post-hoc，不是干净 held-out。test ${esc(d.test_questions_per_config ?? "not_available")} q/配置 vs before ${esc(d.before_questions_per_config ?? "not_available")} q/配置，不能直接配对。</p>` : ""}`;
+  }
 
   function mainEffectsTable(report) {
     const analysis = report.analysis || {};
@@ -2756,6 +2810,8 @@
         return planHeatmap(plan.items);
       }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
+        ${beforeAfterTable(report.analysis)}
+        ${diagnosisTable(report.analysis, { all: true })}
         <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
         <h3>Conditions 适用条件</h3><ul>${(c.conditions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
         <h3>Limitations 局限</h3><ul>${(c.limitations || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
@@ -3006,11 +3062,14 @@
   }
 
   async function renderEvaluation2(root) {
-    const [data, plan, art, w3Report, m1Report, r3Report] = await Promise.all([
+    const [data, plan, art, beforeReport, beforeFixReport, fixedReport, offlineReport, m1Report, r3Report] = await Promise.all([
       api("/api/v2/evaluation"),
       api("/api/v2/experiments/plan").catch(() => ({ items: [] })),
       api("/api/v2/artifacts").catch(() => ({ artifacts: {} })),
       api("/api/v2/experiments/final-w3-test-online/report").catch(() => null),
+      api("/api/v2/experiments/final-w3-test-online-before-fix/report").catch(() => null),
+      api("/api/v2/experiments/final-w3-test-online-fixed/report").catch(() => null),
+      api("/api/v2/experiments/final-w3-test-offline/report").catch(() => null),
       api("/api/v2/experiments/E1-M1-online/report").catch(() => null),
       api("/api/v2/experiments/E1-R3/report").catch(() => null),
     ]);
@@ -3024,20 +3083,28 @@
     const f1 = (m) => test.summary?.[m]?.f1;
     const rec = (m) => test.summary?.[m]?.evidence_recall;
     const project = new Map((data.project_reports || []).map((r) => [r.experiment_id, r]));
-    const onlineProject = project.get("final-w3-test-online") || {};
+    const beforeProject = project.get("final-w3-test-online") || {};
+    const fixedProject = project.get("final-w3-test-online-fixed") || {};
     const offlineProject = project.get("final-w3-test-offline") || {};
-    const onlineFull = w3Report || onlineProject;
-    const onlineMetrics = onlineFull.results?.metrics || onlineProject.results?.metrics || {};
-    const onlineBaseline = onlineFull.results?.baseline_metrics || onlineProject.results?.baseline_metrics || {};
-    const offlineMetrics = offlineProject.results?.metrics || {};
-    const offlineBaseline = offlineProject.results?.baseline_metrics || {};
-    const comparisons = Array.isArray(onlineFull.comparisons) ? onlineFull.comparisons : [];
-    const f1Cmp = comparisons.find((r) => r.metric === "answer_f1");
-    const recCmp = comparisons.find((r) => r.metric === "evidence_recall");
-    const conclusion = onlineFull.conclusion?.status || onlineProject.conclusion?.status || null;
-    const recSig = recCmp && ((recCmp.significant === true) || (Number(recCmp.delta) < 0 && crossesZero(recCmp.ci95) === false));
-    const b0 = f1Cmp?.baseline_value ?? onlineBaseline.answer_f1;
-    const r0 = f1Cmp?.candidate_value ?? onlineMetrics.answer_f1;
+    const beforeFull = beforeFixReport || beforeReport || beforeProject;
+    const fixedFull = fixedReport || fixedProject;
+    const offlineFull = offlineReport || offlineProject;
+    const beforeMetrics = beforeFull.results?.metrics || beforeProject.results?.metrics || {};
+    const beforeBaseline = beforeFull.results?.baseline_metrics || beforeProject.results?.baseline_metrics || {};
+    const fixedMetrics = fixedFull.results?.metrics || fixedProject.results?.metrics || {};
+    const fixedBaseline = fixedFull.results?.baseline_metrics || fixedProject.results?.baseline_metrics || {};
+    const offlineMetrics = offlineFull.results?.metrics || offlineProject.results?.metrics || {};
+    const offlineBaseline = offlineFull.results?.baseline_metrics || offlineProject.results?.baseline_metrics || {};
+    const beforeComparisons = Array.isArray(beforeFull.comparisons) ? beforeFull.comparisons : [];
+    const fixedComparisons = Array.isArray(fixedFull.comparisons) ? fixedFull.comparisons : [];
+    const beforeF1Cmp = beforeComparisons.find((r) => r.metric === "answer_f1");
+    const beforeRecCmp = beforeComparisons.find((r) => r.metric === "evidence_recall");
+    const fixedF1Cmp = fixedComparisons.find((r) => r.metric === "answer_f1");
+    const fixedRecCmp = fixedComparisons.find((r) => r.metric === "evidence_recall");
+    const conclusion = fixedFull.conclusion?.status || beforeFull.conclusion?.status || null;
+    const b0 = fixedF1Cmp?.baseline_value ?? fixedBaseline.answer_f1;
+    const r0 = fixedF1Cmp?.candidate_value ?? fixedMetrics.answer_f1;
+    const devDiag = (fixedFull.analysis && fixedFull.analysis.diagnosis) || null;
 
     const m1Full = m1Report || project.get("E1-M1-online") || {};
     const m1ByCand = m1Full.analysis?.by_candidate || {};
@@ -3069,11 +3136,12 @@
 
     const cards = `<div class="ev-cards">
       <div class="ev-card">
-        <div class="ev-kicker">在线 B0 vs R0</div>
-        <div class="ev-big">${b0 != null && r0 != null ? `F1 ${fixed(b0)} vs ${fixed(r0)}` : "not_available"}</div>
-        <p class="ev-note">结论 <b>${esc(conclusion || "not_available")}</b>${recSig ? "（Recall 显著负）" : ""}</p>
-        ${recCmp ? `<p class="ev-note muted">Recall Δ ${signed(recCmp.delta)} · CI ${ciRange(recCmp.ci95)}</p>` : ""}
-        <div class="ev-sub">online 27B · test 2 段 · 80 题/配置</div>
+        <div class="ev-kicker">online fixed · B0 vs R0-fixed</div>
+        <div class="ev-big">${Number.isFinite(Number(b0)) && Number.isFinite(Number(r0)) ? `F1 ${fixed(b0)} vs ${fixed(r0)}` : "not_available"}</div>
+        <p class="ev-note">结论 <b>${esc(conclusion || "not_available")}</b>${fixedF1Cmp && crossesZero(fixedF1Cmp.ci95) ? "（F1 CI 含 0）" : ""}</p>
+        ${fixedF1Cmp ? `<p class="ev-note muted">F1 Δ ${signed(fixedF1Cmp.delta)} · CI ${ciRange(fixedF1Cmp.ci95)}</p>` : ""}
+        ${fixedRecCmp ? `<p class="ev-note muted">Recall Δ ${signed(fixedRecCmp.delta)} · CI ${ciRange(fixedRecCmp.ci95)}${crossesZero(fixedRecCmp.ci95) ? "（含 0）" : ""}</p>` : ""}
+        <div class="ev-sub">online 27B · test 2 段 · post-hoc · 20 题/配置 · 1 seed</div>
       </div>
       <div class="ev-card">
         <div class="ev-kicker">S6 最佳</div>
@@ -3087,27 +3155,72 @@
         <p class="ev-note"><span class="badge not_wired">not_wired</span> ${esc(graphNote || "not_available")}</p>
         <div class="ev-sub">E1-R3${graphConfigs ? ` · ${graphConfigs} configs` : ""}${r3Full.results?.metrics?.questions ? ` · ${esc(r3Full.results.metrics.questions)} 题` : ""} · offline</div>
       </div>
+      <div class="ev-card">
+        <div class="ev-kicker">Judge / state 可用性</div>
+        <div class="ev-big">Judge not_run</div>
+        <p class="ev-note">state_accuracy <b>not_available</b></p>
+        <p class="ev-note muted">fixed 报告未运行 LLM-as-Judge；state_accuracy 无冻结标注，不冒充质量结论。</p>
+        <div class="ev-sub">online fixed · 20 题/配置</div>
+      </div>
     </div>`;
 
-    const projectRow = (label, metrics, id) => `<tr><td>${esc(label)}</td><td class="mono">${fixed(metrics.answer_f1)}</td><td class="mono">${fixed(metrics.evidence_recall)}</td><td>${reportLink(id)}</td></tr>`;
+    const onlineRow = (label, meta, metrics, id) => `<tr>
+      <td><b>${esc(label)}</b><div class="muted small">${esc(meta)}</div></td>
+      <td class="mono">${metricText(metrics, "answer_f1")}</td>
+      <td class="mono">${metricText(metrics, "evidence_recall")}</td>
+      <td class="mono">${metricText(metrics, "refused_rate")}${metrics && metrics.answered_questions != null ? `<div class="muted small">answered ${esc(metrics.answered_questions)}</div>` : ""}</td>
+      <td class="mono">${metricText(metrics, "answered_f1")}${metrics && metrics.answered_questions != null ? `<div class="muted small">n=${esc(metrics.answered_questions)}</div>` : ""}</td>
+      <td class="mono">${metricText(metrics, "tokens", 1)}</td>
+      <td class="mono">${metricText(metrics, "p95_latency_ms", 1, " ms")}</td>
+      <td>${reportLink(id)}</td>
+    </tr>`;
+    const offlineRow = (label, metrics, id) => `<tr><td>${esc(label)}</td><td class="mono">${metricText(metrics, "answer_f1")}</td><td class="mono">${metricText(metrics, "evidence_recall")}</td><td>${reportLink(id)}</td></tr>`;
     const onlineTable = `<div class="card pad ev-project">
-      <div class="row" style="justify-content:space-between"><h3>本项目 online · B0 vs R0</h3><span class="muted small">final-w3-test-online</span></div>
+      <div class="row" style="justify-content:space-between"><h3>本项目 online · before vs fixed</h3><span class="muted small">final-w3-test-online-before-fix · final-w3-test-online-fixed</span></div>
       <table class="v2-table ev-table">
-        <caption>online 27B · test 2 段 · 80 题/配置</caption>
-        <thead><tr><th>配置</th><th>F1</th><th>Recall</th><th>报告</th></tr></thead>
-        <tbody>${projectRow("B0 baseline", onlineBaseline, "final-w3-test-online")}${projectRow("R0 candidate", onlineMetrics, "final-w3-test-online")}</tbody>
+        <caption>online 27B · test 2 段 · before 80 题/配置（2 seeds）vs fixed 20 题/配置（1 seed，post-hoc）</caption>
+        <thead><tr><th>配置</th><th>F1</th><th>Recall</th><th>refused</th><th>answered F1</th><th>tokens</th><th>P95</th><th>报告</th></tr></thead>
+        <tbody>
+          ${onlineRow("B0", "before · 80 q/配置 · 2 seeds（seeds 13/17）", beforeBaseline, "final-w3-test-online")}
+          ${onlineRow("R0-before", "before · 80 q/配置 · 2 seeds（seeds 13/17）", beforeMetrics, "final-w3-test-online")}
+          ${onlineRow("R0-fixed", "fixed · 20 q/配置 · 1 seed（seed 13）· post-hoc", fixedMetrics, "final-w3-test-online-fixed")}
+        </tbody>
       </table>
-      <p class="muted small">final-w3-test-online · 80 题/配置 · ${onlineFull.dataset?.seeds?.length ?? "not_available"} seeds · 27B 在线回答</p>
+      <p class="muted small">主表 B0 行来自 before（80 q/配置）；fixed 报告内部另有同口径 B0（20 q/配置）：F1 ${metricText(fixedBaseline, "answer_f1")} / Recall ${metricText(fixedBaseline, "evidence_recall")} / refused ${metricText(fixedBaseline, "refused_rate")} / answered F1 ${metricText(fixedBaseline, "answered_f1")}。下方结论卡用这一同口径对照。</p>
+      ${beforeF1Cmp ? `<p class="muted small">before 报告：F1 Δ ${signed(beforeF1Cmp.delta)} · 95% CI ${ciRange(beforeF1Cmp.ci95)}${crossesZero(beforeF1Cmp.ci95) ? "（含 0，inconclusive）" : ""}</p>` : ""}
+      ${beforeRecCmp ? `<p class="muted small">before 报告：Recall Δ ${signed(beforeRecCmp.delta)} · 95% CI ${ciRange(beforeRecCmp.ci95)}${crossesZero(beforeRecCmp.ci95) ? "（含 0）" : "（不含 0，显著负）"}</p>` : ""}
+      <div class="note warn" style="margin-top:10px"><b>口径警告：</b>test 已使用；fixed 是 post-hoc，不是干净 held-out。before 80 题/配置（2 seeds）vs fixed 20 题/配置（1 seed），题目数量与 seed 都不同，不能做 before-vs-fixed 的配对显著性结论。</div>
     </div>`;
     const offlineTable = `<details class="card pad ev-fold">
       <summary>本项目 offline · final-w3-test-offline（展开）</summary>
       <table class="v2-table ev-table">
         <caption>offline final-w3-test-offline · test 2 段 · 80 题/配置</caption>
         <thead><tr><th>配置</th><th>F1</th><th>Recall</th><th>报告</th></tr></thead>
-        <tbody>${projectRow("B0 baseline", offlineBaseline, "final-w3-test-offline")}${projectRow("R0 candidate", offlineMetrics, "final-w3-test-offline")}</tbody>
+        <tbody>${offlineRow("B0 baseline", offlineBaseline, "final-w3-test-offline")}${offlineRow("R0 candidate", offlineMetrics, "final-w3-test-offline")}</tbody>
       </table>
-      <p class="muted small">离线圈定口径；与在线表不可横比，默认折叠。</p>
+      <p class="muted small">离线圈定口径；offline 报告未记录 refused / answered F1，显示 not_available。online 与 offline 不可横比，默认折叠。</p>
     </details>`;
+
+    const f1Base = fixedF1Cmp ? fixedF1Cmp.baseline_value : fixedBaseline.answer_f1;
+    const f1Cand = fixedF1Cmp ? fixedF1Cmp.candidate_value : fixedMetrics.answer_f1;
+    const recBase = fixedRecCmp ? fixedRecCmp.baseline_value : fixedBaseline.evidence_recall;
+    const recCand = fixedRecCmp ? fixedRecCmp.candidate_value : fixedMetrics.evidence_recall;
+    const f1Cross = fixedF1Cmp ? crossesZero(fixedF1Cmp.ci95) : null;
+    const recCross = fixedRecCmp ? crossesZero(fixedRecCmp.ci95) : null;
+    const conclusionCard = `<div class="card pad ev-conclusion" style="margin-top:16px">
+      <div class="row" style="justify-content:space-between"><h3>fixed test 结论 · post-hoc</h3><span class="pill ${esc(conclusion || "not_available")}">${esc(conclusion || "not_available")}</span></div>
+      <table class="v2-table ev-analysis-table">
+        <caption>同口径：fixed 报告内部 B0 vs R0-fixed，20 题/配置，seed 13</caption>
+        <thead><tr><th>指标</th><th>B0（20 q）</th><th>R0-fixed（20 q）</th><th>Δ</th><th>95% CI</th><th>判断</th></tr></thead>
+        <tbody>
+          <tr><td>F1</td><td class="mono">${fixed(f1Base)}</td><td class="mono">${fixed(f1Cand)}</td><td class="mono">${fixedF1Cmp ? signed(fixedF1Cmp.delta) : "not_available"}</td><td class="mono">${ciRange(fixedF1Cmp && fixedF1Cmp.ci95)}</td><td>${f1Cross === null ? "not_available" : f1Cross ? "CI 含 0 → inconclusive" : "CI 不含 0"}</td></tr>
+          <tr><td>Recall</td><td class="mono">${fixed(recBase)}</td><td class="mono">${fixed(recCand)}</td><td class="mono">${fixedRecCmp ? signed(fixedRecCmp.delta) : "not_available"}</td><td class="mono">${ciRange(fixedRecCmp && fixedRecCmp.ci95)}</td><td>${recCross === null ? "not_available" : recCross ? "CI 含 0 → inconclusive" : "CI 不含 0"}</td></tr>
+        </tbody>
+      </table>
+      <p><b>Judge:</b> not_run · <b>state_accuracy:</b> ${metricText(fixedMetrics, "state_accuracy")}</p>
+      <p class="muted small">fixed 内部 B0/R0-fixed 是同一 20 题的配对比较；但整个 fixed 轮是 post-hoc，且 before 是 80 q/2 seeds，不能与 before 做跨轮配对显著性结论。Judge 未运行，state_accuracy 无冻结标注，均不冒充质量结论。</p>
+      <p class="muted small">dev 对照（同一 20 题，seed 13）：F1 ${fixed(devDiag?.dev_before?.answer_f1)} → ${fixed(devDiag?.dev_after?.answer_f1)} · Recall ${fixed(devDiag?.dev_before?.evidence_recall)} → ${fixed(devDiag?.dev_after?.evidence_recall)} · refused ${fixed(devDiag?.dev_before?.refused_rate)} → ${fixed(devDiag?.dev_after?.refused_rate)}。</p>
+    </div>`;
 
     const W = 760, H = 260, left = 44, bottom = 34, top = 18;
     const maxY = 0.7, groupW = (W - left - 20) / methods.length;
@@ -3125,7 +3238,9 @@
       <div class="narr-tech-label">明细与归档 · 原有表格保留在总评之后</div>
       ${cards}
       ${onlineTable}
-      <div class="ev-caliber">口径不同，不可横比</div>
+      <div class="card pad" style="margin-top:16px">${diagnosisTable(fixedFull.analysis, { all: true })}</div>
+      ${conclusionCard}
+      <div class="ev-caliber">online 与 offline 口径不同，不可横比；offline 表只作离线圈定参考</div>
       ${offlineTable}
       <div class="card pad ev-archive" style="margin-top:16px">
         <div class="row" style="justify-content:space-between"><h3>上一版 27B 归档 · Full / Vector / Hybrid / Dynamic</h3><span class="muted small">eval/results.json</span></div>

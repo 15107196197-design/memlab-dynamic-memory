@@ -57,6 +57,18 @@ class WebAppTests(unittest.TestCase):
         self.assertTrue(out["trace"])
         self.assertGreater(len(out["candidates"]), 0)
 
+    def test_offline_extractive_answer_is_short_and_cited(self):
+        out = webapp.post("/api/v2/runs", {
+            "sample": "conv-26", "preset": "R0",
+            "question": "What did Caroline research?",
+            "offline": True,
+        })
+        answer = out["answer"]
+        self.assertFalse(answer["refused"])
+        self.assertIn("adoption", answer["answer"].lower())
+        self.assertIn("D2:8", answer["citations"])
+        self.assertGreaterEqual(len(answer["answer"].split()), 1)
+
     def test_axes_are_registry_backed(self):
         data = webapp.get("/api/v2/config/axes")
         by_id = {axis["id"]: axis for axis in data["axes"]}
@@ -150,6 +162,8 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(out["kind"], "batch")
         self.assertEqual(out["questions"], 6)
         self.assertIn("answer_f1", out["metrics"])
+        self.assertIn("answer_hit_rate", out["metrics"])
+        self.assertGreater(out["metrics"]["answer_hit_rate"], 0)
         self.assertIn("evidence_recall", out["metrics"])
         self.assertEqual(len(out["rows"]), 6)
         self.assertTrue(out["by_category"])

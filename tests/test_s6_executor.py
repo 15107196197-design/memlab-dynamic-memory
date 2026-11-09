@@ -64,6 +64,20 @@ class E2EExecutorTests(unittest.TestCase):
         self.assertEqual(len(runs), 2)
         self.assertEqual({row["status"] for row in runs}, {"complete"})
 
+    def test_retrieval_k_from_plan_changes_candidate_count(self):
+        """R4 k must reach the pipeline; 10/15/25 must not be identical."""
+        with tempfile.TemporaryDirectory() as directory:
+            execute = executor.make_e2e_executor(offline=True, cache_root=Path(directory) / "cache")
+            counts = {}
+            for k in (10, 15, 25):
+                data = lab_config.RunConfig.load(REFERENCE_R0).to_dict()
+                data["retrieval"]["k"] = k
+                result = execute(r0_plan(f"r-s6-k{k}", config=data), questions(1)[0])
+                counts[k] = result["candidates"]
+        self.assertEqual(len(set(counts.values())), 3, counts)
+        self.assertLess(counts[10], counts[15], counts)
+        self.assertLess(counts[15], counts[25], counts)
+
     def test_k_executor_reports_health_metrics(self):
         with tempfile.TemporaryDirectory() as directory:
             execute = executor.make_k_executor(policy="consolidate", params={"threshold": 0.9},

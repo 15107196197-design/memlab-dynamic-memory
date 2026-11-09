@@ -1,0 +1,403 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "lab-smoke",
+  "created_at": "2026-11-09T20:00:35",
+  "module": "M",
+  "stage": "E1.1",
+  "title": "M1 vs M2",
+  "dataset": {
+    "split": "test",
+    "mode": "batch",
+    "samples": [
+      "conv-41"
+    ],
+    "questions": 20,
+    "questions_per_run": {
+      "baseline": 20,
+      "candidate": 20
+    },
+    "seeds": [
+      13
+    ],
+    "test_only": true
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "batch-20261109-144540-92516d19-conv-41-s13",
+        "role": "baseline",
+        "kind": "batch",
+        "sample": "conv-41",
+        "preset": "B0",
+        "config_hash": "sha256:92516d1940459430590fdc82c9bee0a6e3b7b79105f84c7539a2b9670b2c4091",
+        "offline": true,
+        "model": {
+          "llm": "offline-extractive",
+          "embedding": "offline-hash",
+          "offline": true
+        },
+        "git_commit": "deb15cf",
+        "questions": 20,
+        "metrics": {
+          "answer_f1": 0.0488,
+          "evidence_recall": 0.6,
+          "state_accuracy": null,
+          "tokens": 935.35,
+          "p95_latency_ms": 23.342,
+          "errors": 0,
+          "error_rate": 0.0,
+          "questions": 20
+        },
+        "answer_f1": 0.0488,
+        "evidence_recall": 0.6,
+        "state_accuracy": null,
+        "tokens": 935.35,
+        "p95_latency_ms": 23.342,
+        "errors": 0,
+        "error_rate": 0.0
+      },
+      {
+        "run_id": "batch-20261109-144549-b86df997-conv-41-s13",
+        "role": "candidate",
+        "kind": "batch",
+        "sample": "conv-41",
+        "preset": "R0",
+        "config_hash": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4",
+        "offline": true,
+        "model": {
+          "llm": "offline-extractive",
+          "embedding": "offline-hash",
+          "offline": true
+        },
+        "git_commit": "deb15cf",
+        "questions": 20,
+        "metrics": {
+          "answer_f1": 0.0095,
+          "evidence_recall": 0.4,
+          "state_accuracy": null,
+          "tokens": 1103.45,
+          "p95_latency_ms": 76.123,
+          "errors": 0,
+          "error_rate": 0.0,
+          "questions": 20
+        },
+        "answer_f1": 0.0095,
+        "evidence_recall": 0.4,
+        "state_accuracy": null,
+        "tokens": 1103.45,
+        "p95_latency_ms": 76.123,
+        "errors": 0,
+        "error_rate": 0.0
+      }
+    ],
+    "metrics": {
+      "answer_f1": 0.0095,
+      "evidence_recall": 0.4,
+      "state_accuracy": null,
+      "tokens": 1103.45,
+      "p95_latency_ms": 76.123,
+      "error_rate": 0.0,
+      "questions": 20,
+      "errors": 0
+    },
+    "baseline_metrics": {
+      "answer_f1": 0.0488,
+      "evidence_recall": 0.6,
+      "state_accuracy": null,
+      "tokens": 935.35,
+      "p95_latency_ms": 23.342,
+      "error_rate": 0.0,
+      "questions": 20,
+      "errors": 0
+    },
+    "candidate_metrics": {
+      "answer_f1": 0.0095,
+      "evidence_recall": 0.4,
+      "state_accuracy": null,
+      "tokens": 1103.45,
+      "p95_latency_ms": 76.123,
+      "error_rate": 0.0,
+      "questions": 20,
+      "errors": 0
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "answer_f1",
+      "baseline_value": 0.0488,
+      "candidate_value": 0.0095,
+      "delta": -0.0393,
+      "ci95": null,
+      "paired": true,
+      "pairs": 20,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; paired by qid; no bootstrap CI."
+    },
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "evidence_recall",
+      "baseline_value": 0.6,
+      "candidate_value": 0.4,
+      "delta": -0.2,
+      "ci95": null,
+      "paired": true,
+      "pairs": 20,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; paired by qid; no bootstrap CI."
+    },
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "state_accuracy",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": null,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "tokens",
+      "baseline_value": 935.35,
+      "candidate_value": 1103.45,
+      "delta": 168.1,
+      "ci95": null,
+      "paired": true,
+      "pairs": 20,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; paired by qid; no bootstrap CI."
+    },
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "p95_latency_ms",
+      "baseline_value": 23.342,
+      "candidate_value": 76.123,
+      "delta": 52.781,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "batch-20261109-144540-92516d19-conv-41-s13",
+      "candidate": "batch-20261109-144549-b86df997-conv-41-s13",
+      "metric": "errors",
+      "baseline_value": 0.0,
+      "candidate_value": 0.0,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_category": [
+      {
+        "category": "1",
+        "category_label": "多跳",
+        "n": 5,
+        "baseline": {
+          "answer_f1": 0.1114,
+          "evidence_recall": 0.6,
+          "tokens": 854.0
+        },
+        "candidate": {
+          "answer_f1": 0.0,
+          "evidence_recall": 0.1,
+          "tokens": 1167.6
+        },
+        "delta": {
+          "answer_f1": -0.1114,
+          "evidence_recall": -0.5,
+          "tokens": 313.6
+        }
+      },
+      {
+        "category": "2",
+        "category_label": "时间",
+        "n": 5,
+        "baseline": {
+          "answer_f1": 0.0,
+          "evidence_recall": 1.0,
+          "tokens": 939.8
+        },
+        "candidate": {
+          "answer_f1": 0.0381,
+          "evidence_recall": 0.9,
+          "tokens": 1042.2
+        },
+        "delta": {
+          "answer_f1": 0.0381,
+          "evidence_recall": -0.1,
+          "tokens": 102.4
+        }
+      },
+      {
+        "category": "3",
+        "category_label": "常识推断",
+        "n": 5,
+        "baseline": {
+          "answer_f1": 0.0222,
+          "evidence_recall": 0.0,
+          "tokens": 986.8
+        },
+        "candidate": {
+          "answer_f1": 0.0,
+          "evidence_recall": 0.0,
+          "tokens": 1016.2
+        },
+        "delta": {
+          "answer_f1": -0.0222,
+          "evidence_recall": 0.0,
+          "tokens": 29.4
+        }
+      },
+      {
+        "category": "4",
+        "category_label": "单跳",
+        "n": 5,
+        "baseline": {
+          "answer_f1": 0.0615,
+          "evidence_recall": 0.8,
+          "tokens": 960.8
+        },
+        "candidate": {
+          "answer_f1": 0.0,
+          "evidence_recall": 0.6,
+          "tokens": 1187.8
+        },
+        "delta": {
+          "answer_f1": -0.0615,
+          "evidence_recall": -0.2,
+          "tokens": 227.0
+        }
+      }
+    ],
+    "stage_waterfall": [
+      {
+        "stage": "e2e",
+        "baseline_ms": 5.978,
+        "candidate_ms": 95.525,
+        "ms": 95.525,
+        "delta_ms": 89.547
+      },
+      {
+        "stage": "merge",
+        "baseline_ms": 0.129,
+        "candidate_ms": 0.256,
+        "ms": 0.256,
+        "delta_ms": 0.127
+      },
+      {
+        "stage": "retrieve",
+        "baseline_ms": 1.212,
+        "candidate_ms": 15.561,
+        "ms": 15.561,
+        "delta_ms": 14.349
+      },
+      {
+        "stage": "use",
+        "baseline_ms": 0.034,
+        "candidate_ms": 0.036,
+        "ms": 0.036,
+        "delta_ms": 0.002
+      }
+    ],
+    "failure_breakdown": []
+  },
+  "conclusion": {
+    "status": "partial",
+    "direction": "candidate_worse",
+    "f1_delta": -0.0393,
+    "paired_questions": 20,
+    "ci95": null,
+    "claims": [
+      "answer_f1 delta -0.0393 on 20 paired questions; direction=candidate_worse; no bootstrap CI, so status=partial."
+    ],
+    "conditions": [
+      "Same question set/qids and the same seed are required for a paired comparison.",
+      "Candidate and baseline are read from the persisted runs/web JSON; nothing is re-run."
+    ],
+    "limitations": [
+      "single-question/batch; no bootstrap CI; offline/online labeled.",
+      "No paired bootstrap interval is computed, so the status remains descriptive.",
+      "Offline extractive runs are not LLM-quality claims.",
+      "Only the two supplied runs are compared; no seed or provider sweep."
+    ],
+    "next_actions": [
+      "Run at least 10 paired questions (20+ recommended) per configuration.",
+      "Repeat with 2–3 seeds and add a paired bootstrap CI before a causal claim."
+    ],
+    "status_reason": "no_bootstrap_ci"
+  },
+  "metadata": {
+    "git_commit": "deb15cf",
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "baseline": {
+      "run_id": "batch-20261109-144540-92516d19-conv-41-s13",
+      "config_hash": "sha256:92516d1940459430590fdc82c9bee0a6e3b7b79105f84c7539a2b9670b2c4091",
+      "preset": "B0",
+      "offline": true,
+      "model": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "git_commit": "deb15cf"
+    },
+    "candidate": {
+      "run_id": "batch-20261109-144549-b86df997-conv-41-s13",
+      "config_hash": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4",
+      "preset": "R0",
+      "offline": true,
+      "model": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "git_commit": "deb15cf"
+    }
+  },
+  "manifest": {
+    "git_commit": "deb15cf",
+    "config_hashes": {
+      "baseline": "sha256:92516d1940459430590fdc82c9bee0a6e3b7b79105f84c7539a2b9670b2c4091",
+      "candidate": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4"
+    },
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "model": {
+      "baseline": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "candidate": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      }
+    },
+    "offline": {
+      "baseline": true,
+      "candidate": true
+    }
+  },
+  "web": {
+    "route": "#/experiments/lab-smoke",
+    "published": true
+  }
+}

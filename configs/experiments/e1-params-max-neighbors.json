@@ -1,0 +1,45 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1.2-S2-max-neighbors-corrected",
+  "title": "S2 max_neighbors correction after wiring GraphIndex.expand",
+  "module": "S2",
+  "design": "single_factor",
+  "reference_config": "../../configs/reference-r0.json",
+  "environment": {
+    "llm_level": "A0",
+    "llm": "offline-extractive",
+    "embedding": "offline-hash",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": ["conv-26", "conv-30", "conv-43", "conv-44"],
+    "question_limit": 60,
+    "stratify": "category"
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "note": "GraphIndex.expand now caps neighbours per frontier node; default None keeps old behaviour."
+  },
+  "factors": [
+    {
+      "id": "graph.retrieval.params.max_neighbors",
+      "module": "S2",
+      "axis": "graph.retrieval",
+      "levels": [10, 40, 80],
+      "hypothesis": "H5",
+      "metrics": ["recall@15", "ndcg@15", "tokens_per_query", "redundancy_rate"],
+      "applies_when": {"graph.retrieval.impl": ["entity_subgraph", "dual_channel"]}
+    }
+  ],
+  "metrics": ["recall@15", "ndcg@15", "tokens_per_query", "error_rate"],
+  "budget": {"max_configs": 3, "max_questions_per_config": 60, "max_gpu_hours": 0, "max_api_usd": 0},
+  "output": {"runs_dir": "runs/params", "report": "eval/archive/params-graph-max-neighbors-corrected.json"}
+}

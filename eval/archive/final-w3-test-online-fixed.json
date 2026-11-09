@@ -1,0 +1,580 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "final-w3-test-online-fixed",
+  "created_at": "2026-11-09T21:05:08",
+  "manifest": {
+    "git_commit": "1096530",
+    "config_hashes": {
+      "B0": "sha256:c014abce1e6621fa176d0ac56ac9aadc4fab1c2e179f5846dbf6e3237fcae0de",
+      "R0": "sha256:a29bf0589e37b43c61df0bbcb0d839054020f7d51aae61c8e5575d6402c6bd80"
+    },
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3"
+    },
+    "offline": false
+  },
+  "dataset": {
+    "split": "test",
+    "samples": [
+      "conv-41",
+      "conv-42"
+    ],
+    "questions": 20,
+    "seeds": [
+      13
+    ],
+    "test_only": true
+  },
+  "results": {
+    "runs": [
+      {
+        "preset": "B0",
+        "sample": "conv-41",
+        "seed": 13,
+        "run_id": "batch-20261109-205757-c014abce-conv-41-s13",
+        "metrics": {
+          "answer_f1": 0.2756,
+          "evidence_recall": 0.55,
+          "state_accuracy": null,
+          "tokens": 950.3,
+          "p95_latency_ms": 19600.941,
+          "error_rate": 0.0,
+          "questions": 10
+        }
+      },
+      {
+        "preset": "B0",
+        "sample": "conv-42",
+        "seed": 13,
+        "run_id": "batch-20261109-210014-c014abce-conv-42-s13",
+        "metrics": {
+          "answer_f1": 0.2407,
+          "evidence_recall": 0.55,
+          "state_accuracy": null,
+          "tokens": 850.6,
+          "p95_latency_ms": 15534.903,
+          "error_rate": 0.0,
+          "questions": 10
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-41",
+        "seed": 13,
+        "run_id": "batch-20261109-210244-a29bf058-conv-41-s13",
+        "metrics": {
+          "answer_f1": 0.3242,
+          "evidence_recall": 0.6333,
+          "state_accuracy": null,
+          "tokens": 1189.8,
+          "p95_latency_ms": 16006.422,
+          "error_rate": 0.0,
+          "questions": 10
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-42",
+        "seed": 13,
+        "run_id": "batch-20261109-210508-a29bf058-conv-42-s13",
+        "metrics": {
+          "answer_f1": 0.1852,
+          "evidence_recall": 0.5167,
+          "state_accuracy": null,
+          "tokens": 1025.2,
+          "p95_latency_ms": 15484.061,
+          "error_rate": 0.0,
+          "questions": 10
+        }
+      }
+    ],
+    "metrics": {
+      "questions": 20,
+      "answer_f1": 0.2547,
+      "evidence_recall": 0.575,
+      "state_accuracy": null,
+      "tokens": 1107.5,
+      "p95_latency_ms": 15484.061,
+      "error_rate": 0.0,
+      "refused_rate": 0.3,
+      "answered_questions": 14,
+      "answered_f1": 0.2924
+    },
+    "baseline_metrics": {
+      "questions": 20,
+      "answer_f1": 0.2582,
+      "evidence_recall": 0.55,
+      "state_accuracy": null,
+      "tokens": 900.45,
+      "p95_latency_ms": 15534.903,
+      "error_rate": 0.0,
+      "refused_rate": 0.3,
+      "answered_questions": 14,
+      "answered_f1": 0.2936
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "B0",
+      "candidate": "R0",
+      "metric": "answer_f1",
+      "baseline_value": 0.2582,
+      "candidate_value": 0.2547,
+      "delta": -0.0035,
+      "ci95": [
+        -0.214,
+        0.2017
+      ],
+      "paired": true,
+      "significant": false
+    },
+    {
+      "baseline": "B0",
+      "candidate": "R0",
+      "metric": "evidence_recall",
+      "baseline_value": 0.55,
+      "candidate_value": 0.575,
+      "delta": 0.025,
+      "ci95": [
+        -0.2667,
+        0.3167
+      ],
+      "paired": true,
+      "significant": false
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "config",
+        "levels": [
+          "B0",
+          "R0"
+        ],
+        "metrics": {
+          "B0": {
+            "questions": 20,
+            "answer_f1": 0.2582,
+            "evidence_recall": 0.55,
+            "state_accuracy": null,
+            "tokens": 900.45,
+            "p95_latency_ms": 15534.903,
+            "error_rate": 0.0,
+            "refused_rate": 0.3,
+            "answered_questions": 14,
+            "answered_f1": 0.2936
+          },
+          "R0": {
+            "questions": 20,
+            "answer_f1": 0.2547,
+            "evidence_recall": 0.575,
+            "state_accuracy": null,
+            "tokens": 1107.5,
+            "p95_latency_ms": 15484.061,
+            "error_rate": 0.0,
+            "refused_rate": 0.3,
+            "answered_questions": 14,
+            "answered_f1": 0.2924
+          }
+        }
+      }
+    ],
+    "interactions": [],
+    "pareto": [],
+    "by_category": {
+      "B0": [
+        {
+          "category": "1",
+          "n": 6,
+          "answer_f1": 0.2361,
+          "evidence_recall": 0.25
+        },
+        {
+          "category": "2",
+          "n": 6,
+          "answer_f1": 0.2032,
+          "evidence_recall": 1.0
+        },
+        {
+          "category": "3",
+          "n": 4,
+          "answer_f1": 0.35,
+          "evidence_recall": 0.375
+        },
+        {
+          "category": "4",
+          "n": 4,
+          "answer_f1": 0.282,
+          "evidence_recall": 0.5
+        }
+      ],
+      "R0": [
+        {
+          "category": "1",
+          "n": 6,
+          "answer_f1": 0.2083,
+          "evidence_recall": 0.3333
+        },
+        {
+          "category": "2",
+          "n": 6,
+          "answer_f1": 0.1772,
+          "evidence_recall": 0.8333
+        },
+        {
+          "category": "3",
+          "n": 4,
+          "answer_f1": 0.25,
+          "evidence_recall": 0.375
+        },
+        {
+          "category": "4",
+          "n": 4,
+          "answer_f1": 0.445,
+          "evidence_recall": 0.75
+        }
+      ]
+    },
+    "by_seed": {
+      "B0": [
+        {
+          "seed": 13,
+          "questions": 20,
+          "answer_f1": 0.2582,
+          "evidence_recall": 0.55,
+          "state_accuracy": null,
+          "tokens": 900.45,
+          "p95_latency_ms": 15534.903,
+          "error_rate": 0.0,
+          "refused_rate": 0.3,
+          "answered_questions": 14,
+          "answered_f1": 0.2936
+        }
+      ],
+      "R0": [
+        {
+          "seed": 13,
+          "questions": 20,
+          "answer_f1": 0.2547,
+          "evidence_recall": 0.575,
+          "state_accuracy": null,
+          "tokens": 1107.5,
+          "p95_latency_ms": 15484.061,
+          "error_rate": 0.0,
+          "refused_rate": 0.3,
+          "answered_questions": 14,
+          "answered_f1": 0.2924
+        }
+      ]
+    },
+    "stage_waterfall": [
+      {
+        "stage": "e2e",
+        "ms": 14541.744
+      },
+      {
+        "stage": "merge",
+        "ms": 0.233
+      },
+      {
+        "stage": "retrieve",
+        "ms": 0.364
+      },
+      {
+        "stage": "use",
+        "ms": 7268.776
+      }
+    ],
+    "failure_breakdown": [],
+    "bootstrap": {
+      "samples": 1000,
+      "seed": 2026,
+      "pairs_f1": 20,
+      "pairs_recall": 20
+    },
+    "diagnosis": {
+      "dev_before": {
+        "label": "R0 original",
+        "split": "development",
+        "questions": 20,
+        "seeds": [
+          13
+        ],
+        "answer_f1": 0.0705,
+        "evidence_recall": 0.325,
+        "refused_rate": 0.6,
+        "answered_questions": 8,
+        "answered_f1": 0.1491,
+        "tokens": 278.95
+      },
+      "dev_after": {
+        "label": "R0-fixed (filter=none + mmr/decay/compress=none + rerank=none)",
+        "split": "development",
+        "questions": 20,
+        "seeds": [
+          13
+        ],
+        "answer_f1": 0.1502,
+        "evidence_recall": 0.6708,
+        "refused_rate": 0.1,
+        "answered_questions": 18,
+        "answered_f1": 0.163,
+        "tokens": 1150.4
+      },
+      "dev_variants": [
+        {
+          "id": "r0",
+          "label": "R0 original",
+          "answer_f1": 0.0705,
+          "evidence_recall": 0.325,
+          "refused_rate": 0.6,
+          "answered_questions": 8,
+          "answered_f1": 0.1491,
+          "source": "eval/archive/dev-diagnostics.json#variants.r0"
+        },
+        {
+          "id": "dropstale",
+          "label": "drop_stale=false",
+          "answer_f1": 0.093,
+          "evidence_recall": 0.3875,
+          "refused_rate": 0.45,
+          "answered_questions": 11,
+          "answered_f1": 0.1503,
+          "source": "eval/archive/dev-diagnostics.json#variants.dropstale"
+        },
+        {
+          "id": "postoff",
+          "label": "post.mmr/decay/compress=none",
+          "answer_f1": 0.0705,
+          "evidence_recall": 0.325,
+          "refused_rate": 0.6,
+          "answered_questions": 8,
+          "answered_f1": 0.1491,
+          "source": "eval/archive/dev-diagnostics.json#variants.postoff"
+        },
+        {
+          "id": "time",
+          "label": "time_context prompt",
+          "answer_f1": 0.0611,
+          "evidence_recall": 0.325,
+          "refused_rate": 0.55,
+          "answered_questions": 9,
+          "answered_f1": 0.1357,
+          "tokens": 356.6,
+          "source": "eval/archive/dev-diagnostics.json#variants.time"
+        },
+        {
+          "id": "filteroff",
+          "label": "filter=none",
+          "answer_f1": 0.1301,
+          "evidence_recall": 0.6708,
+          "refused_rate": 0.15,
+          "answered_f1": 0.1497,
+          "source": "dev ad-hoc run (filter=none); aggregate recorded in RUNLOG-online.md"
+        },
+        {
+          "id": "fixed",
+          "label": "filter=none + rerank=none",
+          "answer_f1": 0.1502,
+          "evidence_recall": 0.6708,
+          "refused_rate": 0.1,
+          "answered_questions": 18,
+          "answered_f1": 0.163,
+          "tokens": 1150.4,
+          "source": "eval/archive/dev-filteroff-norerank.json#metrics"
+        }
+      ],
+      "root_cause": "R0 的 post.filter 阈值 + drop_stale 把平均候选从 15 剪到 2.5；过滤后 MMR/decay/compress 已无候选可作用。主因是证据剪枝导致拒答，不是 answered-only 答案能力下降：dev 的 answered F1 仅 .1491→.1630，而总 F1 从 .0705 升到 .1502、refused 从 .60 降到 .10，主要来自少拒答。",
+      "time_context": "dev 上 time_context prompt 更差：F1 .0611 / Recall .3250 / refused .55 / answered F1 .1357（R0 original 为 .0705 / .3250 / .60 / .1491）。该 prompt 默认 false，R0-fixed 不启用。",
+      "rerank": "在 filter=none 基础上再关 rerank（CE）：F1 .1301→.1502、refused .15→.10、answered F1 .1497→.1630，Recall 持平 .6708。M2 的 40 题对照也显示 CE 把 Recall 从 .5785 压到 .3498，因此 R0-fixed 关闭 rerank。",
+      "test_reused": true,
+      "test_reuse_note": "test（conv-41/conv-42）已在 before 轮使用并检查；R0-fixed 是同 test 上的 post-hoc 复核，不是干净 held-out，不能再用于调参或宣称泛化。",
+      "test_questions_per_config": 20,
+      "before_questions_per_config": 80,
+      "test_seeds": [
+        13
+      ],
+      "before_seeds": [
+        13,
+        17
+      ],
+      "source_files": [
+        "eval/archive/dev-diagnostics.json",
+        "eval/archive/dev-filteroff-norerank.json"
+      ]
+    },
+    "before_after": {
+      "dev": {
+        "before": {
+          "label": "R0 original",
+          "split": "development",
+          "questions": 20,
+          "seeds": [
+            13
+          ],
+          "answer_f1": 0.0705,
+          "evidence_recall": 0.325,
+          "refused_rate": 0.6,
+          "answered_questions": 8,
+          "answered_f1": 0.1491,
+          "tokens": 278.95
+        },
+        "after": {
+          "label": "R0-fixed (filter=none + mmr/decay/compress=none + rerank=none)",
+          "split": "development",
+          "questions": 20,
+          "seeds": [
+            13
+          ],
+          "answer_f1": 0.1502,
+          "evidence_recall": 0.6708,
+          "refused_rate": 0.1,
+          "answered_questions": 18,
+          "answered_f1": 0.163,
+          "tokens": 1150.4
+        },
+        "paired_note": "dev 的 before/after 使用同一批 4 段 × 5 题（20 题，seed 13），可作诊断描述；无重复 seed，仍非正式显著性结论。"
+      },
+      "test": {
+        "before": {
+          "label": "before · 80 题/配置 · seeds 13/17",
+          "questions_per_config": 80,
+          "seeds": [
+            13,
+            17
+          ],
+          "B0": {
+            "answer_f1": 0.1883,
+            "evidence_recall": 0.5435,
+            "refused_rate": 0.3875,
+            "answered_f1": 0.2728,
+            "tokens": 924.6,
+            "p95_latency_ms": 16032.808
+          },
+          "R0": {
+            "answer_f1": 0.152,
+            "evidence_recall": 0.3403,
+            "refused_rate": 0.5375,
+            "answered_f1": 0.278,
+            "tokens": 319.3,
+            "p95_latency_ms": 8398.226
+          },
+          "comparisons": {
+            "answer_f1": {
+              "baseline": 0.1883,
+              "candidate": 0.152,
+              "delta": -0.0363,
+              "ci95": [
+                -0.1351,
+                0.0575
+              ],
+              "significant": false
+            },
+            "evidence_recall": {
+              "baseline": 0.5435,
+              "candidate": 0.3403,
+              "delta": -0.2032,
+              "ci95": [
+                -0.3509,
+                -0.048
+              ],
+              "significant": true
+            }
+          }
+        },
+        "after": {
+          "label": "R0-fixed · post-hoc · 20 题/配置 · seed 13",
+          "questions_per_config": 20,
+          "seeds": [
+            13
+          ],
+          "post_hoc": true,
+          "B0": {
+            "answer_f1": 0.2582,
+            "evidence_recall": 0.55,
+            "refused_rate": 0.3,
+            "answered_questions": 14,
+            "answered_f1": 0.2936,
+            "tokens": 900.45,
+            "p95_latency_ms": 15534.903
+          },
+          "R0": {
+            "answer_f1": 0.2547,
+            "evidence_recall": 0.575,
+            "refused_rate": 0.3,
+            "answered_questions": 14,
+            "answered_f1": 0.2924,
+            "tokens": 1107.5,
+            "p95_latency_ms": 15484.061
+          },
+          "comparisons": {
+            "answer_f1": {
+              "baseline": 0.2582,
+              "candidate": 0.2547,
+              "delta": -0.0035,
+              "ci95": [
+                -0.214,
+                0.2017
+              ],
+              "significant": false
+            },
+            "evidence_recall": {
+              "baseline": 0.55,
+              "candidate": 0.575,
+              "delta": 0.025,
+              "ci95": [
+                -0.2667,
+                0.3167
+              ],
+              "significant": false
+            }
+          }
+        },
+        "paired_note": "before 为 80 题/配置（2 seeds），fixed 为 20 题/配置（1 seed），题目数量与 seed 都不同，不能把两轮作为配对样本做 before-vs-fixed 的显著性结论。"
+      }
+    }
+  },
+  "conclusion": {
+    "status": "inconclusive",
+    "claims": [
+      "R0 F1 -0.0035 vs B0; 95% bootstrap CI [-0.214, 0.2017] includes 0.",
+      "差距主要来自 refusal/证据剪枝，不是 answered-only 能力：dev answered F1 .1491→.1630，而总 F1 .0705→.1502、refused .60→.10，主要由少拒答贡献。",
+      "R0-fixed 在 dev 上 F1 .0705→.1502、Recall .3250→.6708、refused .60→.10。",
+      "test 已使用；R0-fixed 是对已看过的 test 的 post-hoc 复核，不是干净 held-out。",
+      "before 为 80 题/配置（2 seeds），fixed 为 20 题/配置（1 seed）；数量不同，不能做 before vs fixed 的配对显著性结论。",
+      "fixed 内部同口径（20 题，B0 vs R0-fixed）：F1 .2582 vs .2547，Δ -0.0035，95% CI [-0.2140, 0.2017] 含 0 → inconclusive；Recall .5500 vs .5750，Δ +0.0250，95% CI [-0.2667, 0.3167] 含 0 → inconclusive。"
+    ],
+    "conditions": [
+      "Frozen B0/R0 configs; no test-time tuning.",
+      "Test split conv-41/conv-42; questions stratified by category.",
+      "Real model answer via the configured Ollama/API endpoint; this is a B-level LLM answer comparison.",
+      "R0-fixed 冻结为 filter=none + mmr/decay/compress=none + rerank=none；time_context 默认 false。",
+      "dev 诊断：4 段 × 5 题 = 20 题，seed 13，online 27B；用于定位原因，不冒充 test 结果。",
+      "fixed test 为 post-hoc 复核：test 已在 before 轮使用，不是新的 held-out。",
+      "before 80 题/配置（seeds 13/17）vs fixed 20 题/配置（seed 13），不能直接配对比较。"
+    ],
+    "limitations": [
+      "Local/remote model latency and API/network variance are part of P95; not a GPU-only latency claim.",
+      "state_accuracy is not recorded for the module pipeline; only F1/Recall are comparable.",
+      "B0/R0 test split has already been inspected; this fixed-R0 confirmation is post-hoc, not a clean held-out run.",
+      "The test report is therefore a diagnostic confirmation, not a new untouched test.",
+      "No LLM-as-Judge in this comparison; F1 is the primary metric.",
+      "test 已使用；fixed 结果不能作为干净 held-out 或泛化证据。",
+      "before 与 fixed 的题数/seed 不同，不能做跨轮配对显著性结论。",
+      "dev 诊断无重复 seed；filter=none 的单点结果来自 dev 临时运行，只作原因说明。",
+      "LLM-as-Judge 未运行（Judge: not_run）；state_accuracy 仍为 not_available。"
+    ],
+    "next_actions": [
+      "If time allows, add a second judge or more candidates; do not tune on test.",
+      "Add state_accuracy from a frozen module-pipeline benchmark before reporting it.",
+      "不要再用 test 跑新配置；若要新结论，先在 dev 预注册，再用新的 held-out/test。",
+      "补 LLM-as-Judge 与 state_accuracy 冻结标注后，再报告质量结论。"
+    ]
+  },
+  "web": {
+    "route": "#/experiments/final-w3-test-online-fixed",
+    "published": true
+  },
+  "elapsed_seconds": 580.9
+}

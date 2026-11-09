@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>记忆与图谱 · 可视化方案</title>
+<style>
+  :root{--paper:#F7F4EC;--ink:#202A33;--mut:#6E6A60;--line:#E2DACA;--card:#FFFDF8;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"PingFang SC","Hiragino Sans GB","Source Han Sans SC",sans-serif;}
+  .wrap{width:1600px;margin:0 auto;padding:64px 64px 80px}
+  header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:1px solid var(--line);padding-bottom:26px}
+  .eyebrow{font-size:10.5px;letter-spacing:3px;color:#9A8F7C;font-weight:600}
+  h1{font-size:40px;margin:12px 0 10px;letter-spacing:1px}
+  .sub{font-size:12.5px;color:var(--mut);line-height:1.8}
+  .meta{text-align:right;font-size:11px;color:#8A8172;line-height:1.9}
+  .meta b{display:block;font-size:24px;color:var(--ink)}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:30px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 6px 22px rgba(80,64,40,.06);display:flex;flex-direction:column}
+  .thumb{display:block;position:relative;border-bottom:1px solid var(--line);background:#0d1526}
+  .thumb img{display:block;width:100%;height:auto}
+  .num{position:absolute;left:14px;top:12px;width:30px;height:30px;border-radius:50%;
+    background:rgba(20,28,36,.72);color:#fff;font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center}
+  .body{padding:18px 20px 20px}
+  h2{font-size:17px;margin:0 0 7px}
+  .desc{font-size:11.5px;line-height:1.7;color:#4E5A66;margin:0 0 12px;min-height:58px}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .tag{font-size:9.5px;padding:4px 8px;border-radius:999px;background:#F2EDE1;color:#6E6555;border:1px solid #E4DCCB}
+  .tag.good{background:#EDF3EC;color:#4C7A55;border-color:#D6E4D6}
+  a.open{font-size:10.5px;color:#3F5F86;text-decoration:none;border-bottom:1px solid #B9C9DA}
+  .section{margin-top:40px;border-top:1px solid var(--line);padding-top:26px}
+  .section h3{font-size:15px;margin:0 0 14px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+  .note{font-size:11.5px;line-height:1.9;color:#4E5A66}
+  .note b{color:#202A33}
+  .refs{font-size:10.5px;line-height:2;color:#7B7568}
+  .refs a{color:#3F5F86;text-decoration:none;border-bottom:1px solid #C9D5E2}
+  .rec{background:#202A33;color:#F3EFE4;border-radius:14px;padding:26px 30px;margin-top:34px;
+    display:grid;grid-template-columns:260px 1fr;gap:30px;align-items:center}
+  .rec .k{font-size:10px;letter-spacing:3px;color:#C9B98F}
+  .rec h3{color:#FFFDF8;font-size:19px;margin:8px 0 0}
+  .rec p{font-size:11.5px;line-height:1.9;color:#C9D2D0;margin:0}
+  .rec b{color:#F2D48A}
+  footer{margin-top:30px;font-size:10px;color:#9A8F7C;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">MEMORY &amp; GRAPH  /  VISUAL OPTIONS</div>
+      <h1>记忆与图谱 · 三个可视化方案</h1>
+      <div class="sub">针对当前工作台的「格式化记忆」与「图谱」两块；<b>未接入 8885 页面</b>，先做独立原型。<br>
+      用 conv-26 的现有缓存数据做布局示意，不是新跑的实验结果。</div>
+    </div>
+    <div class="meta"><b>3 + 2</b>三个原型 / 两个补充方向<br>1600 × 1000 · 2× PNG<br>2026-11</div>
+  </header>
+
+  <div class="grid">
+    <div class="card">
+      <a class="thumb" href="m1-records.html"><span class="num">01</span><img src="m1-records.png" alt="记忆记录工作台"></a>
+      <div class="body">
+        <h2>记忆记录工作台</h2>
+        <p class="desc">一条记忆 = 一张可追溯的记录：schema 字段、双时间条、证据原文、失效链、溯源四步。列表选中即详情。</p>
+        <div class="tags"><span class="tag good">格式化记忆</span><span class="tag">证据 / 溯源</span><span class="tag">主视图</span></div>
+        <a class="open" href="m1-records.html">打开矢量原型 ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <a class="thumb" href="m2-timeline.html"><span class="num">02</span><img src="m2-timeline.png" alt="记忆时间轴"></a>
+      <div class="body">
+        <h2>记忆时间轴</h2>
+        <p class="desc">按实体 × 槽位铺开版本条：有效、失效、开区间、事件点；一根 as-of 游标回看“那一刻系统记得什么”。</p>
+        <div class="tags"><span class="tag good">双时间 / 状态</span><span class="tag">as-of 回看</span><span class="tag">变化追踪</span></div>
+        <a class="open" href="m2-timeline.html">打开矢量原型 ↗</a>
+      </div>
+    </div>
+    <div class="card">
+      <a class="thumb" href="m3-graph.html"><span class="num">03</span><img src="m3-graph.png" alt="图谱工作台"></a>
+      <div class="body">
+        <h2>图谱工作台</h2>
+        <p class="desc">实体 / 主题 / 事件 / 记忆单元四类节点，社区气泡分组，边按语义着色；点节点右侧直接看证据。</p>
+        <div class="tags"><span class="tag good">图谱</span><span class="tag">社区 / ego</span><span class="tag">四种图表示</span></div>
+        <a class="open" href="m3-graph.html">打开矢量原型 ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>市场上常见的两套做法（也是这三个原型的参照）</h3>
+    <div class="cols">
+      <div class="note">
+        <b>记忆侧</b>：主流不是“一张大图”，而是 <b>列表 / 检查器 + 时间线 + 证据</b>。<br>
+        Mem0 生态里的 Memprobe 就是按 scope 浏览、测检索、带记忆时间线；Letta 的 ADE 把 memory blocks 与 archival memory 分开看；
+        Zep 的 Context Graph 把 fact 的失效时间写在边上，并保留 episode 作为 provenance。<br><br>
+        <b>共同点</b>：单条记录必须有“字段 + 时间 + 来源”，否则无法解释“为什么记得 / 为什么忘了”。
+      </div>
+      <div class="note">
+        <b>图谱侧</b>：Neo4j Bloom 的范式是 <b>Perspective（只看一类子图）+ 搜索式展开 + 规则化图例 + Slicer 时间过滤 + minimap</b>；
+        GraphRAG 把 entity/relation 抽出来后做社区划分与多层社区摘要；Cytoscape.js / Sigma.js / G6 负责渲染，
+        大图用 WebGL（Sigma）或分层/聚合，而不是把 700 个节点一次性摊开。<br><br>
+        <b>共同点</b>：默认视图要“有焦点”（一个实体、一个社区、一次检索），全图只做背景。
+      </div>
+    </div>
+    <div class="refs" style="margin-top:16px">
+      参照：
+      <a href="https://github.com/rrahul-1/Memprobe">Memprobe</a> ·
+      <a href="https://help.getzep.com/v3/concepts">Zep Context Graph</a> ·
+      <a href="https://docs.letta.com/v1-sdk/ade">Letta ADE</a> ·
+      <a href="https://neo4j.com/docs/desktop/current/explore/">Neo4j Bloom</a> ·
+      <a href="https://neo4j.com/docs/bloom-user-guide/2.6/bloom-tutorial/slicer/">Bloom Slicer</a> ·
+      <a href="https://microsoft.github.io/graphrag/index/overview/">GraphRAG</a> ·
+      <a href="https://js.cytoscape.org/">Cytoscape.js</a> ·
+      <a href="https://www.sigmajs.org/">Sigma.js</a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h3>另外两个可选方向（这次没做原型）</h3>
+    <div class="cols">
+      <div class="note"><b>04 · 矩阵 / 冲突对</b><br>
+        稠密图切到 entity × attribute 邻接矩阵，颜色表示状态与置信度；适合看“同一槽位多条记忆”“疑似重复主题”，
+        比力导向图更容易发现成片的重复与冲突。</div>
+      <div class="note"><b>05 · 溯源链（Sankey / 漏斗）</b><br>
+        turn → fact → 检索命中 → 进入上下文 → 答案，每一段标数量与通过率；适合回答“这条记忆到底有没有被用到”，
+        也是评测页和记忆页之间的桥。</div>
+    </div>
+  </div>
+
+  <div class="rec">
+    <div><div class="k">RECOMMENDED</div><h3>推荐落地顺序</h3></div>
+    <p>先做 <b>01 记录工作台</b>（收益最大、数据已具备）；再把 <b>02 时间轴</b> 作为它的第二个 tab（共用选中态）；<b>03 图谱</b> 放在“按实体/主题探索”入口，默认只展开 1–2 跳，别一上来铺全图。矩阵与溯源链等有评测数据后再补。</p>
+  </div>
+
+  <footer><span>源：/api/v2/memories · /api/v2/graph（conv-26 缓存）</span><span>未修改 web/ 与 8885 运行页面</span></footer>
+</div>
+</body>
+</html>

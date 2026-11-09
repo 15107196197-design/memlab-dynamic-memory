@@ -230,6 +230,7 @@ runs/<run_id>/
 | [03-variants.md](03-variants.md) | 六轴变体目录、参数、优先级、依赖、预期效应 | 想决定“先做哪些实现” |
 | [04-experiments.md](04-experiments.md) | 模块化实验：六模块内部选型/参数/LLM → 耦合/瓶颈/LLM 归因 → 组合/环境/确认；含第 7 章评测标准选择 | 想规划“实验怎么做” |
 | [05-color-focus.md](05-color-focus.md) | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 | 想确认“开发与消融如何承接” |
+| [06-u5-prompt-experiments.md](06-u5-prompt-experiments.md) | U 使用模块补遗：记忆调用后的提示词构造（U5）——位置/预算/指令/整合/元数据/噪声的 15 轴实验计划 | 想补 U 模块的 prompt 因子、做消融与确认 |
 | [HANDOFF.md](HANDOFF.md) | 项目状态、架构不变量、阶段计划、上下文交接协议 | 新会话/被压缩后继续 |
 | [SESSION-PROMPTS.md](SESSION-PROMPTS.md) | S0–S10 + W1–W3 的会话提示词、引用文件、交付与验收 | 准备开始开发/实验/Web |
 | [COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md) | 2026 课程 PDF 硬性要求、6 段 4+2、交付对照 | 做最终交付/报告前 |

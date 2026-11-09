@@ -197,7 +197,10 @@
       "state_accuracy": null,
       "tokens": 319.3,
       "p95_latency_ms": 8398.226,
-      "error_rate": 0.0
+      "error_rate": 0.0,
+      "refused_rate": 0.5375,
+      "answered_questions": 37,
+      "answered_f1": 0.278
     },
     "baseline_metrics": {
       "questions": 80,
@@ -206,7 +209,10 @@
       "state_accuracy": null,
       "tokens": 924.6,
       "p95_latency_ms": 16032.808,
-      "error_rate": 0.0
+      "error_rate": 0.0,
+      "refused_rate": 0.3875,
+      "answered_questions": 49,
+      "answered_f1": 0.2728
     }
   },
   "comparisons": [
@@ -255,7 +261,10 @@
             "state_accuracy": null,
             "tokens": 924.6,
             "p95_latency_ms": 16032.808,
-            "error_rate": 0.0
+            "error_rate": 0.0,
+            "refused_rate": 0.3875,
+            "answered_questions": 49,
+            "answered_f1": 0.2728
           },
           "R0": {
             "questions": 80,
@@ -264,7 +273,10 @@
             "state_accuracy": null,
             "tokens": 319.3,
             "p95_latency_ms": 8398.226,
-            "error_rate": 0.0
+            "error_rate": 0.0,
+            "refused_rate": 0.5375,
+            "answered_questions": 37,
+            "answered_f1": 0.278
           }
         }
       }

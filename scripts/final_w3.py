@@ -52,6 +52,7 @@ def bootstrap_ci(pairs, samples=1000, seed=2026):
 
 
 def aggregate(rows):
+    answered = [r for r in rows if not r.get("refused")]
     return {
         "questions": len(rows),
         "answer_f1": mean([r["answer_f1"] for r in rows]),
@@ -60,6 +61,9 @@ def aggregate(rows):
         "tokens": mean([r["tokens"] for r in rows]),
         "p95_latency_ms": p95([r["latency_ms"] for r in rows]),
         "error_rate": round(sum(1 for r in rows if not r.get("prediction")) / len(rows), 4) if rows else 0.0,
+        "refused_rate": mean([1 if r.get("refused") else 0 for r in rows]),
+        "answered_questions": len(answered),
+        "answered_f1": mean([r["answer_f1"] for r in answered]),
     }
 
 
@@ -71,9 +75,11 @@ def main() -> int:
     parser.add_argument("--online", action="store_true", help="use Ollama/API instead of offline clients")
     parser.add_argument("--context", type=int, default=None,
                         help="override LLM context (24GB GPUs should use 8192/16384)")
+    parser.add_argument("--experiment-id", default=None,
+                        help="override report id (e.g. final-w3-test-online-fixed)")
     args = parser.parse_args()
     offline = not args.online
-    experiment_id = "final-w3-test-online" if not offline else "final-w3-test-offline"
+    experiment_id = args.experiment_id or ("final-w3-test-online" if not offline else "final-w3-test-offline")
     started = time.time()
     batches, rows_by_run = {}, {}
     for preset in CONFIGS:
@@ -162,7 +168,8 @@ def main() -> int:
             ("Local/remote model latency and API/network variance are part of P95; not a GPU-only latency claim."
              if not offline else "No real Ollama/API model: F1 is offline extractive, not B-level."),
             "state_accuracy is not recorded for the module pipeline; only F1/Recall are comparable.",
-            "Two seeds and 20 questions/sample; bootstrap resamples questions, not conversations.",
+            "B0/R0 test split has already been inspected; this fixed-R0 confirmation is post-hoc, not a clean held-out run.",
+            "The test report is therefore a diagnostic confirmation, not a new untouched test.",
             "No LLM-as-Judge in this comparison; F1 is the primary metric.",
         ],
         "next_actions": [

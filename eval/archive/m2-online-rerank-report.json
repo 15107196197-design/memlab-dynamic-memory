@@ -1,0 +1,796 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "M2-online-rerank",
+  "created_at": "2026-11-09T19:15:50+08:00",
+  "source_db": "runs/s6/m2.sqlite",
+  "source_archive": "eval/archive/m2-rerank.json",
+  "raw_schema": "memlab/m2-rerank@1",
+  "code_fingerprint": {
+    "git_head": "10965303b7b419972f425de7b7e82ee345e49cae",
+    "diff_sha1": "95348043209736045e6540d77757ea40d27607c5",
+    "source_files": [
+      "eval/archive/server-code.head",
+      "eval/archive/server-code.sha1"
+    ]
+  },
+  "protocol": {
+    "executor": "e2e",
+    "offline": false,
+    "llm": "qwen3.8:27b-q4_K_M",
+    "context": 8192,
+    "embedding": "bge-m3",
+    "rerank_device": "GPU",
+    "seed": 13,
+    "inference": "Ollama 0.40.15",
+    "host": "NVIDIA L20 48GB (server /root/memlab)",
+    "rerank_model": "BAAI/bge-reranker-v2-m3"
+  },
+  "manifest": {
+    "spec_id": "M2-rerank-deadline",
+    "design": "single_factor",
+    "config_hashes": {
+      "r-m2-rerank-deadline-000-5fc3cd32": "sha256:5fc3cd32d0ccc1511bd00f4a4c3dadc09627d2795d521a47f4a0b9b8011c655a",
+      "r-m2-rerank-deadline-001-d3bc17ec": "sha256:d3bc17ece3ce5dc5bb9403bc862b440f9c39dbca9e1cbbe711d9f4c9c8a0649a"
+    },
+    "executor": "e2e",
+    "read_only_db": true,
+    "builder": "scripts/build_online_reports.py"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_config": 40
+  },
+  "metric_note": "Per-question means; tokens/seconds are mean per question, not totals. p95_latency_ms is the run-level p95 of per-question latency_ms. refused is the mean per-question refusal flag. n_questions is the distinct qid count. Comparisons are paired by qid; ndcg has fewer pairs where a run is missing the metric.",
+  "bootstrap": {
+    "method": "paired_percentile",
+    "iterations": 1000,
+    "seed": 13,
+    "ci_level": 0.95,
+    "resample_unit": "qid"
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "status": "complete",
+        "factors": {
+          "rerank.impl": "none"
+        },
+        "config_hash": "sha256:5fc3cd32d0ccc1511bd00f4a4c3dadc09627d2795d521a47f4a0b9b8011c655a",
+        "n_questions": 40,
+        "errors": 0,
+        "metrics": {
+          "answer_f1": 0.284359,
+          "evidence_recall": 0.578542,
+          "ndcg": 0.431485,
+          "tokens": 376.475,
+          "refused": 0.175,
+          "seconds": 13.373425,
+          "p95_latency_ms": 15036.3817
+        },
+        "metric_counts": {
+          "answer_f1": 40,
+          "evidence_recall": 40,
+          "ndcg": 40,
+          "tokens": 40,
+          "refused": 40,
+          "latency_ms": 40
+        }
+      },
+      {
+        "run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "status": "complete",
+        "factors": {
+          "rerank.impl": "cross_encoder"
+        },
+        "config_hash": "sha256:d3bc17ece3ce5dc5bb9403bc862b440f9c39dbca9e1cbbe711d9f4c9c8a0649a",
+        "n_questions": 40,
+        "errors": 0,
+        "metrics": {
+          "answer_f1": 0.237253,
+          "evidence_recall": 0.349792,
+          "ndcg": 0.512303,
+          "tokens": 47.25,
+          "refused": 0.55,
+          "seconds": 3.8277,
+          "p95_latency_ms": 7113.62345
+        },
+        "metric_counts": {
+          "answer_f1": 40,
+          "evidence_recall": 40,
+          "ndcg": 37,
+          "tokens": 40,
+          "refused": 40,
+          "latency_ms": 40
+        }
+      }
+    ],
+    "n_runs": 2,
+    "errors": 0
+  },
+  "comparisons": [
+    {
+      "contrast": "rerank",
+      "factor": "rerank.impl",
+      "baseline_level": "none",
+      "candidate_level": "cross_encoder",
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "answer_f1",
+      "n_pairs": 40,
+      "n_baseline": 40,
+      "n_candidate": 40,
+      "mean_delta": -0.047106,
+      "delta": -0.047106,
+      "median": 0.0,
+      "median_delta": 0.0,
+      "improved": 6,
+      "worsened": 10,
+      "unchanged": 24,
+      "ci95": [
+        -0.116242,
+        0.001702
+      ],
+      "ci95_crosses_zero": true,
+      "significant": false,
+      "direction": "worse",
+      "lower_is_better": false,
+      "method": "paired_percentile_bootstrap",
+      "bootstrap": {
+        "iterations": 1000,
+        "seed": 13,
+        "ci_level": 0.95
+      }
+    },
+    {
+      "contrast": "rerank",
+      "factor": "rerank.impl",
+      "baseline_level": "none",
+      "candidate_level": "cross_encoder",
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "evidence_recall",
+      "n_pairs": 40,
+      "n_baseline": 40,
+      "n_candidate": 40,
+      "mean_delta": -0.22875,
+      "delta": -0.22875,
+      "median": 0.0,
+      "median_delta": 0.0,
+      "improved": 0,
+      "worsened": 15,
+      "unchanged": 25,
+      "ci95": [
+        -0.3375,
+        -0.11625
+      ],
+      "ci95_crosses_zero": false,
+      "significant": true,
+      "direction": "worse",
+      "lower_is_better": false,
+      "method": "paired_percentile_bootstrap",
+      "bootstrap": {
+        "iterations": 1000,
+        "seed": 13,
+        "ci_level": 0.95
+      }
+    },
+    {
+      "contrast": "rerank",
+      "factor": "rerank.impl",
+      "baseline_level": "none",
+      "candidate_level": "cross_encoder",
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "ndcg",
+      "n_pairs": 37,
+      "n_baseline": 40,
+      "n_candidate": 37,
+      "mean_delta": 0.054359,
+      "delta": 0.054359,
+      "median": 0.0,
+      "median_delta": 0.0,
+      "improved": 17,
+      "worsened": 11,
+      "unchanged": 9,
+      "ci95": [
+        -0.052878,
+        0.169549
+      ],
+      "ci95_crosses_zero": true,
+      "significant": false,
+      "direction": "better",
+      "lower_is_better": false,
+      "method": "paired_percentile_bootstrap",
+      "bootstrap": {
+        "iterations": 1000,
+        "seed": 13,
+        "ci_level": 0.95
+      }
+    },
+    {
+      "contrast": "rerank",
+      "factor": "rerank.impl",
+      "baseline_level": "none",
+      "candidate_level": "cross_encoder",
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "tokens",
+      "n_pairs": 40,
+      "n_baseline": 40,
+      "n_candidate": 40,
+      "mean_delta": -329.225,
+      "delta": -329.225,
+      "median": -322.5,
+      "median_delta": -322.5,
+      "improved": 39,
+      "worsened": 0,
+      "unchanged": 1,
+      "ci95": [
+        -364.5,
+        -295.675
+      ],
+      "ci95_crosses_zero": false,
+      "significant": true,
+      "direction": "better",
+      "lower_is_better": true,
+      "method": "paired_percentile_bootstrap",
+      "bootstrap": {
+        "iterations": 1000,
+        "seed": 13,
+        "ci_level": 0.95
+      }
+    },
+    {
+      "contrast": "rerank",
+      "factor": "rerank.impl",
+      "baseline_level": "none",
+      "candidate_level": "cross_encoder",
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "seconds",
+      "n_pairs": 40,
+      "n_baseline": 40,
+      "n_candidate": 40,
+      "mean_delta": -9.545725,
+      "delta": -9.545725,
+      "median": -10.529,
+      "median_delta": -10.529,
+      "improved": 40,
+      "worsened": 0,
+      "unchanged": 0,
+      "ci95": [
+        -10.418375,
+        -8.6714
+      ],
+      "ci95_crosses_zero": false,
+      "significant": true,
+      "direction": "better",
+      "lower_is_better": true,
+      "method": "paired_percentile_bootstrap",
+      "bootstrap": {
+        "iterations": 1000,
+        "seed": 13,
+        "ci_level": 0.95
+      }
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "rerank.impl",
+        "levels": [
+          "none",
+          "cross_encoder"
+        ],
+        "metrics": {
+          "answer_f1": {
+            "contrast": "rerank",
+            "factor": "rerank.impl",
+            "baseline_level": "none",
+            "candidate_level": "cross_encoder",
+            "baseline": "rerank=none",
+            "candidate": "rerank=cross_encoder",
+            "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+            "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+            "metric": "answer_f1",
+            "n_pairs": 40,
+            "n_baseline": 40,
+            "n_candidate": 40,
+            "mean_delta": -0.047106,
+            "delta": -0.047106,
+            "median": 0.0,
+            "median_delta": 0.0,
+            "improved": 6,
+            "worsened": 10,
+            "unchanged": 24,
+            "ci95": [
+              -0.116242,
+              0.001702
+            ],
+            "ci95_crosses_zero": true,
+            "significant": false,
+            "direction": "worse",
+            "lower_is_better": false,
+            "method": "paired_percentile_bootstrap",
+            "bootstrap": {
+              "iterations": 1000,
+              "seed": 13,
+              "ci_level": 0.95
+            }
+          },
+          "evidence_recall": {
+            "contrast": "rerank",
+            "factor": "rerank.impl",
+            "baseline_level": "none",
+            "candidate_level": "cross_encoder",
+            "baseline": "rerank=none",
+            "candidate": "rerank=cross_encoder",
+            "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+            "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+            "metric": "evidence_recall",
+            "n_pairs": 40,
+            "n_baseline": 40,
+            "n_candidate": 40,
+            "mean_delta": -0.22875,
+            "delta": -0.22875,
+            "median": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 15,
+            "unchanged": 25,
+            "ci95": [
+              -0.3375,
+              -0.11625
+            ],
+            "ci95_crosses_zero": false,
+            "significant": true,
+            "direction": "worse",
+            "lower_is_better": false,
+            "method": "paired_percentile_bootstrap",
+            "bootstrap": {
+              "iterations": 1000,
+              "seed": 13,
+              "ci_level": 0.95
+            }
+          },
+          "ndcg": {
+            "contrast": "rerank",
+            "factor": "rerank.impl",
+            "baseline_level": "none",
+            "candidate_level": "cross_encoder",
+            "baseline": "rerank=none",
+            "candidate": "rerank=cross_encoder",
+            "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+            "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+            "metric": "ndcg",
+            "n_pairs": 37,
+            "n_baseline": 40,
+            "n_candidate": 37,
+            "mean_delta": 0.054359,
+            "delta": 0.054359,
+            "median": 0.0,
+            "median_delta": 0.0,
+            "improved": 17,
+            "worsened": 11,
+            "unchanged": 9,
+            "ci95": [
+              -0.052878,
+              0.169549
+            ],
+            "ci95_crosses_zero": true,
+            "significant": false,
+            "direction": "better",
+            "lower_is_better": false,
+            "method": "paired_percentile_bootstrap",
+            "bootstrap": {
+              "iterations": 1000,
+              "seed": 13,
+              "ci_level": 0.95
+            }
+          },
+          "tokens": {
+            "contrast": "rerank",
+            "factor": "rerank.impl",
+            "baseline_level": "none",
+            "candidate_level": "cross_encoder",
+            "baseline": "rerank=none",
+            "candidate": "rerank=cross_encoder",
+            "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+            "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+            "metric": "tokens",
+            "n_pairs": 40,
+            "n_baseline": 40,
+            "n_candidate": 40,
+            "mean_delta": -329.225,
+            "delta": -329.225,
+            "median": -322.5,
+            "median_delta": -322.5,
+            "improved": 39,
+            "worsened": 0,
+            "unchanged": 1,
+            "ci95": [
+              -364.5,
+              -295.675
+            ],
+            "ci95_crosses_zero": false,
+            "significant": true,
+            "direction": "better",
+            "lower_is_better": true,
+            "method": "paired_percentile_bootstrap",
+            "bootstrap": {
+              "iterations": 1000,
+              "seed": 13,
+              "ci_level": 0.95
+            }
+          },
+          "seconds": {
+            "contrast": "rerank",
+            "factor": "rerank.impl",
+            "baseline_level": "none",
+            "candidate_level": "cross_encoder",
+            "baseline": "rerank=none",
+            "candidate": "rerank=cross_encoder",
+            "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+            "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+            "metric": "seconds",
+            "n_pairs": 40,
+            "n_baseline": 40,
+            "n_candidate": 40,
+            "mean_delta": -9.545725,
+            "delta": -9.545725,
+            "median": -10.529,
+            "median_delta": -10.529,
+            "improved": 40,
+            "worsened": 0,
+            "unchanged": 0,
+            "ci95": [
+              -10.418375,
+              -8.6714
+            ],
+            "ci95_crosses_zero": false,
+            "significant": true,
+            "direction": "better",
+            "lower_is_better": true,
+            "method": "paired_percentile_bootstrap",
+            "bootstrap": {
+              "iterations": 1000,
+              "seed": 13,
+              "ci_level": 0.95
+            }
+          }
+        }
+      }
+    ],
+    "interactions": [],
+    "pareto": [],
+    "group_means": {
+      "cells": [
+        {
+          "cell": "none",
+          "run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+          "factors": {
+            "rerank.impl": "none"
+          },
+          "n_questions": 40,
+          "answer_f1": 0.284359,
+          "evidence_recall": 0.578542,
+          "ndcg": 0.431485,
+          "tokens": 376.475,
+          "refused": 0.175,
+          "p95_latency_ms": 15036.3817
+        },
+        {
+          "cell": "cross_encoder",
+          "run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+          "factors": {
+            "rerank.impl": "cross_encoder"
+          },
+          "n_questions": 40,
+          "answer_f1": 0.237253,
+          "evidence_recall": 0.349792,
+          "ndcg": 0.512303,
+          "tokens": 47.25,
+          "refused": 0.55,
+          "p95_latency_ms": 7113.62345
+        }
+      ]
+    },
+    "paired_deltas": [
+      {
+        "contrast": "rerank",
+        "factor": "rerank.impl",
+        "baseline_level": "none",
+        "candidate_level": "cross_encoder",
+        "baseline": "rerank=none",
+        "candidate": "rerank=cross_encoder",
+        "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "metric": "answer_f1",
+        "n_pairs": 40,
+        "n_baseline": 40,
+        "n_candidate": 40,
+        "mean_delta": -0.047106,
+        "delta": -0.047106,
+        "median": 0.0,
+        "median_delta": 0.0,
+        "improved": 6,
+        "worsened": 10,
+        "unchanged": 24,
+        "ci95": [
+          -0.116242,
+          0.001702
+        ],
+        "ci95_crosses_zero": true,
+        "significant": false,
+        "direction": "worse",
+        "lower_is_better": false,
+        "method": "paired_percentile_bootstrap",
+        "bootstrap": {
+          "iterations": 1000,
+          "seed": 13,
+          "ci_level": 0.95
+        }
+      },
+      {
+        "contrast": "rerank",
+        "factor": "rerank.impl",
+        "baseline_level": "none",
+        "candidate_level": "cross_encoder",
+        "baseline": "rerank=none",
+        "candidate": "rerank=cross_encoder",
+        "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "metric": "evidence_recall",
+        "n_pairs": 40,
+        "n_baseline": 40,
+        "n_candidate": 40,
+        "mean_delta": -0.22875,
+        "delta": -0.22875,
+        "median": 0.0,
+        "median_delta": 0.0,
+        "improved": 0,
+        "worsened": 15,
+        "unchanged": 25,
+        "ci95": [
+          -0.3375,
+          -0.11625
+        ],
+        "ci95_crosses_zero": false,
+        "significant": true,
+        "direction": "worse",
+        "lower_is_better": false,
+        "method": "paired_percentile_bootstrap",
+        "bootstrap": {
+          "iterations": 1000,
+          "seed": 13,
+          "ci_level": 0.95
+        }
+      },
+      {
+        "contrast": "rerank",
+        "factor": "rerank.impl",
+        "baseline_level": "none",
+        "candidate_level": "cross_encoder",
+        "baseline": "rerank=none",
+        "candidate": "rerank=cross_encoder",
+        "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "metric": "ndcg",
+        "n_pairs": 37,
+        "n_baseline": 40,
+        "n_candidate": 37,
+        "mean_delta": 0.054359,
+        "delta": 0.054359,
+        "median": 0.0,
+        "median_delta": 0.0,
+        "improved": 17,
+        "worsened": 11,
+        "unchanged": 9,
+        "ci95": [
+          -0.052878,
+          0.169549
+        ],
+        "ci95_crosses_zero": true,
+        "significant": false,
+        "direction": "better",
+        "lower_is_better": false,
+        "method": "paired_percentile_bootstrap",
+        "bootstrap": {
+          "iterations": 1000,
+          "seed": 13,
+          "ci_level": 0.95
+        }
+      },
+      {
+        "contrast": "rerank",
+        "factor": "rerank.impl",
+        "baseline_level": "none",
+        "candidate_level": "cross_encoder",
+        "baseline": "rerank=none",
+        "candidate": "rerank=cross_encoder",
+        "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "metric": "tokens",
+        "n_pairs": 40,
+        "n_baseline": 40,
+        "n_candidate": 40,
+        "mean_delta": -329.225,
+        "delta": -329.225,
+        "median": -322.5,
+        "median_delta": -322.5,
+        "improved": 39,
+        "worsened": 0,
+        "unchanged": 1,
+        "ci95": [
+          -364.5,
+          -295.675
+        ],
+        "ci95_crosses_zero": false,
+        "significant": true,
+        "direction": "better",
+        "lower_is_better": true,
+        "method": "paired_percentile_bootstrap",
+        "bootstrap": {
+          "iterations": 1000,
+          "seed": 13,
+          "ci_level": 0.95
+        }
+      },
+      {
+        "contrast": "rerank",
+        "factor": "rerank.impl",
+        "baseline_level": "none",
+        "candidate_level": "cross_encoder",
+        "baseline": "rerank=none",
+        "candidate": "rerank=cross_encoder",
+        "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "metric": "seconds",
+        "n_pairs": 40,
+        "n_baseline": 40,
+        "n_candidate": 40,
+        "mean_delta": -9.545725,
+        "delta": -9.545725,
+        "median": -10.529,
+        "median_delta": -10.529,
+        "improved": 40,
+        "worsened": 0,
+        "unchanged": 0,
+        "ci95": [
+          -10.418375,
+          -8.6714
+        ],
+        "ci95_crosses_zero": false,
+        "significant": true,
+        "direction": "better",
+        "lower_is_better": true,
+        "method": "paired_percentile_bootstrap",
+        "bootstrap": {
+          "iterations": 1000,
+          "seed": 13,
+          "ci_level": 0.95
+        }
+      }
+    ],
+    "observations": [
+      "Recall 显著下降：-0.2288，95% CI [-0.3375, -0.1163]，15/40 题变差。",
+      "F1 -0.0471，95% CI [-0.1162, +0.0017]，跨 0 → inconclusive。",
+      "nDCG 配对 delta +0.0544（n=37 个共同 qid），95% CI [-0.0529, +0.1695]，跨 0；run-level 均值差为 +0.0808（3 题 CE 无 ndcg，未配对）。",
+      "Tokens -329.23，95% CI [-364.50, -295.68]；39/40 题下降。",
+      "方向与 trade-off 一致（nDCG 点估计上升、F1/Recall 下降、tokens 大幅下降），但 F1 与 nDCG 的 CI 跨 0，完整 trade-off 未被统计确认。"
+    ],
+    "can_answer": "在 development 4 段、27B、8k、GPU cross-encoder 下，量化 M2 重排对 F1/Recall/nDCG/tokens 的配对变化方向与不确定性区间。",
+    "cannot_answer": "不能外推到 test；n=40 单 seed，F1/nDCG 的 CI 跨 0，不能宣称重排显著更好或更差，也不能当 7B/72B 规模结论。"
+  },
+  "conclusion": {
+    "status": "inconclusive",
+    "primary_metric": "answer_f1",
+    "primary_comparison": {
+      "contrast": "cross_encoder - none",
+      "n_pairs": 40,
+      "mean_delta": -0.047106,
+      "ci95": [
+        -0.116242,
+        0.001702
+      ],
+      "ci95_crosses_zero": true
+    },
+    "status_reason": "规则：F1/Recall 显著下降且 nDCG 显著上升 → partial；本次 F1 CI 跨 0、nDCG CI 跨 0，只有 Recall/tokens 显著下降，因此不满足 partial 条件，记为 inconclusive。",
+    "claims": [
+      "方向与 trade-off 一致：重排提高排序质量（nDCG 点估计 +0.0544）但压缩证据覆盖（Recall -0.2288），F1 -0.0471，tokens 大幅下降；不能写“重排更好”或“重排更差”。",
+      "Recall 显著下降（95% CI [-0.3375, -0.1163]），tokens 显著下降（95% CI [-364.50, -295.68]）。",
+      "F1 95% CI [-0.1162, +0.0017] 跨 0；nDCG 95% CI [-0.0529, +0.1695] 跨 0；两项均 inconclusive，不能支持完整 trade-off 的显著性声明。"
+    ],
+    "per_metric_status": {
+      "answer_f1": {
+        "status": "inconclusive",
+        "mean_delta": -0.047106,
+        "ci95": [
+          -0.116242,
+          0.001702
+        ],
+        "ci95_crosses_zero": true,
+        "direction": "worse"
+      },
+      "evidence_recall": {
+        "status": "significant",
+        "mean_delta": -0.22875,
+        "ci95": [
+          -0.3375,
+          -0.11625
+        ],
+        "ci95_crosses_zero": false,
+        "direction": "worse"
+      },
+      "ndcg": {
+        "status": "inconclusive",
+        "mean_delta": 0.054359,
+        "ci95": [
+          -0.052878,
+          0.169549
+        ],
+        "ci95_crosses_zero": true,
+        "direction": "better"
+      },
+      "tokens": {
+        "status": "significant",
+        "mean_delta": -329.225,
+        "ci95": [
+          -364.5,
+          -295.675
+        ],
+        "ci95_crosses_zero": false,
+        "direction": "better"
+      },
+      "seconds": {
+        "status": "significant",
+        "mean_delta": -9.545725,
+        "ci95": [
+          -10.418375,
+          -8.6714
+        ],
+        "ci95_crosses_zero": false,
+        "direction": "better"
+      }
+    },
+    "conditions": [
+      "Online qwen3.8:27b-q4_K_M, context 8192, bge-m3; 4 dev conversations, 40 q/config, seed 13.",
+      "cross-encoder = BAAI/bge-reranker-v2-m3 on GPU; same 40-question set across configs.",
+      "Bootstrap: 1000 paired resamples over qids, seed 13, percentile 95% CI."
+    ],
+    "limitations": [
+      "n=40（4 段 × 10 题/配置）。",
+      "单 seed 13，无重复运行。",
+      "development split。",
+      "cross-encoder 在 GPU 上跑（BAAI/bge-reranker-v2-m3）。",
+      "无多重比较校正。",
+      "online 27B, context 8192；不能外推到 test 或本地 7B/72B。"
+    ],
+    "next_actions": [
+      "增加 seed/题量，重点复验 F1 与 nDCG 的 CI。",
+      "在 test split 上复验 trade-off。",
+      "对 5 个指标做多重比较校正。"
+    ]
+  },
+  "web": {
+    "route": "#/experiments/M2-online-rerank",
+    "published": false
+  }
+}

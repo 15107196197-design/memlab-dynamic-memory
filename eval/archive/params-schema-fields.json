@@ -1,0 +1,198 @@
+{
+  "schema": "memlab/params-curve@1",
+  "generated_at": "2026-11-09T17:17:20+08:00",
+  "experiment_id": "E1.2-parameter-layer",
+  "spec_hash": "sha256:9d9d57ca39e9f91ae0470b2de3407864e049755125d3e9ca195426ad8843e441",
+  "git_commit": "2c1e22a",
+  "offline": true,
+  "level": "A-interface",
+  "answer_f1_policy": "not reported: offline extractive is not an LLM answer",
+  "judge_policy": "not reported: no judge in offline A-level run",
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "total_questions_per_level": 240
+  },
+  "factor": {
+    "id": "schema.params.fields",
+    "label": "W4 fields",
+    "module": "W4",
+    "axis": "schema",
+    "path": "schema.params.fields",
+    "requested_path": "schema.params.fields",
+    "levels": [
+      6,
+      12
+    ],
+    "hypothesis": "H1",
+    "wired": true,
+    "note": "MetaSchemaExtractor records the value in structured.schema.fields; the offline extractor derives the same fact set for every value, so the A-level curve is expected to be flat."
+  },
+  "reference_config": "configs/reference-r0.json",
+  "reference_hash": "sha256:133e43a3ed2d4c2adfa4cd12c5a2fc15e9ca1d3f6e5d3f2dc6fe0618cc5663a3",
+  "reference_metrics": {
+    "evidence_recall": 0.46187,
+    "ndcg": 0.274561,
+    "tokens": 344.575,
+    "redundancy": 0.048976,
+    "context_precision": 0.069261
+  },
+  "baseline_level": "R0 reference (not a level)",
+  "shared_baseline_note": "Levels with shared_baseline=true have the same config_hash as reference-r0; the compiler ran them once and this table reuses that run.",
+  "rows": [
+    {
+      "level": 6,
+      "level_label": "6",
+      "config_hash": "sha256:92aa0b813242dc8d1bc7e1fb65b46916548048510d80a46a382d9283a3dd836d",
+      "run_id": "r-e1.2-parameter-layer-000-92aa0b81",
+      "status": "complete",
+      "errors": 0,
+      "shared_baseline": false,
+      "evidence_recall_n": 238,
+      "evidence_recall": 0.460819,
+      "ndcg_n": 238,
+      "ndcg": 0.272566,
+      "tokens_n": 240,
+      "tokens": 344.3,
+      "redundancy_n": 240,
+      "redundancy": 0.048928,
+      "context_precision_n": 238,
+      "context_precision": 0.069029,
+      "candidates_n": 240,
+      "candidates": 12.766667,
+      "latency_ms_n": 240,
+      "latency_ms": 10.5239,
+      "field_completeness_n": 240,
+      "field_completeness": 1.0,
+      "store_units_n": 240,
+      "store_units": 758.5,
+      "graph_nodes_n": 240,
+      "graph_nodes": 937.75,
+      "graph_edges_n": 240,
+      "graph_edges": 1301.5,
+      "plan_nodes_n": 240,
+      "plan_nodes": 2.0,
+      "channels_n": 240,
+      "channels": 2.0,
+      "n_questions": 240,
+      "p95_latency_ms": 14.516,
+      "error_rate": 0.0,
+      "delta_vs_baseline": {
+        "evidence_recall": -0.001051,
+        "ndcg": -0.001995,
+        "tokens": -0.275,
+        "redundancy": -4.8e-05,
+        "context_precision": -0.000232
+      }
+    },
+    {
+      "level": 12,
+      "level_label": "12",
+      "config_hash": "sha256:bee5c09e01922254890bb1a25ac99c091efea1b0847de2e9b3a1d85dce12ec56",
+      "run_id": "r-e1.2-parameter-layer-001-bee5c09e",
+      "status": "complete",
+      "errors": 0,
+      "shared_baseline": false,
+      "evidence_recall_n": 238,
+      "evidence_recall": 0.459244,
+      "ndcg_n": 238,
+      "ndcg": 0.267128,
+      "tokens_n": 240,
+      "tokens": 345.995833,
+      "redundancy_n": 240,
+      "redundancy": 0.048715,
+      "context_precision_n": 238,
+      "context_precision": 0.068361,
+      "candidates_n": 240,
+      "candidates": 12.8125,
+      "latency_ms_n": 240,
+      "latency_ms": 38.240108,
+      "field_completeness_n": 240,
+      "field_completeness": 1.0,
+      "store_units_n": 240,
+      "store_units": 758.5,
+      "graph_nodes_n": 240,
+      "graph_nodes": 937.75,
+      "graph_edges_n": 240,
+      "graph_edges": 1301.5,
+      "plan_nodes_n": 240,
+      "plan_nodes": 2.0,
+      "channels_n": 240,
+      "channels": 2.0,
+      "n_questions": 240,
+      "p95_latency_ms": 28.85,
+      "error_rate": 0.0,
+      "delta_vs_baseline": {
+        "evidence_recall": -0.002626,
+        "ndcg": -0.007433,
+        "tokens": 1.420833,
+        "redundancy": -0.000261,
+        "context_precision": -0.0009
+      }
+    }
+  ],
+  "shape": {
+    "evidence_recall": {
+      "metric": "evidence_recall",
+      "shape": "monotone_down",
+      "span": 0.001575,
+      "relative_span": 0.003418,
+      "best_level": "6",
+      "best_value": 0.460819,
+      "values_by_level": {
+        "6": 0.460819,
+        "12": 0.459244
+      }
+    },
+    "ndcg": {
+      "metric": "ndcg",
+      "shape": "monotone_down",
+      "span": 0.005438,
+      "relative_span": 0.019951,
+      "best_level": "6",
+      "best_value": 0.272566,
+      "values_by_level": {
+        "6": 0.272566,
+        "12": 0.267128
+      }
+    },
+    "tokens": {
+      "metric": "tokens",
+      "shape": "flat",
+      "span": 1.695833,
+      "relative_span": 0.004901,
+      "best_level": "12",
+      "best_value": 345.995833,
+      "values_by_level": {
+        "6": 344.3,
+        "12": 345.995833
+      }
+    },
+    "redundancy": {
+      "metric": "redundancy",
+      "shape": "monotone_down",
+      "span": 0.000213,
+      "relative_span": 0.004353,
+      "best_level": "6",
+      "best_value": 0.048928,
+      "values_by_level": {
+        "6": 0.048928,
+        "12": 0.048715
+      }
+    }
+  },
+  "effective_in_e2e": true,
+  "harness_blocker": null,
+  "evidence": [
+    "recall span 0.0016, nDCG span 0.0054, tokens span 1.7",
+    "field_completeness = 1.0 at both levels; store_units/facts identical",
+    "the only mechanism is the digit entering BM25 via search_text"
+  ],
+  "verdict": "tiny difference, but it is a lexical artifact, not extraction quality: the offline MetaSchemaExtractor stores the numeric value in structured.schema.fields, and store.search_text flattens every structured field into the BM25 text, so 6 vs 12 changes the index. field_completeness is 1.0 at both levels and the fact set is unchanged."
+}

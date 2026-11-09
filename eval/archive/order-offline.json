@@ -1,0 +1,322 @@
+{
+  "schema": "memlab/e1-order@1",
+  "experiment_id": "E1.2-order-layer",
+  "generated_at": "2026-11-09T17:35:26+08:00",
+  "offline": true,
+  "level": "A-interface",
+  "answer_f1_policy": "not reported: offline extractive is not an LLM answer",
+  "judge_policy": "not reported: no judge in offline A-level run",
+  "source_db": "runs/order/order.sqlite",
+  "dataset": {
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_run": 240,
+    "question_limit_per_conversation": 60
+  },
+  "protocol": {
+    "factor": "post.order",
+    "levels": 4,
+    "ci": "95% conversation-cluster paired bootstrap vs canonical"
+  },
+  "rows": [
+    {
+      "run_id": "r-e1.2-order-layer-003-616645ff",
+      "order": [
+        "fusion",
+        "rerank",
+        "filter",
+        "compress",
+        "mmr",
+        "decay"
+      ],
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "metrics": {
+        "evidence_recall": {
+          "value": 0.457843,
+          "canonical": 0.457843,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "ndcg": {
+          "value": 0.271094,
+          "canonical": 0.271094,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "tokens": {
+          "value": 341.8875,
+          "canonical": 341.8875,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "redundancy": {
+          "value": 0.049376,
+          "canonical": 0.049376,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "context_precision": {
+          "value": 0.068271,
+          "canonical": 0.068271,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        }
+      }
+    },
+    {
+      "run_id": "r-e1.2-order-layer-002-e207453b",
+      "order": [
+        "fusion",
+        "rerank",
+        "filter",
+        "decay",
+        "mmr",
+        "compress"
+      ],
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "metrics": {
+        "evidence_recall": {
+          "value": 0.457843,
+          "canonical": 0.457843,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "ndcg": {
+          "value": 0.271668,
+          "canonical": 0.271094,
+          "delta_vs_canonical": 0.000574,
+          "ci95": [
+            -0.003711,
+            0.006883
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "tokens": {
+          "value": 341.8875,
+          "canonical": 341.8875,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "redundancy": {
+          "value": 0.049376,
+          "canonical": 0.049376,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "context_precision": {
+          "value": 0.068271,
+          "canonical": 0.068271,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        }
+      }
+    },
+    {
+      "run_id": "r-e1.2-order-layer-000-0335f02c",
+      "order": [
+        "fusion",
+        "rerank",
+        "filter",
+        "mmr",
+        "decay",
+        "compress"
+      ],
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "metrics": {
+        "evidence_recall": {
+          "value": 0.457843,
+          "canonical": 0.457843,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "ndcg": {
+          "value": 0.271094,
+          "canonical": 0.271094,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "tokens": {
+          "value": 341.8875,
+          "canonical": 341.8875,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "redundancy": {
+          "value": 0.049376,
+          "canonical": 0.049376,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "context_precision": {
+          "value": 0.068271,
+          "canonical": 0.068271,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        }
+      }
+    },
+    {
+      "run_id": "r-e1.2-order-layer-001-52d7ed49",
+      "order": [
+        "rerank",
+        "fusion",
+        "filter",
+        "mmr",
+        "decay",
+        "compress"
+      ],
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "metrics": {
+        "evidence_recall": {
+          "value": 0.457843,
+          "canonical": 0.457843,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "ndcg": {
+          "value": 0.271094,
+          "canonical": 0.271094,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        },
+        "tokens": {
+          "value": 341.8875,
+          "canonical": 341.8875,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "redundancy": {
+          "value": 0.049376,
+          "canonical": 0.049376,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "lower_is_better"
+        },
+        "context_precision": {
+          "value": 0.068271,
+          "canonical": 0.068271,
+          "delta_vs_canonical": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "direction": "higher_is_better"
+        }
+      }
+    }
+  ],
+  "limitations": [
+    "Offline hash embedding is not semantic; offline extractive answer is not an LLM answer.",
+    "A-level interface metrics only; no answer F1, no Judge.",
+    "cross-encoder is absent in this environment, so rerank-first vs canonical may be a fallback no-op.",
+    "MMR after decay is the only order change expected to expose a real MMR reordering; the canonical order erases MMR via decay.",
+    "blocked_on_config: post.order patch not merged; do not use for main-branch claims."
+  ],
+  "cancelled_reason": "P4 M3 order was cancelled in the correction batch; it was produced before the cancellation instruction and the patch is not merged. Do not include it in the final handoff.",
+  "blocked_on_config": true,
+  "status": "blocked_on_config",
+  "blocked_reason": "main `RunConfig` rejects `post.order` as a list (post sub-blocks must be objects); the working patch is in repo-c2 (eval/archive/c2-post-order.patch) and is not merged. This order run exists but cannot be reproduced on main."
+}

@@ -289,7 +289,6 @@ def main(argv=None) -> int:
         for path in (db, db.with_name("e1.sqlite-wal"), db.with_name("e1.sqlite-shm")):
             path.unlink(missing_ok=True)
     db.parent.mkdir(parents=True, exist_ok=True)
-    e2e = executor.make_e2e_executor(offline=offline, cache=cache)
     k_executors = {
         "none": executor.make_k_executor(policy="none", params={}, offline=offline, cache=cache),
         "consolidate": executor.make_k_executor(policy="consolidate", params={"threshold": 0.9},
@@ -320,7 +319,8 @@ def main(argv=None) -> int:
             for candidate in candidates:
                 for seed in args.seeds:
                     plan = make_plan(module, candidate, seed, args.questions, args.samples)
-                    execute = k_executors[candidate["action"]] if module == "K" else e2e
+                    execute = (k_executors[candidate["action"]] if module == "K"
+                               else executor.make_e2e_executor(offline=offline, cache=cache))
                     machine = runner.Runner(store, executor=execute, resume=False, judge=judge)
                     outcome = machine.run_plan(plan, questions[seed])
                     summary = summarize(store, plan.run_id, len(questions[seed]))

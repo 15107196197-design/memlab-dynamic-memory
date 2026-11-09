@@ -647,8 +647,10 @@ def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
         for step in result.trace:
             if step.get("ms") is not None:
                 stages[str(step.get("stage") or "unknown")].append(float(step["ms"]))
+    hits = sum(1 for row in rows if row.get("answer_f1") is not None and row["answer_f1"] >= 0.5)
     metrics = {
         "answer_f1": round(sum(f1s) / len(f1s), 4) if f1s else None,
+        "answer_hit_rate": round(hits / len(rows), 4) if rows else None,
         "evidence_recall": round(sum(recalls) / len(recalls), 4) if recalls else None,
         "state_accuracy": None,
         "tokens": round(sum(float(r["tokens"] or 0) for r in rows) / len(rows), 2) if rows else None,

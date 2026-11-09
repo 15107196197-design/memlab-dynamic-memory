@@ -13,6 +13,7 @@ Implementations live on separate registry axes so E1 can swap one stage at a tim
 from __future__ import annotations
 
 import math
+import threading
 from dataclasses import dataclass, replace
 from typing import Any, Mapping, Sequence
 
@@ -292,6 +293,10 @@ class NoReranker(Reranker):
         return list(candidates), {"impl": "none", "fallback": False}
 
 
+_CROSS_ENCODER_CACHE: dict[tuple[str, str], Any] = {}
+_CROSS_ENCODER_LOCK = threading.Lock()
+
+
 @register(AXIS_RERANK, "cross_encoder")
 class CrossEncoderReranker(Reranker):
     """Optional dependency: if sentence-transformers is missing, keep the order."""
@@ -304,7 +309,17 @@ class CrossEncoderReranker(Reranker):
 
     def _load(self):
         from sentence_transformers import CrossEncoder  # optional dependency
-        return CrossEncoder(self.params.get("model", "BAAI/bge-reranker-v2-m3"))
+
+        model_name = str(self.params.get("model", "BAAI/bge-reranker-v2-m3"))
+        device = str(self.params.get("device", "") or "")
+        key = (model_name, device)
+        with _CROSS_ENCODER_LOCK:
+            model = _CROSS_ENCODER_CACHE.get(key)
+            if model is None:
+                kwargs = {"device": device} if device else {}
+                model = CrossEncoder(model_name, **kwargs)
+                _CROSS_ENCODER_CACHE[key] = model
+            return model
 
     def rerank(self, candidates, frame, store, ctx):
         if not candidates:

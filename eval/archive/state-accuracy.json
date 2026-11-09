@@ -1,0 +1,2431 @@
+{
+  "schema": "memlab/state-accuracy@1",
+  "experiment_id": "E1-U-state-accuracy",
+  "generated_at": "2026-11-09T17:41:36+08:00",
+  "offline": true,
+  "level": "A-interface",
+  "answer_f1_policy": "not reported: offline extractive is not an LLM answer",
+  "judge_policy": "not reported: no judge in offline A-level run",
+  "benchmark": "eval/state_benchmark.json",
+  "source_db": "runs/state/state.sqlite",
+  "benchmark_note": "自建参考集：课程标注未随数据提供，因此由项目组对照 LoCoMo 原文，标注了问题、相关轮次的有效性（当前有效/已过时）和它们之间的关系。两种关系都说得通时，两者都算对。只对列出的轮次评分，其他检索到的记忆不计分。",
+  "dataset": {
+    "items": 17,
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-41",
+      "conv-42"
+    ],
+    "as_of_items": 6
+  },
+  "method": {
+    "state_accuracy": "fraction of labelled turns whose predicted state matches gold (per item mean and memory-pooled)",
+    "valid_set_exact": "predicted ACTIVE labelled-turn set equals gold ACTIVE set",
+    "evidence_recall": "fraction of labelled turns represented by any unit in the merged context",
+    "missing_policy": "a labelled turn with no unit in the merged context is MISSING and counts as wrong"
+  },
+  "candidates": [
+    {
+      "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-41-conv-42-221b67a2",
+      "candidate": "U1-none-direct",
+      "config_hash": "sha256:221b67a2911dcb892eaa8265332f13aafd443951250ec7fde5390558afb87b33",
+      "errors": 0,
+      "items": [
+        {
+          "item_id": "t41-job",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": null,
+          "state_accuracy": 0.3333333333333333,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.6666666666666666,
+          "labelled_memories": 3,
+          "active_labelled": 2,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D28_1",
+                "conv41_D28_1",
+                "conv41_D28_1_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D28:5",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_5",
+                "conv41_D28_5",
+                "conv41_D28_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-job-asof",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": "2023-07-31",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t41-dogs",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:2",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_2",
+                "conv41_D31_2",
+                "conv41_D31_2_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-dogs-asof",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": "2023-08-12",
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-john-volunteer",
+          "sample": "conv-41",
+          "question": "What is John currently doing as a volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D28:11",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_11",
+                "conv41_D28_11",
+                "conv41_D28_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D30:18",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_18",
+                "conv41_D30_18",
+                "conv41_D30_18_f0",
+                "conv41_D30_18_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_1",
+                "conv41_D31_1",
+                "conv41_D31_1_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 3
+          }
+        },
+        {
+          "item_id": "t41-maria-volunteer",
+          "sample": "conv-41",
+          "question": "Where does Maria volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D12:18",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D12_18",
+                "conv41_D12_18",
+                "conv41_D12_18_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D17:12",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_12",
+                "conv41_D17_12",
+                "conv41_D17_12_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-max",
+          "sample": "conv-41",
+          "question": "Does John's family still have their dog Max?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D17_1",
+                "conv41_D17_1",
+                "conv41_D17_1_f0",
+                "conv41_D17_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D17:11",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_11",
+                "conv41_D17_11",
+                "conv41_D17_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-turtles",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:25",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D28_25",
+                "conv42_D28_25",
+                "conv42_D28_25_f0",
+                "conv42_D28_25_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-turtles-asof",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": "2022-11-01",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-tournaments-asof",
+          "sample": "conv-42",
+          "question": "How many video game tournaments has Nate won?",
+          "as_of": "2022-07-10",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D10:4",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D10_4",
+                "conv42_D10_4",
+                "conv42_D10_4_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D17_1",
+                "conv42_D17_1",
+                "conv42_D17_1_f0",
+                "conv42_D17_1_f1",
+                "conv42_D17_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-first-screenplay",
+          "sample": "conv-42",
+          "question": "What happened to the first screenplay Joanna submitted?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D3_1",
+                "conv42_D3_1",
+                "conv42_D3_1_f0",
+                "conv42_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D14:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D14_1",
+                "conv42_D14_1",
+                "conv42_D14_1_f0",
+                "conv42_D14_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-movie",
+          "sample": "conv-42",
+          "question": "What is the latest stage of Joanna's own movie project?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D28:8",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D28_8",
+                "conv42_D28_8",
+                "conv42_D28_8_f0",
+                "conv42_D28_8_f1",
+                "conv42_D28_8_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D29:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D29_1",
+                "conv42_D29_1",
+                "conv42_D29_1_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "d26-adoption",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.3333333333333333,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D13:1",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D19:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D19_1",
+                "conv26_D19_1",
+                "conv26_D19_1_f0",
+                "conv26_D19_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d26-adoption-asof",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": "2023-09-30",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D13:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-gina",
+          "sample": "conv-30",
+          "question": "What does Gina do for work now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D1:3",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D1_3",
+                "conv30_D1_3",
+                "conv30_D1_3_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D2:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D2_1",
+                "conv30_D2_1",
+                "conv30_D2_1_f0",
+                "conv30_D2_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d30-jon-studio-asof",
+          "sample": "conv-30",
+          "question": "Has Jon's dance studio officially opened yet?",
+          "as_of": "2023-06-19",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv30_D3_1",
+                "conv30_D3_1",
+                "conv30_D3_1_f0",
+                "conv30_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D15:5",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-jon-work",
+          "sample": "conv-30",
+          "question": "What is Jon's current work situation?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D15:5",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D18:2",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv30_D18_2",
+                "conv30_D18_2",
+                "conv30_D18_2_f0",
+                "conv30_D18_2_f1",
+                "conv30_D18_2_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        }
+      ]
+    },
+    {
+      "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-41-conv-42-184dd835",
+      "candidate": "U2-offline-valid",
+      "config_hash": "sha256:184dd835bf0ab380ac69534918e506fb9612653d6a3965f29f559e5f87886b59",
+      "errors": 0,
+      "items": [
+        {
+          "item_id": "t41-job",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": null,
+          "state_accuracy": 0.3333333333333333,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.6666666666666666,
+          "labelled_memories": 3,
+          "active_labelled": 2,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D28:1",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D28_1",
+                "conv41_D28_1",
+                "conv41_D28_1_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:5",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_5",
+                "conv41_D28_5",
+                "conv41_D28_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 2,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-job-asof",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": "2023-07-31",
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t41-dogs",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:2",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_2",
+                "conv41_D31_2",
+                "conv41_D31_2_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-dogs-asof",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": "2023-08-12",
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-john-volunteer",
+          "sample": "conv-41",
+          "question": "What is John currently doing as a volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D28:11",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_11",
+                "conv41_D28_11",
+                "conv41_D28_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D30:18",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_18",
+                "conv41_D30_18",
+                "conv41_D30_18_f0",
+                "conv41_D30_18_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_1",
+                "conv41_D31_1",
+                "conv41_D31_1_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 3
+          }
+        },
+        {
+          "item_id": "t41-maria-volunteer",
+          "sample": "conv-41",
+          "question": "Where does Maria volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D12:18",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D12_18",
+                "conv41_D12_18",
+                "conv41_D12_18_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D17:12",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_12",
+                "conv41_D17_12",
+                "conv41_D17_12_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-max",
+          "sample": "conv-41",
+          "question": "Does John's family still have their dog Max?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D17_1",
+                "conv41_D17_1",
+                "conv41_D17_1_f0",
+                "conv41_D17_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D17:11",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_11",
+                "conv41_D17_11",
+                "conv41_D17_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-turtles",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:25",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D28_25",
+                "conv42_D28_25",
+                "conv42_D28_25_f0",
+                "conv42_D28_25_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-turtles-asof",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": "2022-11-01",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-tournaments-asof",
+          "sample": "conv-42",
+          "question": "How many video game tournaments has Nate won?",
+          "as_of": "2022-07-10",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D10:4",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D10_4",
+                "conv42_D10_4",
+                "conv42_D10_4_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D17_1",
+                "conv42_D17_1",
+                "conv42_D17_1_f0",
+                "conv42_D17_1_f1",
+                "conv42_D17_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-first-screenplay",
+          "sample": "conv-42",
+          "question": "What happened to the first screenplay Joanna submitted?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv42_D3_1",
+                "conv42_D3_1",
+                "conv42_D3_1_f0",
+                "conv42_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D14:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D14_1",
+                "conv42_D14_1",
+                "conv42_D14_1_f0",
+                "conv42_D14_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-movie",
+          "sample": "conv-42",
+          "question": "What is the latest stage of Joanna's own movie project?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D28:8",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D28_8",
+                "conv42_D28_8",
+                "conv42_D28_8_f0",
+                "conv42_D28_8_f1",
+                "conv42_D28_8_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D29:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D29_1",
+                "conv42_D29_1",
+                "conv42_D29_1_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "d26-adoption",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": null,
+          "state_accuracy": 0.3333333333333333,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.3333333333333333,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D13:1",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D19:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D19_1",
+                "conv26_D19_1",
+                "conv26_D19_1_f0",
+                "conv26_D19_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d26-adoption-asof",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": "2023-09-30",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D13:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-gina",
+          "sample": "conv-30",
+          "question": "What does Gina do for work now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D1:3",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D1_3",
+                "conv30_D1_3",
+                "conv30_D1_3_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D2:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D2_1",
+                "conv30_D2_1",
+                "conv30_D2_1_f0",
+                "conv30_D2_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d30-jon-studio-asof",
+          "sample": "conv-30",
+          "question": "Has Jon's dance studio officially opened yet?",
+          "as_of": "2023-06-19",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv30_D3_1",
+                "conv30_D3_1",
+                "conv30_D3_1_f0",
+                "conv30_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D15:5",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 2,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-jon-work",
+          "sample": "conv-30",
+          "question": "What is Jon's current work situation?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D15:5",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D18:2",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv30_D18_2",
+                "conv30_D18_2",
+                "conv30_D18_2_f0",
+                "conv30_D18_2_f1",
+                "conv30_D18_2_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        }
+      ]
+    },
+    {
+      "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-41-conv-42-0555f1df",
+      "candidate": "U3-offline-chain",
+      "config_hash": "sha256:0555f1dfcf1e201510ec764f7c8046e101ff4959817cefa468dfd2309df19041",
+      "errors": 0,
+      "items": [
+        {
+          "item_id": "t41-job",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": null,
+          "state_accuracy": 0.3333333333333333,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.6666666666666666,
+          "labelled_memories": 3,
+          "active_labelled": 2,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D28:1",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D28_1",
+                "conv41_D28_1",
+                "conv41_D28_1_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:5",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_5",
+                "conv41_D28_5",
+                "conv41_D28_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 2,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-job-asof",
+          "sample": "conv-41",
+          "question": "What is John's current employment situation?",
+          "as_of": "2023-07-31",
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D25:1",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv41_D25_1",
+                "conv41_D25_1",
+                "conv41_D25_1_f0",
+                "conv41_D25_1_f1",
+                "conv41_D25_1_f2"
+              ],
+              "retrieved": true,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t41-dogs",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:2",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_2",
+                "conv41_D31_2",
+                "conv41_D31_2_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-dogs-asof",
+          "sample": "conv-41",
+          "question": "How many dogs does Maria have now?",
+          "as_of": "2023-08-12",
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D30:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_1",
+                "conv41_D30_1",
+                "conv41_D30_1_f0",
+                "conv41_D30_1_f1",
+                "conv41_D30_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t41-john-volunteer",
+          "sample": "conv-41",
+          "question": "What is John currently doing as a volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D28:11",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D28_11",
+                "conv41_D28_11",
+                "conv41_D28_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D30:18",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D30_18",
+                "conv41_D30_18",
+                "conv41_D30_18_f0",
+                "conv41_D30_18_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D31:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D31_1",
+                "conv41_D31_1",
+                "conv41_D31_1_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 3
+          }
+        },
+        {
+          "item_id": "t41-maria-volunteer",
+          "sample": "conv-41",
+          "question": "Where does Maria volunteer?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D12:18",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D12_18",
+                "conv41_D12_18",
+                "conv41_D12_18_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D17:12",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_12",
+                "conv41_D17_12",
+                "conv41_D17_12_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "t41-max",
+          "sample": "conv-41",
+          "question": "Does John's family still have their dog Max?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 2,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv41_D17_1",
+                "conv41_D17_1",
+                "conv41_D17_1_f0",
+                "conv41_D17_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D17:11",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv41_D17_11",
+                "conv41_D17_11",
+                "conv41_D17_11_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-turtles",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D28:25",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D28_25",
+                "conv42_D28_25",
+                "conv42_D28_25_f0",
+                "conv42_D28_25_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-turtles-asof",
+          "sample": "conv-42",
+          "question": "How many turtles does Nate have now?",
+          "as_of": "2022-11-01",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 1,
+          "active_labelled": 1,
+          "historical_labelled": 0,
+          "memories": [
+            {
+              "turn": "D2:14",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D2_14",
+                "conv42_D2_14",
+                "conv42_D2_14_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-tournaments-asof",
+          "sample": "conv-42",
+          "question": "How many video game tournaments has Nate won?",
+          "as_of": "2022-07-10",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D10:4",
+              "gold": "HISTORICAL",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D10_4",
+                "conv42_D10_4",
+                "conv42_D10_4_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            },
+            {
+              "turn": "D17:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D17_1",
+                "conv42_D17_1",
+                "conv42_D17_1_f0",
+                "conv42_D17_1_f1",
+                "conv42_D17_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 2,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "t42-first-screenplay",
+          "sample": "conv-42",
+          "question": "What happened to the first screenplay Joanna submitted?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv42_D3_1",
+                "conv42_D3_1",
+                "conv42_D3_1_f0",
+                "conv42_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D14:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D14_1",
+                "conv42_D14_1",
+                "conv42_D14_1_f0",
+                "conv42_D14_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "t42-movie",
+          "sample": "conv-42",
+          "question": "What is the latest stage of Joanna's own movie project?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D28:8",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv42_D28_8",
+                "conv42_D28_8",
+                "conv42_D28_8_f0",
+                "conv42_D28_8_f1",
+                "conv42_D28_8_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D29:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv42_D29_1",
+                "conv42_D29_1",
+                "conv42_D29_1_f0"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        },
+        {
+          "item_id": "d26-adoption",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": null,
+          "state_accuracy": 0.3333333333333333,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.3333333333333333,
+          "labelled_memories": 3,
+          "active_labelled": 1,
+          "historical_labelled": 2,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D13:1",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D19:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv26_D19_1",
+                "conv26_D19_1",
+                "conv26_D19_1_f0",
+                "conv26_D19_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d26-adoption-asof",
+          "sample": "conv-26",
+          "question": "What is Caroline's latest progress with adoption?",
+          "as_of": "2023-09-30",
+          "state_accuracy": 1.0,
+          "valid_set_exact": 1,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D2:8",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv26_D2_8",
+                "conv26_D2_8",
+                "conv26_D2_8_f0",
+                "conv26_D2_8_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D13:1",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv26_D13_1",
+                "conv26_D13_1",
+                "conv26_D13_1_f0",
+                "conv26_D13_1_f1",
+                "conv26_D13_1_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 1,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-gina",
+          "sample": "conv-30",
+          "question": "What does Gina do for work now?",
+          "as_of": null,
+          "state_accuracy": 0.0,
+          "valid_set_exact": 0,
+          "evidence_recall": 0.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D1:3",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D1_3",
+                "conv30_D1_3",
+                "conv30_D1_3_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D2:1",
+              "gold": "ACTIVE",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D2_1",
+                "conv30_D2_1",
+                "conv30_D2_1_f0",
+                "conv30_D2_1_f1"
+              ],
+              "retrieved": false,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 2
+          }
+        },
+        {
+          "item_id": "d30-jon-studio-asof",
+          "sample": "conv-30",
+          "question": "Has Jon's dance studio officially opened yet?",
+          "as_of": "2023-06-19",
+          "state_accuracy": 0.5,
+          "valid_set_exact": 0,
+          "evidence_recall": 1.0,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D3:1",
+              "gold": "HISTORICAL",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv30_D3_1",
+                "conv30_D3_1",
+                "conv30_D3_1_f0",
+                "conv30_D3_1_f1"
+              ],
+              "retrieved": true,
+              "correct": true
+            },
+            {
+              "turn": "D15:5",
+              "gold": "ACTIVE",
+              "predicted": "HISTORICAL",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": true,
+              "correct": false
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 0,
+            "HISTORICAL": 2,
+            "UNRESOLVED": 0,
+            "MISSING": 0
+          }
+        },
+        {
+          "item_id": "d30-jon-work",
+          "sample": "conv-30",
+          "question": "What is Jon's current work situation?",
+          "as_of": null,
+          "state_accuracy": 0.5,
+          "valid_set_exact": 1,
+          "evidence_recall": 0.5,
+          "labelled_memories": 2,
+          "active_labelled": 1,
+          "historical_labelled": 1,
+          "memories": [
+            {
+              "turn": "D15:5",
+              "gold": "HISTORICAL",
+              "predicted": "MISSING",
+              "unit_ids": [
+                "conv30_D15_5",
+                "conv30_D15_5",
+                "conv30_D15_5_f0"
+              ],
+              "retrieved": false,
+              "correct": false
+            },
+            {
+              "turn": "D18:2",
+              "gold": "ACTIVE",
+              "predicted": "ACTIVE",
+              "unit_ids": [
+                "conv30_D18_2",
+                "conv30_D18_2",
+                "conv30_D18_2_f0",
+                "conv30_D18_2_f1",
+                "conv30_D18_2_f2"
+              ],
+              "retrieved": true,
+              "correct": true
+            }
+          ],
+          "predicted_state_counts": {
+            "ACTIVE": 1,
+            "HISTORICAL": 0,
+            "UNRESOLVED": 0,
+            "MISSING": 1
+          }
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "U1-none-direct": {
+      "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-41-conv-42-221b67a2",
+      "items": 17,
+      "errors": 0,
+      "state_accuracy_item_mean": 0.343137,
+      "state_accuracy_memory_pooled": 0.294118,
+      "valid_set_exact": 0.235294,
+      "evidence_recall": 0.529412,
+      "active_state_accuracy": 0.47619,
+      "historical_state_accuracy": 0.0,
+      "labelled_memories": 34,
+      "as_of_items": 6
+    },
+    "U2-offline-valid": {
+      "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-41-conv-42-184dd835",
+      "items": 17,
+      "errors": 0,
+      "state_accuracy_item_mean": 0.362745,
+      "state_accuracy_memory_pooled": 0.352941,
+      "valid_set_exact": 0.235294,
+      "evidence_recall": 0.529412,
+      "active_state_accuracy": 0.333333,
+      "historical_state_accuracy": 0.384615,
+      "labelled_memories": 34,
+      "as_of_items": 6
+    },
+    "U3-offline-chain": {
+      "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-41-conv-42-0555f1df",
+      "items": 17,
+      "errors": 0,
+      "state_accuracy_item_mean": 0.362745,
+      "state_accuracy_memory_pooled": 0.352941,
+      "valid_set_exact": 0.235294,
+      "evidence_recall": 0.529412,
+      "active_state_accuracy": 0.333333,
+      "historical_state_accuracy": 0.384615,
+      "labelled_memories": 34,
+      "as_of_items": 6
+    }
+  },
+  "limitations": [
+    "Offline hash embedding is not semantic; the extractive answer is not an LLM answer.",
+    "The benchmark has 17 annotated items across conv-26/30/41/42 (6 with an as_of date); it is a custom reference set, not a held-out test split.",
+    "U1/U2/U3 use offline_slot/state resolvers; as_of items cannot be fully respected by offline_slot.",
+    "State labels are turn-level; mapping to module fact units uses evidence spans, so a turn with no fact unit is MISSING.",
+    "All 17 benchmark items have labels, so no NULL state_accuracy rows occur here; the code writes NULL for an unannotated item.",
+    "A-level interface metric only; no answer F1 and no Judge."
+  ]
+}

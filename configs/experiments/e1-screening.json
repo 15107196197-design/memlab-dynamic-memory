@@ -3,7 +3,7 @@
   "id": "E1.2-E1.3-variant-parameter-and-llm-screening",
   "title": "Module-internal variant, parameter and module-LLM screening",
   "design": "single_factor_variant_and_parameter",
-  "reference_config": "../../configs/reference-r0.json",
+  "reference_config": "../../configs/reference-r0-original.json",
   "hypotheses": [
     "H1",
     "H2",

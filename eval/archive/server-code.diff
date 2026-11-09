@@ -1,0 +1,86 @@
+diff --git a/memlab/merge.py b/memlab/merge.py
+index 0fc6b05..b241906 100644
+--- a/memlab/merge.py
++++ b/memlab/merge.py
+@@ -13,6 +13,7 @@ Implementations live on separate registry axes so E1 can swap one stage at a tim
+ from __future__ import annotations
+ 
+ import math
++import threading
+ from dataclasses import dataclass, replace
+ from typing import Any, Mapping, Sequence
+ 
+@@ -292,6 +293,10 @@ class NoReranker(Reranker):
+         return list(candidates), {"impl": "none", "fallback": False}
+ 
+ 
++_CROSS_ENCODER_CACHE: dict[tuple[str, str], Any] = {}
++_CROSS_ENCODER_LOCK = threading.Lock()
++
++
+ @register(AXIS_RERANK, "cross_encoder")
+ class CrossEncoderReranker(Reranker):
+     """Optional dependency: if sentence-transformers is missing, keep the order."""
+@@ -304,7 +309,17 @@ class CrossEncoderReranker(Reranker):
+ 
+     def _load(self):
+         from sentence_transformers import CrossEncoder  # optional dependency
+-        return CrossEncoder(self.params.get("model", "BAAI/bge-reranker-v2-m3"))
++
++        model_name = str(self.params.get("model", "BAAI/bge-reranker-v2-m3"))
++        device = str(self.params.get("device", "") or "")
++        key = (model_name, device)
++        with _CROSS_ENCODER_LOCK:
++            model = _CROSS_ENCODER_CACHE.get(key)
++            if model is None:
++                kwargs = {"device": device} if device else {}
++                model = CrossEncoder(model_name, **kwargs)
++                _CROSS_ENCODER_CACHE[key] = model
++            return model
+ 
+     def rerank(self, candidates, frame, store, ctx):
+         if not candidates:
+diff --git a/memlab/webapp/__init__.py b/memlab/webapp/__init__.py
+index c141c60..b0ecbe8 100644
+--- a/memlab/webapp/__init__.py
++++ b/memlab/webapp/__init__.py
+@@ -824,6 +824,8 @@ def _report_list() -> dict[str, Any]:
+         if not directory.is_dir():
+             continue
+         for path in directory.glob("*.json"):
++            if path.name.startswith("._"):
++                continue  # macOS AppleDouble metadata copied by tar/Finder
+             try:
+                 data = json.loads(path.read_text(encoding="utf-8"))
+                 experiment_id = data.get("experiment_id", path.stem)
+@@ -831,7 +833,7 @@ def _report_list() -> dict[str, Any]:
+                                         "created_at": data.get("created_at"),
+                                         "status": (data.get("conclusion") or {}).get("status"),
+                                         "schema": data.get("schema")}
+-            except (OSError, json.JSONDecodeError):
++            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                 continue
+     ordered = sorted(items.values(), key=lambda item: item.get("created_at") or "", reverse=True)
+     return {"experiments": ordered, "count": len(ordered)}
+diff --git a/scripts/s6_e1.py b/scripts/s6_e1.py
+index 4ea2839..cd58208 100644
+--- a/scripts/s6_e1.py
++++ b/scripts/s6_e1.py
+@@ -289,7 +289,6 @@ def main(argv=None) -> int:
+         for path in (db, db.with_name("e1.sqlite-wal"), db.with_name("e1.sqlite-shm")):
+             path.unlink(missing_ok=True)
+     db.parent.mkdir(parents=True, exist_ok=True)
+-    e2e = executor.make_e2e_executor(offline=offline, cache=cache)
+     k_executors = {
+         "none": executor.make_k_executor(policy="none", params={}, offline=offline, cache=cache),
+         "consolidate": executor.make_k_executor(policy="consolidate", params={"threshold": 0.9},
+@@ -320,7 +319,8 @@ def main(argv=None) -> int:
+             for candidate in candidates:
+                 for seed in args.seeds:
+                     plan = make_plan(module, candidate, seed, args.questions, args.samples)
+-                    execute = k_executors[candidate["action"]] if module == "K" else e2e
++                    execute = (k_executors[candidate["action"]] if module == "K"
++                               else executor.make_e2e_executor(offline=offline, cache=cache))
+                     machine = runner.Runner(store, executor=execute, resume=False, judge=judge)
+                     outcome = machine.run_plan(plan, questions[seed])
+                     summary = summarize(store, plan.run_id, len(questions[seed]))

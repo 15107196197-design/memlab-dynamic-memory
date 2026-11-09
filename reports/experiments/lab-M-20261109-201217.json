@@ -1,0 +1,320 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "lab-M-20261109-201217",
+  "created_at": "2026-11-09T20:12:10",
+  "module": "M",
+  "stage": "E1.1",
+  "title": "lab-M-20261109-201217",
+  "dataset": {
+    "split": "single_question",
+    "mode": "single_question",
+    "samples": [],
+    "questions": 1,
+    "questions_per_run": {
+      "baseline": 1,
+      "candidate": 1
+    },
+    "seeds": [],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "web-20261109-201210-ab852bcb",
+        "role": "baseline",
+        "kind": "single_question",
+        "sample": null,
+        "preset": "B0",
+        "config_hash": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5",
+        "offline": true,
+        "model": {
+          "llm": "offline-extractive",
+          "embedding": "offline-hash",
+          "offline": true
+        },
+        "git_commit": "7797ce8",
+        "questions": 1,
+        "metrics": {
+          "answer_f1": null,
+          "evidence_recall": null,
+          "state_accuracy": null,
+          "tokens": 901,
+          "p95_latency_ms": 1.4,
+          "errors": 0,
+          "error_rate": 0.0,
+          "questions": 1
+        },
+        "answer_f1": null,
+        "evidence_recall": null,
+        "state_accuracy": null,
+        "tokens": 901,
+        "p95_latency_ms": 1.4,
+        "errors": 0,
+        "error_rate": 0.0,
+        "question": "What did Caroline research?"
+      },
+      {
+        "run_id": "web-20261109-201210-ab852bcb",
+        "role": "candidate",
+        "kind": "single_question",
+        "sample": null,
+        "preset": "B0",
+        "config_hash": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5",
+        "offline": true,
+        "model": {
+          "llm": "offline-extractive",
+          "embedding": "offline-hash",
+          "offline": true
+        },
+        "git_commit": "7797ce8",
+        "questions": 1,
+        "metrics": {
+          "answer_f1": null,
+          "evidence_recall": null,
+          "state_accuracy": null,
+          "tokens": 901,
+          "p95_latency_ms": 1.4,
+          "errors": 0,
+          "error_rate": 0.0,
+          "questions": 1
+        },
+        "answer_f1": null,
+        "evidence_recall": null,
+        "state_accuracy": null,
+        "tokens": 901,
+        "p95_latency_ms": 1.4,
+        "errors": 0,
+        "error_rate": 0.0,
+        "question": "What did Caroline research?"
+      }
+    ],
+    "metrics": {
+      "answer_f1": null,
+      "evidence_recall": null,
+      "state_accuracy": null,
+      "tokens": 901,
+      "p95_latency_ms": 1.4,
+      "error_rate": 0.0,
+      "questions": 1,
+      "errors": 0
+    },
+    "baseline_metrics": {
+      "answer_f1": null,
+      "evidence_recall": null,
+      "state_accuracy": null,
+      "tokens": 901,
+      "p95_latency_ms": 1.4,
+      "error_rate": 0.0,
+      "questions": 1,
+      "errors": 0
+    },
+    "candidate_metrics": {
+      "answer_f1": null,
+      "evidence_recall": null,
+      "state_accuracy": null,
+      "tokens": 901,
+      "p95_latency_ms": 1.4,
+      "error_rate": 0.0,
+      "questions": 1,
+      "errors": 0
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": null,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": null,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "state_accuracy",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": null,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "tokens",
+      "baseline_value": 901.0,
+      "candidate_value": 901.0,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "p95_latency_ms",
+      "baseline_value": 1.4,
+      "candidate_value": 1.4,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    },
+    {
+      "baseline": "web-20261109-201210-ab852bcb",
+      "candidate": "web-20261109-201210-ab852bcb",
+      "metric": "errors",
+      "baseline_value": 0.0,
+      "candidate_value": 0.0,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "pairs": 0,
+      "significant": null,
+      "note": "Descriptive candidate - baseline; run-level (no per-qid pair)."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_category": [],
+    "stage_waterfall": [
+      {
+        "stage": "e2e",
+        "baseline_ms": 1.4,
+        "candidate_ms": 1.4,
+        "ms": 1.4,
+        "delta_ms": 0.0
+      },
+      {
+        "stage": "merge",
+        "baseline_ms": 0.98,
+        "candidate_ms": 0.98,
+        "ms": 0.98,
+        "delta_ms": 0.0
+      },
+      {
+        "stage": "retrieve",
+        "baseline_ms": 0.265,
+        "candidate_ms": 0.265,
+        "ms": 0.265,
+        "delta_ms": 0.0
+      },
+      {
+        "stage": "use",
+        "baseline_ms": 0.109,
+        "candidate_ms": 0.109,
+        "ms": 0.109,
+        "delta_ms": 0.0
+      }
+    ],
+    "failure_breakdown": []
+  },
+  "conclusion": {
+    "status": "inconclusive",
+    "direction": "flat",
+    "f1_delta": null,
+    "paired_questions": 0,
+    "ci95": null,
+    "claims": [
+      "Only 1 paired question(s) (<10); no comparison claim."
+    ],
+    "conditions": [
+      "Same question set/qids and the same seed are required for a paired comparison.",
+      "Candidate and baseline are read from the persisted runs/web JSON; nothing is re-run."
+    ],
+    "limitations": [
+      "single-question/batch; no bootstrap CI; offline/online labeled.",
+      "No paired bootstrap interval is computed, so the status remains descriptive.",
+      "Offline extractive runs are not LLM-quality claims.",
+      "Only the two supplied runs are compared; no seed or provider sweep."
+    ],
+    "next_actions": [
+      "Run at least 10 paired questions (20+ recommended) per configuration.",
+      "Repeat with 2–3 seeds and add a paired bootstrap CI before a causal claim."
+    ],
+    "status_reason": "sample_too_small"
+  },
+  "metadata": {
+    "git_commit": "7797ce8",
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "baseline": {
+      "run_id": "web-20261109-201210-ab852bcb",
+      "config_hash": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5",
+      "preset": "B0",
+      "offline": true,
+      "model": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "git_commit": "7797ce8"
+    },
+    "candidate": {
+      "run_id": "web-20261109-201210-ab852bcb",
+      "config_hash": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5",
+      "preset": "B0",
+      "offline": true,
+      "model": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "git_commit": "7797ce8"
+    }
+  },
+  "manifest": {
+    "git_commit": "7797ce8",
+    "config_hashes": {
+      "baseline": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5",
+      "candidate": "sha256:ab852bcbb0fd1cbb7d5d0c8fd9993f5eb1f2b7f4b7a4e57a986bc85c6c8790a5"
+    },
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "model": {
+      "baseline": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      },
+      "candidate": {
+        "llm": "offline-extractive",
+        "embedding": "offline-hash",
+        "offline": true
+      }
+    },
+    "offline": {
+      "baseline": true,
+      "candidate": true
+    }
+  },
+  "web": {
+    "route": "#/experiments/lab-M-20261109-201217",
+    "published": true
+  }
+}

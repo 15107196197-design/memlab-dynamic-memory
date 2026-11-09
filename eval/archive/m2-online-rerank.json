@@ -1,0 +1,242 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "M2-online-rerank",
+  "created_at": "2026-11-09T19:15:50+08:00",
+  "source_db": "runs/s6/m2.sqlite",
+  "source_db_sha256": "ad6d352f5e11da43b40d9607bd7885439019f4877ff111bffc77baefbddd7c07",
+  "kind": "m2",
+  "manifest": {
+    "spec_id": "M2-rerank-deadline",
+    "design": "single_factor",
+    "config_hashes": {
+      "r-m2-rerank-deadline-000-5fc3cd32": "sha256:5fc3cd32d0ccc1511bd00f4a4c3dadc09627d2795d521a47f4a0b9b8011c655a",
+      "r-m2-rerank-deadline-001-d3bc17ec": "sha256:d3bc17ece3ce5dc5bb9403bc862b440f9c39dbca9e1cbbe711d9f4c9c8a0649a"
+    },
+    "executor": "e2e",
+    "exported_by": "scripts/export_online_extras.py",
+    "read_only_db": true
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_config": 40
+  },
+  "metric_note": "Per-question means; tokens and seconds are mean per question, not totals. p95_latency_ms is the run-level p95 of per-question latency_ms. n_questions is the distinct qid count per run; metric_counts shows per-metric coverage (ndcg/latency are missing on a few qids).",
+  "comparison_method": "M2: paired per-question deltas (cross_encoder - none) on shared qids; ci95 is null because no bootstrap was computed (descriptive only).",
+  "results": {
+    "runs": [
+      {
+        "run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "spec_id": "M2-rerank-deadline",
+        "status": "complete",
+        "cell": "rerank=none",
+        "factors": {
+          "rerank.impl": "none"
+        },
+        "config_hash": "sha256:5fc3cd32d0ccc1511bd00f4a4c3dadc09627d2795d521a47f4a0b9b8011c655a",
+        "n_questions": 40,
+        "question_limit": 10,
+        "metrics": {
+          "answer_f1": 0.284359,
+          "evidence_recall": 0.578542,
+          "ndcg": 0.431485,
+          "tokens": 376.475,
+          "seconds": 13.373425,
+          "p95_latency_ms": 15036.3817
+        },
+        "metric_counts": {
+          "answer_f1": 40,
+          "evidence_recall": 40,
+          "ndcg": 40,
+          "tokens": 40,
+          "seconds": 40,
+          "p95_latency_ms": 40
+        },
+        "errors": 0,
+        "error_rate": 0.0
+      },
+      {
+        "run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "spec_id": "M2-rerank-deadline",
+        "status": "complete",
+        "cell": "rerank=cross_encoder",
+        "factors": {
+          "rerank.impl": "cross_encoder"
+        },
+        "config_hash": "sha256:d3bc17ece3ce5dc5bb9403bc862b440f9c39dbca9e1cbbe711d9f4c9c8a0649a",
+        "n_questions": 40,
+        "question_limit": 10,
+        "metrics": {
+          "answer_f1": 0.237253,
+          "evidence_recall": 0.349792,
+          "ndcg": 0.512303,
+          "tokens": 47.25,
+          "seconds": 3.8277,
+          "p95_latency_ms": 7113.62345
+        },
+        "metric_counts": {
+          "answer_f1": 40,
+          "evidence_recall": 40,
+          "ndcg": 37,
+          "tokens": 40,
+          "seconds": 40,
+          "p95_latency_ms": 40
+        },
+        "errors": 0,
+        "error_rate": 0.0
+      }
+    ],
+    "n_runs": 2,
+    "errors": 0
+  },
+  "comparisons": [
+    {
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "answer_f1",
+      "baseline_mean": 0.284359,
+      "candidate_mean": 0.237253,
+      "delta": -0.047106,
+      "mean_delta": -0.047106,
+      "median_delta": 0.0,
+      "improved": 6,
+      "worsened": 10,
+      "unchanged": 24,
+      "n_pairs": 40,
+      "ci95": null,
+      "direction": "worse",
+      "lower_is_better": false,
+      "paired": true,
+      "method": "paired_per_question_delta"
+    },
+    {
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "evidence_recall",
+      "baseline_mean": 0.578542,
+      "candidate_mean": 0.349792,
+      "delta": -0.22875,
+      "mean_delta": -0.22875,
+      "median_delta": 0.0,
+      "improved": 0,
+      "worsened": 15,
+      "unchanged": 25,
+      "n_pairs": 40,
+      "ci95": null,
+      "direction": "worse",
+      "lower_is_better": false,
+      "paired": true,
+      "method": "paired_per_question_delta"
+    },
+    {
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "ndcg",
+      "baseline_mean": 0.457943,
+      "candidate_mean": 0.512303,
+      "delta": 0.054359,
+      "mean_delta": 0.054359,
+      "median_delta": 0.0,
+      "improved": 17,
+      "worsened": 11,
+      "unchanged": 9,
+      "n_pairs": 37,
+      "ci95": null,
+      "direction": "better",
+      "lower_is_better": false,
+      "paired": true,
+      "method": "paired_per_question_delta"
+    },
+    {
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "tokens",
+      "baseline_mean": 376.475,
+      "candidate_mean": 47.25,
+      "delta": -329.225,
+      "mean_delta": -329.225,
+      "median_delta": -322.5,
+      "improved": 39,
+      "worsened": 0,
+      "unchanged": 1,
+      "n_pairs": 40,
+      "ci95": null,
+      "direction": "better",
+      "lower_is_better": true,
+      "paired": true,
+      "method": "paired_per_question_delta"
+    },
+    {
+      "baseline": "rerank=none",
+      "candidate": "rerank=cross_encoder",
+      "baseline_run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+      "candidate_run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+      "metric": "seconds",
+      "baseline_mean": 13.373425,
+      "candidate_mean": 3.8277,
+      "delta": -9.545725,
+      "mean_delta": -9.545725,
+      "median_delta": -10.529,
+      "improved": 40,
+      "worsened": 0,
+      "unchanged": 0,
+      "n_pairs": 40,
+      "ci95": null,
+      "direction": "better",
+      "lower_is_better": true,
+      "paired": true,
+      "method": "paired_per_question_delta"
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "stage_waterfall": [],
+    "failure_breakdown": [],
+    "note": "Descriptive export only: pairwise cell means / paired per-question deltas, no model fit and no bootstrap CI."
+  },
+  "conclusion": {
+    "status": "inconclusive",
+    "note": "descriptive; n=40 (M2) / 60 per cell (E3); no CI",
+    "reason": "No bootstrap confidence interval was computed (ci95=null), so no claim can be marked supported or not_supported; the deltas are reported descriptively.",
+    "claims": [],
+    "bootstrap": {
+      "computed": false,
+      "iterations": 0,
+      "ci95": null
+    },
+    "conditions": [
+      "Development split only.",
+      "All runs in an experiment use the same fixed question set, so deltas are paired by qid.",
+      "Metrics are per-question means; lower is better for tokens, seconds and p95_latency_ms."
+    ],
+    "limitations": [
+      "online 27B, context 8192, development split",
+      "Single run per cell/config (no seed replicates); run-to-run variance is not estimated.",
+      "E3 n=60 per cell; M2 n=40 per config. No bootstrap CI and no significance test.",
+      "p95 latency is run-level and is not part of the paired per-question deltas."
+    ],
+    "next_actions": [
+      "Add a paired bootstrap (1000 resamples) before making supported/not_supported claims.",
+      "Repeat each cell/config with additional seeds to estimate run-to-run variance."
+    ]
+  },
+  "web": {
+    "route": "#/experiments/M2-online-rerank",
+    "published": false
+  }
+}

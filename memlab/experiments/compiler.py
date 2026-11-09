@@ -481,7 +481,7 @@ class Compiler:
                     notes.append(
                         f"candidate {candidate.get('id')!r} uses reference_configs.{reference_key}"
                     )
-            elif normalized in ("R0", "R0_REFERENCE", "R0_ON") and default_preset == "R0":
+            elif normalized in ("R0", "R0_REFERENCE", "R0_ON") and default_preset in ("R0", "R0-FIXED"):
                 base = default_base
             elif normalized in ("B0", "B0_LEGACY", "B0_OFF") and default_preset == "B0":
                 base = default_base

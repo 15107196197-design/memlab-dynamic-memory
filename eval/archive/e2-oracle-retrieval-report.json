@@ -1,0 +1,164 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E2-2-oracle-retrieval",
+  "created_at": "2026-11-09T18:48:37+08:00",
+  "source_db": "runs/e2/oracle.sqlite",
+  "source_archive": "eval/archive/e2-oracle-retrieval.json",
+  "raw_schema": "memlab/e2-oracle@1",
+  "code_fingerprint": {
+    "git_head": "10965303b7b419972f425de7b7e82ee345e49cae",
+    "diff_sha1": "95348043209736045e6540d77757ea40d27607c5",
+    "source_files": [
+      "eval/archive/server-code.head",
+      "eval/archive/server-code.sha1"
+    ]
+  },
+  "protocol": {
+    "executor": "e2e",
+    "offline": false,
+    "llm": "qwen3.8:27b-q4_K_M",
+    "context": 8192,
+    "embedding": "bge-m3",
+    "rerank_device": "未用（retrieval oracle）",
+    "seed": 13,
+    "inference": "Ollama 0.40.15",
+    "host": "NVIDIA L20 48GB (server /root/memlab)"
+  },
+  "manifest": {
+    "spec_id": "E2-2",
+    "design": "oracle_retrieval",
+    "config_hashes": {
+      "e2-oracle-retrieval": "sha256:fcd963fee5159970c728d5ebfd6ceaad2ecf7c336ad9d293bda12eda0156da12"
+    },
+    "executor": "e2e",
+    "read_only_db": true,
+    "builder": "scripts/build_online_reports.py"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_config": 80
+  },
+  "metric_note": "Per-question means; tokens/seconds are mean per question, not totals. p95_latency_ms is the run-level p95 of per-question latency_ms. refused is the mean per-question refusal flag. n_questions is the distinct qid count. Comparisons are paired by qid; ndcg has fewer pairs where a run is missing the metric.",
+  "bootstrap": {
+    "method": "paired_percentile",
+    "iterations": 1000,
+    "seed": 13,
+    "ci_level": 0.95,
+    "resample_unit": "qid"
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "e2-oracle-retrieval",
+        "status": "complete",
+        "factors": {
+          "oracle": "retrieval"
+        },
+        "config_hash": "sha256:fcd963fee5159970c728d5ebfd6ceaad2ecf7c336ad9d293bda12eda0156da12",
+        "n_questions": 80,
+        "errors": 0,
+        "metrics": {
+          "answer_f1": 0.243682,
+          "evidence_recall": 0.661106,
+          "ndcg": null,
+          "tokens": 232.15,
+          "refused": null,
+          "seconds": null,
+          "p95_latency_ms": 4008.8638
+        },
+        "metric_counts": {
+          "answer_f1": 80,
+          "evidence_recall": 79,
+          "ndcg": 0,
+          "tokens": 80,
+          "refused": 0,
+          "latency_ms": 80
+        }
+      }
+    ],
+    "n_runs": 1,
+    "errors": 0
+  },
+  "comparisons": [],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "group_means": {
+      "cells": [
+        {
+          "cell": "oracle=retrieval",
+          "run_id": "e2-oracle-retrieval",
+          "factors": {
+            "oracle": "retrieval"
+          },
+          "n_questions": 80,
+          "answer_f1": 0.243682,
+          "evidence_recall": 0.661106,
+          "ndcg": null,
+          "tokens": 232.15,
+          "refused": null,
+          "p95_latency_ms": 4008.8638
+        }
+      ]
+    },
+    "paired_deltas": [],
+    "observations": [
+      "oracle retrieval: F1 0.2437, Recall 0.6611, tokens 232.15, p95 4008.9 ms (n=80).",
+      "Recall 由 gold evidence 构造，不能与系统 Recall 直接比较；只回答“证据给全时 answer/refusal 还能答对多少”。"
+    ],
+    "can_answer": "在 development 4 段、27B、8k 下给出 retrieval oracle 的 F1/Recall/tokens/延迟上界参考。",
+    "cannot_answer": "只有一个 run，没有配对对象，不能做显著性比较；不能与 B0/R0 比较（题集与配置不同）；不能外推到 test 或 7B/72B。"
+  },
+  "conclusion": {
+    "status": "inconclusive",
+    "primary_metric": "answer_f1",
+    "status_reason": "只有一个 run（80 题），没有配对/对照对象，按规则记为 inconclusive。",
+    "claims": [
+      "oracle retrieval 下 F1 0.2437 / Recall 0.6611，作为检索上界参考。"
+    ],
+    "per_metric_status": {
+      "answer_f1": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      },
+      "evidence_recall": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      },
+      "tokens": {
+        "status": "inconclusive",
+        "mean_delta": null,
+        "ci95": null
+      }
+    },
+    "conditions": [
+      "Online qwen3.8:27b-q4_K_M, context 8192, bge-m3; 4 dev conversations, 80 q, seed 13.",
+      "Only retrieval is replaced by oracle gold evidence; M/U remain frozen R0."
+    ],
+    "limitations": [
+      "single run, n=80（4 段 × 20 题）。",
+      "oracle Recall 是构造值，不能与系统 Recall 比较。",
+      "只做 retrieval oracle；write/store/merge/state/answer oracle 未跑。",
+      "development split。",
+      "不要与 B0/R0 做显著性比较（不同题集/不同配置）。",
+      "online 27B, context 8192。"
+    ],
+    "next_actions": [
+      "补 write/store/merge/state/answer oracle，形成完整 oracle gap。",
+      "在 test split 上复验。"
+    ]
+  },
+  "web": {
+    "route": "#/experiments/E2-2-oracle-retrieval",
+    "published": false
+  }
+}

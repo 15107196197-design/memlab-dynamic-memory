@@ -1,0 +1,1680 @@
+{
+  "schema": "memlab/e3-analysis@1",
+  "experiment_id": "E3-module-combinations",
+  "generated_at": "2026-11-09T17:29:24+08:00",
+  "offline": true,
+  "level": "A-interface",
+  "answer_f1_policy": "not reported: offline extractive is not an LLM answer",
+  "judge_policy": "not reported: no judge in offline A-level run",
+  "source_db": "runs/e3-offline/e3.sqlite",
+  "dataset": {
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_run": 240,
+    "question_limit_per_conversation": 60
+  },
+  "design": {
+    "type": "2^(5-1) fractional factorial",
+    "resolution": "V",
+    "generator": "I = ABCDE (fusion = schema*graph*planner*rerank parity)",
+    "factors": [
+      "schema",
+      "graph",
+      "planner",
+      "rerank",
+      "fusion"
+    ],
+    "runs": 16,
+    "balance": {
+      "schema": {
+        "legacy_flat": 8,
+        "meta_schema": 8
+      },
+      "graph": {
+        "state_slot": 8,
+        "three_layer": 8
+      },
+      "planner": {
+        "dag": 8,
+        "none": 8
+      },
+      "rerank": {
+        "cross_encoder": 8,
+        "none": 8
+      },
+      "fusion": {
+        "query_adaptive_weights": 8,
+        "single_channel": 8
+      }
+    },
+    "aliasing": {
+      "schema+graph": "planner+rerank+fusion",
+      "schema+planner": "graph+rerank+fusion",
+      "schema+rerank": "graph+planner+fusion",
+      "schema+fusion": "graph+planner+rerank",
+      "graph+planner": "schema+rerank+fusion",
+      "graph+rerank": "schema+planner+fusion",
+      "graph+fusion": "schema+planner+rerank",
+      "planner+rerank": "schema+graph+fusion",
+      "planner+fusion": "schema+graph+rerank",
+      "rerank+fusion": "schema+graph+planner"
+    },
+    "center_points": "spec mentions 4 center points, but the S5 compiler does not execute them; this run has 16 runs only.",
+    "note": "Resolution V: main effects are clear of 2FIs; each 2FI is aliased with a 3FI, not with another 2FI. The design is saturated (16 parameters for 16 runs), so no residual df; CIs are conversation-cluster bootstrap, not model-residual CIs."
+  },
+  "runs": [
+    {
+      "run_id": "r-e3-module-combinations-000-191b39a4",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "state_slot",
+        "planner": "none",
+        "rerank": "none",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.381321,
+      "tokens": 289.7375,
+      "redundancy": 0.083032,
+      "context_precision": 0.110739
+    },
+    {
+      "run_id": "r-e3-module-combinations-001-3b73113b",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "state_slot",
+        "planner": "none",
+        "rerank": "cross_encoder",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.334008,
+      "tokens": 304.420833,
+      "redundancy": 0.077029,
+      "context_precision": 0.081638
+    },
+    {
+      "run_id": "r-e3-module-combinations-002-47338b8e",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "state_slot",
+        "planner": "dag",
+        "rerank": "none",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.329925,
+      "tokens": 304.420833,
+      "redundancy": 0.077029,
+      "context_precision": 0.081638
+    },
+    {
+      "run_id": "r-e3-module-combinations-003-b801620f",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "state_slot",
+        "planner": "dag",
+        "rerank": "cross_encoder",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.381321,
+      "tokens": 289.7375,
+      "redundancy": 0.083032,
+      "context_precision": 0.110739
+    },
+    {
+      "run_id": "r-e3-module-combinations-004-c63da6ae",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "three_layer",
+        "planner": "none",
+        "rerank": "none",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.334008,
+      "tokens": 304.420833,
+      "redundancy": 0.077029,
+      "context_precision": 0.081638
+    },
+    {
+      "run_id": "r-e3-module-combinations-005-2ca8a048",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "three_layer",
+        "planner": "none",
+        "rerank": "cross_encoder",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.381321,
+      "tokens": 289.7375,
+      "redundancy": 0.083032,
+      "context_precision": 0.110739
+    },
+    {
+      "run_id": "r-e3-module-combinations-006-011c5728",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "three_layer",
+        "planner": "dag",
+        "rerank": "none",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.381321,
+      "tokens": 289.7375,
+      "redundancy": 0.083032,
+      "context_precision": 0.110739
+    },
+    {
+      "run_id": "r-e3-module-combinations-007-f2837820",
+      "factors": {
+        "schema": "legacy_flat",
+        "graph": "three_layer",
+        "planner": "dag",
+        "rerank": "cross_encoder",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.491317,
+      "ndcg": 0.329925,
+      "tokens": 304.420833,
+      "redundancy": 0.077029,
+      "context_precision": 0.081638
+    },
+    {
+      "run_id": "r-e3-module-combinations-008-5fad86be",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "state_slot",
+        "planner": "none",
+        "rerank": "none",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.33772,
+      "tokens": 317.520833,
+      "redundancy": 0.073329,
+      "context_precision": 0.083886
+    },
+    {
+      "run_id": "r-e3-module-combinations-009-6f63a59c",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "state_slot",
+        "planner": "none",
+        "rerank": "cross_encoder",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.384726,
+      "tokens": 303.9,
+      "redundancy": 0.07864,
+      "context_precision": 0.105646
+    },
+    {
+      "run_id": "r-e3-module-combinations-010-59ae843a",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "state_slot",
+        "planner": "dag",
+        "rerank": "none",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.384726,
+      "tokens": 303.9,
+      "redundancy": 0.07864,
+      "context_precision": 0.105646
+    },
+    {
+      "run_id": "r-e3-module-combinations-011-f2dea53f",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "state_slot",
+        "planner": "dag",
+        "rerank": "cross_encoder",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.333628,
+      "tokens": 317.520833,
+      "redundancy": 0.073329,
+      "context_precision": 0.083886
+    },
+    {
+      "run_id": "r-e3-module-combinations-012-ef8b22ca",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "three_layer",
+        "planner": "none",
+        "rerank": "none",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.384726,
+      "tokens": 303.9,
+      "redundancy": 0.07864,
+      "context_precision": 0.105646
+    },
+    {
+      "run_id": "r-e3-module-combinations-013-8ce94dfd",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "three_layer",
+        "planner": "none",
+        "rerank": "cross_encoder",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.33772,
+      "tokens": 317.520833,
+      "redundancy": 0.073329,
+      "context_precision": 0.083886
+    },
+    {
+      "run_id": "r-e3-module-combinations-014-f8803078",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "three_layer",
+        "planner": "dag",
+        "rerank": "none",
+        "fusion": "query_adaptive_weights"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.333628,
+      "tokens": 317.520833,
+      "redundancy": 0.073329,
+      "context_precision": 0.083886
+    },
+    {
+      "run_id": "r-e3-module-combinations-015-c97f401d",
+      "factors": {
+        "schema": "meta_schema",
+        "graph": "three_layer",
+        "planner": "dag",
+        "rerank": "cross_encoder",
+        "fusion": "single_channel"
+      },
+      "status": "complete",
+      "errors": 0,
+      "n_questions": 240,
+      "evidence_recall": 0.495133,
+      "ndcg": 0.384726,
+      "tokens": 303.9,
+      "redundancy": 0.07864,
+      "context_precision": 0.105646
+    }
+  ],
+  "main_effects": {
+    "evidence_recall": [
+      {
+        "factor": "schema",
+        "low": "legacy_flat",
+        "high": "meta_schema",
+        "low_value": 0.491317,
+        "high_value": 0.495133,
+        "delta_high_minus_low": 0.003817,
+        "ci95": [
+          -0.011563,
+          0.017553
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "graph",
+        "low": "state_slot",
+        "high": "three_layer",
+        "low_value": 0.493225,
+        "high_value": 0.493225,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "planner",
+        "low": "none",
+        "high": "dag",
+        "low_value": 0.493225,
+        "high_value": 0.493225,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "rerank",
+        "low": "none",
+        "high": "cross_encoder",
+        "low_value": 0.493225,
+        "high_value": 0.493225,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "fusion",
+        "low": "single_channel",
+        "high": "query_adaptive_weights",
+        "low_value": 0.493225,
+        "high_value": 0.493225,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      }
+    ],
+    "ndcg": [
+      {
+        "factor": "schema",
+        "low": "legacy_flat",
+        "high": "meta_schema",
+        "low_value": 0.356644,
+        "high_value": 0.3602,
+        "delta_high_minus_low": 0.003556,
+        "ci95": [
+          -0.010348,
+          0.018456
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "graph",
+        "low": "state_slot",
+        "high": "three_layer",
+        "low_value": 0.358422,
+        "high_value": 0.358422,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "planner",
+        "low": "none",
+        "high": "dag",
+        "low_value": 0.359444,
+        "high_value": 0.3574,
+        "delta_high_minus_low": -0.002044,
+        "ci95": [
+          -0.003995,
+          -0.000133
+        ],
+        "ci_excludes_zero": true,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "rerank",
+        "low": "none",
+        "high": "cross_encoder",
+        "low_value": 0.358422,
+        "high_value": 0.358422,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "fusion",
+        "low": "single_channel",
+        "high": "query_adaptive_weights",
+        "low_value": 0.383023,
+        "high_value": 0.33382,
+        "delta_high_minus_low": -0.049203,
+        "ci95": [
+          -0.063818,
+          -0.034712
+        ],
+        "ci_excludes_zero": true,
+        "direction": "higher_is_better"
+      }
+    ],
+    "tokens": [
+      {
+        "factor": "schema",
+        "low": "legacy_flat",
+        "high": "meta_schema",
+        "low_value": 297.079167,
+        "high_value": 310.710417,
+        "delta_high_minus_low": 13.63125,
+        "ci95": [
+          9.8,
+          16.425
+        ],
+        "ci_excludes_zero": true,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "graph",
+        "low": "state_slot",
+        "high": "three_layer",
+        "low_value": 303.894792,
+        "high_value": 303.894792,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "planner",
+        "low": "none",
+        "high": "dag",
+        "low_value": 303.894792,
+        "high_value": 303.894792,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "rerank",
+        "low": "none",
+        "high": "cross_encoder",
+        "low_value": 303.894792,
+        "high_value": 303.894792,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "fusion",
+        "low": "single_channel",
+        "high": "query_adaptive_weights",
+        "low_value": 296.81875,
+        "high_value": 310.970833,
+        "delta_high_minus_low": 14.152083,
+        "ci95": [
+          3.5,
+          24.804167
+        ],
+        "ci_excludes_zero": true,
+        "direction": "lower_is_better_cost"
+      }
+    ],
+    "redundancy": [
+      {
+        "factor": "schema",
+        "low": "legacy_flat",
+        "high": "meta_schema",
+        "low_value": 0.08003,
+        "high_value": 0.075984,
+        "delta_high_minus_low": -0.004046,
+        "ci95": [
+          -0.005102,
+          -0.002483
+        ],
+        "ci_excludes_zero": true,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "graph",
+        "low": "state_slot",
+        "high": "three_layer",
+        "low_value": 0.078007,
+        "high_value": 0.078007,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "planner",
+        "low": "none",
+        "high": "dag",
+        "low_value": 0.078007,
+        "high_value": 0.078007,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "rerank",
+        "low": "none",
+        "high": "cross_encoder",
+        "low_value": 0.078007,
+        "high_value": 0.078007,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "lower_is_better_cost"
+      },
+      {
+        "factor": "fusion",
+        "low": "single_channel",
+        "high": "query_adaptive_weights",
+        "low_value": 0.080836,
+        "high_value": 0.075179,
+        "delta_high_minus_low": -0.005657,
+        "ci95": [
+          -0.010713,
+          -0.000601
+        ],
+        "ci_excludes_zero": true,
+        "direction": "lower_is_better_cost"
+      }
+    ],
+    "context_precision": [
+      {
+        "factor": "schema",
+        "low": "legacy_flat",
+        "high": "meta_schema",
+        "low_value": 0.096188,
+        "high_value": 0.094766,
+        "delta_high_minus_low": -0.001423,
+        "ci95": [
+          -0.003546,
+          0.000775
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "graph",
+        "low": "state_slot",
+        "high": "three_layer",
+        "low_value": 0.095477,
+        "high_value": 0.095477,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "planner",
+        "low": "none",
+        "high": "dag",
+        "low_value": 0.095477,
+        "high_value": 0.095477,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "rerank",
+        "low": "none",
+        "high": "cross_encoder",
+        "low_value": 0.095477,
+        "high_value": 0.095477,
+        "delta_high_minus_low": 0.0,
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "ci_excludes_zero": false,
+        "direction": "higher_is_better"
+      },
+      {
+        "factor": "fusion",
+        "low": "single_channel",
+        "high": "query_adaptive_weights",
+        "low_value": 0.108192,
+        "high_value": 0.082762,
+        "delta_high_minus_low": -0.02543,
+        "ci95": [
+          -0.041589,
+          -0.009603
+        ],
+        "ci_excludes_zero": true,
+        "direction": "higher_is_better"
+      }
+    ]
+  },
+  "interactions": [
+    {
+      "pair": "schema+graph",
+      "alias": "planner+rerank+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.491317,
+      "y10": 0.495133,
+      "y01": 0.491317,
+      "y11": 0.495133,
+      "joint_gain_y11_minus_y00": 0.003817,
+      "additive_gain": 0.003817,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+planner",
+      "alias": "graph+rerank+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.491317,
+      "y10": 0.495133,
+      "y01": 0.491317,
+      "y11": 0.495133,
+      "joint_gain_y11_minus_y00": 0.003817,
+      "additive_gain": 0.003817,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+rerank",
+      "alias": "graph+planner+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.491317,
+      "y10": 0.495133,
+      "y01": 0.491317,
+      "y11": 0.495133,
+      "joint_gain_y11_minus_y00": 0.003817,
+      "additive_gain": 0.003817,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+fusion",
+      "alias": "graph+planner+rerank",
+      "metric": "evidence_recall",
+      "y00": 0.491317,
+      "y10": 0.495133,
+      "y01": 0.491317,
+      "y11": 0.495133,
+      "joint_gain_y11_minus_y00": 0.003817,
+      "additive_gain": 0.003817,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+planner",
+      "alias": "schema+rerank+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+rerank",
+      "alias": "schema+planner+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+fusion",
+      "alias": "schema+planner+rerank",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+rerank",
+      "alias": "schema+graph+fusion",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+fusion",
+      "alias": "schema+graph+rerank",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "rerank+fusion",
+      "alias": "schema+graph+planner",
+      "metric": "evidence_recall",
+      "y00": 0.493225,
+      "y10": 0.493225,
+      "y01": 0.493225,
+      "y11": 0.493225,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+graph",
+      "alias": "planner+rerank+fusion",
+      "metric": "ndcg",
+      "y00": 0.356644,
+      "y10": 0.3602,
+      "y01": 0.356644,
+      "y11": 0.3602,
+      "joint_gain_y11_minus_y00": 0.003556,
+      "additive_gain": 0.003556,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+planner",
+      "alias": "graph+rerank+fusion",
+      "metric": "ndcg",
+      "y00": 0.357664,
+      "y10": 0.361223,
+      "y01": 0.355623,
+      "y11": 0.359177,
+      "joint_gain_y11_minus_y00": 0.001513,
+      "additive_gain": 0.001517,
+      "interaction": -5e-06,
+      "ci95": [
+        -0.000854,
+        0.000822
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+rerank",
+      "alias": "graph+planner+fusion",
+      "metric": "ndcg",
+      "y00": 0.356644,
+      "y10": 0.3602,
+      "y01": 0.356644,
+      "y11": 0.3602,
+      "joint_gain_y11_minus_y00": 0.003556,
+      "additive_gain": 0.003556,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+fusion",
+      "alias": "graph+planner+rerank",
+      "metric": "ndcg",
+      "y00": 0.381321,
+      "y10": 0.384726,
+      "y01": 0.331967,
+      "y11": 0.335674,
+      "joint_gain_y11_minus_y00": -0.045647,
+      "additive_gain": -0.045949,
+      "interaction": 0.000302,
+      "ci95": [
+        -0.005291,
+        0.007056
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "super_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+planner",
+      "alias": "schema+rerank+fusion",
+      "metric": "ndcg",
+      "y00": 0.359444,
+      "y10": 0.359444,
+      "y01": 0.3574,
+      "y11": 0.3574,
+      "joint_gain_y11_minus_y00": -0.002044,
+      "additive_gain": -0.002044,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+rerank",
+      "alias": "schema+planner+fusion",
+      "metric": "ndcg",
+      "y00": 0.358423,
+      "y10": 0.358421,
+      "y01": 0.358421,
+      "y11": 0.358423,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": -5e-06,
+      "interaction": 5e-06,
+      "ci95": [
+        -0.000822,
+        0.000854
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "super_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+fusion",
+      "alias": "schema+planner+rerank",
+      "metric": "ndcg",
+      "y00": 0.383023,
+      "y10": 0.383023,
+      "y01": 0.33382,
+      "y11": 0.33382,
+      "joint_gain_y11_minus_y00": -0.049203,
+      "additive_gain": -0.049203,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+rerank",
+      "alias": "schema+graph+fusion",
+      "metric": "ndcg",
+      "y00": 0.359444,
+      "y10": 0.3574,
+      "y01": 0.359444,
+      "y11": 0.3574,
+      "joint_gain_y11_minus_y00": -0.002044,
+      "additive_gain": -0.002044,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+fusion",
+      "alias": "schema+graph+rerank",
+      "metric": "ndcg",
+      "y00": 0.383023,
+      "y10": 0.383023,
+      "y01": 0.335864,
+      "y11": 0.331776,
+      "joint_gain_y11_minus_y00": -0.051247,
+      "additive_gain": -0.047159,
+      "interaction": -0.004087,
+      "ci95": [
+        -0.007989,
+        -0.000267
+      ],
+      "ci_excludes_zero": true,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "rerank+fusion",
+      "alias": "schema+graph+planner",
+      "metric": "ndcg",
+      "y00": 0.383023,
+      "y10": 0.383023,
+      "y01": 0.33382,
+      "y11": 0.33382,
+      "joint_gain_y11_minus_y00": -0.049203,
+      "additive_gain": -0.049203,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+graph",
+      "alias": "planner+rerank+fusion",
+      "metric": "tokens",
+      "y00": 297.079167,
+      "y10": 310.710417,
+      "y01": 297.079167,
+      "y11": 310.710417,
+      "joint_gain_y11_minus_y00": 13.63125,
+      "additive_gain": 13.63125,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+planner",
+      "alias": "graph+rerank+fusion",
+      "metric": "tokens",
+      "y00": 297.079167,
+      "y10": 310.710417,
+      "y01": 297.079167,
+      "y11": 310.710417,
+      "joint_gain_y11_minus_y00": 13.63125,
+      "additive_gain": 13.63125,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+rerank",
+      "alias": "graph+planner+fusion",
+      "metric": "tokens",
+      "y00": 297.079167,
+      "y10": 310.710417,
+      "y01": 297.079167,
+      "y11": 310.710417,
+      "joint_gain_y11_minus_y00": 13.63125,
+      "additive_gain": 13.63125,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+fusion",
+      "alias": "graph+planner+rerank",
+      "metric": "tokens",
+      "y00": 289.7375,
+      "y10": 303.9,
+      "y01": 304.420833,
+      "y11": 317.520833,
+      "joint_gain_y11_minus_y00": 27.783333,
+      "additive_gain": 28.845833,
+      "interaction": -1.0625,
+      "ci95": [
+        -2.254167,
+        0.05
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+planner",
+      "alias": "schema+rerank+fusion",
+      "metric": "tokens",
+      "y00": 303.894792,
+      "y10": 303.894792,
+      "y01": 303.894792,
+      "y11": 303.894792,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+rerank",
+      "alias": "schema+planner+fusion",
+      "metric": "tokens",
+      "y00": 303.894792,
+      "y10": 303.894792,
+      "y01": 303.894792,
+      "y11": 303.894792,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+fusion",
+      "alias": "schema+planner+rerank",
+      "metric": "tokens",
+      "y00": 296.81875,
+      "y10": 296.81875,
+      "y01": 310.970833,
+      "y11": 310.970833,
+      "joint_gain_y11_minus_y00": 14.152083,
+      "additive_gain": 14.152083,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+rerank",
+      "alias": "schema+graph+fusion",
+      "metric": "tokens",
+      "y00": 303.894792,
+      "y10": 303.894792,
+      "y01": 303.894792,
+      "y11": 303.894792,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+fusion",
+      "alias": "schema+graph+rerank",
+      "metric": "tokens",
+      "y00": 296.81875,
+      "y10": 296.81875,
+      "y01": 310.970833,
+      "y11": 310.970833,
+      "joint_gain_y11_minus_y00": 14.152083,
+      "additive_gain": 14.152083,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "rerank+fusion",
+      "alias": "schema+graph+planner",
+      "metric": "tokens",
+      "y00": 296.81875,
+      "y10": 296.81875,
+      "y01": 310.970833,
+      "y11": 310.970833,
+      "joint_gain_y11_minus_y00": 14.152083,
+      "additive_gain": 14.152083,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive_cost",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+graph",
+      "alias": "planner+rerank+fusion",
+      "metric": "redundancy",
+      "y00": 0.08003,
+      "y10": 0.075984,
+      "y01": 0.08003,
+      "y11": 0.075984,
+      "joint_gain_y11_minus_y00": -0.004046,
+      "additive_gain": -0.004046,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+planner",
+      "alias": "graph+rerank+fusion",
+      "metric": "redundancy",
+      "y00": 0.08003,
+      "y10": 0.075984,
+      "y01": 0.08003,
+      "y11": 0.075984,
+      "joint_gain_y11_minus_y00": -0.004046,
+      "additive_gain": -0.004046,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+rerank",
+      "alias": "graph+planner+fusion",
+      "metric": "redundancy",
+      "y00": 0.08003,
+      "y10": 0.075984,
+      "y01": 0.08003,
+      "y11": 0.075984,
+      "joint_gain_y11_minus_y00": -0.004046,
+      "additive_gain": -0.004046,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+fusion",
+      "alias": "graph+planner+rerank",
+      "metric": "redundancy",
+      "y00": 0.083032,
+      "y10": 0.07864,
+      "y01": 0.077029,
+      "y11": 0.073329,
+      "joint_gain_y11_minus_y00": -0.009703,
+      "additive_gain": -0.010395,
+      "interaction": 0.000692,
+      "ci95": [
+        -6.7e-05,
+        0.001632
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "super_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+planner",
+      "alias": "schema+rerank+fusion",
+      "metric": "redundancy",
+      "y00": 0.078007,
+      "y10": 0.078007,
+      "y01": 0.078007,
+      "y11": 0.078007,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+rerank",
+      "alias": "schema+planner+fusion",
+      "metric": "redundancy",
+      "y00": 0.078007,
+      "y10": 0.078007,
+      "y01": 0.078007,
+      "y11": 0.078007,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+fusion",
+      "alias": "schema+planner+rerank",
+      "metric": "redundancy",
+      "y00": 0.080836,
+      "y10": 0.080836,
+      "y01": 0.075179,
+      "y11": 0.075179,
+      "joint_gain_y11_minus_y00": -0.005657,
+      "additive_gain": -0.005657,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+rerank",
+      "alias": "schema+graph+fusion",
+      "metric": "redundancy",
+      "y00": 0.078007,
+      "y10": 0.078007,
+      "y01": 0.078007,
+      "y11": 0.078007,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+fusion",
+      "alias": "schema+graph+rerank",
+      "metric": "redundancy",
+      "y00": 0.080836,
+      "y10": 0.080836,
+      "y01": 0.075179,
+      "y11": 0.075179,
+      "joint_gain_y11_minus_y00": -0.005657,
+      "additive_gain": -0.005657,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "rerank+fusion",
+      "alias": "schema+graph+planner",
+      "metric": "redundancy",
+      "y00": 0.080836,
+      "y10": 0.080836,
+      "y01": 0.075179,
+      "y11": 0.075179,
+      "joint_gain_y11_minus_y00": -0.005657,
+      "additive_gain": -0.005657,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+graph",
+      "alias": "planner+rerank+fusion",
+      "metric": "context_precision",
+      "y00": 0.096188,
+      "y10": 0.094766,
+      "y01": 0.096188,
+      "y11": 0.094766,
+      "joint_gain_y11_minus_y00": -0.001423,
+      "additive_gain": -0.001423,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+planner",
+      "alias": "graph+rerank+fusion",
+      "metric": "context_precision",
+      "y00": 0.096188,
+      "y10": 0.094766,
+      "y01": 0.096188,
+      "y11": 0.094766,
+      "joint_gain_y11_minus_y00": -0.001423,
+      "additive_gain": -0.001423,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+rerank",
+      "alias": "graph+planner+fusion",
+      "metric": "context_precision",
+      "y00": 0.096188,
+      "y10": 0.094766,
+      "y01": 0.096188,
+      "y11": 0.094766,
+      "joint_gain_y11_minus_y00": -0.001423,
+      "additive_gain": -0.001423,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "schema+fusion",
+      "alias": "graph+planner+rerank",
+      "metric": "context_precision",
+      "y00": 0.110739,
+      "y10": 0.105646,
+      "y01": 0.081638,
+      "y11": 0.083886,
+      "joint_gain_y11_minus_y00": -0.026853,
+      "additive_gain": -0.034193,
+      "interaction": 0.00734,
+      "ci95": [
+        0.00432,
+        0.010323
+      ],
+      "ci_excludes_zero": true,
+      "interpretation": "super_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+planner",
+      "alias": "schema+rerank+fusion",
+      "metric": "context_precision",
+      "y00": 0.095477,
+      "y10": 0.095477,
+      "y01": 0.095477,
+      "y11": 0.095477,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+rerank",
+      "alias": "schema+planner+fusion",
+      "metric": "context_precision",
+      "y00": 0.095477,
+      "y10": 0.095477,
+      "y01": 0.095477,
+      "y11": 0.095477,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "graph+fusion",
+      "alias": "schema+planner+rerank",
+      "metric": "context_precision",
+      "y00": 0.108192,
+      "y10": 0.108192,
+      "y01": 0.082762,
+      "y11": 0.082762,
+      "joint_gain_y11_minus_y00": -0.02543,
+      "additive_gain": -0.02543,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+rerank",
+      "alias": "schema+graph+fusion",
+      "metric": "context_precision",
+      "y00": 0.095477,
+      "y10": 0.095477,
+      "y01": 0.095477,
+      "y11": 0.095477,
+      "joint_gain_y11_minus_y00": 0.0,
+      "additive_gain": 0.0,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "planner+fusion",
+      "alias": "schema+graph+rerank",
+      "metric": "context_precision",
+      "y00": 0.108192,
+      "y10": 0.108192,
+      "y01": 0.082762,
+      "y11": 0.082762,
+      "joint_gain_y11_minus_y00": -0.02543,
+      "additive_gain": -0.02543,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    },
+    {
+      "pair": "rerank+fusion",
+      "alias": "schema+graph+planner",
+      "metric": "context_precision",
+      "y00": 0.108192,
+      "y10": 0.108192,
+      "y01": 0.082762,
+      "y11": 0.082762,
+      "joint_gain_y11_minus_y00": -0.02543,
+      "additive_gain": -0.02543,
+      "interaction": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "ci_excludes_zero": false,
+      "interpretation": "sub_additive",
+      "note": "2FI is aliased with the complementary 3FI (resolution V); no residual df."
+    }
+  ],
+  "limitations": [
+    "Offline hash embedding is not semantic; offline extractive answer is not an LLM answer.",
+    "All metrics are A-level interface metrics; no answer F1 and no Judge.",
+    "Only 4 development conversations, 60 questions per conversation per run.",
+    "Resolution V 2FIs assume 3FIs are negligible; no residual df.",
+    "Several implementation axes are no-op or harness-blocked (e.g. rerank cross-encoder may fall back, graph channel is rarely used); a flat effect is not evidence of no effect with a real model."
+  ]
+}

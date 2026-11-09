@@ -194,7 +194,7 @@ class DedupeTests(unittest.TestCase):
     def test_e4_candidates_use_distinct_reference_configs(self):
         grid = plans_for(E4_GRID)
         self.assertEqual({plan.config["preset"] for plan in grid},
-                         {"B0", "R0", "CHEAP", "QUALITY"})
+                         {"B0", "R0-fixed", "CHEAP", "QUALITY"})
         self.assertEqual(len({plan.config_hash for plan in grid}), 108)
         cheap = next(plan for plan in grid if plan.factors["candidate"] == "CHEAP")
         quality = next(plan for plan in grid if plan.factors["candidate"] == "QUALITY")

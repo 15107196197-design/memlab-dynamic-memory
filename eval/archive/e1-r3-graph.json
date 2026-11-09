@@ -1,0 +1,824 @@
+{
+  "schema": "memlab/eval-archive@1",
+  "experiment": "E1-R3-graph-retrieval-dispatch",
+  "generated_at": "2026-11-09T18:16:45+08:00",
+  "db": "runs/r3-graph/r3.sqlite",
+  "spec": "configs/experiments/e1-r3-graph.json",
+  "protocol": {
+    "executor": "e2e",
+    "offline": true,
+    "llm": "offline-extractive",
+    "embedding": "offline-hash",
+    "subset": "LoCoMo category=1 (multi-hop)",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_config": 61,
+    "configs": 13,
+    "error_rows": 0,
+    "note": "A online 27B results are a pre-wiring harness and are not comparable to this offline table."
+  },
+  "cells": [
+    {
+      "impl": "dual_channel",
+      "repr": "entity_triple",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0",
+      "config_hash": "sha256:6553e4f0b4c1c20c511b2779a8a28f425b380a264f30af23395e2f986243befc",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2318,
+      "answer_f1": 0.0341,
+      "latency_mean_ms": 6.8969,
+      "latency_p95_ms": 26.868,
+      "graph_nodes": 641,
+      "graph_edges": 837,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "state_slot",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-007-021f2c52",
+      "config_hash": "sha256:021f2c52619b16f03682b40a26459fd7a6a2f1f51b7160539c02903dfb59a0b2",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2324,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 11.3871,
+      "latency_p95_ms": 23.526,
+      "graph_nodes": 628,
+      "graph_edges": 339,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "three_layer",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5",
+      "config_hash": "sha256:29b68cb5e5478e748a86493b871d0e4d5c8668d3b9def3e0f2d1eac3932d1b8d",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2318,
+      "answer_f1": 0.0341,
+      "latency_mean_ms": 5.147,
+      "latency_p95_ms": 21.156,
+      "graph_nodes": 800,
+      "graph_edges": 1136,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "entity_triple",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-005-42fda64a",
+      "config_hash": "sha256:42fda64a96176c57b604d8d79ac9839898c6789ef53a08b7de8de33f88aad372",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2315,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 6.0475,
+      "latency_p95_ms": 22.998,
+      "graph_nodes": 641,
+      "graph_edges": 837,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "state_slot",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78",
+      "config_hash": "sha256:1a3b4a78458cbdd42dd9b63754bd8b9c9a55f64c9ddfcf68c27a812a98f483a4",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2324,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 5.1035,
+      "latency_p95_ms": 19.102,
+      "graph_nodes": 628,
+      "graph_edges": 339,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "three_layer",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa",
+      "config_hash": "sha256:10bb97fa6bbb9683c1d0eb6dcaf805c74e27e709e41152af2fc878fd24844f71",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2315,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 5.408,
+      "latency_p95_ms": 21.14,
+      "graph_nodes": 800,
+      "graph_edges": 1136,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "ppr",
+      "repr": "entity_triple",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-011-215749ee",
+      "config_hash": "sha256:215749ee76e0b1f2e88448d3e8cf301a76a0da30680fb8d06f741a8bbd6ad293",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2318,
+      "answer_f1": 0.0341,
+      "latency_mean_ms": 14.6468,
+      "latency_p95_ms": 48.651,
+      "graph_nodes": 641,
+      "graph_edges": 837,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "ppr",
+      "repr": "state_slot",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-010-bff67545",
+      "config_hash": "sha256:bff67545537a10aa85120b77f5f2229b4fceba15ee8bde6768e2356a2e0694f0",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2379,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 8.3193,
+      "latency_p95_ms": 38.455,
+      "graph_nodes": 628,
+      "graph_edges": 339,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "ppr",
+      "repr": "three_layer",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-012-9c637b83",
+      "config_hash": "sha256:9c637b8306e7842ffb31eda63fa288d23c38d4646df6a6a425038186e671059a",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.2381,
+      "answer_f1": 0.0342,
+      "latency_mean_ms": 7.5624,
+      "latency_p95_ms": 37.807,
+      "graph_nodes": 800,
+      "graph_edges": 1136,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "slot_expand",
+      "repr": "state_slot",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434",
+      "config_hash": "sha256:a4d6a434663cdc4b0b4998c22f2d46eadd59b29dd4787c894c4e2e6c8eb34381",
+      "n": 61,
+      "evidence_recall": 0.2372,
+      "multi_hop_recall": 0.2372,
+      "ndcg": 0.235,
+      "answer_f1": 0.0328,
+      "latency_mean_ms": 6.6044,
+      "latency_p95_ms": 24.865,
+      "graph_nodes": 628,
+      "graph_edges": 339,
+      "candidates_mean": 13.2459
+    },
+    {
+      "impl": "vector_only",
+      "repr": "entity_triple",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc",
+      "config_hash": "sha256:3298ddbc780d61020f60b77239e7fc9386be33a0c1dd9aa4c9dd466431965412",
+      "n": 61,
+      "evidence_recall": 0.2257,
+      "multi_hop_recall": 0.2257,
+      "ndcg": 0.1988,
+      "answer_f1": 0.0235,
+      "latency_mean_ms": 7.802,
+      "latency_p95_ms": 23.741,
+      "graph_nodes": 641,
+      "graph_edges": 837,
+      "candidates_mean": 13.2787
+    },
+    {
+      "impl": "vector_only",
+      "repr": "state_slot",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-000-ae075e75",
+      "config_hash": "sha256:ae075e751e5c4581c793409cc27799e383aca7d0bb17d977c9b317456a319d28",
+      "n": 61,
+      "evidence_recall": 0.2257,
+      "multi_hop_recall": 0.2257,
+      "ndcg": 0.1988,
+      "answer_f1": 0.0235,
+      "latency_mean_ms": 41.3323,
+      "latency_p95_ms": 211.717,
+      "graph_nodes": 628,
+      "graph_edges": 339,
+      "candidates_mean": 13.2787
+    },
+    {
+      "impl": "vector_only",
+      "repr": "three_layer",
+      "run_id": "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad",
+      "config_hash": "sha256:874eb7adfd54d9efaa4a4bfef5f650208286f83f566c7e69bdf64fd6ddd6c04e",
+      "n": 61,
+      "evidence_recall": 0.2257,
+      "multi_hop_recall": 0.2257,
+      "ndcg": 0.1988,
+      "answer_f1": 0.0235,
+      "latency_mean_ms": 4.7742,
+      "latency_p95_ms": 13.043,
+      "graph_nodes": 800,
+      "graph_edges": 1136,
+      "candidates_mean": 13.2787
+    }
+  ],
+  "paired_vs_vector_only": [
+    {
+      "impl": "dual_channel",
+      "repr": "entity_triple",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03302,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01061,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "state_slot",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03357,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "three_layer",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03302,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01061,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "entity_triple",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03273,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "state_slot",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03357,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "three_layer",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03273,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "ppr",
+      "repr": "entity_triple",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03302,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01061,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "ppr",
+      "repr": "state_slot",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.0391,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "ppr",
+      "repr": "three_layer",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03929,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "answer_f1": {
+          "mean_delta": 0.01067,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 0,
+          "unchanged": 57
+        }
+      }
+    },
+    {
+      "impl": "slot_expand",
+      "repr": "state_slot",
+      "vs": "vector_only",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.01148,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "mean_delta": 0.03616,
+          "median_delta": 0.0,
+          "improved": 6,
+          "worsened": 0,
+          "unchanged": 55
+        },
+        "answer_f1": {
+          "mean_delta": 0.0093,
+          "median_delta": 0.0,
+          "improved": 3,
+          "worsened": 1,
+          "unchanged": 57
+        }
+      }
+    }
+  ],
+  "ppr_vs_entity_subgraph": [
+    {
+      "repr": "state_slot",
+      "vs": "entity_subgraph",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.0,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 0,
+          "unchanged": 61
+        },
+        "ndcg": {
+          "mean_delta": 0.00553,
+          "median_delta": 0.0,
+          "improved": 1,
+          "worsened": 1,
+          "unchanged": 59
+        },
+        "answer_f1": {
+          "mean_delta": 0.0,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 0,
+          "unchanged": 61
+        }
+      }
+    },
+    {
+      "repr": "entity_triple",
+      "vs": "entity_subgraph",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.0,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 0,
+          "unchanged": 61
+        },
+        "ndcg": {
+          "mean_delta": 0.00028,
+          "median_delta": 0.0,
+          "improved": 1,
+          "worsened": 2,
+          "unchanged": 58
+        },
+        "answer_f1": {
+          "mean_delta": -5e-05,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 1,
+          "unchanged": 60
+        }
+      }
+    },
+    {
+      "repr": "three_layer",
+      "vs": "entity_subgraph",
+      "delta": {
+        "evidence_recall": {
+          "mean_delta": 0.0,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 0,
+          "unchanged": 61
+        },
+        "ndcg": {
+          "mean_delta": 0.00656,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "answer_f1": {
+          "mean_delta": 0.0,
+          "median_delta": 0.0,
+          "improved": 0,
+          "worsened": 0,
+          "unchanged": 61
+        }
+      }
+    }
+  ],
+  "graph_channel_survival": [
+    {
+      "impl": "entity_subgraph",
+      "repr": "state_slot",
+      "questions": 61,
+      "graph_novel_candidates": 34,
+      "graph_novel_in_final": 0,
+      "final_units": 808,
+      "graph_sourced_final_units": 28
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "entity_triple",
+      "questions": 61,
+      "graph_novel_candidates": 91,
+      "graph_novel_in_final": 0,
+      "final_units": 808,
+      "graph_sourced_final_units": 26
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "three_layer",
+      "questions": 61,
+      "graph_novel_candidates": 91,
+      "graph_novel_in_final": 0,
+      "final_units": 808,
+      "graph_sourced_final_units": 26
+    },
+    {
+      "impl": "ppr",
+      "repr": "three_layer",
+      "questions": 61,
+      "graph_novel_candidates": 88,
+      "graph_novel_in_final": 0,
+      "final_units": 808,
+      "graph_sourced_final_units": 30
+    }
+  ],
+  "limitations": [
+    "dual_channel is approximate: GraphIndex has undirected, untyped edges; the entity channel is k-hop expansion and the semantic channel is normalised BM25, not typed entity/relation channels.",
+    "Offline hashing embeddings are not semantic; vector-only comparisons are against a weak dense baseline, not bge-m3.",
+    "planner.analyzer=llm falls back to rule in every cell (recorded warning); only 8/61 category-1 questions are routed to the graph channel (50 single_hop, 3 temporal).",
+    "On those 8 graph-routed questions the graph channel adds complementary gold candidates (BM25 union recall 0.4188 -> up to 0.4854), but 0 graph-only candidates survive the final context, so final evidence_recall is insensitive to graph impl/repr."
+  ],
+  "routing": {
+    "category_1_questions": 61,
+    "rule_analyzer_intents": {
+      "single_hop": 50,
+      "multi_hop": 8,
+      "temporal": 3
+    },
+    "questions_with_graph_channel": 8,
+    "note": "The graph channel is only built when the rule analyzer routes the question to multi_hop. Category=1 (multi-hop) labels do not imply a multi-hop query intent, so 53/61 questions never reach the graph channel."
+  },
+  "graph_channel_analysis": [
+    {
+      "impl": "vector_only",
+      "repr": "state_slot",
+      "q_all": 61,
+      "q_graph_routed": 0,
+      "bm25_recall": null,
+      "graph_recall": null,
+      "union_recall": null,
+      "graph_novel": 0,
+      "graph_novel_gold": 0,
+      "questions_with_novel_gold": 0,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "vector_only",
+      "repr": "entity_triple",
+      "q_all": 61,
+      "q_graph_routed": 0,
+      "bm25_recall": null,
+      "graph_recall": null,
+      "union_recall": null,
+      "graph_novel": 0,
+      "graph_novel_gold": 0,
+      "questions_with_novel_gold": 0,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "vector_only",
+      "repr": "three_layer",
+      "q_all": 61,
+      "q_graph_routed": 0,
+      "bm25_recall": null,
+      "graph_recall": null,
+      "union_recall": null,
+      "graph_novel": 0,
+      "graph_novel_gold": 0,
+      "questions_with_novel_gold": 0,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "slot_expand",
+      "repr": "state_slot",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3667,
+      "union_recall": 0.4854,
+      "graph_novel": 25,
+      "graph_novel_gold": 4,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "state_slot",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 34,
+      "graph_novel_gold": 4,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "entity_triple",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 91,
+      "graph_novel_gold": 2,
+      "questions_with_novel_gold": 2,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "entity_subgraph",
+      "repr": "three_layer",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 91,
+      "graph_novel_gold": 2,
+      "questions_with_novel_gold": 2,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "state_slot",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 34,
+      "graph_novel_gold": 4,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "entity_triple",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 84,
+      "graph_novel_gold": 4,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "dual_channel",
+      "repr": "three_layer",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3479,
+      "union_recall": 0.4604,
+      "graph_novel": 81,
+      "graph_novel_gold": 5,
+      "questions_with_novel_gold": 4,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "ppr",
+      "repr": "state_slot",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3563,
+      "union_recall": 0.4437,
+      "graph_novel": 85,
+      "graph_novel_gold": 7,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "ppr",
+      "repr": "entity_triple",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3063,
+      "union_recall": 0.4188,
+      "graph_novel": 89,
+      "graph_novel_gold": 4,
+      "questions_with_novel_gold": 3,
+      "graph_novel_in_final": 0
+    },
+    {
+      "impl": "ppr",
+      "repr": "three_layer",
+      "q_all": 61,
+      "q_graph_routed": 8,
+      "bm25_recall": 0.4188,
+      "graph_recall": 0.3979,
+      "union_recall": 0.4854,
+      "graph_novel": 88,
+      "graph_novel_gold": 6,
+      "questions_with_novel_gold": 4,
+      "graph_novel_in_final": 0
+    }
+  ]
+}
