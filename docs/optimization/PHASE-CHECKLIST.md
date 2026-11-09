@@ -2,7 +2,7 @@
 
 > 用途：每个会话不要“写完代码就说完成”。开始前报告状态，结束时做一次**集成自检**，确认没有把上一阶段的成果弄坏、没有把未实现的东西标成已完成、没有在缺 key 时伪造 API 结果。
 >
-> 配套文档：[HANDOFF.md](HANDOFF.md)（状态/契约）、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)（任务剧本）。
+> 配套文档：[HANDOFF.md](HANDOFF.md)（状态/契约）、[GOAL-AUDIT.md](GOAL-AUDIT.md)（总体目标对齐）、[SESSION-PROMPTS.md](SESSION-PROMPTS.md)（任务剧本）。
 
 ---
 
@@ -20,6 +20,7 @@
 | 6 | Key 状态 | HANDOFF §1.3 | 需要 key 且缺失时先问用户 |
 | 7 | 文件所有权 | HANDOFF §1.3/COORDINATION（如存在） | 不碰别人正在改的文件 |
 | 8 | 本会话验收 | SESSION-PROMPTS 对应 § | 能一句话复述“做什么、验收是什么” |
+| 9 | 总体目标 | GOAL-AUDIT §1 | 知道本任务服务于哪个模块/阶段，而不是“优化系统” |
 
 **Startup Report 模板：**
 
@@ -111,7 +112,19 @@ git remote -v
 2. 什么还没验证；
 3. 下阶段最可能踩的坑。
 
-### 1.8 下一步选择（不要自动继续）
+### 1.8 总体目标对齐（Goal Alignment）
+
+对照 [GOAL-AUDIT.md](GOAL-AUDIT.md) 回答：
+
+- 本阶段改动属于哪个模块/轴（W/S/R/M/U/K）？
+- 它对 E0–E5 的哪个问题有贡献？
+- 它是否让“能力 → 实现 → 参数 → 组合 → 环境”更清楚，还是只是让测试变绿？
+- 有没有“声明但未实现/配置但不消费/静默 fallback/LLM 混淆”的红旗？
+- 每个 P0/P1 是否写了“影响的实验阶段”和“验收测试”？
+
+**如果本阶段新增了因子/配置，必须证明它真的被 wire；no-op 因子按 P1 处理。**
+
+### 1.9 下一步选择（不要自动继续）
 
 完成报告后，给用户 A/B：
 
@@ -137,7 +150,11 @@ B. 新会话继续 S<x+1>：我给出可直接复制的启动提示词。
 - 文档/HANDOFF 没更新；
 - 有别人未提交的文件混进本次 commit；
 - 端到端冒烟没跑，只说“单测通过”；
-- 失败样本被当成 0 分，没分类。
+- 失败样本被当成 0 分，没分类；
+- 只让测试变绿，却留下声明未实现/配置不消费的因子；
+- 只报“系统提升”，没有区分 LLM 能力；
+- 只给全局最优，没有环境条件；
+- 未跑/缺 key 却写成“无差异/已完成”。
 
 ---
 
@@ -158,6 +175,7 @@ Completion audit:
 - key status: not needed / local / API / blocked_on_key
 - files changed:
 - docs updated: HANDOFF §1/§5/§7 ; SESSION-PROMPTS (if needed)
+- goal alignment: 模块/轴 + E 阶段 + 是否新增 no-op 因子 + 红旗
 - known gaps:
   1.
   2.

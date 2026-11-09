@@ -166,6 +166,7 @@ artifacts/
 | `docs/optimization/04-experiments.md` | 模块化实验：W/S/R/M/U/K、E2 耦合、E3 组合、E4 环境、第 7 章评测标准 |
 | `docs/optimization/05-color-focus.md` | 红/蓝合并后的“能力→实现→参数→组合→环境”因果地图 |
 | `docs/optimization/PHASE-CHECKLIST.md` | 每个会话的 Startup Audit / Completion Audit / 分配模板 |
+| `docs/optimization/GOAL-AUDIT.md` | 总体目标对齐审计：能力→实现→参数→组合→环境、10 个审计问题、红旗 |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
 | `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令 |
 | `configs/reference-b0.json` | B0 遗留基线（`state_slot` + `slot_expand` + `version_chain`） |
@@ -555,9 +556,10 @@ artifacts/
 1. docs/optimization/HANDOFF.md（本文件，先读 §1、§1.3、§2、§5）
 2. docs/optimization/SESSION-PROMPTS.md 的对应会话（Sx）
 3. docs/optimization/PHASE-CHECKLIST.md（开场/收尾自检）
-4. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
-5. docs/optimization/04-experiments.md 的对应模块章节
-6. 相关 configs/experiments/*.json
+4. docs/optimization/GOAL-AUDIT.md（总体目标对齐）
+5. docs/optimization/02-architecture.md 的 2.5–2.9（MemoryUnit/契约/缓存）
+6. docs/optimization/04-experiments.md 的对应模块章节
+7. 相关 configs/experiments/*.json
 
 0. 先做 Startup Audit（PHASE-CHECKLIST §0）：报告 branch/commit、git status、worktree、测试基线、当前阶段、key 状态、将改文件、验收。
    先判断本会话是否需要 API key（见 HANDOFF §1.3）。
@@ -690,8 +692,9 @@ artifacts/
 4. 文档：HANDOFF §1/§5/§7 更新，key 状态写清；
 5. Git：只提交本阶段文件，不 push upstream；
 6. 已知缺口：至少列 3 条；
-7. 输出 Completion Report（模板见 PHASE-CHECKLIST §3）；
-8. 给用户 A/B 选择：A 在本会话继续下一 S（先做 Startup Audit），B 新会话（给可直接复制的启动提示词）。**用户没选之前不要自动开始下一阶段。**
+7. 总体目标对齐：对照 GOAL-AUDIT 检查模块/阶段/因子是否 wire、是否 no-op、是否 LLM 混淆；
+8. 输出 Completion Report（模板见 PHASE-CHECKLIST §3）；
+9. 给用户 A/B 选择：A 在本会话继续下一 S（先做 Startup Audit），B 新会话（给可直接复制的启动提示词）。**用户没选之前不要自动开始下一阶段。**
 
 **不能宣称完成的情况：** 只跑新测试、R0 静默跑 B0、缺 key 却声称跑了 API、缓存命中旧代码、文档没更新、别人未提交文件混入。
 

@@ -2,9 +2,9 @@
 
 > 用途：每个会话新开时，先读 [HANDOFF.md](HANDOFF.md)，再复制对应会话的提示词。
 >
-> **读法（很重要）：** [HANDOFF.md](HANDOFF.md) 是“项目状态 + 契约 + 交接协议”；本文件是“每个会话的任务剧本”；[PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) 是“开场自检 + 收尾验收”。**三个都要用**：只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、先读哪些文件、验收标准是什么”；只读本文件会知道任务，但不知道当前状态、分支、key/模型状态和未解决问题。
+> **读法（很重要）：** [HANDOFF.md](HANDOFF.md) 是“项目状态 + 契约 + 交接协议”；本文件是“每个会话的任务剧本”；[PHASE-CHECKLIST.md](PHASE-CHECKLIST.md) 是“开场自检 + 收尾验收”；[GOAL-AUDIT.md](GOAL-AUDIT.md) 是“总体目标对齐”。**四个都要用**：只读 HANDOFF 会知道“现在在哪”，但不知道“这个会话具体做什么、验收标准是什么”；只读本文件会知道任务，但不知道当前状态、分支、key/模型状态和未解决问题。
 >
-> **推荐顺序：** HANDOFF §1/§1.3/§2/§5 → 本文件 §0 会话地图 + §0.1 Key 检查 → 本会话的具体提示词 → PHASE-CHECKLIST §0 开场自检 → 提示词里列出的文件。
+> **推荐顺序：** HANDOFF §1/§1.3/§2/§5 → 本文件 §0 会话地图 + §0.1 Key 检查 → GOAL-AUDIT §1–§3 → 本会话的具体提示词 → PHASE-CHECKLIST §0 开场自检 → 提示词里列出的文件。
 >
 > **不要把 S0–S10 塞进同一个会话。** 每个会话结束时更新 HANDOFF；下一个会话只读 HANDOFF + 本会话指定文件。
 >
@@ -111,7 +111,7 @@
 - 大输出写文件，不塞聊天；只读汇总/失败样本。
 - 不 push 到 upstream；不提交 runs/、日志、模型权重、API key。
 - 每个会话开头先做 §0.1 的 Key 检查 + PHASE-CHECKLIST §0 Startup Audit；需要 key 且缺失时先问用户，未确认前不跑 API。
-- 每个会话结束前执行 PHASE-CHECKLIST §1 Completion Audit（全量测试、集成、回归、文档、Git、缺口）。
+- 每个会话结束前执行 PHASE-CHECKLIST §1 Completion Audit（全量测试、集成、回归、总体目标对齐、文档、Git、缺口）。
 - 结束前更新 HANDOFF §5 与 §7（含 Key 状态），不要只说“完成”。
 - 完成并通过自检后，不要自动开始下一个 S；先给用户 A/B 选择（见 §14.4）。
 ```
@@ -625,6 +625,7 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 
 - [HANDOFF.md](HANDOFF.md)
 - [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)
+- [GOAL-AUDIT.md](GOAL-AUDIT.md)
 - [S5-REPORT.md](S5-REPORT.md)
 - [README.md](README.md)
 - [01-audit.md](01-audit.md)
@@ -692,10 +693,11 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 1. 全量测试 `python -m unittest discover -s tests -t .`；
 2. 集成检查：Runtime guard、config validation、cache key、LLM 参数、时序 validity、端到端冒烟；
 3. 回归：旧 38 + 前序阶段测试仍过；
-4. 文档：HANDOFF §1/§5/§7 更新，Key 状态写清；
-5. Git：只提交本阶段文件，不 push upstream；
-6. 已知缺口至少 3 条；
-7. 输出 Completion Report（PHASE-CHECKLIST §3）。
+4. 总体目标对齐：对照 GOAL-AUDIT 检查“能力/阶段/因子是否 wire/是否 no-op/是否 LLM 混淆”；
+5. 文档：HANDOFF §1/§5/§7 更新，Key 状态写清；
+6. Git：只提交本阶段文件，不 push upstream；
+7. 已知缺口至少 3 条；
+8. 输出 Completion Report（PHASE-CHECKLIST §3）。
 
 **没有通过集成检查，不要说“完成”。**
 
@@ -739,10 +741,12 @@ B. 新会话继续 S<x+1>
 ### 15.1 原则
 
 1. **一个会话只做一个阶段**：S4 就做 M/U/K，不要顺手做 S5。
-2. **用链接，不要贴聊天**：HANDOFF + SESSION-PROMPTS + PHASE-CHECKLIST + 相关文件。
-3. **必须写验收标准**：否则会话不知道什么时候停。
-4. **必须写“不要做”**：防止它扩大范围。
-5. **并行任务必须隔离 worktree**：不要让两个会话改同一个工作区。
+2. **先对齐目标**：读 GOAL-AUDIT，明确本任务服务哪个模块/哪个 E 阶段，而不是“优化系统”。
+3. **用链接，不要贴聊天**：HANDOFF + SESSION-PROMPTS + PHASE-CHECKLIST + GOAL-AUDIT + 相关文件。
+4. **必须写验收标准**：否则会话不知道什么时候停。
+5. **必须写“不要做”**：防止它扩大范围。
+6. **并行任务必须隔离 worktree**：不要让两个会话改同一个工作区。
+7. **修复任务必须写“不能只让测试变绿”**：不能 build 的因子要标 runnable=false，不能静默删掉。
 
 ### 15.2 最简模板（日常用）
 
@@ -750,6 +754,7 @@ B. 新会话继续 S<x+1>
 @repo/docs/optimization/HANDOFF.md
 @repo/docs/optimization/SESSION-PROMPTS.md
 @repo/docs/optimization/PHASE-CHECKLIST.md
+@repo/docs/optimization/GOAL-AUDIT.md
 
 工作区根目录是 default-workspace，仓库在 repo/。
 请先 cd repo，读 HANDOFF §1/§1.3/§2/§5，再读 SESSION-PROMPTS 的 S4。
@@ -772,6 +777,7 @@ Key：需要 L3 API；先按 HANDOFF §1.3 询问，未确认不跑 API。
 - HANDOFF §1/§1.3/§2/§5
 - SESSION-PROMPTS §0.1 + S9
 - PHASE-CHECKLIST §0
+- GOAL-AUDIT §1–§3
 - 04-experiments.md §4.13
 - e4-environment-grid.json
 
@@ -873,5 +879,55 @@ Key：<不需要 / 本地 / API 需要，先问 / blocked_on_key>
 - 不要把所有文档都 @ 进去。
 - 不要把旧聊天记录/大段日志贴进去。
 - 不要在缺 key 时让它“先用别的模型试试”而不记录。
+
+---
+
+## 16. 修复会话提示词模板（审计后使用）
+
+```text
+@repo/docs/optimization/HANDOFF.md
+@repo/docs/optimization/SESSION-PROMPTS.md
+@repo/docs/optimization/PHASE-CHECKLIST.md
+@repo/docs/optimization/GOAL-AUDIT.md
+@repo/docs/optimization/AUDIT-2026-11-09.md
+
+工作区：/Users/.../default-workspace
+仓库：repo/
+先做 Startup Audit：branch/commit、git status、worktree、测试基线、S6 是否还有未提交改动。
+
+目标：修复审计报告里的 P0/P1，不新增功能，不跑 E1 全量。
+先读：
+- HANDOFF §1/§1.3/§2/§5
+- SESSION-PROMPTS §14/§15
+- PHASE-CHECKLIST §0
+- GOAL-AUDIT §1–§3
+- AUDIT-2026-11-09.md
+
+修复顺序：
+1. 确认 S6 executor 是否已提交；未提交不要覆盖，必要时用隔离 worktree。
+2. runnable 门禁：compiler/CLI 对每个 plan 做 registry + build 检查；
+   不能 build 的 plan 标 runnable=false，默认不进入正式矩阵。
+3. Runner 按 plan.dataset 选数据。
+4. resume 区分 ok/error，加 --retry-errors。
+5. compiler 按 config_hash 去重。
+6. 每个修复补测试；更新 GOAL-AUDIT/PHASE-CHECKLIST 的对应项。
+
+验收：
+- 全量测试通过；
+- E1a/E3/E4 所有 plan 可 build；E1b 列出不可运行项及原因；
+- 没有 no-op 因子；没有静默 fallback；没有把 offline 当 LLM；
+- HANDOFF/S6-REPORT 更新；
+- 给 A/B 选择。
+
+不要做：
+- 不要重写模块；
+- 不要跑 E1 全量；
+- 不要用 legacy_dynamic 冒充 R0；
+- 不要 push upstream；
+- 不要覆盖 S6 未提交文件。
+
+Key：不需要。
+开始前 Startup Audit；完成后 Completion Audit + Goal Alignment。
+```
 
 > 一句话：**给会话的不是“任务描述”，而是“入口文件 + 阶段提示词 + 验收 + 不要做 + 完成自检”。**
