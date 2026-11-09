@@ -58,7 +58,6 @@
           ]
         },
         "set": {
-          "schema.params.bitemporal": false,
           "temporal.model": "version_chain",
           "temporal.params.conflict_policy": "keep_both",
           "logic.state_resolver": "query_llm"

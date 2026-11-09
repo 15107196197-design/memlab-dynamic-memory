@@ -71,7 +71,6 @@
           "schema.impl": "legacy_flat"
         },
         "set": {
-          "schema.params.bitemporal": false,
           "temporal.model": "record_time",
           "temporal.params.conflict_policy": "keep_both",
           "logic.state_resolver": "query_llm"

@@ -147,7 +147,7 @@ class RunnerTests(unittest.TestCase):
     def test_three_configs_ten_questions_write_sqlite(self):
         with tempfile.TemporaryDirectory() as directory:
             payload = minimal_spec(
-                factors=[{"id": "planner.impl", "levels": ["none", "rule_router", "dag"]}],
+                factors=[{"id": "fusion.impl", "levels": ["single_channel", "rrf", "weighted_rrf"]}],
                 dataset={"adapter": "locomo", "samples": ["conv-26"], "question_limit": 10},
             )
             spec = spec_module.load(write_spec(Path(directory), payload))

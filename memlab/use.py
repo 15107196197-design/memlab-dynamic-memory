@@ -14,6 +14,7 @@ from typing import Any, Mapping, Sequence
 from . import model
 from .contracts import MemoryUnit, StateView
 from .registry import build as build_impl
+from .registry import get as get_impl
 from .registry import register
 from .tokens import estimate_tokens
 from .trace import Trace
@@ -314,9 +315,25 @@ class UsePipeline:
 
         # Config blocks mix parameters for several axes (e.g. logic.params has audit
         # settings); only pass what the selected implementation declares.
-        return cls(overrides.pop("resolver", resolver()), overrides.pop("answerer", answerer()),
-                   resolver_params=overrides.pop("resolver_params", {}),
-                   answerer_params=overrides.pop("answerer_params", {}), **overrides)
+        resolver_name, answerer_name = overrides.pop("resolver", resolver()), overrides.pop("answerer", answerer())
+
+        def allowed_params(axis: str, name: str, path: str) -> dict[str, Any]:
+            if config is None or not hasattr(config, "params"):
+                return {}
+            params = config.params(path)
+            try:
+                impl = get_impl(axis, name)
+                allowed = getattr(impl, "params_allowed", frozenset())
+            except Exception:
+                return params
+            return {key: value for key, value in params.items() if key in allowed}
+
+        return cls(
+            resolver_name, answerer_name,
+            resolver_params=overrides.pop("resolver_params", allowed_params(AXIS_STATE, resolver_name, "logic")),
+            answerer_params=overrides.pop("answerer_params", allowed_params(AXIS_ANSWER, answerer_name, "answer")),
+            **overrides,
+        )
 
     def run(self, query: str, merged: Any, frame: Any, store: Any, ctx: Any) -> AnswerResult:
         trace = Trace()

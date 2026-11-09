@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 from .. import config as lab_config
+from .. import registry
 from . import spec as spec_module
 
 
@@ -40,11 +41,50 @@ def set_path(data: dict[str, Any], path: str, value: Any) -> None:
     current[parts[-1]] = copy.deepcopy(value)
 
 
+def set_impl(config: dict[str, Any], path: str, value: Any, *,
+             keep_params: bool = False) -> None:
+    """Set an ``*.impl`` path and drop params the new implementation cannot accept."""
+    axis = path[:-5] if path.endswith(".impl") else path
+    old = get_path(config, path)
+    if not keep_params and old != value and axis != "planner":
+        params_path = f"{axis}.params"
+        params = get_path(config, params_path)
+        if isinstance(params, Mapping):
+            try:
+                impl = registry.get(axis, str(value))
+                allowed = getattr(impl, "params_allowed", frozenset())
+                set_path(config, params_path, {key: item for key, item in params.items() if key in allowed})
+            except Exception:
+                pass
+    set_path(config, path, value)
+
+
 def apply_overrides(base: Mapping[str, Any], overrides: Mapping[str, Any]) -> dict[str, Any]:
     """Deep-copy base and apply dotted-path overrides."""
     out = copy.deepcopy(dict(base))
+    impl_paths = {str(path) for path in overrides if str(path).endswith(".impl")}
+    explicit_params = {path[:-5] + ".params" for path in impl_paths}
     for path, value in overrides.items():
-        set_path(out, str(path), value)
+        path = str(path)
+        if path.endswith(".impl"):
+            set_impl(out, path, value, keep_params=path[:-5] + ".params" in overrides)
+        else:
+            set_path(out, path, value)
+    return out
+
+
+def normalize_environment(environment: Mapping[str, Any]) -> dict[str, Any]:
+    """Accept the short spec form (``llm: model``) as well as the config form.
+
+    Experiment specs use ``environment.llm = "qwen..."`` for readability, while a
+    RunConfig requires ``environment.llm = {"model": ...}``.  Normalize here so a
+    compiled plan is always a valid run config.
+    """
+    out = copy.deepcopy(dict(environment))
+    for key in ("llm", "embedding", "judge"):
+        value = out.get(key)
+        if isinstance(value, str) and value.strip():
+            out[key] = {"model": value}
     return out
 
 
@@ -89,6 +129,22 @@ def apply_derived_rules(config: dict[str, Any], rules: Iterable[Mapping[str, Any
         if not changed:
             break
     return out, applied
+
+
+def capability_closure(config: dict[str, Any]) -> tuple[dict[str, Any], list[str]]:
+    """Apply generic fallbacks that keep a compiled plan executable.
+
+    Experiment specs should express the dependency; this is a safety net so a
+    matrix never contains a plan that ``RunConfig`` rejects.  It only downgrades a
+    policy when the structure that policy needs is absent.
+    """
+    out = copy.deepcopy(config)
+    notes: list[str] = []
+    if get_path(out, "graph.repr.impl") == "none" and get_path(out, "temporal.params.conflict_policy") == "invalidate_edge":
+        if get_path(out, "write.resolver.impl") != "bitemporal_invalidate":
+            set_path(out, "temporal.params.conflict_policy", "keep_both")
+            notes.append("capability closure: no graph -> conflict_policy=keep_both")
+    return out, notes
 
 
 def _slug(value: str) -> str:
@@ -139,10 +195,17 @@ class Compiler:
               factors: Mapping[str, Any] | None = None, environment: Mapping[str, Any] | None = None,
               dataset: Mapping[str, Any] | None = None, notes: Iterable[str] = ()) -> RunPlan:
         requested = copy.deepcopy(requested or config)
-        env = merge(self.spec.environment, environment or {})
+        env = normalize_environment(merge(self.spec.environment, environment or {}))
         data = merge(self.spec.dataset, dataset or {})
         effective, applied = apply_derived_rules(config, self.rules)
+        effective, closure = capability_closure(effective)
+        applied += closure
         effective = merge(effective, {"environment": env, "dataset": data})
+        problems = lab_config.problems(effective)
+        if problems:
+            raise spec_module.SpecError([
+                f"plan {index} is not a valid run config: " + "; ".join(problems[:5])
+            ])
         digest = lab_config.digest(effective)
         run_id = f"r-{_slug(self.spec.id)}-{index:03d}-{digest.split(':')[-1][:8]}"
         all_notes = list(notes) + applied
@@ -169,7 +232,10 @@ class Compiler:
             path = self._factor_path(factor)
             for level in factor.get("levels") or []:
                 requested = copy.deepcopy(base)
-                set_path(requested, path, level)
+                if path.endswith(".impl"):
+                    set_impl(requested, path, level)
+                else:
+                    set_path(requested, path, level)
                 if not self._applies(requested, factor):
                     continue
                 plans.append(self._plan(len(plans), requested, factors={factor["id"]: level}))
@@ -211,7 +277,11 @@ class Compiler:
             requested = copy.deepcopy(base)
             values = {}
             for factor, (_, value) in zip(factors, combination):
-                set_path(requested, self._factor_path(factor), value)
+                path = self._factor_path(factor)
+                if path.endswith(".impl"):
+                    set_impl(requested, path, value)
+                else:
+                    set_path(requested, path, value)
                 values[factor["id"]] = value
             plans.append(self._plan(len(plans), requested, factors=values,
                                     notes=["fractional spec compiled as full factorial; generator not implemented"]
@@ -243,7 +313,11 @@ class Compiler:
             chosen[last["id"]] = values_for[-1][sum(bits) % 2]
             requested = copy.deepcopy(self._base())
             for factor in factors:
-                set_path(requested, self._factor_path(factor), chosen[factor["id"]])
+                path = self._factor_path(factor)
+                if path.endswith(".impl"):
+                    set_impl(requested, path, chosen[factor["id"]])
+                else:
+                    set_path(requested, path, chosen[factor["id"]])
             plans.append(self._plan(len(plans), requested, factors=chosen))
         return plans
 

@@ -74,5 +74,6 @@ def build_store(sample: str | Mapping[str, Any], ctx: Any, *,
     store = MemoryStore(turns)
     write = pipeline.write(turns, store, ctx)
     graph_name = graph or _impl(ctx, "graph.repr", "state_slot")
-    store.ensure_graph(graph_name)
+    if graph_name and graph_name != "none":
+        store.ensure_graph(graph_name)
     return IngestResult(store=store, write=write, graph=graph_name, conversation=record["sample_id"])
