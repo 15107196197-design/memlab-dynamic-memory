@@ -48,22 +48,76 @@ _PIPELINES: dict[tuple[str, str, bool], E2EPipeline] = {}
 _JOBS: dict[str, dict[str, Any]] = {}
 _JOBS_LOCK = threading.RLock()
 _JOBS_EXECUTOR = ThreadPoolExecutor(max_workers=1)
-AXES = [
-    {"id": "schema", "label": "Schema", "path": "schema.impl"},
-    {"id": "write.resolver", "label": "Write resolver", "path": "write.resolver.impl"},
-    {"id": "write.auditor", "label": "Write auditor", "path": "write.auditor.impl"},
-    {"id": "graph.repr", "label": "Graph repr", "path": "graph.repr.impl"},
-    {"id": "planner", "label": "Planner", "path": "planner.impl"},
-    {"id": "fusion", "label": "Fusion", "path": "fusion.impl"},
-    {"id": "rerank", "label": "Rerank", "path": "rerank.impl"},
-    {"id": "post.filter", "label": "Post filter", "path": "post.filter.impl"},
-    {"id": "post.mmr", "label": "Post MMR", "path": "post.mmr.impl"},
-    {"id": "post.decay", "label": "Post decay", "path": "post.decay.impl"},
-    {"id": "post.compress", "label": "Post compress", "path": "post.compress.impl"},
-    {"id": "logic.state_resolver", "label": "State resolver", "path": "logic.state_resolver", "string": True},
-    {"id": "answer", "label": "Answerer", "path": "answer.impl"},
+MODULES = [
+    {"id": "W", "name": "Write", "label_zh": "写入",
+     "question": "原始对话如何变成可追溯、可冲突消解的 Memory？",
+     "stages": ["E1.1 实现选型", "E1.2 参数", "E1.3 模块 LLM"]},
+    {"id": "S", "name": "Store", "label_zh": "存储",
+     "question": "同样的内容如何组织，才能被检索到且不丢状态？",
+     "stages": ["E1.1 图表示", "E1.2 图参数", "E1.4 模块内组合"]},
+    {"id": "R", "name": "Retrieve", "label_zh": "检索",
+     "question": "问题如何变成检索动作：规划、通道与 K？",
+     "stages": ["E1.1 规划器", "E1.2 通道/K", "E1.3 规划 LLM"]},
+    {"id": "M", "name": "Merge", "label_zh": "合并",
+     "question": "多路候选如何融合、重排并控制 token 成本？",
+     "stages": ["E1.1 融合/重排", "E1.2 阈值/λ", "E1.4 顺序"]},
+    {"id": "U", "name": "Use", "label_zh": "使用",
+     "question": "哪些 Memory 当前有效，最终如何回答与引用？",
+     "stages": ["E1.1 状态解析", "E1.1 回答器", "E1.3 回答 LLM"]},
+    {"id": "K", "name": "Maintenance", "label_zh": "维护",
+     "question": "长期运行如何更新、去重、归档而不丢历史？",
+     "stages": ["K 单独执行", "维护指标", "不在单题 E2E 内"],
+     "note": "K 维护作用于长期存储，不在单题 Web 运行中执行；其指标见 maintenance 实验。"},
 ]
 
+AXES = [
+    {"id": "schema", "module": "W", "label": "Schema", "label_zh": "记忆结构",
+     "path": "schema.impl", "kind": "impl",
+     "desc": "flat facts / meta schema：字段、证据与双时间结构"},
+    {"id": "write.resolver", "module": "W", "label": "Resolver", "label_zh": "写入冲突策略",
+     "path": "write.resolver.impl", "kind": "impl",
+     "desc": "append / overwrite / keep_both / mem0_4action"},
+    {"id": "write.auditor", "module": "W", "label": "Auditor", "label_zh": "写入审计",
+     "path": "write.auditor.impl", "kind": "impl",
+     "desc": "none / llm_audit：写入后是否复核冲突"},
+    {"id": "graph.repr", "module": "S", "label": "Graph representation", "label_zh": "图表示",
+     "path": "graph.repr.impl", "kind": "impl",
+     "desc": "state_slot / entity_triple / three_layer / event_sparse：存储图结构"},
+    {"id": "planner", "module": "R", "label": "Planner", "label_zh": "查询规划",
+     "path": "planner.impl", "kind": "impl",
+     "desc": "none / rule_router / dag：是否拆子问题、如何路由"},
+    {"id": "retrieval.channels", "module": "R", "label": "Channels", "label_zh": "检索通道",
+     "path": "retrieval.channels", "kind": "channels",
+     "available": ["dense", "bm25", "graph", "temporal"],
+     "desc": "dense 稠密 / bm25 词法 / graph 图 / temporal 时序：多路召回"},
+    {"id": "retrieval.k", "module": "R", "label": "Top K", "label_zh": "检索数量 K",
+     "path": "retrieval.k", "kind": "number", "min": 1, "max": 50,
+     "desc": "每路保留的候选数量（影响召回与成本）"},
+    {"id": "fusion", "module": "M", "label": "Fusion", "label_zh": "融合",
+     "path": "fusion.impl", "kind": "impl",
+     "desc": "rrf / weighted_rrf / linear / query_adaptive_weights"},
+    {"id": "rerank", "module": "M", "label": "Rerank", "label_zh": "重排",
+     "path": "rerank.impl", "kind": "impl",
+     "desc": "none / cross_encoder：语义重排，缺依赖时回退"},
+    {"id": "post.filter", "module": "M", "label": "Filter", "label_zh": "后过滤",
+     "path": "post.filter.impl", "kind": "impl",
+     "desc": "none / threshold：按相关性/时效过滤"},
+    {"id": "post.mmr", "module": "M", "label": "MMR", "label_zh": "多样性选择",
+     "path": "post.mmr.impl", "kind": "impl",
+     "desc": "none / mmr：在相关性与多样性间取舍"},
+    {"id": "post.decay", "module": "M", "label": "Time decay", "label_zh": "时间衰减",
+     "path": "post.decay.impl", "kind": "impl",
+     "desc": "none / time_decay：按时间降低旧候选权重"},
+    {"id": "post.compress", "module": "M", "label": "Compress", "label_zh": "压缩",
+     "path": "post.compress.impl", "kind": "impl",
+     "desc": "none / extractive：控制进入回答的 token 预算"},
+    {"id": "logic.state_resolver", "module": "U", "label": "State resolver", "label_zh": "状态解析",
+     "path": "logic.state_resolver", "kind": "string",
+     "desc": "none / offline_slot / query_llm / bitemporal：判断当前有效 Memory"},
+    {"id": "answer", "module": "U", "label": "Answerer", "label_zh": "回答器",
+     "path": "answer.impl", "kind": "impl",
+     "desc": "direct / valid_history / evidence_chain / citation_required"},
+]
 
 class WebError(ValueError):
     def __init__(self, message: str, status: int = 400, **details: Any):
@@ -466,11 +520,14 @@ def axes() -> dict[str, Any]:
     impls = registry.list_implementations()
     out = []
     for axis in AXES:
-        names = impls.get(axis["id"], [])
-        if not names:
+        names = axis.get("available") or impls.get(axis["id"], [])
+        if axis.get("kind") not in ("number", "channels") and not names:
             continue
         out.append({**axis, "available": names})
-    return {"axes": out, "count": len(out)}
+    modules = []
+    for module in MODULES:
+        modules.append({**module, "axes": [axis for axis in out if axis.get("module") == module["id"]]})
+    return {"modules": modules, "axes": out, "count": len(out)}
 
 
 def _job_submit(body: dict[str, Any]) -> dict[str, Any]:

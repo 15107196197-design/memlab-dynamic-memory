@@ -42,3 +42,30 @@
 .v2-axis { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); }
 .v2-axis select { border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font-size: 12px; color: var(--ink); background: #fff; }
 @media (max-width: 640px) { .v2-axes { grid-template-columns: 1fr; } }
+/* Experiment-lab module zoning: W -> S -> R -> M -> U -> K */
+.lab-flow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 16px 0 10px; }
+.lab-flow button { border: 1px solid var(--line); background: #fff; border-radius: 8px; padding: 7px 10px; cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.lab-flow button b { font-family: var(--mono); color: var(--ink); margin-right: 4px; }
+.lab-flow button span { color: var(--muted); font-size: 11px; margin-left: 4px; }
+.lab-flow button:hover { border-color: var(--ink); }
+.lab-flow i { color: var(--faint); font-style: normal; font-size: 12px; }
+.lab-rule { font-size: 13px; line-height: 1.8; color: var(--ink-2); }
+.lab-modules { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
+.lab-module { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 16px 18px; }
+.lab-module:target { border-color: var(--ink); }
+.lab-mod-head { display: flex; gap: 10px; align-items: flex-start; }
+.lab-code { display: inline-flex; width: 28px; height: 28px; align-items: center; justify-content: center; border-radius: 7px; background: var(--ink); color: #fff; font-family: var(--mono); font-size: 13px; flex: none; }
+.lab-mod-head h3 { margin: 0 0 3px; font-size: 16px; }
+.lab-mod-head p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.lab-stage { display: flex; flex-wrap: wrap; gap: 5px; margin: 9px 0 4px; }
+.lab-stage span { border: 1px solid var(--line-2); background: #fafafa; border-radius: 999px; padding: 1px 7px; font-size: 11px; color: var(--muted); }
+.lab-axis-list { display: grid; gap: 10px; margin-top: 10px; }
+.lab-axis { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--line-2); padding-top: 8px; }
+.lab-axis > span { font-size: 13px; }
+.lab-axis > span b { font-weight: 600; }
+.lab-axis > span em { color: var(--muted); font-style: normal; font-size: 11px; margin-left: 4px; }
+.lab-axis small { color: var(--muted); font-size: 11px; line-height: 1.45; }
+.lab-axis select, .lab-axis input[type=number] { font-size: 12px; padding: 6px 8px; }
+.lab-channels { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--ink-2); }
+.lab-channels label { display: inline-flex; align-items: center; gap: 4px; }
+@media (max-width: 820px) { .lab-modules { grid-template-columns: 1fr; } }

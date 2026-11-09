@@ -65,6 +65,16 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("logic.state_resolver", by_id)
         self.assertIn("meta_schema", by_id["schema"]["available"])
 
+    def test_axes_are_grouped_by_six_modules(self):
+        data = webapp.get("/api/v2/config/axes")
+        self.assertEqual([m["id"] for m in data["modules"]], ["W", "S", "R", "M", "U", "K"])
+        modules = {m["id"]: m for m in data["modules"]}
+        self.assertEqual([a["id"] for a in modules["W"]["axes"]], ["schema", "write.resolver", "write.auditor"])
+        self.assertIn("retrieval.channels", [a["id"] for a in modules["R"]["axes"]])
+        self.assertEqual(modules["K"]["axes"], [])
+        channels = next(a for a in modules["R"]["axes"] if a["id"] == "retrieval.channels")
+        self.assertIn("graph", channels["available"])
+
     def test_async_job_completes(self):
         job = webapp.post("/api/v2/jobs", {
             "sample": "conv-26", "preset": "B0",
