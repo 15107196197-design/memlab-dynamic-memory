@@ -1,0 +1,17 @@
+{
+  "created_at": "2026-11-09T18:54:24+08:00",
+  "reports": [
+    "reports/experiments/E1-W1.json",
+    "reports/experiments/E1-S2.json",
+    "reports/experiments/E1-R1.json",
+    "reports/experiments/E1-M1.json",
+    "reports/experiments/E1-U1.json",
+    "reports/experiments/E1-K1.json",
+    "reports/experiments/E2-1.json",
+    "reports/experiments/E5-1.json",
+    "reports/experiments/E1-2-params.json",
+    "reports/experiments/E1-R3.json"
+  ],
+  "data_mode": "offline",
+  "note": "Offline-only reports; online fields are pending and must not be filled with these numbers."
+}
