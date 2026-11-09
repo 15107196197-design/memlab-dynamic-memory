@@ -13,7 +13,7 @@
 | **A. 直接复用** | B0/R0 已实现模块、`data/facts`、`data/states`、`eval/archive/legacy-b0-results.json`、S5 控制面、S6 offline executor、S7a coupling | ✅ 现在可用 | 无 |
 | **B. 本地模型/服务** | 真实 LLM、bge-m3 embedding | ⚠️ 代码已接 Ollama，但服务未启动 | 安装 Ollama + pull 模型 |
 | **C. 本地 Python 包/权重** | cross-encoder rerank、NLI/entailment、统计/图算法 | ⚠️ 代码有回退/未接 | pip 包 + 模型权重 |
-| **D. 外部 API** | L3 强模型、第二 Judge、API embedding/rerank | ❌ 还没有 provider adapter | OpenAI-compatible adapter + key |
+| **D. 外部 API** | L3 强模型、第二 Judge、API embedding/rerank | ⚠️ provider adapter 已实现，缺 endpoint/key | 设置 key + 跑 `scripts/preflight.py` |
 | **E. 需适配/实现** | H-MEM/StructMem/A-MEM、event/community/bitemporal graph、PPR/community、REAPER/RL、LLM reranker/summary、Hindsight、self-consistency、hierarchy、K 的 summarize/entailment | ❌ 没有 drop-in | 论文代码/自己实现 registry adapter |
 
 > **重要：** “已注册”不等于“已 wire”。当前 `graph.retrieval.impl`、`post.dedupe`、`write.consolidator` 等配置轴存在但代码未消费；不要把它们当有效因子。
@@ -206,12 +206,12 @@ pip install networkx python-louvain
 | Microsoft GraphRAG 全量 | 面向文档语料，不是 LoCoMo 对话；社区/图算法可借用，不要整套接 |
 | FAISS | 754 unit 规模不需要；当前 cosine 足够 |
 | `rank_bm25` | 已有 BM25 实现 |
-| OpenAI Python SDK | `requests/httpx` 已够；真正缺的是 provider adapter，不是 SDK |
+| OpenAI Python SDK | `requests/httpx` 已够；provider adapter 已实现，不需要额外 SDK |
 | 本地 72B | 成本/显存不现实；L3 用 API |
 
 ---
 
 ## 10. 一句话结论
 
-**E1.1 的 A 级现在就能用现有成果跑；B 级只差 Ollama + 27B/bge-m3；M2/M3 只差 cross-encoder；L3/Judge 只差一个 API adapter + key。**  
+**E1.1 的 A 级现在就能用现有成果跑；B 级只差 Ollama + 27B/bge-m3；M2/M3 只差 cross-encoder；L3/Judge 只差 endpoint + key（adapter 已实现）。**  
 H-MEM/StructMem/A-MEM/REAPER/PPR/community/LLM rerank/summary/Hindsight/entailment **不是安装包就能用**，需要写 adapter；不要为了“组件齐全”先装一堆框架。

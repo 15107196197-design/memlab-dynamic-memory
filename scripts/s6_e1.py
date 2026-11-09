@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import importlib.util
 import json
 import math
 import random
@@ -25,12 +26,27 @@ if str(ROOT) not in sys.path:
 
 from memlab import cache as lab_cache
 from memlab import config as lab_config
-from memlab import legacy, manifest
+from memlab import legacy, manifest, providers
+from memlab.judge import Judge
 from memlab.experiments import compiler, executor, runner, store as store_module
 from memwb import dataset, evaluation
 
 BASE_R0 = lab_config.RunConfig.load(ROOT / "configs" / "reference-r0.json").to_dict()
 SAMPLES = ["conv-26", "conv-30", "conv-43", "conv-44"]
+PROVIDER_OVERRIDES: dict[str, str] = {}
+EMBEDDING_OVERRIDES: dict[str, str] = {}
+JUDGE_ENABLED = False
+
+
+def apply_provider_overrides(config: dict) -> dict:
+    environment = config.setdefault("environment", {})
+    if PROVIDER_OVERRIDES:
+        environment.setdefault("llm", {}).update(PROVIDER_OVERRIDES)
+    if EMBEDDING_OVERRIDES:
+        environment.setdefault("embedding", {}).update(EMBEDDING_OVERRIDES)
+    if JUDGE_ENABLED:
+        environment["judge"] = dict(environment.get("llm") or {})
+    return config
 
 
 def config_from(base: dict, overrides: dict) -> dict:
@@ -151,6 +167,7 @@ def question_sets(samples: list[str], total: int, seed: int) -> list:
 def make_plan(module: str, candidate: dict, seed: int, question_limit: int,
               samples: list[str] | None = None):
     config = copy.deepcopy(candidate["config"])
+    apply_provider_overrides(config)
     config.setdefault("environment", {})["seed"] = seed
     lab_config.RunConfig.from_dict(config)  # validate before the run starts
     digest = lab_config.digest(config)
@@ -181,6 +198,21 @@ def summarize(store: store_module.ResultStore, run_id: str, n: int) -> dict:
             "error_rate": round(errors / n, 4) if n else None, "metrics": metrics}
 
 
+def _report_limits(offline: bool, judge: bool = False) -> list[str]:
+    limits = []
+    if offline:
+        limits.append("Offline: embedding is deterministic hashing; answer F1 is an extractive baseline, not an LLM answer.")
+    else:
+        limits.append("Online: answer F1 is from the configured LLM." + ("" if judge else " No LLM-as-Judge was computed."))
+        if judge:
+            limits.append("Judge currently uses the configured answer model; use a separate judge model/provider for E5.")
+    limits.append("R0 configs run through E2E executor; Runtime guard remains fail-closed.")
+    if importlib.util.find_spec("sentence_transformers") is None:
+        limits.append("cross_encoder falls back because sentence-transformers is not installed.")
+    limits.append("K metrics are store-level and repeated per question.")
+    return limits
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description="Run S6 module screening")
     parser.add_argument("--questions", type=int, default=120,
@@ -192,16 +224,60 @@ def main(argv=None) -> int:
     parser.add_argument("--cache", default=str(ROOT / "runs" / "s6" / "cache"))
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--online", action="store_true",
-                        help="use Ollama instead of offline clients (requires a running model server)")
+                        help="use the configured provider instead of offline clients")
+    parser.add_argument("--provider", default=None, choices=("ollama", "openai_compatible", "deepseek", "dashscope", "qwen", "openrouter"))
+    parser.add_argument("--model", default=None)
+    parser.add_argument("--base-url", default=None)
+    parser.add_argument("--api-key-env", default=None)
+    parser.add_argument("--embedding-provider", default=None)
+    parser.add_argument("--embedding-model", default=None)
+    parser.add_argument("--embedding-base-url", default=None)
+    parser.add_argument("--embedding-api-key-env", default=None)
+    parser.add_argument("--judge", action="store_true",
+                        help="run LLM-as-Judge for every question (B-level; online only)")
     args = parser.parse_args(argv)
+    global PROVIDER_OVERRIDES, EMBEDDING_OVERRIDES, JUDGE_ENABLED
+    PROVIDER_OVERRIDES = {key: value for key, value in {
+        "provider": args.provider, "model": args.model, "base_url": args.base_url,
+        "api_key_env": args.api_key_env,
+    }.items() if value}
+    EMBEDDING_OVERRIDES = {key: value for key, value in {
+        "provider": args.embedding_provider, "model": args.embedding_model,
+        "base_url": args.embedding_base_url, "api_key_env": args.embedding_api_key_env,
+    }.items() if value}
+    JUDGE_ENABLED = bool(args.judge)
 
     db = Path(args.db)
+    cache = lab_cache.ArtifactCache(Path(args.cache))
+    offline = not args.online
+    llm_environment = dict((BASE_R0.get("environment") or {}).get("llm") or {})
+    llm_environment.update(PROVIDER_OVERRIDES)
+    if args.judge and offline:
+        print(json.dumps({"error": "--judge requires --online (a real LLM); offline judge is not meaningful"},
+                         ensure_ascii=False, indent=2))
+        return 2
+    judge = Judge.from_environment({"llm": llm_environment}).score if args.judge else None
+    embedding_environment = dict((BASE_R0.get("environment") or {}).get("embedding") or {})
+    embedding_environment.update(EMBEDDING_OVERRIDES)
+    if not offline:
+        try:
+            preflight = providers.preflight(llm_environment)
+        except Exception as exc:
+            print(json.dumps({"error": f"LLM: {type(exc).__name__}: {exc}", "ready": False},
+                             ensure_ascii=False, indent=2))
+            return 2
+        try:
+            embedding_preflight = providers.preflight(embedding_environment)
+        except Exception as exc:
+            print(json.dumps({"error": f"embedding: {type(exc).__name__}: {exc}", "ready": False},
+                             ensure_ascii=False, indent=2))
+            return 2
+        print(json.dumps({"preflight": {"llm": preflight, "embedding": embedding_preflight}},
+                         ensure_ascii=False, indent=2))
     if not args.resume:
         for path in (db, db.with_name("e1.sqlite-wal"), db.with_name("e1.sqlite-shm")):
             path.unlink(missing_ok=True)
     db.parent.mkdir(parents=True, exist_ok=True)
-    cache = lab_cache.ArtifactCache(Path(args.cache))
-    offline = not args.online
     e2e = executor.make_e2e_executor(offline=offline, cache=cache)
     k_executors = {
         "none": executor.make_k_executor(policy="none", params={}, offline=offline, cache=cache),
@@ -218,7 +294,7 @@ def main(argv=None) -> int:
                 for seed in args.seeds:
                     plan = make_plan(module, candidate, seed, args.questions, args.samples)
                     execute = k_executors[candidate["action"]] if module == "K" else e2e
-                    machine = runner.Runner(store, executor=execute, resume=False)
+                    machine = runner.Runner(store, executor=execute, resume=False, judge=judge)
                     outcome = machine.run_plan(plan, questions[seed])
                     summary = summarize(store, plan.run_id, len(questions[seed]))
                     try:
@@ -260,8 +336,9 @@ def main(argv=None) -> int:
         "generated_at": datetime.now().astimezone().isoformat(timespec="seconds"),
         "git_commit": manifest.git_commit(),
         "offline": offline,
-        "ollama": not offline,
-        "answer_f1_kind": "offline_extractive (not an LLM answer)" if offline else "local_llm",
+        "provider": (PROVIDER_OVERRIDES.get("provider") or (BASE_R0.get("environment") or {}).get("llm", {}).get("provider") or "ollama"),
+        "ollama": (not offline and (PROVIDER_OVERRIDES.get("provider") or "ollama") == "ollama"),
+        "answer_f1_kind": "offline_extractive (not an LLM answer)" if offline else "llm_answer",
         "dataset": {"samples": args.samples, "questions_per_seed": args.questions, "seeds": args.seeds},
         "modules": {
             module: [
@@ -275,13 +352,8 @@ def main(argv=None) -> int:
             for module, items in by_module.items()
         },
         "reproducibility": reproducibility,
-        "limits": [
-            "Ollama unavailable: embedding is deterministic hashing, answer F1 is extractive baseline.",
-            "B-level Judge/F1 and real P95 are blocked_on_ollama.",
-            "R0 configs run through E2E executor; Runtime guard remains fail-closed.",
-            "cross_encoder falls back because sentence-transformers is not installed.",
-            "K metrics are store-level and repeated per question.",
-        ],
+        "judge": bool(args.judge),
+        "limits": _report_limits(offline, bool(args.judge)),
     }
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)

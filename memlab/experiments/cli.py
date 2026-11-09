@@ -11,12 +11,50 @@ import json
 import sys
 from pathlib import Path
 
+from .. import providers
 from . import analysis, compiler, runner, spec as spec_module
 from .store import ResultStore
 
 
 def _load(path: str) -> spec_module.Spec:
     return spec_module.load(path)
+
+
+def _block(value) -> dict:
+    if isinstance(value, dict):
+        return dict(value)
+    if isinstance(value, str) and value.strip():
+        return {"model": value}
+    return {}
+
+
+def apply_model_args(spec: spec_module.Spec, args) -> None:
+    """Apply CLI provider overrides to the spec environment (no key values)."""
+    environment = spec.data.setdefault("environment", {})
+    llm = _block(environment.get("llm"))
+    for key, value in (("provider", getattr(args, "provider", None)),
+                       ("model", getattr(args, "model", None)),
+                       ("base_url", getattr(args, "base_url", None)),
+                       ("api_key_env", getattr(args, "api_key_env", None))):
+        if value:
+            llm[key] = value
+    environment["llm"] = llm
+    embedding = _block(environment.get("embedding"))
+    for key, value in (("provider", getattr(args, "embedding_provider", None)),
+                       ("model", getattr(args, "embedding_model", None)),
+                       ("base_url", getattr(args, "embedding_base_url", None)),
+                       ("api_key_env", getattr(args, "embedding_api_key_env", None))):
+        if value:
+            embedding[key] = value
+    if embedding:
+        environment["embedding"] = embedding
+
+
+def preflight(spec: spec_module.Spec) -> dict:
+    environment = spec.data.get("environment") or {}
+    llm = _block(environment.get("llm"))
+    embedding = _block(environment.get("embedding"))
+    return {"llm": providers.preflight(llm), "embedding": providers.preflight(embedding)}
 
 
 def partition_plans(plans):
@@ -50,6 +88,7 @@ def _summary(spec, plans, selected, *, out=None, dry_run=True) -> dict:
 
 def cmd_sweep(args) -> int:
     spec = _load(args.spec)
+    apply_model_args(spec, args)
     plans = compiler.compile_spec(spec)
     selected = plans if args.include_invalid else [plan for plan in plans if plan.valid]
     if args.out:
@@ -70,6 +109,15 @@ def cmd_sweep(args) -> int:
 
 def cmd_run(args) -> int:
     spec = _load(args.spec)
+    apply_model_args(spec, args)
+    if getattr(args, "preflight", False) and args.executor == "e2e" and not args.offline:
+        try:
+            report = preflight(spec)
+        except Exception as exc:
+            print(json.dumps({"error": f"{type(exc).__name__}: {exc}", "ready": False},
+                             ensure_ascii=False, indent=2))
+            return 2
+        print(json.dumps({"preflight": report}, ensure_ascii=False, indent=2))
     plans = compiler.compile_spec(spec)
     selected = plans if args.include_invalid else [plan for plan in plans if plan.valid]
     if not selected:
@@ -98,6 +146,22 @@ def cmd_analyze(args) -> int:
     return 0
 
 
+def add_model_args(parser: argparse.ArgumentParser, *, with_preflight: bool = False) -> None:
+    parser.add_argument("--provider", default=None,
+                        choices=("ollama", "openai_compatible", "deepseek", "dashscope", "qwen", "openrouter"))
+    parser.add_argument("--model", default=None)
+    parser.add_argument("--base-url", default=None)
+    parser.add_argument("--api-key-env", default=None)
+    parser.add_argument("--embedding-provider", default=None,
+                        choices=("ollama", "openai_compatible", "deepseek", "dashscope", "qwen", "openrouter"))
+    parser.add_argument("--embedding-model", default=None)
+    parser.add_argument("--embedding-base-url", default=None)
+    parser.add_argument("--embedding-api-key-env", default=None)
+    if with_preflight:
+        parser.add_argument("--preflight", action="store_true",
+                            help="check provider/key/model before running e2e")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="MemLab experiment control plane")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -110,6 +174,7 @@ def build_parser() -> argparse.ArgumentParser:
     sweep.add_argument("--show", type=int, default=5)
     sweep.add_argument("--include-invalid", action="store_true",
                        help="write plans that are not runnable or vary a no-op axis")
+    add_model_args(sweep)
     sweep.set_defaults(func=cmd_sweep)
 
     run = sub.add_parser("run", help="compile and execute a spec")
@@ -131,6 +196,7 @@ def build_parser() -> argparse.ArgumentParser:
                      help="legacy = Runtime/legacy methods; e2e = S4 module pipeline")
     run.add_argument("--offline", action="store_true",
                      help="e2e only: deterministic offline clients when Ollama is unavailable")
+    add_model_args(run, with_preflight=True)
     run.set_defaults(func=cmd_run)
 
     analyze = sub.add_parser("analyze", help="summarize a result database")

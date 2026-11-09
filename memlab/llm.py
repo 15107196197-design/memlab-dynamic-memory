@@ -26,6 +26,7 @@ from memwb import config as legacy_config
 from memwb import llm as legacy_llm
 
 from . import config as lab_config
+from . import providers
 
 _CAPTURE_LOCK = threading.Lock()
 
@@ -47,10 +48,13 @@ class CallRecord:
 
 
 def _block(provider: str | None, model: str | None, temperature: float | None,
-           context: int | None, options: Mapping[str, Any] | None, digest: str | None) -> dict[str, Any]:
+           context: int | None, options: Mapping[str, Any] | None, digest: str | None,
+           base_url: str | None = None, api_key_env: str | None = None) -> dict[str, Any]:
     return {
         "provider": provider or "ollama",
         "model": model or legacy_config.answer_model(),
+        "base_url": base_url,
+        "api_key_env": api_key_env,
         "temperature": temperature,
         "context": context,
         "options": dict(options or {}),
@@ -65,7 +69,8 @@ def fingerprint_environment(environment: Mapping[str, Any] | None) -> str:
     embedding_block = env.get("embedding") if isinstance(env.get("embedding"), Mapping) else {}
     return lab_config.digest({
         "llm": _block(llm_block.get("provider"), llm_block.get("model"), llm_block.get("temperature"),
-                      llm_block.get("context"), llm_block.get("options"), llm_block.get("digest")),
+                      llm_block.get("context"), llm_block.get("options"), llm_block.get("digest"),
+                      llm_block.get("base_url"), llm_block.get("api_key_env")),
         "embedding": {
             "provider": embedding_block.get("provider") or "ollama",
             "model": embedding_block.get("model") or legacy_config.embed_model(),
@@ -114,13 +119,17 @@ class LLMClient:
 
     def __init__(self, model: str | None = None, *, provider: str = "ollama", temperature: float = 0.0,
                  context: int | None = None, options: Mapping[str, Any] | None = None,
-                 digest: str | None = None):
+                 digest: str | None = None, base_url: str | None = None,
+                 api_key_env: str | None = None, timeout: float | None = None):
         self.model = model
         self.provider = provider
         self.temperature = temperature
         self.context = context
         self.options = dict(options or {})
         self.digest = digest
+        self.base_url = base_url
+        self.api_key_env = api_key_env
+        self.timeout = timeout
         self.calls: list[CallRecord] = []
 
     @classmethod
@@ -133,6 +142,9 @@ class LLMClient:
             context=block.get("context"),
             options=block.get("options"),
             digest=block.get("digest"),
+            base_url=block.get("base_url"),
+            api_key_env=block.get("api_key_env"),
+            timeout=block.get("timeout"),
         )
 
     @property
@@ -142,6 +154,7 @@ class LLMClient:
     def fingerprint(self) -> str:
         return lab_config.digest({"llm": _block(
             self.provider, self.effective_model, self.temperature, self.context, self.options, self.digest,
+            self.base_url, self.api_key_env,
         )})
 
     def generate(self, prompt: str, json_mode: bool = False, max_tokens: int | None = None):
@@ -151,11 +164,21 @@ class LLMClient:
         text: Any = None
         error: str | None = None
         try:
-            with _recording_post(usage):
-                text = legacy_llm.generate(
-                    prompt, json_mode=json_mode, model=self.model, max_tokens=max_tokens,
-                    temperature=self.temperature, num_ctx=self.context, options=self.options,
-                )
+            if (self.provider or "ollama").lower() == "ollama":
+                with _recording_post(usage):
+                    text = legacy_llm.generate(
+                        prompt, json_mode=json_mode, model=self.model, max_tokens=max_tokens,
+                        temperature=self.temperature, num_ctx=self.context, options=self.options,
+                    )
+            else:
+                block = {
+                    "provider": self.provider, "model": self.effective_model,
+                    "base_url": self.base_url, "api_key_env": self.api_key_env,
+                    "temperature": self.temperature, "timeout": self.timeout, "options": self.options,
+                }
+                text, remote = providers.chat(block, prompt, json_mode=json_mode,
+                                              max_tokens=max_tokens, timeout=self.timeout)
+                usage.update(remote)
             return text
         except Exception as exc:
             error = f"{type(exc).__name__}: {exc}"
@@ -181,11 +204,16 @@ class EmbeddingClient:
     """Embedding client with fingerprinting and per-call accounting."""
 
     def __init__(self, model: str | None = None, *, provider: str = "ollama",
-                 options: Mapping[str, Any] | None = None, digest: str | None = None):
+                 options: Mapping[str, Any] | None = None, digest: str | None = None,
+                 base_url: str | None = None, api_key_env: str | None = None,
+                 timeout: float | None = None):
         self.model = model
         self.provider = provider
         self.options = dict(options or {})
         self.digest = digest
+        self.base_url = base_url
+        self.api_key_env = api_key_env
+        self.timeout = timeout
         self.calls: list[CallRecord] = []
 
     @classmethod
@@ -196,6 +224,9 @@ class EmbeddingClient:
             provider=block.get("provider", "ollama"),
             options=block.get("options"),
             digest=block.get("digest"),
+            base_url=block.get("base_url"),
+            api_key_env=block.get("api_key_env"),
+            timeout=block.get("timeout"),
         )
 
     @property
@@ -206,6 +237,8 @@ class EmbeddingClient:
         return lab_config.digest({"embedding": {
             "provider": self.provider,
             "model": self.effective_model,
+            "base_url": self.base_url,
+            "api_key_env": self.api_key_env,
             "options": self.options,
             "digest": self.digest,
         }})
@@ -215,7 +248,15 @@ class EmbeddingClient:
         error: str | None = None
         vectors: list[list[float]] | None = None
         try:
-            vectors = legacy_llm.embed(list(texts))
+            if (self.provider or "ollama").lower() == "ollama":
+                vectors = legacy_llm.embed(list(texts))
+            else:
+                block = {
+                    "provider": self.provider, "model": self.effective_model,
+                    "base_url": self.base_url, "api_key_env": self.api_key_env,
+                    "timeout": self.timeout, "options": self.options,
+                }
+                vectors, _ = providers.embed(block, list(texts), timeout=self.timeout)
             return vectors
         except Exception as exc:
             error = f"{type(exc).__name__}: {exc}"

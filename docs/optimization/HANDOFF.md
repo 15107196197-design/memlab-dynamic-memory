@@ -27,10 +27,10 @@
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **212 passed**（209 + 3 S7b-A screen 测试） |
-| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen（`coupling.screen` + `scripts/s7b_a.py`） |
-| 未实现 | S6 B 级（真实 Ollama F1/Judge）、E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）、Lab UI、API provider adapter；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **S7b-A 完成（A 级描述性）**；B 级仍 `blocked_on_ollama`；正式 S7b 需 Oracle run + 真实 F1/Judge；见 [S7B-A-REPORT.md](S7B-A-REPORT.md) |
+| 测试 | `python -m unittest discover -s tests -t .` → **223 passed**（212 + provider 8 + judge 3） |
+| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）、Lab UI；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 当前阶段 | **代码已具备“接模型即跑”的条件**：provider adapter + preflight + Judge + CLI overrides；真实模型仍未接入，B 级待跑。见 [RUNBOOK.md](RUNBOOK.md) |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -169,6 +169,7 @@ artifacts/
 | `docs/optimization/GOAL-AUDIT.md` | 总体目标对齐审计：能力→实现→参数→组合→环境、10 个审计问题、红旗 |
 | `docs/optimization/PREREQUISITES.md` | 每个 S 的环境/包/模型/接口/数据前置、检测命令、缺口处理阶梯与 A/B/C 模板 |
 | `docs/optimization/COMPONENT-SOURCING.md` | 模块内组件复用/安装/API/需实现的统计与安装顺序 |
+| `docs/optimization/RUNBOOK.md` | 模型接入后的 preflight、S6 B 级、E1.2/E1.3/E3/E4 命令与结果位置 |
 | `docs/optimization/S5-REPORT.md` | S5 实验控制面完成报告与 S6 前置 |
 | `docs/optimization/S6-REPORT.md` | S6 E1 离线筛选：协议、候选表、缺口与复现命令；§10.1 为控制面遗留项收尾 |
 | `docs/optimization/S7A-REPORT.md` | E2 耦合分析层（conversion/oracle/归因）完成报告 |
@@ -235,12 +236,12 @@ artifacts/
 
 | 项 | 状态 | 缺失时首选动作 |
 |---|---|---|
-| Python / 测试 | Python 3.14 下 **212 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
+| Python / 测试 | Python 3.14 下 **223 passed**（以 §1 为准）；要求 3.10+ | 缺 Python/包：装；先修基线 |
 | 本地 Ollama | **未安装/未运行**（S0 时 `127.0.0.1:11434` 连接失败；后续会话未见恢复） | 装/启动/`ollama pull`；磁盘/网络不够→给远程 endpoint / API / offline 选项 |
 | 本地模型 | `qwen3.8:27b-q4_K_M`、`bge-m3` 未验证/未拉取（约 17GB + 1GB 级） | 先 `ollama list`；缺则拉；磁盘不足→问用户清盘/换机/远程 |
 | 可选包 | `sentence-transformers` **未安装**；cross-encoder 回退 | `pip install -r requirements-optional.txt`；不能装→问用户；回退必须标“未真实重排” |
-| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） | 先实现 adapter，再给 provider/model/预算选项并问；未确认不跑 API |
-| API provider adapter | **未实现**：当前 `memlab.llm` 只走 Ollama；S9 前需要 `memlab/providers.py`（Ollama + OpenAI-compatible） | 这是可修代码前置：先实现 + 冒烟，不要只写 blocked |
+| API keys | **未配置**（`DEEPSEEK_API_KEY` / `DASHSCOPE_API_KEY` / `OPENROUTER_API_KEY` 等均未设置） | 给 provider/model/预算选项并问；未确认不跑 API |
+| API provider adapter | **已实现**：`memlab/providers.py`（Ollama + OpenAI-compatible），`LLMClient/EmbeddingClient` 已路由；`scripts/preflight.py` 可检查 | 仍需真实 endpoint/key 验证；key 只从 env 读 |
 | 数据 | `data/locomo10.json` 等已跟踪；四对话可用 | 缺数据先查 `data/`/`git status`；不要重下未知来源 |
 | Scene adapter | `personal_assistant` 可用；`coding` / `customer_service` **planned** | 在 S9 前实现或问用户优先级；planned 不计入最优 |
 | E1b 变体 | `post.mmr/decay=none`、`event_sparse` 已修/实现；`hmem/structmem/amem`、`community`、`cot`、`llm_summary` **deferred** | 按 `e1-screening.json` 的 `deferred.planned_in` 重入；不要当 blocked 或静默删 |
@@ -675,7 +676,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 - [ ] E0/E2/E3/E4/E5
 - [ ] 正式 E1 的 run 顺序随机化 / bootstrap / 多重比较（analysis 仍只有 per-run 汇总）
 - [ ] Lab UI / 报告自动化
-- [ ] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；S9 前必须）
+- [x] `memlab/providers.py`（Ollama + OpenAI-compatible API adapter；已实现 + 单测/本地 HTTP 冒烟）
 - [ ] API key / 预算确认（S9 L3 与 S10 第二 Judge；当前未配置）
 
 ### 5.3 实验记录模板
@@ -693,7 +694,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 |---|---|---|---|---|---|---|
 | 1 | 本地 Ollama + qwen/bge 未装/未跑 | S3 真实检索、S6 B 级、S7/S8/S9 | `blocked_on_ollama_install` | `ollama serve` + `ollama pull qwen3.8:27b-q4_K_M` + `ollama pull bge-m3`；或接远程 endpoint | 允许安装/清磁盘/给远程 URL | `ollama list` 有模型；curl tags 成功 |
 | 2 | `sentence-transformers` + reranker 模型 | S4 真实重排、S6 M2/M3 | `blocked_on_cross_encoder` | `pip install -r requirements-optional.txt`；首次下载模型 | 网络/磁盘/是否接受回退 | `import sentence_transformers` + 模型 cache 存在 |
-| 3 | `memlab/providers.py` 未实现 | S7 L3、S9、S10 | 可修代码前置 | 实现 OpenAI-compatible adapter + 1 次冒烟 | 选 provider/model/base_url | 冒烟返回 JSON；key 只从 env 读 |
+| 3 | `memlab/providers.py` + preflight | S7 L3、S9、S10 | **已实现**（Ollama + OpenAI-compatible；单测/本地 HTTP 冒烟） | 接真实 endpoint 后跑 `scripts/preflight.py` | 选 provider/model/base_url | 冒烟返回 JSON；key 只从 env 读 |
 | 4 | API keys 未配置 | S9 L3、S10 第二 Judge | `blocked_on_key`（未尝试前） | 先完成 #3，再给 provider/model/预算选项询问 | export 环境变量（不在聊天发 key） | 环境变量存在；1 次小请求成功 |
 | 5 | E1b 延后变体（`hmem/structmem/amem`、`community`、`cot`、`llm_summary`） | E1b 正式矩阵 | **5 组 `deferred`**（不是完成；`event_sparse`、`post.mmr/decay=none` 已修/实现） | 按 `e1-screening.json` 的 `deferred.planned_in` 重入：LLM extraction / 图库+摘要模型 / CoT 字段 | 优先级/是否本轮实现 | `sweep` 的 `deferred_factors` 与计划一致；实现后 runnable |
 | 6 | E4 candidate 轴 | E4 环境结论 | **B0/R0/CHEAP/QUALITY 已独立（108 格，0 alias）**；`E3_WINNER` deferred | E3 选出冠军后启用；不要用 `pending_e3` 折叠成 R0 | E3 结果 | 5 个 candidate 独立 `config_hash`，无假格 |
@@ -826,7 +827,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
   3. offline hash embedding 非语义；cross-encoder 未安装，M2/M3 的 rerank 是回退。
   4. S6 已覆盖四对话，但只有 80 题/seed；B 级与 cross-encoder 仍 blocked，S7b 需先补真实候选。
 - 下一步 3 件事：
-  1. 有 Ollama 后：`python scripts/s6_e1.py --online --questions 80 --seeds 13 17` 跑 B 级 2–3 候选。
+  1. 有 Ollama 后：`python scripts/preflight.py` → `python scripts/s6_e1.py --online --judge --questions 80 --seeds 13 17` 跑 B 级 2–3 候选（见 [RUNBOOK.md](RUNBOOK.md)）。
   2. 补 E1.2（W 字段数、M λ、R k）与 E1.3（模块 LLM 档位）小矩阵。
   3. 用 S6 候选跑 S7b（E2 耦合；S7a 已合并）。
 - 下一步选择：A 本会话继续 S7b / B 新会话（用 SESSION-PROMPTS S7）；用户未选前不自动开始。
@@ -959,7 +960,7 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 
 **前置（按优先级）：**
 
-1. **B 级 S6（有 Ollama 后）**：`python scripts/s6_e1.py --online --questions 80 --seeds 13 17`，优先 M2/R3（S7b-A 的高转化假设），把真实 `answer_f1/Judge/P95` 与 offline 对照。
+1. **B 级 S6（有模型后）**：先 `python scripts/preflight.py`，再 `python scripts/s6_e1.py --online --judge --questions 80 --seeds 13 17`，优先 M2/R3，把真实 `answer_f1/Judge/P95` 与 offline 对照。
 2. **正式 S7b-B**：同一 DB 结构重跑 `scripts/s7b_a.py`（B 级版报告，不覆盖 S7B-A-REPORT）；补 Oracle 干预 run + 多模型归因。
 3. **补 metric/executor**：`state_accuracy`、`judge_accuracy`、Oracle executor；否则 `P(A|S=1)` 和 Oracle gap 仍 `not_available`。
 4. 补 E1.2/E1.3 小矩阵（W 字段数、M λ、R k；模块 LLM 档位），仍按模块单因子。

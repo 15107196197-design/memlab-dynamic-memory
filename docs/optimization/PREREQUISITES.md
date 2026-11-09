@@ -70,9 +70,9 @@
 | **S4** | Python；真实 M 需 Ollama | 同 S3 + `sentence-transformers>=3.0` + `BAAI/bge-reranker-v2-m3`（~2GB） | 无 key | S3 | 缺 cross-encoder：`pip install -r requirements-optional.txt` 并下载；不能装：问用户；继续用回退必须标“未真实重排” |
 | **S5** | Python + SQLite（标准库） | 无 | 无 | S1–S4、`configs/experiments/*.json` | 先 dry-run；CLI 导入失败先修路径/依赖 |
 | **S6** | Python；B 级需 Ollama + 磁盘/网络 | qwen/bge；可选 cross-encoder | 无 API key；可选远程 Ollama / OpenAI-compatible（需 adapter） | S5 e2e executor、`scripts/s6_e1.py`、四对话数据 | 先尝试装/启动/拉模型；不行：问用户远程 endpoint / API key+adapter / offline A 级；不能只写 blocked |
-| **S7** | Python；S6 runs；可选 Ollama/API | 同 S6；L3 模型可选 | L3 API 可选；API 需 provider adapter | S6 SQLite/manifests/候选 | 无 L3：本地 L1/L2 + 标 A 级；有 key 无 adapter：先写 adapter；不要静默换模型 |
+| **S7** | Python；S6 runs；可选 Ollama/API | 同 S6；L3 模型可选 | L3 API 可选；provider adapter 已实现，需 endpoint/key | S6 SQLite/manifests/候选 | 无 L3：本地 L1/L2 + 标 A 级；有 key 先跑 preflight；不要静默换模型 |
 | **S8** | Python；S6/S7 候选 | 可选 L3 | 可选 API | S6/S7 结果、E3 spec | 候选缺失：先跑最小 S6 子集或明示用 B0/R0；缺 L3：本地组合并标未验证 |
-| **S9** | Python；3 档 LLM；磁盘/网络 | 本地 7B/27B + L3 API/72B；统计包按 analysis 实现需要 | **L3 key + `memlab/providers.py`** | S8、E4 spec、E3 winner、scene adapters（`coding`/`customer_service` 目前 planned） | 先实现 provider adapter + scene adapter；缺 key：给 provider/model/预算选项；无 key：L1/L2 2×3 子集并标 L3 未验证 |
+| **S9** | Python；3 档 LLM；磁盘/网络 | 本地 7B/27B + L3 API/72B；统计包按 analysis 实现需要 | **L3 key + 真实 endpoint**（provider adapter 已实现） | S8、E4 spec、E3 winner、scene adapters（`coding`/`customer_service` 目前 planned） | 先跑 `scripts/preflight.py`；补 scene adapter；缺 key：给 provider/model/预算选项；无 key：L1/L2 2×3 子集并标 L3 未验证 |
 | **S10** | Python；统计；人工标注 | 第二 Judge（不同家族）；bootstrap/κ 所需包 | 第二 Judge key/provider；人工 | E1–E4 结果、留出集 | 缺第二 Judge：本地不同家族或问 key；缺人工：问用户安排；不要 answer=judge |
 
 > “已注册/目录里有”不等于“可运行/已 wire”。组件获取方式见 [COMPONENT-SOURCING.md](COMPONENT-SOURCING.md)；`graph.retrieval.impl`、`post.dedupe`、`write.consolidator` 等 no-op 轴不要当因子。
@@ -99,6 +99,7 @@ ls ~/.cache/huggingface/hub 2>/dev/null | head
 
 # 代码前置 / 接口 adapter
 test -f memlab/providers.py && echo provider-adapter-present || echo provider-adapter-missing
+python scripts/preflight.py --config configs/reference-r0.json
 python -c "from memlab.experiments import executor; print('e2e-executor ok')"
 python -c "from memlab.experiments import runner; print('runner ok')"
 
@@ -228,14 +229,14 @@ blocked_on_<x>
 ### S9 · E4 环境
 
 - 检查：S8、E4 spec、3 档 LLM、`memlab/providers.py`、API key、数据规模、scene adapter。
-- 可自行：实现 provider adapter（OpenAI-compatible）+ 测试；补 scene adapter；装统计包；跑 L1/L2 子集。
+- 可自行：跑 `scripts/preflight.py`；补 scene adapter；装统计包；跑 L1/L2 子集。
 - 问用户：provider/model/base_url/预算；系统安装/大下载；scene adapter 优先级；是否接受 L1/L2 子集。
 - 边界：`coding`/`customer_service` 仍 planned 时不能计入最优；不能用本地 27B 冒充 L3；E4 的 `B0/R0/CHEAP/QUALITY` 已独立，`E3_WINNER` 是 `deferred`（等 E3），不要编译成 R0 假格。
 
 ### S10 · E5 确认 + 最终报告
 
 - 检查：E1–E4 结果、留出集、第二 Judge（不同家族）、人工标注、统计包。
-- 可自行：实现 provider adapter；本地不同家族 Judge；bootstrap/κ 脚本；补复现包。
+- 可自行：用 provider adapter 接第二 Judge；bootstrap/κ 脚本；补复现包。
 - 问用户：第二 Judge key/provider/预算；人工标注安排；是否接受“单 Judge + 人工”限制。
 - 边界：answer 模型不能当唯一 Judge；不同 Judge 不横比；未跑不能写“无差异”。
 

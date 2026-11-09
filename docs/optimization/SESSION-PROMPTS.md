@@ -62,7 +62,7 @@
 | S9 | **需要（完整网格）** | L3 强模型 + provider adapter + scene adapter | 先写 adapter + 问 provider/model/预算；用户拒绝才跑 L1/L2 的 2×3 子集并标 L3 未验证 |
 | S10 | **建议/需要** | 第二 Judge / 跨家族复核 + 人工 | 问 key/provider；或本地不同家族 Judge + 人工；不能静默省略 |
 
-> **代码前提：** 当前 `memlab.llm` 只走 Ollama；API 需要 `memlab/providers.py`（Ollama + OpenAI-compatible）。没有 adapter 时，即使有 key 也不能跑 API——**先把 adapter 补上，再问 key**，不要只写 blocked。
+> **代码前提：** `memlab/providers.py` 已实现 Ollama + OpenAI-compatible，`scripts/preflight.py` 可检查 endpoint/key/model；接模型后先跑 preflight，再问 key/预算。
 
 ### 通用 key 检查块（前置门禁的一步）
 
@@ -661,8 +661,8 @@ K：
 
 ### 前置条件（先检测，不满足先修）
 
-- 检查：S8、`e4-environment-grid.json`、3 档 LLM、`memlab/providers.py`、API key、数据规模、scene adapter（`coding`/`customer_service` 目前 planned）。
-- 可自行修：实现 OpenAI-compatible provider adapter 并冒烟；补 scene adapter；装统计包；先跑 L1/L2 子集。
+- 检查：S8、`e4-environment-grid.json`、3 档 LLM、`scripts/preflight.py`、API key、数据规模、scene adapter（`coding`/`customer_service` 目前 planned）。
+- 可自行修：跑 `scripts/preflight.py`；补 scene adapter；装统计包；先跑 L1/L2 子集。
 - 需问用户：provider/model/base_url/预算；系统安装/大下载；scene adapter 优先级；是否接受 L1/L2 子集。
 - 边界：planned scene 不计入最优；本地 27B 不冒充 L3；E3_WINNER 未选出时不能编译成 R0 假格。
 

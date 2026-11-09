@@ -69,7 +69,8 @@ class Runner:
 
     def __init__(self, store: ResultStore, *, executor: Callable[[RunPlan, Question], Mapping[str, Any]] | None = None,
                  limit: int | None = None, shard: int = 0, shards: int = 1, resume: bool = True,
-                 retry_errors: bool = False, log: Callable[[dict[str, Any]], None] | None = None):
+                 retry_errors: bool = False, judge: Callable[[RunPlan, Question, Mapping[str, Any]], Mapping[str, Any]] | None = None,
+                 log: Callable[[dict[str, Any]], None] | None = None):
         if shards <= 0 or not 0 <= shard < shards:
             raise ValueError("shard must satisfy 0 <= shard < shards")
         self.store = store
@@ -79,6 +80,7 @@ class Runner:
         self.shards = shards
         self.resume = resume
         self.retry_errors = retry_errors
+        self.judge = judge
         self.log = log
 
     def _selected(self, questions: Sequence[Question]) -> list[Question]:
@@ -105,6 +107,16 @@ class Runner:
                 metrics = evaluate_result(result, question)
                 metrics.setdefault("seconds", round(time.perf_counter() - started, 3))
                 meta = {"status": "ok", **(result.get("_meta") or {})}
+                if self.judge is not None:
+                    try:
+                        verdict = self.judge(plan, question, result)
+                        metrics.update({key: value for key, value in verdict.items()
+                                        if isinstance(value, (int, float)) and not isinstance(value, bool)})
+                        meta["judge_reason"] = str(verdict.get("judge_reason", ""))[:200]
+                    except Exception as exc:  # judge failure is data, not an answer failure
+                        self.store.add_metric(plan.run_id, question.qid, "judge_error", 1.0,
+                                              meta={"type": type(exc).__name__, "message": str(exc)[:500]})
+                        meta["judge_error"] = f"{type(exc).__name__}: {exc}"[:200]
                 self.store.add_metrics(plan.run_id, question.qid, metrics, meta=meta)
                 status = "ok"
             except Exception as exc:  # noqa: BLE001 - failures are data
