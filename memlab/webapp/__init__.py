@@ -41,6 +41,32 @@ PRESETS = {
     "CHEAP": ROOT / "configs" / "reference-cheap.json",
     "QUALITY": ROOT / "configs" / "reference-quality.json",
 }
+HARDWARE = {
+    "machine": "MacBook Air M2 (2022)",
+    "memory_gb": 8,
+    "disk_free_gb": 6,
+    "os": "macOS",
+    "local_llm_scale": {
+        "status": "hardware_blocked",
+        "label_zh": "GPU/内存受限",
+        "reason": "8GB unified memory and no usable discrete GPU: local 7B/27B/72B scale runs are not executable at experiment scale.",
+        "design_retained": True,
+        "alternative": "API tier grid (API_T1_cheap / API_T2_mid / API_T3_strong)",
+    },
+    "cross_encoder": {
+        "status": "hardware_limited",
+        "label_zh": "正式重排 GPU 受限",
+        "reason": "CPU cross-encoder is only viable for small smoke tests, not 36-cell M2/M3 experiments.",
+        "alternative": "small-sample CPU rerank or future API rerank adapter",
+    },
+}
+STATUS_LEGEND = {
+    "ready": "当前可运行",
+    "hardware_blocked": "硬件原因不可执行；设计保留",
+    "hardware_limited": "可小样本/回退；正式实验受限",
+    "not_implemented": "代码未实现（不是硬件原因）",
+    "deferred": "按计划延后（不是硬件原因）",
+}
 COURSE_IDS = legacy_config.SPLIT["development"] + legacy_config.SPLIT["test"]
 _SHARED_CACHE = lab_cache.ArtifactCache(ROOT / "cache" / "web")
 _CONTEXTS: dict[tuple[str, str, bool], Any] = {}
@@ -60,7 +86,9 @@ MODULES = [
      "stages": ["E1.1 规划器", "E1.2 通道/K", "E1.3 规划 LLM"]},
     {"id": "M", "name": "Merge", "label_zh": "合并",
      "question": "多路候选如何融合、重排并控制 token 成本？",
-     "stages": ["E1.1 融合/重排", "E1.2 阈值/λ", "E1.4 顺序"]},
+     "stages": ["E1.1 融合/重排", "E1.2 阈值/λ", "E1.4 顺序"],
+     "hardware_note": "M2/M3 的真实 cross-encoder 重排在 8GB CPU 上不可做；这是 GPU/内存限制，不是未实现。可小样本回退，或等 API rerank adapter。",
+     "hardware_status": "hardware_limited"},
     {"id": "U", "name": "Use", "label_zh": "使用",
      "question": "哪些 Memory 当前有效，最终如何回答与引用？",
      "stages": ["E1.1 状态解析", "E1.1 回答器", "E1.3 回答 LLM"]},
@@ -98,7 +126,13 @@ AXES = [
      "desc": "rrf / weighted_rrf / linear / query_adaptive_weights"},
     {"id": "rerank", "module": "M", "label": "Rerank", "label_zh": "重排",
      "path": "rerank.impl", "kind": "impl",
-     "desc": "none / cross_encoder：语义重排，缺依赖时回退"},
+     "desc": "none / cross_encoder：语义重排，缺依赖时回退",
+     "status": "hardware_limited",
+     "status_note": "正式 M2/M3 需要 GPU；CPU 只能小样本/回退，不是未实现。",
+     "option_status": {"cross_encoder": {
+         "status": "hardware_limited",
+         "label_zh": "GPU 受限（正式）",
+         "note": "8GB CPU 只适合小样本；正式重排结论暂不可得"}}},
     {"id": "post.filter", "module": "M", "label": "Filter", "label_zh": "后过滤",
      "path": "post.filter.impl", "kind": "impl",
      "desc": "none / threshold：按相关性/时效过滤"},
@@ -523,11 +557,12 @@ def axes() -> dict[str, Any]:
         names = axis.get("available") or impls.get(axis["id"], [])
         if axis.get("kind") not in ("number", "channels") and not names:
             continue
-        out.append({**axis, "available": names})
+        out.append({**axis, "available": names, "status": axis.get("status", "ready")})
     modules = []
     for module in MODULES:
         modules.append({**module, "axes": [axis for axis in out if axis.get("module") == module["id"]]})
-    return {"modules": modules, "axes": out, "count": len(out)}
+    return {"modules": modules, "axes": out, "count": len(out),
+            "hardware": HARDWARE, "status_legend": STATUS_LEGEND}
 
 
 def _job_submit(body: dict[str, Any]) -> dict[str, Any]:
@@ -837,7 +872,8 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
         if not path.is_file():
             return {"available": False, "reason": "eval/results.json not found"}
         data = json.loads(path.read_text(encoding="utf-8"))
-        return {"available": True, "source": "eval/results.json", "reports": _report_list()["experiments"], **data}
+        return {"available": True, "source": "eval/results.json", "reports": _report_list()["experiments"],
+                "hardware": HARDWARE, **data}
 
     if route == "/system":
         return {
@@ -855,8 +891,10 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
                 "ollama_url": legacy_config.ollama_url(),
             },
             "web": {"version": "w1", "api": "/api/v2", "legacy_api": "/api"},
+            "hardware": HARDWARE,
             "gaps": [
-                "W1: single-question runs; async experiment jobs and report tabs are W2.",
+                "本地 7B/27B/72B 规模实验：硬件受限（8GB 内存/无独显），设计保留但当前不可执行；用 API 档位替代。",
+                "M2/M3 真实 cross-encoder 重排：CPU 只适合小样本；这是硬件限制，不是未实现。",
                 "Legacy mode needs Ollama; module mode has offline extractive demo.",
                 "The teacher-provided dynamic-state annotations are not bundled; state benchmark is project-built.",
             ],

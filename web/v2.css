@@ -69,3 +69,13 @@
 .lab-channels { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--ink-2); }
 .lab-channels label { display: inline-flex; align-items: center; gap: 4px; }
 @media (max-width: 820px) { .lab-modules { grid-template-columns: 1fr; } }
+
+/* Hardware-limit annotations: distinguish "GPU blocked" from "not implemented". */
+.badge { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 1px 7px; font-size: 10.5px; line-height: 1.6; color: var(--ink-2); background: #fafafa; vertical-align: middle; }
+.badge.hardware_blocked, .badge.hardware_limited { border-color: #e2c48d; background: #fdf8ec; color: #7a4d12; }
+.badge.not_implemented, .badge.deferred { border-color: #d8d2c6; background: #f7f5f0; color: #6b6254; }
+.hardware-banner { border: 1px solid #e2c48d; background: #fdf8ec; border-radius: 10px; padding: 12px 14px; margin: 12px 0 2px; display: grid; gap: 5px; font-size: 13px; color: #5d431d; }
+.hardware-banner .badge { margin-left: 4px; }
+.hardware-banner .small { line-height: 1.6; }
+.hw-note { color: #7a4d12 !important; background: #fdf8ec; border-left: 2px solid #e2c48d; padding: 4px 8px; margin-top: 4px; }
+.lab-axis > span .badge { margin-left: 4px; }

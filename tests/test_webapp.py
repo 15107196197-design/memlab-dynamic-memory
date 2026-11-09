@@ -75,6 +75,25 @@ class WebAppTests(unittest.TestCase):
         channels = next(a for a in modules["R"]["axes"] if a["id"] == "retrieval.channels")
         self.assertIn("graph", channels["available"])
 
+    def test_hardware_limits_are_explicit_and_distinct_from_unimplemented(self):
+        data = webapp.get("/api/v2/config/axes")
+        hardware = data["hardware"]
+        self.assertEqual(hardware["local_llm_scale"]["status"], "hardware_blocked")
+        self.assertTrue(hardware["local_llm_scale"]["design_retained"])
+        self.assertIn("API", hardware["local_llm_scale"]["alternative"])
+        by_id = {axis["id"]: axis for axis in data["axes"]}
+        self.assertEqual(by_id["rerank"]["status"], "hardware_limited")
+        self.assertIn("cross_encoder", by_id["rerank"]["option_status"])
+        modules = {m["id"]: m for m in data["modules"]}
+        self.assertEqual(modules["M"]["hardware_status"], "hardware_limited")
+        self.assertIn("GPU", modules["M"]["hardware_note"])
+        self.assertIn("hardware_blocked", data["status_legend"])
+
+    def test_system_reports_hardware_boundary(self):
+        data = webapp.get("/api/v2/system")
+        self.assertEqual(data["hardware"]["machine"], "MacBook Air M2 (2022)")
+        self.assertTrue(any("硬件受限" in gap for gap in data["gaps"]))
+
     def test_async_job_completes(self):
         job = webapp.post("/api/v2/jobs", {
             "sample": "conv-26", "preset": "B0",

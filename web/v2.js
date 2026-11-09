@@ -11,6 +11,23 @@
   const v2sample = () => (app.samples || []).find((s) => s.id === app.sampleId) || {};
   const splitLabel = (s) => SPLIT_LABEL[s.split] || s.split || "—";
   const statePill = (state) => `<span class="pill ${esc(String(state || "").toLowerCase())}">${esc(STATE_LABEL[state] || state || "—")}</span>`;
+  const statusBadge = (status, label) => `<span class="badge ${esc(status || "ready")}">${esc(label || status || "ready")}</span>`;
+  const optionLabel = (axis, name) => {
+    const st = axis?.option_status?.[name];
+    return st ? `${name} · ${st.label_zh || st.status}` : name;
+  };
+  const hardwareBanner = (hw) => {
+    if (!hw) return "";
+    const local = hw.local_llm_scale || {};
+    const ce = hw.cross_encoder || {};
+    return `<div class="hardware-banner">
+      <div><b>硬件边界 · Hardware limit</b> <span class="badge hardware_blocked">GPU/内存受限</span></div>
+      <div class="small">当前机器：${esc(hw.machine || "—")} · ${esc(hw.memory_gb ?? "—")}GB 内存 · ${esc(hw.disk_free_gb ?? "—")}GB 可用磁盘。</div>
+      <div class="small">本地 7B/27B/72B 规模实验：<b>${esc(local.label_zh || "硬件受限")}</b>。${esc(local.reason || "")}</div>
+      <div class="small">替代：${esc(local.alternative || "API 档位")}。这是<b>硬件限制</b>，不是“未实现/没装包”；设计、评测方法保留。</div>
+      ${ce.reason ? `<div class="small">cross-encoder：${esc(ce.reason)} 替代：${esc(ce.alternative || "API rerank")}。</div>` : ""}
+    </div>`;
+  };
   const interval = (v) => {
     if (!v) return "—";
     const start = v.start ? String(v.start).slice(0, 10) : "?";
@@ -247,9 +264,11 @@
     const modules = axisData.modules || [];
     const options = list.filter((p) => !p.error).map((p) => `<option value="${esc(p.name)}" ${p.name === "B0" ? "selected" : ""}>${esc(p.name)}</option>`).join("");
     root.innerHTML = `${header("EXPERIMENT LAB · 实验台", "实验台", "六模块分区：W 写入 → S 存储 → R 检索 → M 合并 → U 使用 → K 维护；一次只改一个模块，其他模块固定，才可归因。")}
+      ${hardwareBanner(axisData.hardware)}
       <div class="lab-flow">${modules.map((m) => `<button data-jump="lab-${m.id}"><b>${esc(m.id)}</b> ${esc(m.label_zh)}<span>${esc(m.name)}</span></button>`).join("<i>→</i>")}</div>
       <div class="card pad lab-rule">
-        <b>实验逻辑</b>：E1.1 先选实现（Implementation）→ E1.2 调参数（Parameters）→ E1.3 换模块 LLM；E2 看耦合，E3 做组合，E4 换环境。每次只动一个轴；先校验 <span class="mono">runnable</span>，再跑单题 → 批量 → 生成四段报告。
+        <b>实验逻辑</b>：E1.1 先选实现（Implementation）→ E1.2 调参数（Parameters）→ E1.3 换模块 LLM / API 档位；E2 看耦合，E3 做组合，E4 换环境。每次只动一个轴；先校验 <span class="mono">runnable</span>，再跑单题 → 批量 → 生成四段报告。<br><span class="badge hardware_blocked">GPU 受限</span> 是<b>硬件原因</b>（不是未实现/没装包）：设计保留，当前用 API 档位或小样本回退。
+        <span class="badge not_implemented">未实现</span> 才是代码缺口；两者不要混。
       </div>
       <div class="card pad" style="margin-top:14px">
         <div class="toolbar"><span class="small"><b>预设</b> Preset</span><select id="v2-lab-preset" class="field">${options}</select><button id="v2-lab-validate" class="btn">校验配置 Validate</button><span id="v2-lab-hash" class="mono muted"></span></div>
@@ -288,15 +307,15 @@
         return `<label class="lab-axis"><span><b>${esc(axis.label_zh)}</b> <em>${esc(axis.label)}</em></span><small>${esc(axis.desc || "")}</small>
           <input type="number" data-path="${esc(axis.path)}" value="${esc(current ?? axis.min ?? 0)}" min="${esc(axis.min ?? 0)}" max="${esc(axis.max ?? 100)}" class="field"></label>`;
       }
-      const opts = (axis.available || []).map((n) => `<option value="${esc(n)}" ${String(n) === String(current) ? "selected" : ""}>${esc(n)}</option>`).join("");
-      return `<label class="lab-axis"><span><b>${esc(axis.label_zh)}</b> <em>${esc(axis.label)}</em></span><small>${esc(axis.desc || "")}</small>
+      const opts = (axis.available || []).map((n) => `<option value="${esc(n)}" ${String(n) === String(current) ? "selected" : ""}>${esc(optionLabel(axis, n))}</option>`).join("");
+      return `<label class="lab-axis"><span><b>${esc(axis.label_zh)}</b> <em>${esc(axis.label)}</em> ${axis.status && axis.status !== "ready" ? statusBadge(axis.status, axis.status === "hardware_limited" ? "GPU 受限" : axis.status) : ""}</span><small>${esc(axis.desc || "")}</small>${axis.status_note ? `<small class="hw-note">${esc(axis.status_note)}</small>` : ""}
         <select data-path="${esc(axis.path)}" class="field">${opts}</select></label>`;
     };
 
     const modulesHtml = (config) => modules.map((m) => {
       const axes = m.axes || [];
       return `<section class="lab-module" id="lab-${esc(m.id)}">
-        <div class="lab-mod-head"><span class="lab-code">${esc(m.id)}</span><div><h3>${esc(m.label_zh)} · ${esc(m.name)}</h3><p>${esc(m.question || "")}</p></div></div>
+        <div class="lab-mod-head"><span class="lab-code">${esc(m.id)}</span><div><h3>${esc(m.label_zh)} · ${esc(m.name)} ${m.hardware_status ? statusBadge(m.hardware_status, "GPU 受限") : ""}</h3><p>${esc(m.question || "")}</p>${m.hardware_note ? `<p class="small hw-note">${esc(m.hardware_note)}</p>` : ""}</div></div>
         <div class="lab-stage">${(m.stages || []).map((x) => `<span>${esc(x)}</span>`).join("")}</div>
         ${axes.length ? `<div class="lab-axis-list">${axes.map((a) => axisField(a, config)).join("")}</div>` : `<p class="note">${esc(m.note || "本模块没有可在单题 Web 运行中切换的实现轴。")}</p>`}
       </section>`;
@@ -476,6 +495,7 @@
     }).join("");
     const rrows = Object.entries(retrieval.summary || {}).filter(([k]) => k !== "dynamic_candidates").map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v["@15"] ?? "—")}</td></tr>`).join("");
     root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "课程要求的 F1 / Recall@K / 状态准确率，以及 Full Text / Vector RAG 对照。归档结果来自 eval/results.json，明确标注模型与 split。")}
+      ${hardwareBanner(data.hardware)}
       <div class="note">来源：<span class="mono">${esc(data.source)}</span> · 模型 ${esc(data.answer_model || "—")} / ${esc(data.embedding_model || "—")} · 测试对话 ${esc((data.split?.test || []).join(", "))} · 归档时间 ${esc(data.generated_at || "—")}</div>
       <div class="v2-cols">
         <div class="card pad"><h3>QA（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>F1</th><th>evidence recall</th><th>sec</th><th>state acc</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table>
@@ -488,6 +508,7 @@
   async function renderSystem(root) {
     const data = await api("/api/v2/system");
     root.innerHTML = `${header("SYSTEM · 系统", "系统", "运行环境、数据、模型与已知边界；用于课程演示和复现。")}
+      ${hardwareBanner(data.hardware)}
       <div class="v2-cols">
         <div class="card pad"><h3>数据</h3><pre class="v2-pre">${esc(JSON.stringify(data.dataset, null, 2))}</pre></div>
         <div class="card pad"><h3>模型</h3><pre class="v2-pre">${esc(JSON.stringify(data.model, null, 2))}</pre></div>
