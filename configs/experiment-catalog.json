@@ -2,243 +2,1140 @@
   "schema": "memlab/experiment-catalog@1",
   "updated": "2026-11-09",
   "source": "docs/optimization/04-experiments.md",
+  "coverage": {
+    "doc_sections": "§4.5–§4.14",
+    "ranges": {
+      "W": "W1–W5 + W-LLM",
+      "S": "S1–S4 + S-LLM",
+      "R": "R1–R4 + R-LLM",
+      "M": "M1–M6 + M-LLM",
+      "U": "U1–U4",
+      "K": "K1–K3",
+      "E2": "E2-1–E2-4",
+      "E3": "E3-1–E3-4 (E3a/E3b/E3c/Pareto)",
+      "E4": "E4-1–E4-8",
+      "E5": "E5-1",
+      "E0": "E0-1"
+    },
+    "schema_notice": "2026-11-09: catalog status now includes partial/pending/no_op/not_wired/blocked_on_code/blocked_on_hardware; grade/missing added; old fields retained; Web unchanged.",
+    "status_vocabulary": [
+      "partial",
+      "pending",
+      "no_op",
+      "not_wired",
+      "blocked_on_code",
+      "blocked_on_hardware"
+    ],
+    "grade_vocabulary": [
+      "offline",
+      "online",
+      "offline+online",
+      "not_run",
+      "blocked"
+    ],
+    "markers_legend": {
+      "no_op": "config accepted but not consumed, or no measurable effect under the current harness",
+      "not_wired": "config path is not read by the executor/pipeline",
+      "blocked_on_code": "code/feature missing; must be implemented before the experiment can run",
+      "blocked_on_hardware": "blocked by local GPU/CPU/model/dependency"
+    },
+    "notes": [
+      "Status vocabulary: partial (ran, key metrics missing or offline-only), pending (implemented/designed, not run), no_op (config not consumed or no measurable effect), not_wired (config path not read by the executor/pipeline), blocked_on_code (feature missing), blocked_on_hardware (GPU/CPU/model/dependency missing).",
+      "Offline A-level results are labelled offline=true and must not be read as LLM F1/Judge/P95.",
+      "E1.4 module-internal combinations are covered by W2/W3 and M1/M5; no separate row.",
+      "E1.3 module-LLM rows use the -LLM suffix so they do not collide with the W/S/R/M experiment numbers."
+    ]
+  },
   "items": [
+    {
+      "id": "E0-1",
+      "stage": "E0",
+      "module": "E0",
+      "title": "E0 基线复现与评测协议",
+      "question": "B0/全文/Vector/Hybrid/Dynamic 基线是否可复现？方差多大？",
+      "metrics": [
+        "answer_f1",
+        "evidence_recall",
+        "state_accuracy",
+        "p95_latency_ms",
+        "variance"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "Inherited legacy 27B archive (2026-11-04; Full Text F1 0.5589) + W3 offline test B0/R0 (80 q). 27B was not re-run because Ollama/GPU is unavailable.",
+      "reason": "Archive is inherited; no same-protocol 27B rerun. W3 is offline extractive.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "same-protocol 27B rerun",
+        "online/B-level",
+        "variance/CI"
+      ]
+    },
     {
       "id": "E1-W1",
       "stage": "E1.1",
       "module": "W",
-      "title": "W 写入实现选型",
-      "question": "schema / resolver / auditor 哪个组合能保住可追溯性与冲突？",
+      "title": "W1 架构插拔（Schema / 抽取 / 审计）",
+      "question": "哪种 Schema + 抽取 + 审计组合最好？",
       "metrics": [
-        "evidence_coverage",
+        "extraction_P",
+        "extraction_R",
+        "schema_validity",
         "field_completeness",
-        "answer_f1",
-        "tokens"
+        "evidence_recall",
+        "state_accuracy",
+        "answer_f1"
       ],
-      "status": "done",
+      "status": "partial",
       "offline": true,
-      "evidence": "S6 36 runs; W1/W2/W3",
-      "link": "#/lab"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "S6 6 runs offline: W1 Recall 0.4753, W2 0.5053, W3 0.4452; W2 best recall, W1 best nDCG; report E1-W1. Online B-level (qwen3.8:27b, 40 q, seed 13): W2 F1 0.1837 vs W1 0.1699 (+0.0138), W1 Recall 0.5564 vs W2 0.5269; W3 0.1540/0.4487. Tokens 44.7-54.3; P95 7.8-8.5 s. No Judge.",
+      "reason": "Offline A-level screen complete (3 candidates x 2 seeds x 80 q); B-level F1/Judge/P95 blocked_on_ollama.",
+      "report": "reports/experiments/E1-W1.json",
+      "link": "#/experiments/E1-W1",
+      "doc_ref": "04 §4.5.2 W1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "LLM Judge",
+        "second seed",
+        "state_accuracy"
+      ],
+      "report_online": "reports/experiments/E1-W1-online.json",
+      "online_source": "eval/archive/s6-e1-online-40.json"
     },
     {
       "id": "E1-W2",
-      "stage": "E1.2",
+      "stage": "E1.1",
       "module": "W",
-      "title": "W 字段与阈值参数",
-      "question": "meta-schema 字段数、审计阈值如何影响质量？",
+      "title": "W2 冲突/更新插拔（resolver）",
+      "question": "append / keep_both / overwrite / Mem0 4-action / 失效哪个好？",
       "metrics": [
-        "field_completeness",
-        "evidence_coverage",
-        "answer_f1"
+        "duplicate_rate",
+        "contradiction_rate",
+        "update_correctness",
+        "as_of_accuracy",
+        "state_accuracy"
       ],
-      "status": "pending",
+      "status": "partial",
       "offline": true,
-      "evidence": "未做参数 sweep",
-      "link": "#/lab"
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "S6 W1/W2 append vs W3 mem0_4action + llm_audit (6 runs offline); strict adoption: resolver add Recall -0.0458 / nDCG -0.0643, remove nDCG +0.0532 (CI excludes 0). No 5-resolver × update-rate sweep.",
+      "reason": "Only append vs mem0_4action + strict one-component adoption observed; keep_both/overwrite/bitemporal invalidation were not swept.",
+      "report": "reports/experiments/E1-W1.json",
+      "link": "#/experiments/E1-W1",
+      "doc_ref": "04 §4.5.2 W2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "5-resolver x update-rate sweep",
+        "as-of/state accuracy"
+      ]
     },
     {
       "id": "E1-W3",
+      "stage": "E1.1",
+      "module": "W",
+      "title": "W3 写入审计插拔（none / rule / LLM / adversarial）",
+      "question": "写入审计值不值？",
+      "metrics": [
+        "contradiction_rate",
+        "hallucination_rate",
+        "audit_cost",
+        "answer_faithfulness",
+        "answer_f1"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "W3 uses llm_audit (6 runs offline); strict adoption has audit remove only (delta 0), add not compiled; llm_audit is a no-op offline. No none/rule/adversarial × noise sweep.",
+      "reason": "Auditor axis only observed through W3; no audit-cost or adversarial-noise experiment.",
+      "report": "reports/experiments/E1-W1.json",
+      "link": "#/experiments/E1-W1",
+      "doc_ref": "04 §4.5.2 W3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "none/rule/LLM/adversarial x noise",
+        "audit cost"
+      ]
+    },
+    {
+      "id": "E1-W4",
+      "stage": "E1.2",
+      "module": "W",
+      "title": "W4 写入参数（字段数/evidence/双时间/few-shot/CoT）",
+      "question": "字段数、evidence、双时间、few-shot、CoT 怎么调？",
+      "metrics": [
+        "field_completeness",
+        "schema_validity",
+        "evidence_recall",
+        "state_accuracy",
+        "answer_f1"
+      ],
+      "status": "no_op",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "[no_op] E1.2 params: fields 6 vs 12 Recall 0.4608/0.4592, nDCG 0.2726/0.2671 (BM25 lexical artifact); evidence flag accepted but never read (no_op). Report E1-2-params.",
+      "reason": "Only fields/evidence ran; bitemporal/few-shot/CoT not swept. fields effect is a BM25 lexical artifact, not extraction quality.",
+      "report": "reports/experiments/E1-2-params.json",
+      "link": "#/experiments/E1-2-params",
+      "doc_ref": "04 §4.5.2 W4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "no_op"
+      ],
+      "markers": [
+        "schema.params.evidence: accepted but never read on the offline path",
+        "schema.params.fields 6 vs 12: BM25 lexical artifact, not extraction quality"
+      ],
+      "grade": "offline",
+      "missing": [
+        "schema.params.evidence is unread",
+        "fields 6 vs 12 is a BM25 lexical artifact",
+        "bitemporal/few-shot/CoT"
+      ],
+      "status_flags": [
+        "no_op",
+        "partial"
+      ],
+      "factors": [
+        {
+          "id": "schema.params.evidence",
+          "status": "no_op",
+          "grade": "offline",
+          "evidence": "flag accepted but never read; curve deleted",
+          "missing": [
+            "wire or remove"
+          ]
+        },
+        {
+          "id": "schema.params.fields",
+          "status": "partial",
+          "grade": "offline",
+          "evidence": "6 vs 12 changes BM25 text by the digit, not extraction quality",
+          "missing": [
+            "real extraction quality"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-W5",
+      "stage": "E1.1",
+      "module": "W",
+      "title": "W5 切分（轮次 / 会话 / 主题块）",
+      "question": "轮次/会话/主题块哪种切分提高证据覆盖与下游质量？",
+      "metrics": [
+        "evidence_coverage",
+        "extraction_completeness",
+        "evidence_recall",
+        "answer_f1"
+      ],
+      "status": "blocked_on_code",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "[blocked_on_code] No chunking factor in memlab/write.py or e1-screening; S6 always ingests turn/fact units.",
+      "reason": "Chunking is not wired as a factor; no W5 run.",
+      "link": "#/lab",
+      "doc_ref": "04 §4.5.2 W5",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "chunking (turn/session/topic block) is not wired as a factor"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "chunking factor is not wired"
+      ]
+    },
+    {
+      "id": "E1-W-LLM",
       "stage": "E1.3",
       "module": "W",
-      "title": "W 抽取 LLM 档位",
+      "title": "W 抽取 LLM 档位（E1.3）",
       "question": "7B/27B/72B 抽取模型是否改变写入质量？",
       "metrics": [
         "extraction_P",
         "extraction_R",
-        "field_completeness"
+        "field_completeness",
+        "answer_f1"
       ],
-      "status": "blocked",
+      "status": "blocked_on_hardware",
       "offline": false,
-      "evidence": "需 GPU/API；当前 W 复用缓存 facts",
-      "link": "#/system"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] Requires LLM extraction; current W reuses data/facts + data/states caches. Local 7B/27B/72B is not executable on 8GB M2; API key not configured.",
+      "reason": "blocked_on_local_gpu / blocked_on_key.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.5.2 W1 (3 LLM tiers)",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "local 7B/27B/72B not executable on 8GB M2; no API key"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "local GPU/API key",
+        "real extraction model"
+      ]
     },
     {
       "id": "E1-S1",
       "stage": "E1.1",
       "module": "S",
-      "title": "S 图表示选型",
-      "question": "state_slot / entity_triple / three_layer / event_sparse 哪个表示有召回增益？",
+      "title": "S1 存储单元（turn / fact / event / summary）",
+      "question": "turn/fact/event/summary 哪个召回上限高？",
       "metrics": [
+        "retrieval_ceiling",
+        "index_size",
         "evidence_recall@K",
-        "graph_nodes",
-        "graph_edges",
-        "latency"
+        "answer_f1"
       ],
-      "status": "done",
+      "status": "blocked_on_code",
       "offline": true,
-      "evidence": "S6 36 runs; S1/S2/S3",
-      "link": "#/graph2"
+      "data_modes": [],
+      "evidence": "[blocked_on_code] No storage-unit factor; S6 store always contains turn+fact units. No retrieval-ceiling metric is stored.",
+      "reason": "not_implemented: unit type is not a switch in memlab/store.py; ceiling metric missing.",
+      "link": "#/graph2",
+      "doc_ref": "04 §4.6.2 S1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "storage-unit type is not a switch in memlab/store.py"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "storage-unit switch",
+        "retrieval-ceiling metric"
+      ]
     },
     {
       "id": "E1-S2",
+      "stage": "E1.1",
+      "module": "S",
+      "title": "S2 图表示插拔（state_slot / entity / event / three_layer）",
+      "question": "图多细最好？图表示是否提高多跳/全局召回？",
+      "metrics": [
+        "graph_ceiling",
+        "connectivity",
+        "build_cost",
+        "multi_hop_recall",
+        "graph_nodes",
+        "graph_edges"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "eval/archive/graph-completion.json#p0_1_event_sparse: event_sparse 已补测；4 种表示（state_slot/entity_triple/three_layer/event_sparse）最终 Recall 均为 0.2372，不可分；graph_novel_candidates 11，graph_novel_in_final 0；max_neighbors wired but flat。仍缺真实 embedding 与第二 seed。",
+      "reason": "event_sparse 已补测；4 种表示最终 Recall 不可分；offline A-level only。",
+      "report": "reports/experiments/E1-S2.json",
+      "link": "#/experiments/E1-S2",
+      "doc_ref": "04 §4.6.2 S2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "no_op",
+        "not_wired"
+      ],
+      "markers": [
+        "graph.retrieval.impl: RUNLOG 明确说只有 params 被读（S1/S2/S3 相同，not_wired）",
+        "graph channel: graph_novel_in_final=0；event_sparse 补测后 final Recall 仍 0.2372",
+        "max_neighbors: wired but flat（routing/budget）"
+      ],
+      "grade": "offline",
+      "missing": [
+        "event_sparse 已补测；4 种表示最终 Recall 均为 0.2372，不可分；仍缺真实 embedding 与第二 seed"
+      ],
+      "status_flags": [
+        "partial",
+        "no_op",
+        "not_wired"
+      ],
+      "factors": [
+        {
+          "id": "graph.channel",
+          "status": "no_op",
+          "grade": "offline",
+          "evidence": "S1/S2/S3 identical Recall 0.5053; no unique graph hits",
+          "missing": [
+            "real embedding / unique-hit metric"
+          ]
+        },
+        {
+          "id": "graph.retrieval.params.max_neighbors",
+          "status": "partial",
+          "grade": "offline",
+          "evidence": "wired but flat: only 23/240 questions route to graph_khop; budget 15 saturates",
+          "missing": [
+            "real graph-heavy query mix"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-S3",
+      "stage": "E1.1",
+      "module": "S",
+      "title": "S3 分层插拔（L0 摘要 → L3 原文）",
+      "question": "L0–L3 分层值不值？",
+      "metrics": [
+        "evidence_recall",
+        "tokens",
+        "p95_latency_ms",
+        "answer_f1"
+      ],
+      "status": "blocked_on_code",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "[blocked_on_code] No L0–L3 hierarchy. three_layer is a graph representation (entity/event/topic), not a summary hierarchy.",
+      "reason": "not_implemented: hierarchical summary store is absent.",
+      "link": "#/graph2",
+      "doc_ref": "04 §4.6.2 S3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "L0-L3 hierarchical summary store not implemented"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "L0-L3 hierarchy"
+      ]
+    },
+    {
+      "id": "E1-S4",
       "stage": "E1.2",
       "module": "S",
-      "title": "S 图粒度/扩展参数",
-      "question": "k-hop、邻居上限、分层粒度如何影响召回与成本？",
+      "title": "S4 更新（增量 vs 全量重建）",
+      "question": "增量更新与全量重建如何影响构建时间、陈旧度与长期 F1？",
       "metrics": [
-        "evidence_recall@K",
-        "graph_edges",
-        "tokens"
+        "build_time",
+        "update_time",
+        "staleness",
+        "long_term_f1"
       ],
-      "status": "pending",
+      "status": "blocked_on_code",
       "offline": true,
-      "evidence": "未做 k-hop sweep",
-      "link": "#/graph2"
+      "data_modes": [],
+      "evidence": "[blocked_on_code] index_hash exists, but no incremental-vs-rebuild experiment and no long-term F1 run.",
+      "reason": "not_implemented: update mode is not an experiment factor.",
+      "link": "#/graph2",
+      "doc_ref": "04 §4.6.2 S4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "incremental-vs-rebuild is not an experiment factor"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "incremental-vs-rebuild factor"
+      ]
+    },
+    {
+      "id": "E1-S-LLM",
+      "stage": "E1.3",
+      "module": "S",
+      "title": "S LLM 图抽取（实体/事件/关系）",
+      "question": "能否用模型从原始对话直接抽实体/事件/关系？",
+      "metrics": [
+        "entity_P/R",
+        "relation_P/R",
+        "graph_nodes",
+        "graph_edges",
+        "evidence_coverage"
+      ],
+      "status": "blocked_on_hardware",
+      "offline": false,
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] Graph is built deterministically from cached facts/states; no LLM graph extraction. Local GPU unavailable; API key not configured.",
+      "reason": "blocked_on_local_gpu / blocked_on_key.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.6.2 S2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "LLM graph extraction needs a model; local GPU unavailable"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "LLM graph extraction",
+        "local GPU/API key"
+      ]
     },
     {
       "id": "E1-R1",
       "stage": "E1.1",
       "module": "R",
-      "title": "R 规划器/通道选型",
-      "question": "none / rule_router / DAG，dense/bm25/graph/temporal 如何组合？",
+      "title": "R1 规划器插拔（none / rule_router / DAG）",
+      "question": "规则/REAPER/DAG 哪个规划器提高计划质量与多跳召回？",
       "metrics": [
-        "evidence_recall@K",
-        "nDCG@K",
+        "plan_accuracy",
         "plan_nodes",
-        "tokens"
+        "routing_accuracy",
+        "multi_hop_f1",
+        "p95_latency_ms"
       ],
-      "status": "done",
+      "status": "partial",
       "offline": true,
-      "evidence": "S6 36 runs; R1/R2/R3",
-      "link": "#/lab"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "S6 6 runs offline: R3 DAG Recall 0.4704 = R1 none; nDCG 0.3696 vs 0.3711; R2 0.4452. Strict adoption: planner add nDCG -0.0751, remove nDCG +0.0632 (CI excludes 0). Report E1-R1. Online B-level: R2 F1 0.1540 / Recall 0.4487 vs R1/R3 0.1243/0.4179; Tokens 54.3; P95 7.52 s.",
+      "reason": "Offline A-level screen complete; plan_accuracy not stored. B-level blocked_on_ollama.",
+      "report": "reports/experiments/E1-R1.json",
+      "link": "#/experiments/E1-R1",
+      "doc_ref": "04 §4.7.2 R1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "LLM Judge",
+        "second seed",
+        "plan_accuracy"
+      ],
+      "report_online": "reports/experiments/E1-R1-online.json",
+      "online_source": "eval/archive/s6-e1-online-40.json"
     },
     {
       "id": "E1-R2",
-      "stage": "E1.2",
+      "stage": "E1.1",
       "module": "R",
-      "title": "R 检索 K/深度参数",
-      "question": "K、depth、通道权重如何取舍召回与成本？",
+      "title": "R2 通道插拔（dense / sparse / graph / temporal）",
+      "question": "通道怎么组合？每路是否有独有命中？",
       "metrics": [
         "evidence_recall@K",
-        "tokens",
-        "p95_latency_ms"
+        "ndcg@K",
+        "unique_hits",
+        "context_precision"
       ],
-      "status": "pending",
+      "status": "partial",
       "offline": true,
-      "evidence": "未做 K sweep",
-      "link": "#/lab"
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "eval/archive/graph-completion.json#p1_r2_single_channel: 4 个单通道（bm25 Recall 0.3560 / dense 0.0367 / graph_khop 0.1854 / temporal 0.3560；nDCG 0.3971/0.0635/0.2959/0.3971）。temporal 与 bm25 在 61 题上完全相同（无 as_of 时词法回退）。不是 6 路线 × 4 类。",
+      "reason": "只完成 4 个单通道；channels 未被 planner 消费；不是 6 路线 × 4 类。",
+      "link": "#/lab",
+      "doc_ref": "04 §4.7.2 R2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "4 个单通道完成；不是 6 路线 × 4 类；temporal 为无 as_of 时的词法回退；retrieval.channels 只被校验、不被 planner 消费；单通道由分析脚本直接调 channel 实现，不是 runner 路由"
+      ]
     },
     {
       "id": "E1-R3",
+      "stage": "E1.1",
+      "module": "R",
+      "title": "R3 图检索插拔（k-hop / PPR / community）",
+      "question": "k-hop/PPR/community 哪个提高多跳召回？",
+      "metrics": [
+        "multi_hop_recall",
+        "p95_latency_ms",
+        "answer_f1",
+        "tokens"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "[no_op] R3 dispatch 13 configs x 61 multi-hop q offline: all final Recall 0.2372; nDCG 0.2315-0.2381; p95 19.1-48.7 ms. Graph implementations (slot_expand/entity_subgraph/dual_channel/ppr) are wired, but graph-novel candidates 34-91 and 0 survive fusion; flat final recall is a fusion/budget result.",
+      "reason": "Graph retrieval is wired but graph-only candidates do not survive fusion; offline hash embedding; no B-level.",
+      "report": "reports/experiments/E1-R3.json",
+      "link": "#/experiments/E1-R3",
+      "doc_ref": "04 §4.7.2 R3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "no_op"
+      ],
+      "markers": [
+        "graph-only candidates 34-91 but 0 survive fusion; final Recall 0.2372 across all impl/repr"
+      ],
+      "grade": "offline",
+      "missing": [
+        "graph-only candidates survive fusion",
+        "real embedding",
+        "B-level"
+      ],
+      "status_flags": [
+        "partial",
+        "no_op"
+      ],
+      "factors": [
+        {
+          "id": "graph.retrieval.impl x graph.repr",
+          "status": "no_op",
+          "grade": "offline",
+          "evidence": "13 configs x 61 multi-hop q: all final Recall 0.2372; graph-novel candidates 34-91, 0 survive fusion",
+          "missing": [
+            "graph candidates surviving fusion",
+            "real embedding"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-R4",
+      "stage": "E1.2",
+      "module": "R",
+      "title": "R4 检索参数（k / k-hop / 并行度 / 动态决策）",
+      "question": "K、k-hop、并行度、动态决策如何取舍？",
+      "metrics": [
+        "evidence_recall",
+        "plan_nodes",
+        "p95_latency_ms",
+        "answer_f1",
+        "tokens"
+      ],
+      "status": "not_wired",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "[not_wired] R4 retrieval.k corrected: 10/15/25 -> Recall 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, tokens 227.4/344.6/578.9 (k=25 recall +0.0295, tokens +234.3; nDCG n.s.). planner.params.k is never read. Report E1-2-params.",
+      "reason": "retrieval.k is live after C's correction; planner.params.k remains not wired; parallelism/dynamic_decision still unswept.",
+      "report": "reports/experiments/E1-2-params.json",
+      "link": "#/experiments/E1-2-params",
+      "doc_ref": "04 §4.7.2 R4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "not_wired"
+      ],
+      "markers": [
+        "retrieval.k: e2e executor hardcodes k=15",
+        "planner.params.k: never read"
+      ],
+      "grade": "offline",
+      "missing": [
+        "planner.params.k is never read",
+        "nDCG change not significant"
+      ],
+      "status_flags": [
+        "not_wired",
+        "partial"
+      ],
+      "factors": [
+        {
+          "id": "retrieval.k",
+          "status": "partial",
+          "grade": "offline",
+          "evidence": "corrected run: 10/15/25 -> Recall 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, tokens 227.4/344.6/578.9",
+          "missing": [
+            "nDCG change not significant"
+          ]
+        },
+        {
+          "id": "planner.params.k",
+          "status": "not_wired",
+          "grade": "offline",
+          "evidence": "never read by planner; only retrieval.k is wired",
+          "missing": [
+            "wire planner.params.k"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-R-LLM",
       "stage": "E1.3",
       "module": "R",
-      "title": "R 规划 LLM 档位",
+      "title": "R 规划 LLM 档位（E1.3）",
       "question": "规划器换 7B/27B/72B 是否改变计划质量？",
       "metrics": [
         "plan_accuracy",
         "evidence_recall@K",
         "p95_latency_ms"
       ],
-      "status": "blocked",
+      "status": "blocked_on_hardware",
       "offline": false,
-      "evidence": "需 GPU/API；当前 planner 规则化",
-      "link": "#/system"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] planner.params.planner_model is not wired; current analyzer/planner are rule-based. Local GPU unavailable; API key not configured.",
+      "reason": "blocked_on_module_llm_wiring_and_local_gpu.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.7.2 R1 / §4.13.2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "planner LLM not wired; local GPU unavailable"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "planner LLM wiring",
+        "local GPU/API key"
+      ]
     },
     {
       "id": "E1-M1",
       "stage": "E1.1",
       "module": "M",
-      "title": "M 融合/重排/后处理选型",
-      "question": "RRF / weighted / adaptive，cross-encoder / filter / MMR / decay / compress 哪些有用？",
+      "title": "M1 路线 × 融合插拔（RRF / weighted / adaptive）",
+      "question": "加图/加时序是否值得？融合方法怎么选？",
       "metrics": [
-        "nDCG@K",
-        "evidence_recall@K",
-        "tokens",
-        "p95_latency_ms"
+        "candidate_recall",
+        "ndcg@K",
+        "unique_hits",
+        "context_precision",
+        "answer_f1"
       ],
-      "status": "done",
+      "status": "partial",
       "offline": true,
-      "evidence": "S6 M1/M2/M3",
-      "link": "#/lab"
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "eval/archive/graph-completion.json#p0_3_m1_route: 2×2（graph.retrieval.impl vector_only/entity_subgraph × fusion rrf/weighted_rrf），61 题/格。rrf: vector_only Recall 0.2407 vs entity_subgraph 0.2456；weighted_rrf: 0.0279 vs 0.0795；graph_on_minus_off rrf +0.0049 / weighted_rrf +0.0516；DoD +0.0467。路线臂是代理，不是 dense+bm25+graph 三路并集。",
+      "reason": "路线臂是代理；channels 未被 planner 消费；offline A-level。",
+      "report": "reports/experiments/E1-M1.json",
+      "link": "#/experiments/E1-M1",
+      "doc_ref": "04 §4.8.2 M1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "路线臂是代理（vector_only vs entity_subgraph），不是 dense+bm25+graph 三路并集；retrieval.channels 只被校验、不被 planner 消费"
+      ]
     },
     {
       "id": "E1-M2",
-      "stage": "E1.2",
+      "stage": "E1.1",
       "module": "M",
-      "title": "M 阈值/λ/顺序参数",
-      "question": "rerank top_n、MMR λ、decay λ、压缩预算如何选？",
+      "title": "M2 重排插拔 × 数据规模",
+      "question": "重排在大规模是否更值？",
       "metrics": [
-        "nDCG@K",
+        "ndcg@K",
+        "rerank_gain",
+        "answer_f1",
         "tokens",
         "p95_latency_ms"
       ],
-      "status": "pending",
-      "offline": true,
-      "evidence": "未做参数 sweep",
-      "link": "#/lab"
+      "status": "partial",
+      "offline": false,
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "eval/archive/m2-rerank.json: online M2 rerank 40 q/config, GPU BAAI/bge-reranker-v2-m3. none F1 0.2844 / Recall 0.5785 / nDCG 0.4315 / Tokens 376.5 / P95 13.0 s; cross_encoder F1 0.2373 / Recall 0.3498 / nDCG 0.5123 / Tokens 47.25 / P95 3.5 s. nDCG up, Recall/F1 down; not a uniform win.",
+      "reason": "1 seed, 40 q/config; CE trades recall/F1 for nDCG/tokens.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.8.2 M2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [],
+      "markers": [],
+      "grade": "online",
+      "missing": [
+        "more q/seed/CI",
+        "Judge",
+        "top_n with real reranker"
+      ],
+      "report_online": "reports/experiments/M2-online.json",
+      "online_source": "eval/archive/m2-rerank.json",
+      "status_flags": [
+        "partial"
+      ]
     },
     {
       "id": "E1-M3",
+      "stage": "E1.1",
+      "module": "M",
+      "title": "M3 顺序插拔（fusion/rerank/MMR/decay/compress）",
+      "question": "先融合还是先重排？先衰减还是先重排？",
+      "metrics": [
+        "ndcg@K",
+        "context_precision",
+        "redundancy",
+        "answer_f1",
+        "tokens"
+      ],
+      "status": "blocked_on_code",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "[blocked_on_code] 4-order artifact exists only in repo-c2; main RunConfig rejects post.order list (blocked_on_config), patch c2-post-order.patch not merged. Do not cite order deltas.",
+      "reason": "blocked_on_config: the order run is not reproducible on main; merge the patch before citing any order effect.",
+      "link": "#/lab",
+      "doc_ref": "04 §4.8.2 M3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "post.order list rejected by main RunConfig; c2-post-order.patch not merged"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "post.order list rejected by RunConfig (blocked_on_config)",
+        "merge c2-post-order.patch before citing order deltas"
+      ],
+      "status_flags": [
+        "blocked_on_code",
+        "blocked_on_config"
+      ],
+      "factors": [
+        {
+          "id": "post.order",
+          "status": "blocked_on_code",
+          "grade": "not_run",
+          "evidence": "4-order artifact exists in repo-c2 but main rejects post.order list; patch not merged",
+          "missing": [
+            "merge c2-post-order.patch",
+            "rerun on main"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-M4",
+      "stage": "E1.2",
+      "module": "M",
+      "title": "M4 后处理参数（MMR λ / decay λ / 压缩预算）",
+      "question": "MMR λ、decay λ、压缩预算怎么调？",
+      "metrics": [
+        "redundancy",
+        "tokens",
+        "compression_ratio",
+        "answer_f1",
+        "p95_latency_ms"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "[no_op] MMR with decay off: λ=0.9 vs 0.5 nDCG +0.00236, CI [+0.00098,+0.00417] (small ranking-only effect); canonical MMR×decay order erases MMR (no_op). decay λ=0.001 nDCG +0.0127; compress 500 tokens -4.1; filter none vs threshold recall +0.0886 / nDCG +0.0564. Report E1-2-params.",
+      "reason": "MMR×decay stage-order interaction is NOT tested; MMR is only testable with decay off.",
+      "report": "reports/experiments/E1-2-params.json",
+      "link": "#/experiments/E1-2-params",
+      "doc_ref": "04 §4.8.2 M4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "no_op"
+      ],
+      "markers": [
+        "post.mmr.params.lambda: MMR permutation erased by the following decay re-sort",
+        "post.compress 1000/2000: identical to default at ~345-token context"
+      ],
+      "grade": "offline",
+      "missing": [
+        "MMR x decay interaction not tested",
+        "real rerank"
+      ],
+      "status_flags": [
+        "partial",
+        "no_op"
+      ],
+      "factors": [
+        {
+          "id": "post.mmr.params.lambda",
+          "status": "partial",
+          "grade": "offline",
+          "evidence": "decay-off: 0.9 vs 0.5 nDCG +0.00236, CI [+0.00098,+0.00417]; recall/tokens unchanged",
+          "missing": [
+            "MMR×decay interaction",
+            "real rerank"
+          ]
+        },
+        {
+          "id": "post.order (mmr×decay)",
+          "status": "no_op",
+          "grade": "offline",
+          "evidence": "canonical decay re-sorts and erases MMR permutation",
+          "missing": [
+            "test MMR after decay"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "E1-M5",
+      "stage": "E1.1",
+      "module": "M",
+      "title": "M5 动态权重插拔（query-adaptive）",
+      "question": "按 query 类型调权是否有效？",
+      "metrics": [
+        "ndcg@K",
+        "per_category_recall",
+        "answer_f1"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "M3 query_adaptive ran in S6 but is confounded with R0 post (rerank fallback + filter/MMR/decay/compress); no isolated off/on × query-type run.",
+      "reason": "Confounded, not an isolated M5 effect.",
+      "report": "reports/experiments/E1-M1.json",
+      "link": "#/experiments/E1-M1",
+      "doc_ref": "04 §4.8.2 M5",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "isolated query-adaptive on/off",
+        "query-type labels"
+      ]
+    },
+    {
+      "id": "E1-M6",
+      "stage": "E1.1",
+      "module": "M",
+      "title": "M6 候选深度（top_n / 20/50/100）",
+      "question": "候选深度怎么配重排成本与 nDCG？",
+      "metrics": [
+        "ndcg@K",
+        "rerank_cost",
+        "answer_f1",
+        "p95_latency_ms"
+      ],
+      "status": "blocked_on_hardware",
+      "offline": false,
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] E1.2 params: top_n 20/50/100 flat; cross-encoder fallback because sentence-transformers is absent; top_n never applied. Report E1-2-params.",
+      "reason": "blocked_on_cross_encoder: rerank fallback; top_n is not applied.",
+      "blocked_on": "hardware",
+      "report": "reports/experiments/E1-2-params.json",
+      "link": "#/experiments/E1-2-params",
+      "doc_ref": "04 §4.8.2 M6",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "cross_encoder fallback; rerank.params.top_n never applied"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "cross-encoder fallback"
+      ]
+    },
+    {
+      "id": "E1-M-LLM",
       "stage": "E1.3",
       "module": "M",
-      "title": "M 压缩/重排 LLM 档位",
+      "title": "M 压缩/重排 LLM 档位（E1.3）",
       "question": "LLM summary / LLM rerank 是否优于抽取式压缩？",
       "metrics": [
         "answer_f1",
         "tokens",
         "faithfulness"
       ],
-      "status": "blocked",
+      "status": "blocked_on_hardware",
       "offline": false,
-      "evidence": "llm_summary 未实现；需模型",
-      "link": "#/system"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] post.compress.impl=llm_summary is deferred/not registered; LLM rerank is not wired. Local GPU unavailable; API key not configured.",
+      "reason": "blocked_on_ollama; llm_summary deferred.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.8.2 M2/M4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "llm_summary not registered; local GPU unavailable"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "llm_summary implementation",
+        "local GPU/API key"
+      ]
     },
     {
       "id": "E1-U1",
       "stage": "E1.1",
       "module": "U",
-      "title": "U 状态解析/回答器选型",
-      "question": "query_llm / offline_slot / bitemporal；direct / valid_history / evidence_chain 怎么选？",
+      "title": "U1 上下文格式插拔（平铺 / 结构化 / 证据链）",
+      "question": "平铺/结构化/证据链哪个提高上下文利用率与忠实度？",
       "metrics": [
-        "state_accuracy",
+        "context_utilization",
+        "faithfulness",
         "answer_f1",
-        "citation_precision",
-        "refusal"
+        "judge_accuracy",
+        "citations"
       ],
       "status": "partial",
       "offline": true,
-      "evidence": "S6 U1/U2/U3；state_accuracy 未写入",
-      "link": "#/ask2"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "S6 6 runs: U1/U2/U3 all Recall 0.5927/nDCG 0.4061; citations 1.0; answer_f1 0.021–0.022. C state benchmark (17 items): U1 0.3431, U2/U3 0.3627; valid-set exact 0.2353; evidence recall 0.5294. Report E1-U1. Online B-level: U2 F1 0.2998, U3 0.2921, U1 0.2883; all Recall 0.7462; Tokens 377.4; P95 4.0/4.7/4.5 s; U2/U3 refused 0.275 vs U1 0.025.",
+      "reason": "Offline extractive answer; judge/faithfulness not_run; state_accuracy exists but is not paired with answer_f1, so P(A|S) remains not_available.",
+      "report": "reports/experiments/E1-U1.json",
+      "link": "#/experiments/E1-U1",
+      "doc_ref": "04 §4.9.2 U1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "LLM Judge",
+        "second seed",
+        "online state_accuracy / P(A|S)"
+      ],
+      "report_online": "reports/experiments/E1-U1-online.json",
+      "online_source": "eval/archive/s6-e1-online-40.json"
     },
     {
       "id": "E1-U2",
-      "stage": "E1.2",
+      "stage": "E1.1",
       "module": "U",
-      "title": "U 提示词/验证器/冲突策略",
-      "question": "引用校验、拒答阈值、冲突披露如何影响忠实度？",
+      "title": "U2 状态解析插拔（none / offline_slot / query_llm / bitemporal）",
+      "question": "哪种状态解析最准？",
       "metrics": [
-        "answer_f1",
-        "judge_accuracy",
-        "citation_precision"
+        "state_accuracy",
+        "valid_set_exact",
+        "as_of_accuracy",
+        "answer_f1"
       ],
-      "status": "pending",
-      "offline": false,
-      "evidence": "需 Judge/真实模型",
-      "link": "#/ask2"
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "U2 offline_slot and U3 evidence_chain ran; bitemporal/query_llm did not. C state benchmark: U2/U3 item mean 0.3627, valid-set exact 0.2353, ACTIVE 0.3333 / HISTORICAL 0.3846.",
+      "reason": "state_accuracy is available on 17 annotated items but not paired with answer_f1; P(A|S) remains not_available.",
+      "report": "reports/experiments/E1-U1.json",
+      "link": "#/experiments/E1-U1",
+      "doc_ref": "04 §4.9.2 U2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "bitemporal/query_llm",
+        "P(A|S) answer-state join"
+      ]
     },
     {
       "id": "E1-U3",
       "stage": "E1.3",
       "module": "U",
-      "title": "U 回答 LLM 档位",
-      "question": "7B/27B/72B 回答模型是否改变系统收益？",
+      "title": "U3 回答 LLM 档位（E1.3）",
+      "question": "系统增益是否依赖强 LLM？",
       "metrics": [
         "answer_f1",
         "judge_accuracy",
         "tokens",
         "p95_latency_ms"
       ],
-      "status": "blocked",
+      "status": "blocked_on_hardware",
       "offline": false,
-      "evidence": "需 GPU/API",
-      "link": "#/system"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] No 7B/27B/72B answer model; S6 uses offline extractive. Legacy 27B archive exists but is a different protocol.",
+      "reason": "blocked_on_local_gpu / blocked_on_key.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.9.2 U3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "answer LLM 7B/27B/72B not available; offline extractive only"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "answer LLM 7B/27B/72B"
+      ]
+    },
+    {
+      "id": "E1-U4",
+      "stage": "E1.1",
+      "module": "U",
+      "title": "U4 验证插拔（引用 / 校验 / 拒答）",
+      "question": "引用/校验/拒答值不值？",
+      "metrics": [
+        "hallucination_rate",
+        "citation_precision",
+        "refusal_correctness",
+        "answer_f1"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "Citation/refusal checks exist (citations=1.0, refused=0.0) but no isolated verification × noise run.",
+      "reason": "No U4 run.",
+      "link": "#/ask2",
+      "doc_ref": "04 §4.9.2 U4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "verification x noise run"
+      ]
     },
     {
       "id": "E1-K1",
       "stage": "E1.1",
       "module": "K",
-      "title": "K 维护动作选型",
-      "question": "none / dedupe / archive 如何影响 staleness、contradiction、update correctness？",
+      "title": "K1 更新/遗忘插拔（append / overwrite / archive / TTL）",
+      "question": "覆盖/失效/保留/归档？",
       "metrics": [
         "staleness",
         "contradiction_rate",
@@ -247,31 +1144,90 @@
       ],
       "status": "partial",
       "offline": true,
-      "evidence": "S6 K1/K2/K3 store-level",
-      "link": "#/lab"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "S6 6 store-level runs: K3 archive staleness 0.2234/contradiction 0.4000/update 0.8086 vs K1 0.2314/0.4224/0.7914; no answer F1; report E1-K1. Online K store-level: K3 staleness 0.2234 / contradiction 0.4000 / update 0.8086 vs K1 0.2314/0.4224/0.7914; Tokens/P95 not_available.",
+      "reason": "Store-level only; no long-term F1; tokens/P95 not_available.",
+      "report": "reports/experiments/E1-K1.json",
+      "link": "#/experiments/E1-K1",
+      "doc_ref": "04 §4.10.2 K1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "answer-level F1",
+        "long-term F1",
+        "LLM Judge"
+      ],
+      "report_online": "reports/experiments/E1-K1-online.json",
+      "online_source": "eval/archive/s6-e1-online-40.json"
     },
     {
       "id": "E1-K2",
+      "stage": "E1.1",
+      "module": "K",
+      "title": "K2 合并插拔（dedupe / summarize / reflect）",
+      "question": "去重/摘要/反思值不值？",
+      "metrics": [
+        "duplicate_rate",
+        "tokens",
+        "information_loss",
+        "evidence_recall",
+        "answer_f1"
+      ],
+      "status": "partial",
+      "offline": true,
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "K2 dedupe ran store-level: removed 8.5, contradiction 0.4187, update 0.7885; no threshold/retention sweep and no answer-level F1.",
+      "reason": "Only one dedupe threshold (0.9); summarize/reflect not implemented.",
+      "report": "reports/experiments/E1-K1.json",
+      "link": "#/experiments/E1-K1",
+      "doc_ref": "04 §4.10.2 K2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline",
+      "missing": [
+        "threshold/retention sweep",
+        "answer-level F1"
+      ]
+    },
+    {
+      "id": "E1-K3",
       "stage": "E1.2",
       "module": "K",
-      "title": "K 阈值/保留策略",
-      "question": "dedupe θ、archive 天数、版本保留如何选？",
+      "title": "K3 一致性扫描（0 / 每日 / 每周）",
+      "question": "扫描频率如何影响矛盾检测与成本？",
       "metrics": [
-        "staleness",
-        "contradiction_rate",
-        "removed_units"
+        "contradiction_detection_f1",
+        "scan_cost",
+        "long_term_f1",
+        "credibility"
       ],
       "status": "pending",
       "offline": true,
-      "evidence": "未做阈值 sweep",
-      "link": "#/lab"
+      "data_modes": [],
+      "evidence": "maintenance.scan_action exists, but no frequency × contradiction-rate run and no detection-F1 metric.",
+      "reason": "No K3 run.",
+      "link": "#/lab",
+      "doc_ref": "04 §4.10.2 K3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "frequency run",
+        "detection F1"
+      ]
     },
     {
       "id": "E2-1",
       "stage": "E2",
       "module": "E2",
-      "title": "E2 耦合/转化率",
-      "question": "P(A|R)、P(A|R,S) 的瓶颈在哪个模块？",
+      "title": "E2-1 质量传播与转化率",
+      "question": "P(A|R)、P(A|C)、P(A|S) 的瓶颈在哪个模块？",
       "metrics": [
         "conversion",
         "bottleneck",
@@ -279,62 +1235,230 @@
       ],
       "status": "partial",
       "offline": true,
-      "evidence": "S7b-A offline only",
-      "link": "#/evaluation2"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "S7b-A offline: P(A|R=1)=0.1866 vs P(A)=0.2342 (30 answer runs); P(A|C=1) n=2. C state benchmark gives P(S=1) 0.3431/0.3627/0.3627 for U1/U2/U3, but it is not paired with answer_f1, so P(A|S=1) remains null. Report E2-1. Online B-level: P(A)=0.5200, P(R)=0.4567, P(A|R=1)=0.5657 (n=274), lift +0.0457; P(A|C=1)=0.4149 (n=94); P(A|S)=null (no online state_accuracy). Tokens 160.5; P95 8495.7 ms.",
+      "reason": "A-level offline only; P(A|C) sample too small; P(A|S) lacks answer-state pairing; no Oracle run.",
+      "report": "reports/experiments/E2-1.json",
+      "link": "#/experiments/E2-1",
+      "doc_ref": "04 §4.11.1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "LLM Judge",
+        "online state_accuracy / P(A|S)",
+        "Oracle"
+      ],
+      "report_online": "reports/experiments/E2-1-online.json",
+      "online_source": "eval/archive/s6-e1-online-40.json"
+    },
+    {
+      "id": "E2-WR",
+      "stage": "E2",
+      "module": "E2",
+      "title": "W×R 耦合（schema × graph）",
+      "question": "结构化写入是否让图检索更有效？",
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "interaction_2x2",
+        "graph_novel_in_final"
+      ],
+      "status": "partial",
+      "offline": true,
+      "grade": "offline",
+      "data_modes": [
+        "offline"
+      ],
+      "evidence": "eval/archive/graph-completion.json#p0_2_wr: 2×2（schema legacy_flat/meta_schema × graph.retrieval.impl vector_only/entity_subgraph），61 题/格，4 dev 对话。cell recall 0.1908/0.1990/0.2257/0.2372；nDCG 0.1934/0.2184/0.1988/0.2315；DoD +0.0033 Recall / +0.0078 nDCG（仅 1 题变化）。",
+      "design": "2×2，61 题/格，4 dev 对话",
+      "missing": [
+        "DoD +0.0033（Recall）/ +0.0078（nDCG），仅 1 题变化，不能宣称结构化写入显著增强图检索"
+      ],
+      "reason": "DoD 只有 1 题变化；offline hash embedding；不能宣称 W×R 显著。",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.11.4 W×R",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md"
+    },
+    {
+      "id": "E2-SM",
+      "stage": "E2",
+      "module": "E2",
+      "title": "S×M 耦合（graph repr × rerank）",
+      "question": "图表示是否被重排补偿？",
+      "metrics": [
+        "ndcg",
+        "evidence_recall",
+        "rerank_gain",
+        "interaction_2x2"
+      ],
+      "status": "blocked_on_hardware",
+      "offline": false,
+      "grade": "blocked",
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "eval/archive/graph-completion.json#p2_sxm: graph.repr.impl × rerank.impl（none/cross_encoder），61 题配对子集的设计已记录但未跑；缺 sentence-transformers/GPU，未用 filter 冒充重排。",
+      "missing": [
+        "无 GPU / sentence-transformers，未跑；未用 filter 冒充重排"
+      ],
+      "reason": "blocked_on_hardware: cross_encoder reranker needs sentence-transformers / GPU; no model weights offline.",
+      "blocked_on": "hardware",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.11.4 S×M",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "cross_encoder reranker needs sentence-transformers / GPU; no model weights"
+      ],
+      "status_flags": [
+        "blocked_on_hardware"
+      ]
     },
     {
       "id": "E2-2",
       "stage": "E2",
       "module": "E2",
-      "title": "E2 Oracle 干预",
+      "title": "E2-2 Oracle 干预",
       "question": "给 oracle context/state 后差距多大？",
       "metrics": [
         "oracle_gap",
         "oracle_state_gap"
       ],
-      "status": "pending",
-      "offline": true,
-      "evidence": "Oracle executor 未实现",
-      "link": "#/evaluation2"
+      "status": "partial",
+      "offline": false,
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "eval/archive/e2-oracle-retrieval.json: retrieval oracle 80 q; F1 0.2437 / Recall 0.6611（constructed，不可与系统 recall 比）/ Tokens 232.15 / latency 2217.14 ms. 仅 retrieval oracle；write/store/merge/state/answer oracle 未跑。",
+      "reason": "Only retrieval oracle; constructed recall; other oracles not run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.11.2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [],
+      "markers": [],
+      "grade": "online",
+      "missing": [
+        "write/store/merge/state/answer oracles",
+        "matched non-oracle baseline",
+        "Judge"
+      ],
+      "report_online": "reports/experiments/E2-2-online.json",
+      "online_source": "eval/archive/e2-oracle-retrieval.json",
+      "status_flags": [
+        "partial"
+      ]
     },
     {
       "id": "E2-3",
       "stage": "E2",
       "module": "E2",
-      "title": "E2 LLM 归因",
-      "question": "系统增益是否随 LLM 变强而消失？",
+      "title": "E2-3 LLM 混淆与归因",
+      "question": "系统增益中有多少来自 LLM？",
       "metrics": [
         "G_system(L)",
         "variance_decomposition",
         "mediation"
       ],
-      "status": "blocked",
+      "status": "blocked_on_hardware",
       "offline": false,
-      "evidence": "需 L1/L2/L3 模型",
-      "link": "#/system"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] Needs ≥2 LLM tiers; S6 is one offline environment. llm_attribution=not_available.",
+      "reason": "blocked_on_local_gpu / blocked_on_key.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.11.3",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "needs >=2 LLM tiers; only offline environment available"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "LLM tiers"
+      ]
+    },
+    {
+      "id": "E2-4",
+      "stage": "E2",
+      "module": "E2",
+      "title": "E2-4 模块间插拔与交互（6 对 2×2）",
+      "question": "W×R、S×M、R×M、M×U、W×K、R×U 是否互补/替代？",
+      "metrics": [
+        "interaction_2x2",
+        "marginal_contribution"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "Six module pairs are specified in 04 §4.11.4 and e2-coupling.json; no 2×2 run.",
+      "reason": "No E2-4 run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.11.4",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "6 module-pair 2x2 runs"
+      ]
     },
     {
       "id": "E3-1",
       "stage": "E3",
       "module": "E3",
-      "title": "E3 候选组合",
-      "question": "模块候选 2×2/部分因子组合是否超加？",
+      "title": "E3a 候选组合（2×2 / 部分因子）",
+      "question": "模块候选组合是否超加/次加？",
       "metrics": [
         "answer_f1",
         "evidence_recall",
         "interaction",
         "tokens"
       ],
-      "status": "pending",
+      "status": "partial",
       "offline": true,
-      "evidence": "待 E1 候选冻结",
-      "link": "#/evaluation2"
+      "data_modes": [
+        "offline",
+        "online"
+      ],
+      "evidence": "eval/archive/e3-offline.json（16-run 2^(5-1) offline）; eval/archive/e3-2x2.json（online 4 格 × 60 q）: weighted_rrf/direct F1 0.1764 / Recall 0.3026 / nDCG 0.4080 vs single/direct 0.1500/0.2860/0.3855; direct beats evidence_chain under both fusions. 1 seed, no CI.",
+      "reason": "Offline A-level; graph/rerank/fusion are no-op/fallback; no answer F1/Judge; B-level blocked.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.12",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "no_op"
+      ],
+      "markers": [
+        "graph/rerank/fusion main effects 0.0 in the 16-run offline E3; planner nDCG -0.0020 (CI [-0.0040,-0.0001])"
+      ],
+      "grade": "offline+online",
+      "missing": [
+        "seeds/CI",
+        "Judge",
+        "E3b/E3c"
+      ],
+      "report_online": "reports/experiments/E3-1-online.json",
+      "online_source": "eval/archive/e3-2x2.json"
     },
     {
       "id": "E3-2",
       "stage": "E3",
       "module": "E3",
-      "title": "E3 Pareto/成本前沿",
+      "title": "E3 输出：Pareto / 成本前沿",
       "question": "质量-成本-延迟的最优组合在哪里？",
       "metrics": [
         "pareto",
@@ -344,60 +1468,388 @@
       ],
       "status": "pending",
       "offline": true,
-      "evidence": "待 E3 组合矩阵",
-      "link": "#/evaluation2"
+      "data_modes": [],
+      "evidence": "Depends on E3-1; no combination matrix yet.",
+      "reason": "No E3 Pareto input.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.12 指标/输出",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "E3 combination matrix"
+      ]
+    },
+    {
+      "id": "E3-3",
+      "stage": "E3b",
+      "module": "E3",
+      "title": "E3b 参数插拔（4 对定向 2×2）",
+      "question": "参数交互是否改变最佳组合？",
+      "metrics": [
+        "interaction_2x2",
+        "answer_f1",
+        "tokens"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "Four pairs are specified in e3-factorial.json supplementary_designs: k_hop×granularity, fields×rerank, rrf_k×top_n, decay λ×query type; no run.",
+      "reason": "No E3b run; cross-encoder pair is additionally blocked.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.12 E3b",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "E3b 2x2 runs"
+      ]
+    },
+    {
+      "id": "E3-4",
+      "stage": "E3c",
+      "module": "E3",
+      "title": "E3c 时序嵌套（write_policy × query_type）",
+      "question": "写时策略与查询类型是否交互？",
+      "metrics": [
+        "as_of_accuracy",
+        "valid_set_exact",
+        "temporal_consistency",
+        "answer_f1",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "blocked_on_code",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "[blocked_on_code] e3-factorial.json defines E3c, but write.resolver.impl=bitemporal_invalidate is not implemented (only append/keep_both/overwrite/mem0_4action).",
+      "reason": "not_implemented: missing bitemporal_invalidate write resolver; read-side bitemporal exists.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.12 E3c",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "write.resolver.impl=bitemporal_invalidate not implemented"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "bitemporal_invalidate resolver"
+      ]
     },
     {
       "id": "E4-1",
       "stage": "E4",
       "module": "E4",
-      "title": "E4 环境网格",
-      "question": "LLM × 数据规模 × 场景下条件最优是否变化？",
+      "title": "E4-1 本地 LLM 规模（7B/27B/72B）",
+      "question": "换本地 LLM 规模，最优配置是否改变？",
       "metrics": [
         "conditional_best",
         "regret",
         "interaction"
       ],
+      "status": "blocked_on_hardware",
+      "offline": false,
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "[blocked_on_hardware] MacBook Air M2 / 8GB unified memory cannot run 7B/27B/72B at experiment scale; design and evaluation protocol are retained.",
+      "reason": "blocked_on_local_gpu; use API tier as the executable substitute.",
+      "blocked_on": "hardware",
+      "link": "#/system",
+      "doc_ref": "04 §4.13.1",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_hardware"
+      ],
+      "markers": [
+        "local 7B/27B/72B cannot run on 8GB M2"
+      ],
+      "grade": "blocked",
+      "missing": [
+        "local 7B/27B/72B"
+      ]
+    },
+    {
+      "id": "E4-2",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-2 API 档位网格（T1/T2/T3 × 3 scales × 4 candidates）",
+      "question": "换 API capability tier，最优配置是否改变？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "api_cost_usd",
+        "p95_latency_ms"
+      ],
       "status": "pending",
       "offline": false,
-      "evidence": "API/grid 规格已建；真实模型未跑",
-      "link": "#/evaluation2"
+      "data_modes": [
+        "online"
+      ],
+      "evidence": "e4-api-tier-grid.json compiles 36 cells (B0/R0/CHEAP/QUALITY); no provider/key configured, so 0 cells ran.",
+      "reason": "Needs API key/provider and budget; not a hardware block.",
+      "requires": [
+        "api_key"
+      ],
+      "link": "#/system",
+      "doc_ref": "04 §4.13.2",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "API key/provider",
+        "36-cell run"
+      ]
+    },
+    {
+      "id": "E4-3",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-3 数据规模（S1 2 段 / S2 6 段 / S3 10 段 / LongMemEval）",
+      "question": "数据规模是否改变最优配置？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "interaction",
+        "tokens"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "Scale grid exists in e4-environment-grid.json; no scale sweep. S6 uses 4 dev conversations only.",
+      "reason": "No E4-3 run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "scale sweep"
+      ]
+    },
+    {
+      "id": "E4-4",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-4 场景（个人助理 / 代码 / 客服 / 医疗教育）",
+      "question": "换场景后 Schema 插件与最优配置是否改变？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "scene_transfer"
+      ],
+      "status": "blocked_on_code",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "[blocked_on_code] Only personal_assistant/locomo is ready; coding and customer_service adapters are planned, not implemented.",
+      "reason": "not_implemented: scene adapters missing; do not count empty cells as results.",
+      "link": "#/system",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "marker_classes": [
+        "blocked_on_code"
+      ],
+      "markers": [
+        "coding/customer_service scene adapters not implemented"
+      ],
+      "grade": "not_run",
+      "missing": [
+        "scene adapters"
+      ]
+    },
+    {
+      "id": "E4-5",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-5 查询分布（均衡 / 多跳重 / 时序重 / 开放域重）",
+      "question": "平均分是否掩盖子集差异？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "query_mix_interaction"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "environment.query_mix exists ('balanced'); no query-mix sweep.",
+      "reason": "No E4-5 run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "query-mix sweep"
+      ]
+    },
+    {
+      "id": "E4-6",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-6 上下文预算（8k / 32k / 128k）",
+      "question": "上下文预算与压缩/分层/图如何交互？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "tokens",
+        "p95_latency_ms"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "environment.context_budget=32768 exists; no 8k/32k/128k sweep.",
+      "reason": "No E4-6 run.",
+      "link": "#/lab",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "context-budget sweep"
+      ]
+    },
+    {
+      "id": "E4-7",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-7 噪声/冲突（干净 / 10% / 30%）",
+      "question": "噪声与冲突是否改变审计/失效策略的价值？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "audit_effect"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "environment.noise exists (0.0); no 10%/30% sweep.",
+      "reason": "No E4-7 run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "noise sweep"
+      ]
+    },
+    {
+      "id": "E4-8",
+      "stage": "E4",
+      "module": "E4",
+      "title": "E4-8 更新率（静态 / 流式）",
+      "question": "更新率是否改变维护策略的价值？",
+      "metrics": [
+        "conditional_best",
+        "regret",
+        "staleness",
+        "long_term_f1"
+      ],
+      "status": "pending",
+      "offline": true,
+      "data_modes": [],
+      "evidence": "environment.update_rate exists ('static'); no streaming/update-rate sweep.",
+      "reason": "No E4-8 run.",
+      "link": "#/evaluation2",
+      "doc_ref": "04 §4.13 环境维度",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "not_run",
+      "missing": [
+        "update-rate sweep"
+      ]
     },
     {
       "id": "E5-1",
       "stage": "E5",
       "module": "E5",
-      "title": "E5 留出确认",
+      "title": "E5 留出确认（test 2 段 + 多 seed + 第二 Judge）",
       "question": "冻结候选在 test 2 段是否保持？",
       "metrics": [
         "answer_f1",
         "evidence_recall",
         "state_accuracy",
         "judge_accuracy",
-        "p95_latency_ms"
+        "p95_latency_ms",
+        "second_judge_agreement"
       ],
       "status": "partial",
       "offline": true,
-      "evidence": "W3 test 80 题 offline；B 级未跑",
-      "link": "#/experiments/final-w3-test-offline"
-    },
-    {
-      "id": "E1-S3",
-      "stage": "E1.3",
-      "module": "S",
-      "title": "S LLM 图抽取（实体/事件/关系）",
-      "question": "能否用模型从原始对话直接抽出实体/事件/关系，而不是只消费缓存 facts？",
-      "metrics": [
-        "entity_P/R",
-        "relation_P/R",
-        "graph_nodes",
-        "graph_edges",
-        "evidence_coverage"
+      "data_modes": [
+        "offline",
+        "online"
       ],
-      "status": "blocked",
-      "offline": false,
-      "evidence": "未实现；当前图来自 data/facts / data/states 缓存",
-      "link": "#/graph2"
+      "evidence": "W3 offline test: conv-41/42, 80 q, B0 F1 0.0354 vs R0 0.0054 (delta -0.0300, CI [-0.0575,-0.0104]); report E5-1. Online test (conv-41/42, 2 seeds): B0 F1 0.1883 / Recall 0.5435 vs R0 0.1520/0.3403; F1 delta -0.0363 CI [-0.1351,+0.0575] (n.s.), Recall delta -0.2032 CI [-0.3509,-0.048]; Tokens 924.6/319.3; P95 16032.8/8398.2 ms. Second Judge/human not_run.",
+      "reason": "Offline only; no online rerun, no second judge, no human κ, state_accuracy missing.",
+      "report": "reports/experiments/E5-1.json",
+      "link": "#/experiments/E5-1",
+      "doc_ref": "04 §4.14",
+      "updated": "2026-11-09",
+      "source": "docs/optimization/04-experiments.md",
+      "grade": "offline+online",
+      "missing": [
+        "second Judge",
+        "human kappa",
+        "state_accuracy"
+      ],
+      "report_online": "reports/experiments/E5-1-online.json",
+      "online_source": "eval/archive/final-w3-test-online.json"
     }
-  ]
+  ],
+  "count": 50,
+  "status_counts": {
+    "partial": 21,
+    "no_op": 1,
+    "blocked_on_code": 7,
+    "blocked_on_hardware": 9,
+    "not_wired": 1,
+    "pending": 11
+  },
+  "online": {
+    "status": "complete",
+    "source": [
+      "eval/archive/s6-e1-online-40.json",
+      "eval/archive/final-w3-test-online.json",
+      "eval/archive/e2-oracle-retrieval.json",
+      "eval/archive/e3-2x2.json",
+      "eval/archive/m2-rerank.json"
+    ],
+    "model": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "judge": "not_run",
+    "seeds": {
+      "E1_modules": [
+        13
+      ],
+      "E5": [
+        13,
+        17
+      ]
+    },
+    "questions": {
+      "E1_modules": 40,
+      "E5": 80
+    },
+    "rows": 33,
+    "note": "E1 modules 40 q/seed 13; E5 test 80 q/2 seeds; E2 oracle 80 q; E3 2x2 60 q/cell; M2 40 q; no Judge."
+  },
+  "status_flag_counts": {
+    "no_op": 4,
+    "partial": 7,
+    "not_wired": 2,
+    "blocked_on_code": 1,
+    "blocked_on_config": 1,
+    "blocked_on_hardware": 1
+  },
+  "factor_status_counts": {
+    "no_op": 4,
+    "partial": 4,
+    "not_wired": 1,
+    "blocked_on_code": 1
+  }
 }

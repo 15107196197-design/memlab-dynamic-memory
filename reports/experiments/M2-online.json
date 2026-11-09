@@ -1,0 +1,348 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "M2-online",
+  "created_at": "2026-11-09T19:19:26+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "1096530",
+    "config_hashes": {},
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3",
+      "judge": "not_run",
+      "reranker": "BAAI/bge-reranker-v2-m3"
+    },
+    "offline": false,
+    "data_mode": "online",
+    "source_db": "runs/s6/m2.sqlite",
+    "source_archive": "eval/archive/m2-rerank.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 40,
+    "seeds": [
+      13
+    ],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "r-m2-rerank-deadline-000-5fc3cd32",
+        "candidate": "none",
+        "question": "40 q · rerank=none",
+        "tokens": 376.475,
+        "latency_ms": 13032.5241,
+        "candidates": 13.2,
+        "answer": "online LLM; F1=0.2844",
+        "metrics": {
+          "answer_f1": 0.2844,
+          "candidates": 13.2,
+          "channels": 2.0,
+          "citations": 0.175,
+          "conflict_pairs": 0.125,
+          "context_precision": 0.1062,
+          "evidence_recall": 0.5785,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 13032.5241,
+          "ndcg": 0.4315,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0648,
+          "refused": 0.175,
+          "seconds": 13.3734,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 3.025,
+          "tokens": 376.475,
+          "tokens_total": 1043.425,
+          "valid_units": 10.175
+        }
+      },
+      {
+        "run_id": "r-m2-rerank-deadline-001-d3bc17ec",
+        "candidate": "cross_encoder",
+        "question": "40 q · rerank=cross_encoder",
+        "tokens": 47.25,
+        "latency_ms": 3488.7321,
+        "candidates": 2.225,
+        "answer": "online LLM; F1=0.2373",
+        "metrics": {
+          "answer_f1": 0.2373,
+          "candidates": 2.225,
+          "channels": 2.0,
+          "citations": 0.025,
+          "conflict_pairs": 0.025,
+          "context_precision": 0.3351,
+          "evidence_recall": 0.3498,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 3488.7321,
+          "ndcg": 0.5123,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1234,
+          "refused": 0.55,
+          "seconds": 3.8277,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.4,
+          "tokens": 47.25,
+          "tokens_total": 286.85,
+          "valid_units": 1.825
+        }
+      }
+    ],
+    "metrics": {
+      "questions": 80,
+      "answer_f1": 0.2609,
+      "evidence_recall": 0.4642,
+      "tokens": 211.86,
+      "p95_latency_ms": 8260.63,
+      "error_rate": 0.0
+    },
+    "source": {
+      "archive": "eval/archive/m2-rerank.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "none",
+      "candidate": "cross_encoder",
+      "metric": "answer_f1",
+      "baseline_value": 0.2844,
+      "candidate_value": 0.2373,
+      "delta": -0.0471,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online 40 q/config, 1 seed; descriptive."
+    },
+    {
+      "baseline": "none",
+      "candidate": "cross_encoder",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5785,
+      "candidate_value": 0.3498,
+      "delta": -0.2287,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online 40 q/config, 1 seed; descriptive."
+    },
+    {
+      "baseline": "none",
+      "candidate": "cross_encoder",
+      "metric": "ndcg",
+      "baseline_value": 0.4315,
+      "candidate_value": 0.5123,
+      "delta": 0.0808,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online 40 q/config, 1 seed; descriptive."
+    },
+    {
+      "baseline": "none",
+      "candidate": "cross_encoder",
+      "metric": "tokens",
+      "baseline_value": 376.475,
+      "candidate_value": 47.25,
+      "delta": -329.225,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online 40 q/config, 1 seed; descriptive."
+    },
+    {
+      "baseline": "none",
+      "candidate": "cross_encoder",
+      "metric": "latency_ms",
+      "baseline_value": 13032.5241,
+      "candidate_value": 3488.7321,
+      "delta": -9543.792,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online 40 q/config, 1 seed; descriptive."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_candidate": {
+      "none": {
+        "answer_f1": 0.2844,
+        "candidates": 13.2,
+        "channels": 2.0,
+        "citations": 0.175,
+        "conflict_pairs": 0.125,
+        "context_precision": 0.1062,
+        "evidence_recall": 0.5785,
+        "field_completeness": 1.0,
+        "graph_edges": 1301.5,
+        "graph_nodes": 937.75,
+        "latency_ms": 13032.5241,
+        "ndcg": 0.4315,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0648,
+        "refused": 0.175,
+        "seconds": 13.3734,
+        "store_facts": 222.75,
+        "store_turns": 535.75,
+        "store_units": 758.5,
+        "superseded_units": 3.025,
+        "tokens": 376.475,
+        "tokens_total": 1043.425,
+        "valid_units": 10.175
+      },
+      "cross_encoder": {
+        "answer_f1": 0.2373,
+        "candidates": 2.225,
+        "channels": 2.0,
+        "citations": 0.025,
+        "conflict_pairs": 0.025,
+        "context_precision": 0.3351,
+        "evidence_recall": 0.3498,
+        "field_completeness": 1.0,
+        "graph_edges": 1301.5,
+        "graph_nodes": 937.75,
+        "latency_ms": 3488.7321,
+        "ndcg": 0.5123,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1234,
+        "refused": 0.55,
+        "seconds": 3.8277,
+        "store_facts": 222.75,
+        "store_turns": 535.75,
+        "store_units": 758.5,
+        "superseded_units": 0.4,
+        "tokens": 47.25,
+        "tokens_total": 286.85,
+        "valid_units": 1.825
+      }
+    },
+    "failure_breakdown": [],
+    "failure_note": "0 errors; 2 configs.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 0,
+          "source": null,
+          "status": "not_run"
+        },
+        {
+          "mode": "online",
+          "rows": 2,
+          "source": "eval/archive/m2-rerank.json",
+          "status": "complete"
+        }
+      ],
+      "fake_factors": [
+        "no Judge",
+        "1 seed unless stated",
+        "state_accuracy not recorded"
+      ],
+      "a_level_only": false,
+      "b_level": true,
+      "judge": "not_run",
+      "not_available": [
+        "judge_accuracy",
+        "state_accuracy",
+        "P(A|S) pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "在线 2 行；B 级 LLM 答案，无 Judge；不与离线数字混合。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "answer_f1",
+        "value": 0.2373
+      },
+      "tokens_per_query": 47.25,
+      "p95_latency_ms": 3488.7321
+    },
+    "claims": [
+      "M2 rerank online: cross_encoder F1 0.2373 vs none 0.2844; Recall 0.3498 vs 0.5785; nDCG 0.5123 vs 0.4315; Tokens 47.25 vs 376.475. quality=F1 0.2373. | quality F1=0.2373; Tokens=47.2; P95=3488.7 ms.",
+      "Cross-encoder raises nDCG (+0.0808) but lowers Recall (-0.2287) and F1 (-0.0471); it is not uniformly better. quality=F1 0.2373. | quality F1=0.2373; Tokens=47.2; P95=3488.7 ms."
+    ],
+    "conditions": [
+      "Online qwen3.8:27b, bge-m3, GPU cross-encoder BAAI/bge-reranker-v2-m3; 4 dev conversations, 40 q/config, 1 seed."
+    ],
+    "limitations": [
+      "1 seed, 40 q/config; no CI.",
+      "Cross-encoder trades recall/F1 for nDCG/tokens; not a uniform win.",
+      "No Judge."
+    ],
+    "next_actions": [
+      "Add seeds and paired CI; test top_n with the real reranker."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 0,
+        "source": null,
+        "status": "not_run"
+      },
+      {
+        "mode": "online",
+        "rows": 2,
+        "source": "eval/archive/m2-rerank.json",
+        "status": "complete"
+      }
+    ],
+    "fake_factors": [
+      "no Judge",
+      "1 seed unless stated",
+      "state_accuracy not recorded"
+    ],
+    "a_level_only": false,
+    "b_level": true,
+    "judge": "not_run",
+    "not_available": [
+      "judge_accuracy",
+      "state_accuracy",
+      "P(A|S) pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "在线 2 行；B 级 LLM 答案，无 Judge；不与离线数字混合。"
+  },
+  "online": {
+    "status": "complete",
+    "source": "eval/archive/m2-rerank.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40
+  },
+  "web": {
+    "route": "#/experiments/M2-online",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-M2"
+    ],
+    "note": "Online cross-encoder rerank; not a uniform win."
+  }
+}

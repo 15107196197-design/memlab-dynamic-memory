@@ -24,13 +24,13 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
+| 当前 commit | 本报告/catalog 提交（`git log -1 --oneline`；前序 graph-completion `2103023`）；报告/catalog 基线 `2c1e22a`；A 的 online 数据 commit `1096530`；S7b-A `4fc1571` |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **237 passed**（234 + API tier 3） |
-| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight**；**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`） |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；**本地 7B/27B/72B 规模实验：硬件受限（MacBook Air M2，8GB 内存/磁盘不足），设计保留但不可执行**；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **W2b 已完成（Web 侧）**；**API 档位实验已接入控制面**（E1 12 格 / E4 36 格，compiler + 测试）。下一步：有 API key 先跑 API 档位；W3 最终评测/复现包。本地 LLM 规模实验标记 `blocked_on_local_gpu`。见 [RUNBOOK.md](RUNBOOK.md)、[04-experiments.md](04-experiments.md) §4.13.1–4.13.2。 |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 与 `docs/optimization/figures/` 是未跟踪原型；`runs/params/`、`runs/r3-graph/` 与 `eval/archive/*` 由 C/A 会话产出（未跟踪）；`reports/experiments/` 已生成 11 份离线 + 8 份 online + final-w3 两份（gitignored） |
+| 测试 | `python -m unittest discover -s tests -t .` → **262 passed**（当前工作区，含 C 的未提交测试；本会话 commit 只含 catalog/HANDOFF/reports） |
+| 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight**；**API 档位实验**（`e1-api-tier-grid` / `e4-api-tier-grid`）；**报告层**（`memlab/experiment-report@1` 11 份离线 + 12 份 online，四段 + 三件套）；**catalog 50 行**（04 §4.5–§4.14 全覆盖 + graph-completion/E2-WR/E2-SM + offline/online/Judge 标记） |
+| 未实现 | **本地 7B/27B/72B 规模实验：硬件受限（MacBook Air M2，8GB 内存/磁盘不足），设计保留但不可执行**；E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8）；online E1 只有 1 seed/40 q、**无 Judge**；E5 第二 Judge/人工 `not_run`；online `state_accuracy` 未记录，`P(A|S)` 仍 null |
+| 当前阶段 | **报告/catalog 会话**：11 份离线 + 12 份 online 报告、50 行 catalog、C2/params corrections、graph-completion、RUNLOG-online 已合并；已提交（只 add catalog/HANDOFF/reports），Web 23 份报告 / 50 行校验通过。见 §5.1.13–5.1.15。 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -724,6 +724,247 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 - 测试：**234 passed**（未新增测试；脚本手动运行）。
 - 下一步：online 重跑、state_accuracy、slides/截图/复现包。
 
+### 5.1.13 离线报告层与 catalog 补全（2026-11-09 报告会话）
+
+> 范围：只读 `runs/` 与 `eval/archive/`，写 `reports/experiments/*.json` 与 `configs/experiment-catalog.json`；**不跑实验、不调 LLM、不改 `memlab/`、`scripts/`、`web/`**。测试 **262 passed**（当前工作区含 C 的未提交测试；本会话 commit 只含 catalog/HANDOFF/reports）。本节的 F1/Recall 全部是 **offline extractive**，不是 27B/LLM F1。
+
+**报告（11 份，Web 四段可读；每条 claim 带 质量 + Tokens + P95）**
+
+| report | 数据 | 结论状态 | 质量（best/代表） | Tokens/q | P95 |
+|---|---|---|---:|---:|---:|
+| `E1-W1` | S6 W1/W2/W3 × 2 seeds × 80 q | partial | W2 Recall 0.5053；W1 nDCG 0.3644 | 306.9–350.8 | 11.0–167.5 ms |
+| `E1-S2` | S6 S1/S2/S3 graph repr | partial | 三者 Recall 均 0.5053 | 306.9 | 9.0–92.5 ms |
+| `E1-R1` | S6 R1/R2/R3 planner | partial | R3 Recall 0.4704；R1 nDCG 0.3711 | 331.8–350.8 | 13.0–75.0 ms |
+| `E1-M1` | S6 M1/M2/M3 fusion/post | partial | M2 Recall 0.5482；M2 nDCG 0.4856 | 350.8–400.2 | 6.5–27.0 ms |
+| `E1-U1` | S6 U1/U2/U3 state/answer | partial | 三者 Recall 0.5927；nDCG 0.4061 | 363.6 | 6.0–54.5 ms |
+| `E1-K1` | S6 K1/K2/K3 store-level | partial | K3 update 0.8086；staleness 0.2234 | not_available | not_available |
+| `E2-1` | S7b-A 36 runs 转化率 | partial | P(A\|R=1) 0.1866；P(A) 0.2342 | 342.6 | 42.0 ms |
+| `E1-2-params` | E1.2 23 rows × 240 q/level | partial | R0 Recall 0.4619；nDCG 0.2746 | 344.6 | 5.9 ms |
+| `E1-R3` | R3 13 configs × 61 multi-hop q | partial | graph cells Recall 0.2372；nDCG 0.2334 | not_available | 28.5 ms |
+| `E5-1` | W3 test 80 q B0/R0 | not_supported | B0 F1 0.0354 / R0 0.0054 | 921.4 / 991.0 | 23.7 / 44.7 ms |
+| `final-w3-test-offline` | W3 原报告（补三件套） | not_supported | 同上 | 同上 | 同上 |
+
+- 报告位置：`reports/experiments/E1-W1.json`、`E1-S2`、`E1-R1`、`E1-M1`、`E1-U1`、`E1-K1`、`E2-1`、`E1-2-params`、`E1-R3`、`E5-1`、`final-w3-test-offline`（后两者同源，E5-1 是确认视图）。
+- 所有报告四段齐全：`results` / `comparisons` / `analysis` / `conclusion`；`conclusion.three_piece` 明确给质量、Tokens、P95；缺项写 `not_available`。
+- 单题/离线 batch 不再生成“看似统计”的结论；E5 的 `not_supported` 只适用于 offline test 条件。
+- 报告 `conclusion.status=partial` 与 catalog `status=partial` + `grade=offline` 一致；不再用 `done` 表示“offline screen 跑完”，B 级/online 未完成时一律 partial。
+
+**E2 转化率（04 §4.11.1；S6 30 个 answer-capable runs，2400 题；K 无 answer 行，单列）**
+
+| 口径 | 分子/分母 | 值 | 说明 |
+|---|---:|---:|---|
+| P(A) | 562/2400 | 0.2342 | A = `answer_f1>0`（offline extractive） |
+| P(R) | 1013/2400 | 0.4221 | R = `evidence_recall>=1.0` |
+| **P(A\|R=1)** | 189/1013 | **0.1866** | lift vs P(A) = **−0.0476**（描述量） |
+| P(C) | 2/2400 | 0.0008 | C = `context_precision>=1.0`（严格无干扰） |
+| P(A\|C=1) | 0/2 | **null** | 样本不足（仅 2/2400），不写 0 当结论 |
+| P(S) | 0/2400 | null | `state_accuracy` 0 行 |
+| P(A\|S=1) | 0/0 | **null** | 无 `state_accuracy`，`not_available` |
+
+按模块 `P(A|R=1)`（S7b-A）：W 0.1429（n=189）、S 0.1449（207）、R 0.2330（176）、M 0.2525（198）、U 0.1687（243）；K 无 gate/answer。seed 13 0.2439（529）vs seed 17 0.1240（484），波动大，单 seed 排序不可信。所有模块 lift 为负，**不能**据此说“检索有害/M/U 是瓶颈”——answerer 是抽取式，B 级必须用真实 LLM 重跑。
+
+**阶段瀑布（04 §4.8.3）**
+
+| 阶段 | 是否可测 | 证据 |
+|---|---|---|
+| raw channels | 是 | M1 candidates 15（params 层 12.8） |
+| fusion | 部分 | M1 RRF nDCG 0.4363 / Recall 0.5288（终点回看，不是 fusion 后独立测量） |
+| rerank | **否** | `sentence-transformers` 缺失，cross_encoder 全部 fallback；无真实重排 |
+| MMR | 代理 | 只有 `redundancy`（M1 0.0508）；无 MMR 后独立 nDCG |
+| decay | 部分 | M1 未启用 decay；E1.2 仅见 λ=0.001 nDCG 0.2873（+0.0127），无阶段内指标 |
+| compress | 是 | M1 tokens 400.2；E1.2 budget=500 时 340.4（−4.1），recall/nDCG 不变 |
+| answer | 是 | M1 F1 0.0468 / Recall 0.5288 / P95 6.5 ms（offline extractive） |
+
+> 没有逐阶段 recall/nDCG 落库，因此不编造 fusion→rerank→MMR→decay→compress 的“每段数字”；报告里用 `available/reason` 标出 fallback、未启用、未记录。
+
+**Catalog（`configs/experiment-catalog.json`，50 行）**
+
+- 覆盖：E0-1；W1–W5 + W-LLM；S1–S4 + S-LLM；R1–R4 + R-LLM；M1–M6 + M-LLM；U1–U4；K1–K3；E2-1–E2-4；E3-1–E3-4（E3a/E3b/E3c/Pareto）；E4-1–E4-8；E5-1。新增了 **W5、S4、K3、E3b、E3c、E4 子维度**。
+- **通知 S1**：catalog schema 2026-11-09 新增 `status=no_op/not_wired/blocked_on_code/blocked_on_hardware` + `grade`/`missing`；旧字段保留，Web 不改；offline 证据行一律 `partial` + `grade=offline`。
+- 状态计数：**partial 21 / no_op 1 / not_wired 1 / blocked_on_code 7 / blocked_on_hardware 9 / pending 11**（共 50）；`status_flags` 计 no_op 4 / not_wired 2 / blocked_on_config 1；`factors[]` 另有子因子 evidence/missing。
+- `partial` + `grade=offline`：E0-1、E1-W1/W2/W3、E1-S2、E1-R1/R2/R3、E1-M1/M4/M5、E1-U1/U2、E1-K1/K2、E2-1、E2-WR、E3-1、E5-1；W4/R4 分别用 primary `no_op` / `not_wired`。
+- `no_op`（primary 1 = W4；flag 3）：E1-W4（evidence 未读、fields 只是 BM25 词法伪影）、E1-S2（graph channel 无独有命中；max_neighbors 已 wire 但仍 flat）、E1-M4（MMR×decay 顺序擦掉 MMR；decay-off 的 λ=0.9 vs 0.5 只有 +0.00236 nDCG，交互未测）。
+- `not_wired`（primary 1 = R4；flag 1）：E1-R4（`planner.params.k` 从未被读；`retrieval.k` 曾写死 15，C 的 `params-planner-k-corrected.json` 已修正为 live，catalog `factors[]` 同时记录两件事）。
+- `blocked_on_code`（7）：W5 切分、S1 存储单元、S3 分层、S4 增量更新、E1-M3 `post.order`（`blocked_on_config`，patch 未合并）、E3c `bitemporal_invalidate`、E4-4 scene adapter。
+- `blocked_on_hardware`（9）：W/S/R/M 的 LLM 档位、M6（cross-encoder）、U3、E2-3、E2-SM（graph repr × rerank）、E4-1（本地 7B/27B/72B）。
+- `pending`（11）：U4、K3、E2-4、E3-2/3、E4-2（API 档位，需 key）、E4-3/5/6/7/8。
+- 每行都有 `evidence`、`missing`、`doc_ref`；`pending`/`blocked_*`/`no_op`/`not_wired` 行另有 `reason` 或 `missing` 说明；可跑项带 `report`/`link`。
+- 三类标记已写入 `marker_classes` + `markers`（并前缀到 evidence）：`no_op`（W4 evidence/fields、S2 max_neighbors/graph channel、M3 order、M4 MMR×decay）、`not_wired`（R4 retrieval.k/planner.params.k）、`blocked_on_code`（W5/S1/S3/S4/R3/E3c/E2 Oracle/scene adapter）、`blocked_on_hardware`（M2/M6/U3/W1 的 LLM 档/E4 等）。
+- C 的 offline gapfill 结果已进入 catalog evidence：E1.1 adoption（12 模块 add/remove）、E3 16-run、order 4-run、params seed-17；这些是 A 级接口指标，不写 answer F1/Judge。
+- **params-corrections（C）**：`retrieval.k` 的旧曲线是 e2e executor 写死 15 的假 flat；`params-planner-k-corrected.json` 已把 k 传入，10/15/25 → Recall 0.4206/0.4619/0.4913、nDCG 0.2638/0.2746/0.2700、tokens 227.4/344.6/578.9，是真实预算 tradeoff。`planner.params.k` 仍未 wire；`max_neighbors`/`evidence`/`MMR×decay`/graph channel 仍是 no-op。
+
+**边界（不得越过）**
+
+1. 以上全部是 **offline**：hashing embedding + extractive answer；`answer_f1` 不是 LLM F1，Judge 未跑。
+2. `state_accuracy` 已有 C 的 17-item 结果（U1 0.3431、U2/U3 0.3627；valid-set exact 0.2353），但**没有与 answer_f1 配对**，所以 `P(A|S=1)` 仍 `not_available` 并写原因；Judge、Oracle gap、LLM 归因仍缺。
+3. P95 是 per-question runner 延迟，不是 API/本地 GPU 部署延迟；不同协议不可横比。
+4. 27B 归档（`eval/archive/legacy-b0-results.json`）与 S6 offline 是不同协议，未混用。
+5. online 数据未到位前，报告里的 `online.status` 一律 `pending`，不填任何离线数字。
+
+**Web 校验（本会话已做）**
+
+- `GET /api/v2/experiments`：23 份报告（11 离线 + 12 online）；`GET /api/v2/experiments/<id>/report` 四段齐全，`conclusion.three_piece` 存在。
+- `GET /api/v2/experiments/plan`：50 行，`status_counts` 含 partial/no_op/not_wired/blocked_on_code/blocked_on_hardware；`factors[]` 有子因子 evidence/missing。
+- 测试：`python -m unittest discover -s tests -t .` → **262 passed**（当前工作区含 C 的未提交测试；catalog 状态测试已按新 schema 更新）。
+
+### 5.1.14 C2 gap-fill / parameter corrections（2026-11-09，C 会话离线 A 级）
+
+> 来源：[C2-GAPFILL.md](C2-GAPFILL.md)、[params-corrections.md](params-corrections.md)。全部 **offline A-level**（hash embedding + extractive answer），**无 answer F1、无 Judge**；C 的 `memlab/`/`tests/` 改动未提交，也不进入本会话 commit。
+
+**Run manifest（0 error）**
+
+| Batch | DB | Runs | Questions | Artifact |
+|---|---|---:|---:|---|
+| E3 5-factor half-fraction | `runs/e3-offline/e3.sqlite` | 16 | 240/run | `eval/archive/e3-offline.json` |
+| E1.1 strict adoption | `runs/adoption/adoption.sqlite` | 22 adoption + 2 baselines | 240/run | `eval/archive/e1-adoption-offline.json` |
+| R4 `retrieval.k` corrected | `runs/params/p1-r4.sqlite` | 3 | 240/run | `params-planner-k-corrected.json` |
+| MMR with decay off | `runs/params/p1-mmr-nodecay.sqlite` | 3 | 240/run | `params-mmr-lambda-nodecay.json` |
+| max_neighbors corrected | `runs/params/p1-maxneighbors.sqlite` | 3 | 240/run | `params-graph-max-neighbors-corrected.json` |
+| state accuracy | `runs/state/state.sqlite` | 3 candidates × 17 items | 17 | `state-accuracy.json` |
+| P2 extension | `runs/params/p1-ext.sqlite` | 6 | 240/run | `e1-params-ext.json` |
+
+**P0 corrections（覆盖旧 artifact）**
+
+- **R4 `retrieval.k` 已修正**：executor 读 `plan.effective_config['retrieval']['k']`，不再写死 15。10/15/25 → Recall 0.4206/0.4619/0.4913、nDCG 0.2638/0.2746/0.2700、tokens 227.4/344.6/578.9、mean candidates 8.47/12.79/21.45。k=25 recall +0.0295 `[+0.0205,+0.0367]`、tokens +234.3；k=10 recall −0.0417 `[-0.0718,-0.0237]`、tokens −117.2；nDCG 变化不显著。旧 `params-planner-k.json` 作废。
+- **MMR λ（decay off）**：0.5/0.7/0.9 → nDCG 0.3268/0.3282/0.3292；λ=0.9 vs 0.5 **+0.00236**，95% cluster CI **[+0.00098,+0.00417]**；recall/tokens/redundancy 不变。**MMR×decay 交互仍未测**。
+- **max_neighbors 已 wire 但仍 flat**：10/40/80 全部 Recall 0.4619 / nDCG 0.2746 / 344.6 tokens；原因是 23/240 题走 graph_khop、预算 15 饱和、多数 seed degree 4。不要再说“未消费”。
+- **`schema.params.evidence` = no_op**：`MetaSchemaExtractor` 总是从缓存 facts 派生 evidence，flag 不读；曲线删除，不重跑。
+
+**E3 主效应（16-run，resolution V，无 residual df）**
+
+| 因子 | ΔRecall@15 | ΔnDCG@15 | Δtokens/q | 读法 |
+|---|---:|---:|---:|---|
+| schema | +0.0038 `[-0.0116,+0.0176]` | +0.0036 `[-0.0103,+0.0185]` | **+13.63** `[+9.80,+16.43]` | 质量 CI 过 0，成本上升 |
+| graph | 0 | 0 | 0 | graph 路由很少 → 未识别 |
+| planner | 0 | **−0.0020** `[-0.0040,−0.0001]` | 0 | DAG 略降 nDCG |
+| rerank | 0 | 0 | 0 | cross-encoder fallback |
+| fusion | 0 | **−0.0492** `[-0.0638,−0.0347]` | **+14.15** `[+3.50,+24.80]` | query_adaptive 降 nDCG、增 token |
+
+显著交互：planner×fusion nDCG **−0.0041** `[-0.0080,−0.0003]`（次加）；schema×fusion context precision **+0.0073** `[+0.0043,+0.0103]`（超加）。其余 2FI 多为 0 或 CI 过 0；不要读成“真实 reranker/graph 下无交互”。
+
+**E1.1 strict adoption（24 runs；B0/R0 是不同基线，add/remove 不可互比）**
+
+- B0：Recall 0.6437 / nDCG 0.5521 / 306.9 tokens；R0：0.4619 / 0.2746 / 344.6 tokens。offline A 级 B0 更高，不能外推到 27B。
+- 显著项（`*` = CI 排除 0）：decay add nDCG **−0.0522\***、remove **+0.0536\***；filter remove Recall **+0.0889\*** / nDCG **+0.0564\*** / tokens **+53.31\***；fusion remove nDCG **+0.1102\*** / tokens **−40.68\***；planner add nDCG **−0.0751\***、remove nDCG **+0.0632\***；resolver add Recall **−0.0458\*** / nDCG **−0.0643\***、remove nDCG **+0.0532\***；schema add Recall **+0.0156\***、remove Recall **−0.0227\***。
+- audit/compress/graph/mmr/rerank/temporal 多数为 0；S6 的 A 候选是 bundle，这些 strict one-component 结果只用于方向/归因。
+
+**State accuracy（17 items，4 conversations，6 as_of）**
+
+| Candidate | item mean | pooled memory | valid-set exact | evidence recall | ACTIVE acc | HISTORICAL acc |
+|---|---:|---:|---:|---:|---:|---:|
+| U1 none/direct | 0.3431 | 0.2941 | 0.2353 | 0.5294 | 0.4762 | 0.0000 |
+| U2 offline_slot/valid_history | 0.3627 | 0.3529 | 0.2353 | 0.5294 | 0.3333 | 0.3846 |
+| U3 offline_slot/evidence_chain | 0.3627 | 0.3529 | 0.2353 | 0.5294 | 0.3333 | 0.3846 |
+
+offline_slot 用 ACTIVE 换 HISTORICAL；valid-set exact 只有 0.2353；U2/U3 状态指标相同（U3 只改 answerer）。这 17 项**没有与 S6 answer_f1 配对**，所以 `P(A|S=1)` 仍 `not_available`，不要用 item mean 代替。
+
+**P2 extension（6 runs）**
+
+- `fusion.rrf_k`：10/30/60/100 → nDCG 0.3192/0.2944/0.2746/0.2558；10 vs 60 nDCG **+0.0448** `[+0.0313,+0.0583]`、recall +0.0101 `[0.0,+0.0170]`；100 vs 60 nDCG **−0.0188** `[-0.0235,−0.0141]`。低 RRF k 更好，曲线单调。
+- `post.filter`：none vs threshold → Recall 0.5508/0.4619、nDCG 0.3310/0.2746、tokens 397.9/344.6；none 的 recall **+0.0886** `[+0.0370,+0.1483]`、nDCG **+0.0564** `[+0.0290,+0.0861]`、tokens +53.3。threshold 在 offline 过度剪枝。
+
+**R3 graph retrieval dispatch（13 configs × 61 multi-hop q）**
+
+- 所有 impl（slot_expand/entity_subgraph/dual_channel/ppr）× repr（state_slot/entity_triple/three_layer）最终 Recall 都是 **0.2372**；nDCG 0.2315–0.2381；p95 19.1–48.7 ms。
+- graph novel candidates 34–91，但 **0 个进入 final**；`graph_channel_survival` 明确写了这一点。flat 是 fusion/budget 结果，不是“未实现”。`planner.analyzer=llm` 仍回退 rule，所有 cell 路由相同。
+- catalog R3 因此是 `partial` + `no_op` 标记，不再写 blocked_on_code。
+
+**Graph completion（C 的 `eval/archive/graph-completion.json`，commit `2103023`；offline A 级）**
+
+- **S2 event_sparse 已补测**：state_slot/entity_triple/three_layer/event_sparse 4 种表示最终 Recall 均 **0.2372**，不可分；graph_novel_candidates 11，graph_novel_in_final 0。E1-S2 仍是 `partial` + grade offline，缺真实 embedding 与第二 seed。
+- **W×R（E2-WR）**：2×2（legacy_flat/meta_schema × vector_only/entity_subgraph），61 q/格；DoD **+0.0033 Recall / +0.0078 nDCG**，仅 **1 题**变化，不能宣称结构化写入显著增强图检索。meta−legacy 在 vector_only 下 Recall +0.0348、在 graph 下 +0.0381，但 DoD 本身太小。
+- **M1 route（E1-M1）**：2×2（vector_only/entity_subgraph × rrf/weighted_rrf），61 q/格；rrf Recall 0.2407 vs 0.2456，weighted_rrf 0.0279 vs 0.0795；graph_on_minus_off rrf +0.0049 / weighted_rrf +0.0516，DoD +0.0467。**路线臂是代理**，不是 dense+bm25+graph 三路并集。
+- **R2 single-channel（E1-R2）**：4 个单通道 bm25 Recall 0.3560 / dense 0.0367 / graph_khop 0.1854 / temporal 0.3560；nDCG 0.3971/0.0635/0.2959/0.3971。temporal 与 bm25 在 61 题上完全相同（无 as_of 时词法回退）；不是 6 路线 × 4 类。
+- **S×M（E2-SM）**：graph repr × rerank（none/cross_encoder）设计已记录，但 **blocked_on_hardware**：缺 sentence-transformers/GPU；**未用 filter 冒充重排**。
+- **两个偏差**（写进 E1-R2/E1-M1 的 missing）：① `retrieval.channels` 只被校验、不被 planner 消费；② 单通道由分析脚本直接调 channel 实现，不是 runner 路由。
+- graph-completion 的其他限制：offline hash embedding 非语义；只有 4 dev 对话、61 个 category-1 题、1 seed；rule analyzer 只把 8/61 题路由到 graph；R0 query_adaptive 下 graph-novel 进 final 0 次，plain RRF 下 44 次但只有 2 个 gold，final Recall 仍基本不变。
+
+**E1-M3 / cancelled**
+
+- 4-order 实验只在 `repo-c2` 可复现；main 的 `RunConfig` 拒绝 `post.order` list，patch `eval/archive/c2-post-order.patch` 未合并。**E1-M3 = blocked_on_config**，不要引用 order delta。
+- P3 seed 17（`params-s17.json`）与 P4 order 产物标 `cancelled: true`，不进主分支结论。
+
+### 5.1.15 Online/B 级回传（2026-11-09，A 会话；qwen3.8:27b + bge-m3）
+
+> 来源：`eval/archive/s6-e1-online-40.json`、`runs/s6/e1-online-40.sqlite`、`eval/archive/final-w3-test-online.json`，以及 RUNLOG-online.md §4–§6 的 `e2-oracle-retrieval.json`、`e3-2x2.json`、`m2-rerank.json`。**这是 online LLM 答案，不是 offline extractive**；E1 模块 40 题 × seed 13，E5 test 80 题 × 2 seeds；**无 Judge**。A 的 RUNLOG-online.md 已合并进本节（2026-11-09 19:18）。
+
+**E1 模块在线（18 runs，0 error；F1/Recall/Tokens/P95）**
+
+| 模块 | 候选 | F1 | Recall | Tokens/q | P95 |
+|---|---|---:|---:|---:|---:|
+| W | W1 legacy+append | 0.1699 | **0.5564** | 45.9 | 8173 ms |
+| W | W2 meta+append | **0.1837** | 0.5269 | 44.7 | 8514 ms |
+| W | W3 meta+mem0 | 0.1540 | 0.4487 | 54.3 | 7772 ms |
+| S | S1/S2/S3 | 0.1837 | 0.5269 | 44.7 | 8246/8155/8143 ms |
+| R | R1 none | 0.1243 | 0.4179 | 56.0 | 7470 ms |
+| R | R2 rule_router | **0.1540** | **0.4487** | 54.3 | 7522 ms |
+| R | R3 DAG | 0.1243 | 0.4179 | 56.0 | 7466 ms |
+| M | M1 rrf | **0.3064** | **0.6983** | 403.8 | 16994 ms |
+| M | M2 weighted+compress | 0.2274 | 0.5667 | 372.7 | 18324 ms |
+| M | M3 adaptive | 0.1540 | 0.4487 | 54.3 | 7544 ms |
+| U | U1 none/direct | 0.2883 | 0.7462 | 377.4 | 3984 ms |
+| U | U2 offline_slot/valid | **0.2998** | 0.7462 | 377.4 | 4652 ms |
+| U | U3 offline_slot/chain | 0.2921 | 0.7462 | 377.4 | 4476 ms |
+| K | K1/K2/K3 store-level | — | — | — | — |
+
+- K：K1 staleness 0.2314 / contradiction 0.4224 / update 0.7914；K2 0.2323/0.4187/0.7885；K3 **0.2234/0.4000/0.8086**。K 没有 answer F1，tokens/P95 `not_available`。
+- Online 排名与 offline 不同：M2 在线差于 M1（offline M2 recall 更高）；R2 在线最好（offline R2 最差）；U2 仅比 U1 F1 高 0.0115，且拒答 0.275 vs 0.025。不要把 offline 排名直接搬到 online。
+- `cross_encoder` 仍 fallback（M2 不是真实重排）；`state_accuracy` 未写入 online DB。
+
+**E2-1 在线转化率（600 题，排除 K；A=`answer_f1>0`，R=`evidence_recall>=1.0`，C=`context_precision>=1.0`）**
+
+| 口径 | 分子/分母 | 值 |
+|---|---:|---:|
+| P(A) | 312/600 | 0.5200 |
+| P(R) | 274/600 | 0.4567 |
+| **P(A\|R=1)** | 155/274 | **0.5657**（lift **+0.0457**） |
+| P(C) | 94/600 | 0.1567 |
+| P(A\|C=1) | 39/94 | 0.4149 |
+| P(A\|S=1) | 0/0 | **null** |
+
+按模块 `P(A|R=1)`：U 0.6282、S 0.5882、M 0.5818、W 0.5417、R 0.4286；K 无 answer。在线 lift 为正，与 offline 负 lift 方向相反——这是 LLM answerer 与 extractive answerer 的差异，不能直接归因给模块。`P(A|S=1)` 仍 `null`：online DB 无 `state_accuracy`；C 的 17-item benchmark 没有与 answer_f1 配对。
+
+**E5 test 在线（test conv-41/42，80 q，2 seeds）**
+
+| 配置 | F1 | Recall | Tokens/q | P95 |
+|---|---:|---:|---:|---:|
+| B0 | **0.1883** | **0.5435** | 924.6 | 16032.8 ms |
+| R0 | 0.1520 | 0.3403 | 319.3 | 8398.2 ms |
+
+F1 delta **−0.0363**，95% CI **[−0.1351,+0.0575]**（不显著）；Recall delta **−0.2032**，CI **[−0.3509,−0.048]**（显著负）。第二 Judge/人工 **not_run**；state_accuracy 未记录。E5 结论标 `inconclusive`（F1 不显著，Recall 显著负），不是“R0 全面更差”。
+
+**E2-2 Oracle retrieval（RUNLOG §4）**
+
+- 4 dev 段 × 20 题 = 80；只把 retrieval 换成 oracle（gold evidence 注入），M/U 冻结 R0；online 27B；context 8192。
+- F1 **0.2437**、Recall **0.6611**（构造值，不可与系统 Recall 直接比）、Tokens 232.15/query、latency 2217.14 ms、elapsed 195.2 s。
+- 解读：即使证据给全，F1 仍只有 0.2437，answer/refusal 仍是瓶颈之一；只做了 retrieval oracle，write/store/merge/state/answer oracle 未跑。
+
+**E3 2×2（fusion × answer；RUNLOG §5）**
+
+| fusion | answer | F1 | Recall | nDCG | Tokens |
+|---|---|---|---:|---:|---:|---:|
+| single_channel | direct | 0.1500 | 0.2860 | 0.3855 | 48.55 |
+| single_channel | evidence_chain | 0.1347 | 0.2860 | 0.3855 | 48.55 |
+| weighted_rrf | direct | **0.1764** | **0.3026** | **0.4080** | 48.58 |
+| weighted_rrf | evidence_chain | 0.1607 | 0.3026 | 0.4080 | 48.58 |
+
+weighted_rrf 比 single_channel F1 +0.0264 / Recall +0.0166；同一 fusion 下 direct 略优于 evidence_chain。4 格 × 60 q，1 seed，无 CI，只能描述性。
+
+**M2 rerank（none vs cross_encoder；RUNLOG §6）**
+
+| rerank | F1 | Recall | nDCG | Tokens | s/query |
+|---|---:|---:|---:|---:|---:|
+| none | **0.2844** | **0.5785** | 0.4315 | 376.5 | 13.37 |
+| cross_encoder | 0.2373 | 0.3498 | **0.5123** | 47.25 | 3.83 |
+
+cross-encoder 提高 nDCG（+0.0808），但 Recall −0.2287、F1 −0.0471，tokens 大降；**不是一致更好**。GPU 单次 40 题/配置，1 seed，无 CI。
+
+**Catalog / 报告**
+
+- 新增 12 份 online 报告：`E1-W1-online`、`E1-S2-online`、`E1-R1-online`、`E1-M1-online`、`E1-U1-online`、`E1-K1-online`、`E2-1-online`、`E2-2-online`、`E3-1-online`、`M2-online`、`E5-1-online`，另有 A 的 `final-w3-test-online`。
+- Catalog 对应行 `grade="offline+online"`、`report_online`、`online_source`；status 仍 `partial`（无 Judge / 1 seed / 40 q）。`online` 顶层字段为 `complete`。
+- `E5-1` 仍是 `partial`；`E5-1-online` 结论 `inconclusive`，第二 Judge/human `not_run`。
+
 ### 5.2 未开始
 - [x] W1 Web MVP：6 段入口、记忆库 v2、v2 JSON 下载、提问/状态页、基础实验台、系统页、旧 API 兼容（2026-11-09，229 tests）
 - [x] W2 核心 Web 实验台：轴配置器 + runnable gate + 异步 job + 实验详情四 tab + 评测归档页（2026-11-09，233 tests）
@@ -820,6 +1061,25 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 ```
 
 ### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / 报告层 + catalog + online 合并 / 会话
+- 本次完成：11 份离线 report + 12 份 online report（Web 共 23 份）；E2-1 离线/在线转化率；E2-2 Oracle retrieval；E3 2×2；M2 rerank；E5 离线/在线 test；catalog 50 行覆盖 04 §4.5–§4.14（+ E2-WR/E2-SM），合并 C2-GAPFILL + params-corrections + graph-completion + RUNLOG-online；HANDOFF §5.1.13–5.1.15。
+- 改动文件：`configs/experiment-catalog.json`、`docs/optimization/HANDOFF.md`、`reports/experiments/*.json`（gitignored）；另按新 schema 更新 `tests/test_webapp.py` 的 catalog 断言（commit 范围见下）。**未改** `memlab/`、`scripts/`、`web/`；C/A 的代码与数据未 commit。
+- 测试：`python -m unittest discover -s tests -t .` → **262 passed**（当前工作区含 C 的未提交测试）。
+- 新增报告/指标：E1 离线 W/S/R/M/U/K；E1.2 params（R4 k corrected、MMR decay-off、max_neighbors、rrf_k/filter）；E1-R3 graph dispatch；E1 online 18 runs（qwen3.8:27b，40 q，seed 13，无 Judge）；E2-1 online P(A)=0.52 / P(A|R)=0.5657；E5 online B0 F1 0.1883 vs R0 0.1520。
+- Key 状态：online 使用 A 的 Ollama qwen3.8:27b + bge-m3；本会话只读 SQLite/JSON，未调用 LLM/GPU。Judge/第二 Judge/人工 `not_run`。
+- 关键决策：① offline/online 分报告，不混表；② 无 conclusion 不写完成；每条 claim 带质量+Tokens+P95；③ catalog 用 status + status_flags + factors[] + grade + missing 解释 no_op/not_wired/blocked_on_code/blocked_on_hardware；④ E1-M3 标 blocked_on_config（main 拒绝 post.order，patch 未合并）；⑤ P(A|S) 仍 null，因为 online DB 无 state_accuracy、C 的 17-item benchmark 未与 answer_f1 配对。
+- 未解决问题：
+  1. online E1 只有 1 seed/40 q、无 Judge；E5 第二 Judge/人工 not_run；`state_accuracy` online 未记录。
+  2. `P(A|C=1)` 在线 n=94，离线 n=2；样本仍小。
+  3. C 的 `memlab/`/`tests/`/`configs/experiments/*` 改动未提交；本会话 commit 只含 catalog/HANDOFF（及必要的 catalog 测试断言）。
+- 下一步 3 件事：
+  1. RUNLOG-online.md 已合并（§5.1.15）；提交前再核对一次 archive 与日志。
+  2. 补第二 seed、LLM Judge、online state_accuracy。
+  3. 合并 C 的 post-order patch 后在 main 重跑 E1-M3。
+- 下一步选择：等 A 的 RUNLOG/用户确认后提交；不自动开始下一阶段。
+- 下个会话先读：本文件 §1/§5.1.13–5.1.15；`C2-GAPFILL.md`；`params-corrections.md`；`configs/experiment-catalog.json`。
+
 
 ### 2026-11-09 / S7b-A 离线耦合 / 会话
 - commit：`4fc1571`（代码/数据/文档）；后续只允许 docs pin 提交。

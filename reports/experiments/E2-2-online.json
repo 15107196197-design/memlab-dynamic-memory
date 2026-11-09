@@ -1,0 +1,194 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E2-2-online",
+  "created_at": "2026-11-09T19:19:26+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "1096530",
+    "config_hashes": {},
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3",
+      "judge": "not_run"
+    },
+    "offline": false,
+    "data_mode": "online",
+    "source_db": "runs/e2/oracle.sqlite",
+    "source_archive": "eval/archive/e2-oracle-retrieval.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 80,
+    "seeds": [
+      13
+    ],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "e2-oracle-retrieval",
+        "candidate": "oracle retrieval",
+        "question": "80 q · conv-26/30/43/44 · seed 13",
+        "tokens": 232.15,
+        "latency_ms": 2217.14,
+        "candidates": null,
+        "answer": "online LLM; F1=0.2437",
+        "metrics": {
+          "answer_f1": 0.2437,
+          "evidence_recall": 0.6611,
+          "tokens": 232.15,
+          "latency_ms": 2217.14
+        }
+      }
+    ],
+    "metrics": {
+      "answer_f1": 0.2437,
+      "evidence_recall": 0.6611,
+      "tokens": 232.15,
+      "latency_ms": 2217.14,
+      "error_rate": 0.0,
+      "questions": 80
+    },
+    "source": {
+      "archive": "eval/archive/e2-oracle-retrieval.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "R0 (not matched)",
+      "candidate": "oracle retrieval",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": 0.2437,
+      "delta": null,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Oracle injects gold evidence; no matched non-oracle run on the same 80 q, so no delta."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "failure_breakdown": [],
+    "failure_note": "0 errors; 80 q oracle run.",
+    "oracle_scope": "retrieval only; M/U frozen R0. write/store/merge/state/answer oracle not run.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 0,
+          "source": null,
+          "status": "not_run"
+        },
+        {
+          "mode": "online",
+          "rows": 1,
+          "source": "eval/archive/e2-oracle-retrieval.json",
+          "status": "complete"
+        }
+      ],
+      "fake_factors": [
+        "no Judge",
+        "1 seed unless stated",
+        "state_accuracy not recorded"
+      ],
+      "a_level_only": false,
+      "b_level": true,
+      "judge": "not_run",
+      "not_available": [
+        "judge_accuracy",
+        "state_accuracy",
+        "P(A|S) pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "在线 1 行；B 级 LLM 答案，无 Judge；不与离线数字混合。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "answer_f1",
+        "value": 0.2437
+      },
+      "tokens_per_query": 232.15,
+      "p95_latency_ms": 2217.14
+    },
+    "claims": [
+      "E2-2 retrieval oracle: F1 0.2437, Recall 0.6611 (constructed, not comparable to system recall); quality=F1 0.2437. | quality F1=0.2437; Tokens=232.2; P95=2217.1 ms."
+    ],
+    "conditions": [
+      "Online qwen3.8:27b, bge-m3; 4 dev conversations, 80 q, seed 13; retrieval only oracle."
+    ],
+    "limitations": [
+      "Oracle recall is constructed from gold evidence; do not compare it with system recall.",
+      "Only retrieval oracle; other oracles not run.",
+      "No Judge."
+    ],
+    "next_actions": [
+      "Run write/store/merge/state/answer oracles for a full oracle gap."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 0,
+        "source": null,
+        "status": "not_run"
+      },
+      {
+        "mode": "online",
+        "rows": 1,
+        "source": "eval/archive/e2-oracle-retrieval.json",
+        "status": "complete"
+      }
+    ],
+    "fake_factors": [
+      "no Judge",
+      "1 seed unless stated",
+      "state_accuracy not recorded"
+    ],
+    "a_level_only": false,
+    "b_level": true,
+    "judge": "not_run",
+    "not_available": [
+      "judge_accuracy",
+      "state_accuracy",
+      "P(A|S) pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "在线 1 行；B 级 LLM 答案，无 Judge；不与离线数字混合。"
+  },
+  "online": {
+    "status": "complete",
+    "source": "eval/archive/e2-oracle-retrieval.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 80
+  },
+  "web": {
+    "route": "#/experiments/E2-2-online",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E2-2"
+    ],
+    "note": "Retrieval oracle only; constructed recall."
+  }
+}

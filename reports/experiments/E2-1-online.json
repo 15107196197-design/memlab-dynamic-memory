@@ -1,0 +1,1017 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E2-1-online",
+  "created_at": "2026-11-09T18:47:36+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "1096530",
+    "config_hashes": {},
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3",
+      "judge": "not_run"
+    },
+    "offline": false,
+    "data_mode": "online",
+    "provider": "ollama",
+    "source_db": "runs/s6/e1-online-40.sqlite",
+    "source_archive": "eval/archive/s6-e1-online-40.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 600,
+    "seeds": [
+      13
+    ],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "s6-W-W1-legacy-append-s13-conv-26-conv-30-conv-43-conv-44-ca07567f",
+        "candidate": "W1-legacy-append",
+        "question": "40 q · W · seed 13",
+        "tokens": 45.9,
+        "latency_ms": 8173.0,
+        "candidates": 2.625,
+        "answer": "online LLM; F1=0.1699",
+        "metrics": {
+          "answer_f1": 0.1699,
+          "candidates": 2.625,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4491,
+          "evidence_recall": 0.5564,
+          "field_completeness": 0.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 4879.9594,
+          "ndcg": 0.6446,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1356,
+          "refused": 0.45,
+          "seconds": 4.8904,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 45.9,
+          "tokens_total": 287.625,
+          "valid_units": 2.3,
+          "p95_seconds": 8.173
+        }
+      },
+      {
+        "run_id": "s6-W-W2-meta-append-s13-conv-26-conv-30-conv-43-conv-44-3ed76142",
+        "candidate": "W2-meta-append",
+        "question": "40 q · W · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8514.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 4872.9786,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.8808,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_seconds": 8.514
+        }
+      },
+      {
+        "run_id": "s6-W-W3-meta-mem0-s13-conv-26-conv-30-conv-43-conv-44-18c559f1",
+        "candidate": "W3-meta-mem0",
+        "question": "40 q · W · seed 13",
+        "tokens": 54.325,
+        "latency_ms": 7772.0,
+        "candidates": 2.225,
+        "answer": "online LLM; F1=0.1540",
+        "metrics": {
+          "answer_f1": 0.154,
+          "candidates": 2.225,
+          "channels": 2.0,
+          "citations": 0.025,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.3772,
+          "evidence_recall": 0.4487,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4640.4182,
+          "ndcg": 0.5396,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1175,
+          "refused": 0.475,
+          "seconds": 4.9763,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.3,
+          "tokens": 54.325,
+          "tokens_total": 302.45,
+          "valid_units": 1.925,
+          "p95_seconds": 7.772
+        }
+      },
+      {
+        "run_id": "s6-S-S1-state-slot-s13-conv-26-conv-30-conv-43-conv-44-175ee9aa",
+        "candidate": "S1-state-slot",
+        "question": "40 q · S · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8246.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 752.0,
+          "graph_nodes": 958.75,
+          "latency_ms": 4659.1015,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.67,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_seconds": 8.246
+        }
+      },
+      {
+        "run_id": "s6-S-S2-entity-triple-s13-conv-26-conv-30-conv-43-conv-44-ad574a5e",
+        "candidate": "S2-entity-triple",
+        "question": "40 q · S · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8155.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 1381.75,
+          "graph_nodes": 972.75,
+          "latency_ms": 4621.5783,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.6327,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_seconds": 8.155
+        }
+      },
+      {
+        "run_id": "s6-S-S3-three-layer-s13-conv-26-conv-30-conv-43-conv-44-935c4ddc",
+        "candidate": "S3-three-layer",
+        "question": "40 q · S · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8143.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 4628.5446,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.6398,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_seconds": 8.143
+        }
+      },
+      {
+        "run_id": "s6-R-R1-planner-none-s13-conv-26-conv-30-conv-43-conv-44-4ed94711",
+        "candidate": "R1-planner-none",
+        "question": "40 q · R · seed 13",
+        "tokens": 56.0,
+        "latency_ms": 7470.0,
+        "candidates": 2.375,
+        "answer": "online LLM; F1=0.1243",
+        "metrics": {
+          "answer_f1": 0.1243,
+          "candidates": 2.375,
+          "channels": 1.0,
+          "citations": 0.025,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.3563,
+          "evidence_recall": 0.4179,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4299.4577,
+          "ndcg": 0.5042,
+          "plan_nodes": 1.0,
+          "redundancy": 0.1048,
+          "refused": 0.5,
+          "seconds": 4.6319,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.225,
+          "tokens": 56.0,
+          "tokens_total": 307.275,
+          "valid_units": 2.15,
+          "p95_seconds": 7.47
+        }
+      },
+      {
+        "run_id": "s6-R-R2-rule-router-s13-conv-26-conv-30-conv-43-conv-44-8f9e2c40",
+        "candidate": "R2-rule-router",
+        "question": "40 q · R · seed 13",
+        "tokens": 54.325,
+        "latency_ms": 7522.0,
+        "candidates": 2.225,
+        "answer": "online LLM; F1=0.1540",
+        "metrics": {
+          "answer_f1": 0.154,
+          "candidates": 2.225,
+          "channels": 2.0,
+          "citations": 0.025,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.3772,
+          "evidence_recall": 0.4487,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4575.5373,
+          "ndcg": 0.5396,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1175,
+          "refused": 0.475,
+          "seconds": 4.9109,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.3,
+          "tokens": 54.325,
+          "tokens_total": 302.45,
+          "valid_units": 1.925,
+          "p95_seconds": 7.522
+        }
+      },
+      {
+        "run_id": "s6-R-R3-dag-s13-conv-26-conv-30-conv-43-conv-44-dc7cc5cb",
+        "candidate": "R3-dag",
+        "question": "40 q · R · seed 13",
+        "tokens": 56.0,
+        "latency_ms": 7466.0,
+        "candidates": 2.375,
+        "answer": "online LLM; F1=0.1243",
+        "metrics": {
+          "answer_f1": 0.1243,
+          "candidates": 2.375,
+          "channels": 1.5,
+          "citations": 0.025,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.3563,
+          "evidence_recall": 0.4179,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4286.2684,
+          "ndcg": 0.5042,
+          "plan_nodes": 1.5,
+          "redundancy": 0.1048,
+          "refused": 0.5,
+          "seconds": 4.622,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.225,
+          "tokens": 56.0,
+          "tokens_total": 307.275,
+          "valid_units": 2.15,
+          "p95_seconds": 7.466
+        }
+      },
+      {
+        "run_id": "s6-M-M1-rrf-s13-conv-26-conv-30-conv-43-conv-44-51adf394",
+        "candidate": "M1-rrf",
+        "question": "40 q · M · seed 13",
+        "tokens": 403.825,
+        "latency_ms": 16994.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.3064",
+        "metrics": {
+          "answer_f1": 0.3064,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.325,
+          "conflict_pairs": 0.05,
+          "context_precision": 0.1043,
+          "evidence_recall": 0.6983,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 14610.3185,
+          "ndcg": 0.6065,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0613,
+          "refused": 0.3,
+          "seconds": 14.9499,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 4.275,
+          "tokens": 403.825,
+          "tokens_total": 1119.25,
+          "valid_units": 10.725,
+          "p95_seconds": 16.994
+        }
+      },
+      {
+        "run_id": "s6-M-M2-weighted-compress-s13-conv-26-conv-30-conv-43-conv-44-a12704e0",
+        "candidate": "M2-weighted-compress",
+        "question": "40 q · M · seed 13",
+        "tokens": 372.7,
+        "latency_ms": 18324.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2274",
+        "metrics": {
+          "answer_f1": 0.2274,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.225,
+          "conflict_pairs": 0.025,
+          "context_precision": 0.0786,
+          "evidence_recall": 0.5667,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 15494.527,
+          "ndcg": 0.5299,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0698,
+          "refused": 0.4,
+          "seconds": 15.8367,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 2.425,
+          "tokens": 372.7,
+          "tokens_total": 1063.65,
+          "valid_units": 12.575,
+          "p95_seconds": 18.324
+        }
+      },
+      {
+        "run_id": "s6-M-M3-query-adaptive-s13-conv-26-conv-30-conv-43-conv-44-8f9e2c40",
+        "candidate": "M3-query-adaptive",
+        "question": "40 q · M · seed 13",
+        "tokens": 54.325,
+        "latency_ms": 7544.0,
+        "candidates": 2.225,
+        "answer": "online LLM; F1=0.1540",
+        "metrics": {
+          "answer_f1": 0.154,
+          "candidates": 2.225,
+          "channels": 2.0,
+          "citations": 0.025,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.3772,
+          "evidence_recall": 0.4487,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4585.0341,
+          "ndcg": 0.5396,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1175,
+          "refused": 0.475,
+          "seconds": 4.9233,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.3,
+          "tokens": 54.325,
+          "tokens_total": 302.45,
+          "valid_units": 1.925,
+          "p95_seconds": 7.544
+        }
+      },
+      {
+        "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-43-conv-44-4a85299c",
+        "candidate": "U1-none-direct",
+        "question": "40 q · U · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 3984.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2883",
+        "metrics": {
+          "answer_f1": 0.2883,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.375,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 2795.8855,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.025,
+          "seconds": 2.8072,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.0,
+          "tokens": 377.375,
+          "tokens_total": 996.95,
+          "valid_units": 15.0,
+          "p95_seconds": 3.984
+        }
+      },
+      {
+        "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-43-conv-44-fb710fe2",
+        "candidate": "U2-offline-valid",
+        "question": "40 q · U · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 4652.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2998",
+        "metrics": {
+          "answer_f1": 0.2998,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.15,
+          "conflict_pairs": 0.05,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3187.7816,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.275,
+          "seconds": 3.1957,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.35,
+          "tokens": 377.375,
+          "tokens_total": 1069.55,
+          "valid_units": 12.65,
+          "p95_seconds": 4.652
+        }
+      },
+      {
+        "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-43-conv-44-5fe535ee",
+        "candidate": "U3-offline-chain",
+        "question": "40 q · U · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 4476.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2921",
+        "metrics": {
+          "answer_f1": 0.2921,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.15,
+          "conflict_pairs": 0.05,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3161.2839,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.275,
+          "seconds": 3.1721,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.35,
+          "tokens": 377.375,
+          "tokens_total": 1086.6,
+          "valid_units": 12.65,
+          "p95_seconds": 4.476
+        }
+      },
+      {
+        "run_id": "s6-K-K1-none-s13-conv-26-conv-30-conv-43-conv-44-3ed76142",
+        "candidate": "K1-none",
+        "question": "40 q · K · seed 13",
+        "tokens": null,
+        "latency_ms": null,
+        "candidates": null,
+        "answer": "store-level only",
+        "metrics": {
+          "contradiction_rate": 0.4224,
+          "duplicates": 15.5,
+          "removed": 0.0,
+          "seconds": 0.0118,
+          "staleness": 0.2314,
+          "units": 958.75,
+          "update_correctness": 0.7914,
+          "p95_seconds": 0.101
+        }
+      },
+      {
+        "run_id": "s6-K-K2-dedupe-s13-conv-26-conv-30-conv-43-conv-44-3ed76142",
+        "candidate": "K2-dedupe",
+        "question": "40 q · K · seed 13",
+        "tokens": null,
+        "latency_ms": null,
+        "candidates": null,
+        "answer": "store-level only",
+        "metrics": {
+          "contradiction_rate": 0.4187,
+          "duplicates": 0.0,
+          "removed": 8.5,
+          "seconds": 0.013,
+          "staleness": 0.2323,
+          "units": 950.25,
+          "update_correctness": 0.7885,
+          "p95_seconds": 0.088
+        }
+      },
+      {
+        "run_id": "s6-K-K3-archive-s13-conv-26-conv-30-conv-43-conv-44-3ed76142",
+        "candidate": "K3-archive",
+        "question": "40 q · K · seed 13",
+        "tokens": null,
+        "latency_ms": null,
+        "candidates": null,
+        "answer": "store-level only",
+        "metrics": {
+          "contradiction_rate": 0.4,
+          "duplicates": 3.5,
+          "removed": 490.75,
+          "seconds": 0.0072,
+          "staleness": 0.2234,
+          "units": 468.0,
+          "update_correctness": 0.8086,
+          "p95_seconds": 0.057
+        }
+      }
+    ],
+    "metrics": {
+      "P(A)": 0.52,
+      "P(R)": 0.4567,
+      "P(C)": 0.1567,
+      "P(A|R=1)": 0.5657,
+      "P(A|C=1)": 0.4149,
+      "P(A|S=1)": null,
+      "P(S=1)": null,
+      "tokens": 160.54,
+      "p95_latency_ms": 8495.67,
+      "error_rate": 0.0
+    },
+    "conversion": {
+      "P(A)": {
+        "n": 312,
+        "denominator": 600,
+        "value": 0.52
+      },
+      "P(R)": {
+        "n": 274,
+        "denominator": 600,
+        "value": 0.4567
+      },
+      "P(C)": {
+        "n": 94,
+        "denominator": 600,
+        "value": 0.1567
+      },
+      "P(A|R=1)": {
+        "n": 155,
+        "denominator": 274,
+        "value": 0.5657
+      },
+      "P(A|C=1)": {
+        "n": 39,
+        "denominator": 94,
+        "value": 0.4149
+      },
+      "P(A|S=1)": {
+        "n": 0,
+        "denominator": 0,
+        "value": null,
+        "reason": "online DB has no state_accuracy rows; C state benchmark is not paired with answer_f1"
+      },
+      "P(S=1)": {
+        "value": null,
+        "reason": "state_accuracy not recorded online"
+      }
+    },
+    "by_module": {
+      "W": {
+        "P(A)": {
+          "n": 59,
+          "denominator": 120,
+          "value": 0.4917
+        },
+        "P(R)": {
+          "n": 48,
+          "denominator": 120,
+          "value": 0.4
+        },
+        "P(A|R=1)": {
+          "n": 26,
+          "denominator": 48,
+          "value": 0.5417
+        }
+      },
+      "S": {
+        "P(A)": {
+          "n": 60,
+          "denominator": 120,
+          "value": 0.5
+        },
+        "P(R)": {
+          "n": 51,
+          "denominator": 120,
+          "value": 0.425
+        },
+        "P(A|R=1)": {
+          "n": 30,
+          "denominator": 51,
+          "value": 0.5882
+        }
+      },
+      "R": {
+        "P(A)": {
+          "n": 51,
+          "denominator": 120,
+          "value": 0.425
+        },
+        "P(R)": {
+          "n": 42,
+          "denominator": 120,
+          "value": 0.35
+        },
+        "P(A|R=1)": {
+          "n": 18,
+          "denominator": 42,
+          "value": 0.4286
+        }
+      },
+      "M": {
+        "P(A)": {
+          "n": 69,
+          "denominator": 120,
+          "value": 0.575
+        },
+        "P(R)": {
+          "n": 55,
+          "denominator": 120,
+          "value": 0.4583
+        },
+        "P(A|R=1)": {
+          "n": 32,
+          "denominator": 55,
+          "value": 0.5818
+        }
+      },
+      "U": {
+        "P(A)": {
+          "n": 73,
+          "denominator": 120,
+          "value": 0.6083
+        },
+        "P(R)": {
+          "n": 78,
+          "denominator": 120,
+          "value": 0.65
+        },
+        "P(A|R=1)": {
+          "n": 49,
+          "denominator": 78,
+          "value": 0.6282
+        }
+      }
+    },
+    "source": {
+      "db": "runs/s6/e1-online-40.sqlite",
+      "archive": "eval/archive/s6-e1-online-40.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "P(A)",
+      "candidate": "P(A|R=1)",
+      "metric": "conversion",
+      "baseline_value": 0.52,
+      "candidate_value": 0.5657,
+      "delta": 0.0457,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online descriptive conversion; different denominators."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_module": {
+      "W": {
+        "P(A)": {
+          "n": 59,
+          "denominator": 120,
+          "value": 0.4917
+        },
+        "P(R)": {
+          "n": 48,
+          "denominator": 120,
+          "value": 0.4
+        },
+        "P(A|R=1)": {
+          "n": 26,
+          "denominator": 48,
+          "value": 0.5417
+        }
+      },
+      "S": {
+        "P(A)": {
+          "n": 60,
+          "denominator": 120,
+          "value": 0.5
+        },
+        "P(R)": {
+          "n": 51,
+          "denominator": 120,
+          "value": 0.425
+        },
+        "P(A|R=1)": {
+          "n": 30,
+          "denominator": 51,
+          "value": 0.5882
+        }
+      },
+      "R": {
+        "P(A)": {
+          "n": 51,
+          "denominator": 120,
+          "value": 0.425
+        },
+        "P(R)": {
+          "n": 42,
+          "denominator": 120,
+          "value": 0.35
+        },
+        "P(A|R=1)": {
+          "n": 18,
+          "denominator": 42,
+          "value": 0.4286
+        }
+      },
+      "M": {
+        "P(A)": {
+          "n": 69,
+          "denominator": 120,
+          "value": 0.575
+        },
+        "P(R)": {
+          "n": 55,
+          "denominator": 120,
+          "value": 0.4583
+        },
+        "P(A|R=1)": {
+          "n": 32,
+          "denominator": 55,
+          "value": 0.5818
+        }
+      },
+      "U": {
+        "P(A)": {
+          "n": 73,
+          "denominator": 120,
+          "value": 0.6083
+        },
+        "P(R)": {
+          "n": 78,
+          "denominator": 120,
+          "value": 0.65
+        },
+        "P(A|R=1)": {
+          "n": 49,
+          "denominator": 78,
+          "value": 0.6282
+        }
+      }
+    },
+    "conversion": {
+      "P(A)": {
+        "n": 312,
+        "denominator": 600,
+        "value": 0.52
+      },
+      "P(R)": {
+        "n": 274,
+        "denominator": 600,
+        "value": 0.4567
+      },
+      "P(C)": {
+        "n": 94,
+        "denominator": 600,
+        "value": 0.1567
+      },
+      "P(A|R=1)": {
+        "n": 155,
+        "denominator": 274,
+        "value": 0.5657
+      },
+      "P(A|C=1)": {
+        "n": 39,
+        "denominator": 94,
+        "value": 0.4149
+      },
+      "P(A|S=1)": {
+        "n": 0,
+        "denominator": 0,
+        "value": null,
+        "reason": "online DB has no state_accuracy rows; C state benchmark is not paired with answer_f1"
+      },
+      "P(S=1)": {
+        "value": null,
+        "reason": "state_accuracy not recorded online"
+      }
+    },
+    "failure_breakdown": [],
+    "failure_note": "0 errors; 18/18 online runs complete.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 36,
+          "source": "reports/experiments/E2-1.json",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 18,
+          "source": "runs/s6/e1-online-40.sqlite",
+          "status": "complete"
+        }
+      ],
+      "fake_factors": [
+        "P(A|C) small denominator",
+        "P(A|S) no paired state_accuracy",
+        "no Judge",
+        "1 seed"
+      ],
+      "a_level_only": false,
+      "b_level": true,
+      "judge": "not_run",
+      "not_available": [
+        "judge_accuracy",
+        "P(A|S) pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 36 行 / 在线 18 行；在线 B 级，无 Judge、1 seed、40 题。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "P(A|R=1)",
+        "value": 0.5657
+      },
+      "tokens_per_query": 160.54,
+      "p95_latency_ms": 8495.67
+    },
+    "claims": [
+      "Online B-level: P(A)=0.5200 (n=600), P(R)=0.4567, P(A|R=1)=0.5657 (n=274); lift=+0.0457; quality=P(A|R=1), Tokens 160.5, P95 8495.7 ms. | quality P(A|R=1)=0.5657; Tokens=160.5; P95=8495.7 ms.",
+      "P(A|C=1)=0.4149 (n=94); P(A|S=1) is not_available because online DB has no state_accuracy rows. C's 17-item state benchmark is not paired with answer_f1, so it cannot fill P(A|S). | quality P(A|R=1)=0.5657; Tokens=160.5; P95=8495.7 ms.",
+      "Module P(A|R=1): U 0.6282 > S 0.5882 > M 0.5818 > W 0.5417 > R 0.4286; online lifts are positive, unlike the offline negative lifts. | quality P(A|R=1)=0.5657; Tokens=160.5; P95=8495.7 ms."
+    ],
+    "conditions": [
+      "Online LLM answer (qwen3.8:27b-q4_K_M), bge-m3; 4 dev conversations, 40 q, seed 13.",
+      "A=answer_f1>0; R=evidence_recall>=1.0; C=context_precision>=1.0."
+    ],
+    "limitations": [
+      "No Judge, 1 seed, 40 q.",
+      "P(A|S) not_available: no online state_accuracy; C's 17-item benchmark is not paired.",
+      "P(A|C) denominator only 94 questions."
+    ],
+    "next_actions": [
+      "Add online state_accuracy and Judge; add a second seed."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 36,
+        "source": "reports/experiments/E2-1.json",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 18,
+        "source": "runs/s6/e1-online-40.sqlite",
+        "status": "complete"
+      }
+    ],
+    "fake_factors": [
+      "P(A|C) small denominator",
+      "P(A|S) no paired state_accuracy",
+      "no Judge",
+      "1 seed"
+    ],
+    "a_level_only": false,
+    "b_level": true,
+    "judge": "not_run",
+    "not_available": [
+      "judge_accuracy",
+      "P(A|S) pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 36 行 / 在线 18 行；在线 B 级，无 Judge、1 seed、40 题。"
+  },
+  "online": {
+    "status": "complete",
+    "source": "eval/archive/s6-e1-online-40.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40
+  },
+  "web": {
+    "route": "#/experiments/E2-1-online",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E2-1"
+    ],
+    "note": "Online B-level conversion; P(A|S) remains null with reason."
+  }
+}

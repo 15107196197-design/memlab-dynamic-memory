@@ -1,0 +1,1036 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-U1",
+  "created_at": "2026-11-09T18:54:24+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "b4cf2f0",
+    "config_hashes": {
+      "U1-none-direct": "sha256:221b67a2911dcb892eaa8265332f13aafd443951250ec7fde5390558afb87b33",
+      "U2-offline-valid": "sha256:184dd835bf0ab380ac69534918e506fb9612653d6a3965f29f559e5f87886b59",
+      "U3-offline-chain": "sha256:0555f1dfcf1e201510ec764f7c8046e101ff4959817cefa468dfd2309df19041"
+    },
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "model": {
+      "llm": "offline-extractive",
+      "embedding": "offline-hash",
+      "judge": "not_run"
+    },
+    "offline": true,
+    "data_mode": "offline",
+    "source_db": "runs/s6/e1.sqlite",
+    "source_archive": "eval/archive/s6-e1-screening.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_seed": 80,
+    "runs": 6,
+    "questions": 480,
+    "seeds": [
+      13,
+      17
+    ],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-43-conv-44-221b67a2",
+        "candidate": "U1-none-direct",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 362.45,
+        "latency_ms": 11.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0277",
+        "config_hash": "sha256:221b67a2911dcb892eaa8265332f13aafd443951250ec7fde5390558afb87b33",
+        "metrics": {
+          "answer_f1": 0.0277,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.0861,
+          "evidence_recall": 0.5945,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 4.6163,
+          "ndcg": 0.4051,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0666,
+          "refused": 0.0,
+          "seconds": 0.0224,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.0,
+          "tokens": 362.45,
+          "tokens_total": 974.075,
+          "valid_units": 15.0,
+          "state_accuracy": null,
+          "p95_latency_ms": 11.0
+        }
+      },
+      {
+        "run_id": "s6-U-U1-none-direct-s17-conv-26-conv-30-conv-43-conv-44-736fc96f",
+        "candidate": "U1-none-direct",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 364.8,
+        "latency_ms": 73.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0151",
+        "config_hash": "sha256:736fc96faa207c6c0cfb77f013c824169334aa9a385a3b7313b081e9448e7c95",
+        "metrics": {
+          "answer_f1": 0.0151,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.0883,
+          "evidence_recall": 0.591,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 13.213,
+          "ndcg": 0.407,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0611,
+          "refused": 0.0,
+          "seconds": 0.0208,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.0,
+          "tokens": 364.8,
+          "tokens_total": 977.575,
+          "valid_units": 15.0,
+          "state_accuracy": null,
+          "p95_latency_ms": 73.0
+        }
+      },
+      {
+        "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-43-conv-44-184dd835",
+        "candidate": "U2-offline-valid",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 362.45,
+        "latency_ms": 103.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0265",
+        "config_hash": "sha256:184dd835bf0ab380ac69534918e506fb9612653d6a3965f29f559e5f87886b59",
+        "metrics": {
+          "answer_f1": 0.0265,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.075,
+          "context_precision": 0.0861,
+          "evidence_recall": 0.5945,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 5.5792,
+          "ndcg": 0.4051,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0666,
+          "refused": 0.0,
+          "seconds": 0.0174,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.9875,
+          "tokens": 362.45,
+          "tokens_total": 1042.925,
+          "valid_units": 12.0125,
+          "state_accuracy": null,
+          "p95_latency_ms": 103.0
+        }
+      },
+      {
+        "run_id": "s6-U-U2-offline-valid-s17-conv-26-conv-30-conv-43-conv-44-4e016711",
+        "candidate": "U2-offline-valid",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 364.8,
+        "latency_ms": 6.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0181",
+        "config_hash": "sha256:4e01671151faa97ed3897a7de3ec144b8205747107f66362b1a3a1a18540fb96",
+        "metrics": {
+          "answer_f1": 0.0181,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.075,
+          "context_precision": 0.0883,
+          "evidence_recall": 0.591,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3.7247,
+          "ndcg": 0.407,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0611,
+          "refused": 0.0,
+          "seconds": 0.0147,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.7,
+          "tokens": 364.8,
+          "tokens_total": 1047.1625,
+          "valid_units": 12.3,
+          "state_accuracy": null,
+          "p95_latency_ms": 6.0
+        }
+      },
+      {
+        "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-43-conv-44-0555f1df",
+        "candidate": "U3-offline-chain",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 362.45,
+        "latency_ms": 5.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0265",
+        "config_hash": "sha256:0555f1dfcf1e201510ec764f7c8046e101ff4959817cefa468dfd2309df19041",
+        "metrics": {
+          "answer_f1": 0.0265,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.075,
+          "context_precision": 0.0861,
+          "evidence_recall": 0.5945,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3.2483,
+          "ndcg": 0.4051,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0666,
+          "refused": 0.0,
+          "seconds": 0.0069,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.9875,
+          "tokens": 362.45,
+          "tokens_total": 1060.7,
+          "valid_units": 12.0125,
+          "state_accuracy": null,
+          "p95_latency_ms": 5.0
+        }
+      },
+      {
+        "run_id": "s6-U-U3-offline-chain-s17-conv-26-conv-30-conv-43-conv-44-efc4dc34",
+        "candidate": "U3-offline-chain",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 364.8,
+        "latency_ms": 7.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0181",
+        "config_hash": "sha256:efc4dc345c4f04a0e5e4585787200737f1abec8660b7821bfc74c178b2934bb4",
+        "metrics": {
+          "answer_f1": 0.0181,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.075,
+          "context_precision": 0.0883,
+          "evidence_recall": 0.591,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3.0916,
+          "ndcg": 0.407,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0611,
+          "refused": 0.0,
+          "seconds": 0.0138,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.7,
+          "tokens": 364.8,
+          "tokens_total": 1064.875,
+          "valid_units": 12.3,
+          "state_accuracy": null,
+          "p95_latency_ms": 7.0
+        }
+      }
+    ],
+    "metrics": {
+      "evidence_recall": 0.5927,
+      "ndcg": 0.4061,
+      "state_accuracy": null,
+      "citations": 1.0,
+      "refused": 0.0,
+      "tokens": 363.625,
+      "p95_latency_ms": 34.1667,
+      "questions": 480,
+      "error_rate": 0.0
+    },
+    "state_accuracy": {
+      "source": "eval/archive/state-accuracy.json",
+      "benchmark": "eval/state_benchmark.json",
+      "items": 17,
+      "as_of_items": 6,
+      "candidates": {
+        "U1-none-direct": {
+          "item_mean": 0.3431,
+          "pooled_memory": 0.2941,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.4762,
+          "historical_acc": 0.0
+        },
+        "U2-offline-valid": {
+          "item_mean": 0.3627,
+          "pooled_memory": 0.3529,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.3333,
+          "historical_acc": 0.3846
+        },
+        "U3-offline-chain": {
+          "item_mean": 0.3627,
+          "pooled_memory": 0.3529,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.3333,
+          "historical_acc": 0.3846
+        }
+      },
+      "P_A_given_S": null,
+      "P_A_given_S_reason": "state benchmark items are not paired with answer_f1; no joined (A,S) table."
+    },
+    "by_candidate": {
+      "U1-none-direct": {
+        "role": "cost",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0214,
+          "evidence_recall": 0.5927,
+          "ndcg": 0.4061,
+          "context_precision": 0.0872,
+          "tokens": 363.625,
+          "p95_latency_ms": 42.0,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 1204.25,
+          "graph_edges": 1973.75,
+          "redundancy": 0.0639,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      },
+      "U2-offline-valid": {
+        "role": "balanced",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0223,
+          "evidence_recall": 0.5927,
+          "ndcg": 0.4061,
+          "context_precision": 0.0872,
+          "tokens": 363.625,
+          "p95_latency_ms": 54.5,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 1204.25,
+          "graph_edges": 1973.75,
+          "redundancy": 0.0639,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      },
+      "U3-offline-chain": {
+        "role": "quality",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0223,
+          "evidence_recall": 0.5927,
+          "ndcg": 0.4061,
+          "context_precision": 0.0872,
+          "tokens": 363.625,
+          "p95_latency_ms": 6.0,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 1204.25,
+          "graph_edges": 1973.75,
+          "redundancy": 0.0639,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      }
+    },
+    "source": {
+      "db": "runs/s6/e1.sqlite",
+      "archive": "eval/archive/s6-e1-screening.json"
+    },
+    "error_rate": 0.0
+  },
+  "comparisons": [
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5927,
+      "candidate_value": 0.5927,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "ndcg",
+      "baseline_value": 0.4061,
+      "candidate_value": 0.4061,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "tokens",
+      "baseline_value": 363.625,
+      "candidate_value": 363.625,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 160,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "p95_latency_ms",
+      "baseline_value": 42.0,
+      "candidate_value": 54.5,
+      "delta": 12.5,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "pairs": 0,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5927,
+      "candidate_value": 0.5927,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "ndcg",
+      "baseline_value": 0.4061,
+      "candidate_value": 0.4061,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "tokens",
+      "baseline_value": 363.625,
+      "candidate_value": 363.625,
+      "delta": 0.0,
+      "ci95": [
+        0.0,
+        0.0
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 160,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "p95_latency_ms",
+      "baseline_value": 42.0,
+      "candidate_value": 6.0,
+      "delta": -36.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "pairs": 0,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "candidate",
+        "levels": [
+          "U1-none-direct",
+          "U2-offline-valid",
+          "U3-offline-chain"
+        ],
+        "metrics": {
+          "U1-none-direct": {
+            "answer_f1": 0.0214,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 42.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          },
+          "U2-offline-valid": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 54.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          },
+          "U3-offline-chain": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 6.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    ],
+    "interactions": [],
+    "pareto": [
+      {
+        "candidate": "U1-none-direct",
+        "quality": 0.5927,
+        "cost_tokens": 363.625,
+        "p95_latency_ms": 42.0
+      },
+      {
+        "candidate": "U2-offline-valid",
+        "quality": 0.5927,
+        "cost_tokens": 363.625,
+        "p95_latency_ms": 54.5
+      },
+      {
+        "candidate": "U3-offline-chain",
+        "quality": 0.5927,
+        "cost_tokens": 363.625,
+        "p95_latency_ms": 6.0
+      }
+    ],
+    "by_seed": [
+      {
+        "candidate": "U1-none-direct",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.5945,
+          "ndcg": 0.4051,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 362.45,
+          "p95_latency_ms": 11.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "U1-none-direct",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.591,
+          "ndcg": 0.407,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 364.8,
+          "p95_latency_ms": 73.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "U2-offline-valid",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.5945,
+          "ndcg": 0.4051,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 362.45,
+          "p95_latency_ms": 103.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "U2-offline-valid",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.591,
+          "ndcg": 0.407,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 364.8,
+          "p95_latency_ms": 6.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "U3-offline-chain",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.5945,
+          "ndcg": 0.4051,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 362.45,
+          "p95_latency_ms": 5.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "U3-offline-chain",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.591,
+          "ndcg": 0.407,
+          "state_accuracy": null,
+          "citations": 1.0,
+          "refused": 0.0,
+          "tokens": 364.8,
+          "p95_latency_ms": 7.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      }
+    ],
+    "stage_waterfall": [
+      {
+        "stage": "state",
+        "description": "State resolver: none / offline_slot",
+        "available": false,
+        "ms": null,
+        "metrics": {},
+        "reason": "state_accuracy is not recorded (0 rows in DB)."
+      },
+      {
+        "stage": "context",
+        "description": "Context format: valid / superseded / conflicts",
+        "available": false,
+        "ms": null,
+        "metrics": {}
+      },
+      {
+        "stage": "answer",
+        "description": "Answerer: direct / valid_history / evidence_chain",
+        "available": true,
+        "ms": 42.0,
+        "metrics": {
+          "answer_f1": 0.0214
+        }
+      },
+      {
+        "stage": "verify",
+        "description": "Citation/refusal checks",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "citations": 1.0
+        }
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 errors across 36 S6 runs; no failure taxonomy to report.",
+    "conversion": {
+      "definitions": {
+        "A": "answer_f1 > 0 (offline extractive)",
+        "R": "evidence_recall >= 1.0",
+        "C": "context_precision >= 1.0 (strict: no distractors)",
+        "S": "state_accuracy >= 1.0 (not recorded)"
+      },
+      "module": {
+        "P(A)": {
+          "n": 100,
+          "denominator": 480,
+          "value": 0.2083,
+          "status": "ok"
+        },
+        "P(R)": {
+          "n": 243,
+          "denominator": 480,
+          "value": 0.5062,
+          "status": "ok"
+        },
+        "P(C)": {
+          "n": 0,
+          "denominator": 480,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(S)": {
+          "n": 0,
+          "denominator": 480,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(A|R=1)": {
+          "n": 41,
+          "denominator": 243,
+          "value": 0.1687,
+          "status": "ok"
+        },
+        "P(A|C=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "observed_value": null,
+          "status": "insufficient_sample",
+          "reason": "strict C=1 (context_precision>=1.0) has only 0 questions; too few for a rate."
+        },
+        "P(A|S=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "not_available",
+          "reason": "state_accuracy is not recorded in runs/s6/e1.sqlite (0 rows)."
+        }
+      },
+      "global_answer_modules": {
+        "P(A)": {
+          "n": 562,
+          "denominator": 2400,
+          "value": 0.2342,
+          "status": "ok"
+        },
+        "P(R)": {
+          "n": 1013,
+          "denominator": 2400,
+          "value": 0.4221,
+          "status": "ok"
+        },
+        "P(C)": {
+          "n": 2,
+          "denominator": 2400,
+          "value": 0.0008,
+          "status": "ok"
+        },
+        "P(S)": {
+          "n": 0,
+          "denominator": 2400,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(A|R=1)": {
+          "n": 189,
+          "denominator": 1013,
+          "value": 0.1866,
+          "status": "ok"
+        },
+        "P(A|C=1)": {
+          "n": 0,
+          "denominator": 2,
+          "value": null,
+          "observed_value": 0.0,
+          "status": "insufficient_sample",
+          "reason": "strict C=1 (context_precision>=1.0) has only 2 questions; too few for a rate."
+        },
+        "P(A|S=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "not_available",
+          "reason": "state_accuracy is not recorded in runs/s6/e1.sqlite (0 rows)."
+        }
+      }
+    },
+    "bootstrap": {
+      "samples": 2000,
+      "seed": 2026,
+      "paired_by": "seed+qid",
+      "note": "Percentile bootstrap; descriptive only."
+    },
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 6,
+          "source": "runs/s6/e1.sqlite",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 0,
+          "source": null,
+          "status": "pending",
+          "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+        }
+      ],
+      "fake_factors": [
+        "state_accuracy available on 17 items but not paired with answer_f1",
+        "query_llm state resolver (not run)"
+      ],
+      "a_level_only": true,
+      "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+      "not_available": [
+        "judge_accuracy",
+        "P(A|S) answer-state pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 6 行 / 在线 0 行（pending）；假因子 2 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+    },
+    "state_accuracy": {
+      "source": "eval/archive/state-accuracy.json",
+      "benchmark": "eval/state_benchmark.json",
+      "items": 17,
+      "as_of_items": 6,
+      "candidates": {
+        "U1-none-direct": {
+          "item_mean": 0.3431,
+          "pooled_memory": 0.2941,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.4762,
+          "historical_acc": 0.0
+        },
+        "U2-offline-valid": {
+          "item_mean": 0.3627,
+          "pooled_memory": 0.3529,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.3333,
+          "historical_acc": 0.3846
+        },
+        "U3-offline-chain": {
+          "item_mean": 0.3627,
+          "pooled_memory": 0.3529,
+          "valid_set_exact": 0.2353,
+          "evidence_recall": 0.5294,
+          "active_acc": 0.3333,
+          "historical_acc": 0.3846
+        }
+      },
+      "P_A_given_S": null,
+      "P_A_given_S_reason": "state benchmark items are not paired with answer_f1; no joined (A,S) table."
+    }
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 6,
+        "source": "runs/s6/e1.sqlite",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 0,
+        "source": null,
+        "status": "pending",
+        "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+      }
+    ],
+    "fake_factors": [
+      "state_accuracy available on 17 items but not paired with answer_f1",
+      "query_llm state resolver (not run)"
+    ],
+    "a_level_only": true,
+    "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+    "not_available": [
+      "judge_accuracy",
+      "P(A|S) answer-state pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 6 行 / 在线 0 行（pending）；假因子 2 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "Recall",
+        "value": 0.5927
+      },
+      "tokens_per_query": 363.625,
+      "p95_latency_ms": 34.1667
+    },
+    "claims": [
+      "Offline A-level: U1/U2/U3 all Recall 0.5927, nDCG 0.4061; Tokens 363.6; P95 42.0/54.5/6.0 ms; quality=Recall 0.5927. | quality Recall=0.5927; Tokens=363.6; P95=34.2 ms.",
+      "C state benchmark (17 items): U1 item mean 0.3431, U2/U3 0.3627; valid-set exact 0.2353; offline_slot trades ACTIVE (0.4762->0.3333) for HISTORICAL (0->0.3846). P(A|S=1) remains not_available because the benchmark is not paired with answer_f1. | quality Recall=0.5927; Tokens=363.6; P95=34.2 ms.",
+      "answer_f1 ~0.021-0.022 is offline extractive, not LLM answer quality; B-level blocked_on_ollama. | quality Recall=0.5927; Tokens=363.6; P95=34.2 ms.",
+      "Module aggregate over 6 runs: quality (Recall) = 0.5927, Tokens 363.6, P95 34.2 ms."
+    ],
+    "conditions": [
+      "Offline A-level only: hashing embedding + extractive answer; no LLM was called.",
+      "Development split (conv-26/30/43/44), 80 questions/seed, seeds 13/17.",
+      "One module is varied at a time; other modules are fixed at the S6 reference settings."
+    ],
+    "limitations": [
+      "answer_f1 is offline extractive, not an LLM F1; Judge is not_run.",
+      "P95 is runner-reported per-question seconds; it is not an API/local-GPU deployment latency.",
+      "cross_encoder rerank fell back because sentence-transformers is not installed.",
+      "state_accuracy is not recorded, so P(A|S=1) is not_available.",
+      "Paired bootstrap is descriptive; two seeds do not support a formal causal claim."
+    ],
+    "next_actions": [
+      "Run the same candidates with --online --judge when an API/Ollama endpoint is available.",
+      "Record state_accuracy and judge_accuracy before claiming U/state gains.",
+      "Install sentence-transformers or add an API rerank adapter before interpreting M2 rerank."
+    ]
+  },
+  "online": {
+    "status": "complete",
+    "report": "E1-U1-online.json",
+    "source": "eval/archive/s6-e1-online-40.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40,
+    "note": "Online numbers are kept in the separate -online report; this report stays offline-only."
+  },
+  "web": {
+    "route": "#/experiments/E1-U1",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-U1",
+      "E1-U2",
+      "E1-U4"
+    ],
+    "note": "This S6 module screen partially covers these catalog rows; see catalog for exact status."
+  }
+}

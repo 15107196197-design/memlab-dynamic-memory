@@ -1,0 +1,989 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-M1",
+  "created_at": "2026-11-09T18:54:24+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "b4cf2f0",
+    "config_hashes": {
+      "M1-rrf": "sha256:451c3a8ba21ddea6a121773917a97081251ee86a8ead206e35044479bdbbb42a",
+      "M2-weighted-compress": "sha256:8b2664c0dfc3645b3f84ccf1d8409f5c662e5a8143671ccaaafa5a5a9896e58b",
+      "M3-query-adaptive": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4"
+    },
+    "dataset_hash": "sha256:79fa87e90f04081343b8c8debecb80a9a6842b76a7aa537dc9fdf651ea698ff4",
+    "model": {
+      "llm": "offline-extractive",
+      "embedding": "offline-hash",
+      "judge": "not_run"
+    },
+    "offline": true,
+    "data_mode": "offline",
+    "source_db": "runs/s6/e1.sqlite",
+    "source_archive": "eval/archive/s6-e1-screening.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_seed": 80,
+    "runs": 6,
+    "questions": 480,
+    "seeds": [
+      13,
+      17
+    ],
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "s6-M-M1-rrf-s13-conv-26-conv-30-conv-43-conv-44-451c3a8b",
+        "candidate": "M1-rrf",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 398.9,
+        "latency_ms": 5.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0446",
+        "config_hash": "sha256:451c3a8ba21ddea6a121773917a97081251ee86a8ead206e35044479bdbbb42a",
+        "metrics": {
+          "answer_f1": 0.0446,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.0875,
+          "context_precision": 0.0726,
+          "evidence_recall": 0.5603,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 3.0937,
+          "ndcg": 0.4524,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0523,
+          "refused": 0.0,
+          "seconds": 0.012,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 2.275,
+          "tokens": 398.9,
+          "tokens_total": 1116.65,
+          "valid_units": 12.725,
+          "state_accuracy": null,
+          "p95_latency_ms": 5.0
+        }
+      },
+      {
+        "run_id": "s6-M-M1-rrf-s17-conv-26-conv-30-conv-43-conv-44-4d3fad9d",
+        "candidate": "M1-rrf",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 401.525,
+        "latency_ms": 8.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0490",
+        "config_hash": "sha256:4d3fad9dec3513878b6ea0bd6b01810cd722281622eafc066aca4215b3cbd784",
+        "metrics": {
+          "answer_f1": 0.049,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.1,
+          "context_precision": 0.0708,
+          "evidence_recall": 0.4973,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 3.4288,
+          "ndcg": 0.4202,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0494,
+          "refused": 0.0,
+          "seconds": 0.0149,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 2.175,
+          "tokens": 401.525,
+          "tokens_total": 1121.225,
+          "valid_units": 12.825,
+          "state_accuracy": null,
+          "p95_latency_ms": 8.0
+        }
+      },
+      {
+        "run_id": "s6-M-M2-weighted-compress-s13-conv-26-conv-30-conv-43-conv-44-8b2664c0",
+        "candidate": "M2-weighted-compress",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 390.4375,
+        "latency_ms": 31.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0577",
+        "config_hash": "sha256:8b2664c0dfc3645b3f84ccf1d8409f5c662e5a8143671ccaaafa5a5a9896e58b",
+        "metrics": {
+          "answer_f1": 0.0577,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.075,
+          "context_precision": 0.081,
+          "evidence_recall": 0.5793,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 3.8754,
+          "ndcg": 0.5032,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0697,
+          "refused": 0.0,
+          "seconds": 0.024,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 2.3,
+          "tokens": 390.4375,
+          "tokens_total": 1098.9,
+          "valid_units": 12.7,
+          "state_accuracy": null,
+          "p95_latency_ms": 31.0
+        }
+      },
+      {
+        "run_id": "s6-M-M2-weighted-compress-s17-conv-26-conv-30-conv-43-conv-44-93ef6e4e",
+        "candidate": "M2-weighted-compress",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 395.125,
+        "latency_ms": 23.0,
+        "candidates": 15.0,
+        "answer": "offline extractive; F1=0.0626",
+        "config_hash": "sha256:93ef6e4e5b0e89fe1112ffa2f759fb9db8838d6523af672f0ac1efb7ebba0c01",
+        "metrics": {
+          "answer_f1": 0.0626,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.1,
+          "context_precision": 0.0808,
+          "evidence_recall": 0.5171,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 5.0977,
+          "ndcg": 0.468,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0652,
+          "refused": 0.0,
+          "seconds": 0.0377,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 2.3125,
+          "tokens": 395.125,
+          "tokens_total": 1106.2875,
+          "valid_units": 12.6875,
+          "state_accuracy": null,
+          "p95_latency_ms": 23.0
+        }
+      },
+      {
+        "run_id": "s6-M-M3-query-adaptive-s13-conv-26-conv-30-conv-43-conv-44-b86df997",
+        "candidate": "M3-query-adaptive",
+        "seed": 13,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 13",
+        "tokens": 352.925,
+        "latency_ms": 8.0,
+        "candidates": 12.775,
+        "answer": "offline extractive; F1=0.0261",
+        "config_hash": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4",
+        "metrics": {
+          "answer_f1": 0.0261,
+          "candidates": 12.775,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.0875,
+          "context_precision": 0.0688,
+          "evidence_recall": 0.4715,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 4.4148,
+          "ndcg": 0.3225,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0494,
+          "refused": 0.0,
+          "seconds": 0.0048,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.0,
+          "tokens": 352.925,
+          "tokens_total": 995.225,
+          "valid_units": 12.775,
+          "state_accuracy": null,
+          "p95_latency_ms": 8.0
+        }
+      },
+      {
+        "run_id": "s6-M-M3-query-adaptive-s17-conv-26-conv-30-conv-43-conv-44-e7fac53a",
+        "candidate": "M3-query-adaptive",
+        "seed": 17,
+        "sample": "conv-26, conv-30, conv-43, conv-44",
+        "question": "80 q · conv-26, conv-30, conv-43, conv-44 · seed 17",
+        "tokens": 348.625,
+        "latency_ms": 11.0,
+        "candidates": 12.7875,
+        "answer": "offline extractive; F1=0.0202",
+        "config_hash": "sha256:e7fac53a6665f5cfab27c7109ed24963c5ddee153632a2ffd51b02c4277fcd78",
+        "metrics": {
+          "answer_f1": 0.0202,
+          "candidates": 12.7875,
+          "channels": 2.0,
+          "citations": 1.0,
+          "conflict_pairs": 0.1,
+          "context_precision": 0.0667,
+          "evidence_recall": 0.419,
+          "field_completeness": 1.0,
+          "graph_edges": 1301.5,
+          "graph_nodes": 937.75,
+          "latency_ms": 5.189,
+          "ndcg": 0.2847,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0462,
+          "refused": 0.0,
+          "seconds": 0.0057,
+          "store_facts": 222.75,
+          "store_turns": 535.75,
+          "store_units": 758.5,
+          "superseded_units": 0.0,
+          "tokens": 348.625,
+          "tokens_total": 984.9375,
+          "valid_units": 12.7875,
+          "state_accuracy": null,
+          "p95_latency_ms": 11.0
+        }
+      }
+    ],
+    "metrics": {
+      "evidence_recall": 0.5074,
+      "ndcg": 0.4085,
+      "redundancy": 0.0554,
+      "tokens": 381.2563,
+      "p95_latency_ms": 14.3333,
+      "questions": 480,
+      "error_rate": 0.0
+    },
+    "state_accuracy": null,
+    "by_candidate": {
+      "M1-rrf": {
+        "role": "cost",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0468,
+          "evidence_recall": 0.5288,
+          "ndcg": 0.4363,
+          "context_precision": 0.0717,
+          "tokens": 400.2125,
+          "p95_latency_ms": 6.5,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 937.75,
+          "graph_edges": 1301.5,
+          "redundancy": 0.0508,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      },
+      "M2-weighted-compress": {
+        "role": "balanced",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0602,
+          "evidence_recall": 0.5482,
+          "ndcg": 0.4856,
+          "context_precision": 0.0809,
+          "tokens": 392.7812,
+          "p95_latency_ms": 27.0,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 937.75,
+          "graph_edges": 1301.5,
+          "redundancy": 0.0674,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      },
+      "M3-query-adaptive": {
+        "role": "quality",
+        "runs": 2,
+        "metrics": {
+          "answer_f1": 0.0232,
+          "evidence_recall": 0.4452,
+          "ndcg": 0.3036,
+          "context_precision": 0.0678,
+          "tokens": 350.775,
+          "p95_latency_ms": 9.5,
+          "field_completeness": 1.0,
+          "staleness": null,
+          "contradiction_rate": null,
+          "update_correctness": null,
+          "removed": null,
+          "units": null,
+          "graph_nodes": 937.75,
+          "graph_edges": 1301.5,
+          "redundancy": 0.0478,
+          "candidates": 12.7812,
+          "channels": 2.0,
+          "plan_nodes": 2.0,
+          "citations": 1.0,
+          "refused": 0.0,
+          "questions": 160,
+          "error_rate": 0.0
+        }
+      }
+    },
+    "source": {
+      "db": "runs/s6/e1.sqlite",
+      "archive": "eval/archive/s6-e1-screening.json"
+    },
+    "error_rate": 0.0
+  },
+  "comparisons": [
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M2-weighted-compress",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5288,
+      "candidate_value": 0.5482,
+      "delta": 0.0194,
+      "ci95": [
+        0.0021,
+        0.0393
+      ],
+      "paired": true,
+      "significant": true,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M2-weighted-compress",
+      "metric": "ndcg",
+      "baseline_value": 0.4363,
+      "candidate_value": 0.4856,
+      "delta": 0.0493,
+      "ci95": [
+        0.0331,
+        0.0665
+      ],
+      "paired": true,
+      "significant": true,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M2-weighted-compress",
+      "metric": "tokens",
+      "baseline_value": 400.2125,
+      "candidate_value": 392.7812,
+      "delta": -7.4313,
+      "ci95": [
+        -16.325,
+        1.7125
+      ],
+      "paired": true,
+      "significant": false,
+      "pairs": 160,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M2-weighted-compress",
+      "metric": "p95_latency_ms",
+      "baseline_value": 6.5,
+      "candidate_value": 27.0,
+      "delta": 20.5,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "pairs": 0,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M3-query-adaptive",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5288,
+      "candidate_value": 0.4452,
+      "delta": -0.0836,
+      "ci95": [
+        -0.1317,
+        -0.0391
+      ],
+      "paired": true,
+      "significant": true,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M3-query-adaptive",
+      "metric": "ndcg",
+      "baseline_value": 0.4363,
+      "candidate_value": 0.3036,
+      "delta": -0.1327,
+      "ci95": [
+        -0.1709,
+        -0.0969
+      ],
+      "paired": true,
+      "significant": true,
+      "pairs": 159,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M3-query-adaptive",
+      "metric": "tokens",
+      "baseline_value": 400.2125,
+      "candidate_value": 350.775,
+      "delta": -49.4375,
+      "ci95": [
+        -58.5562,
+        -40.1625
+      ],
+      "paired": true,
+      "significant": true,
+      "pairs": 160,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    },
+    {
+      "baseline": "M1-rrf",
+      "candidate": "M3-query-adaptive",
+      "metric": "p95_latency_ms",
+      "baseline_value": 6.5,
+      "candidate_value": 9.5,
+      "delta": 3.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "pairs": 0,
+      "note": "Descriptive offline bootstrap over paired questions; not a causal test."
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "candidate",
+        "levels": [
+          "M1-rrf",
+          "M2-weighted-compress",
+          "M3-query-adaptive"
+        ],
+        "metrics": {
+          "M1-rrf": {
+            "answer_f1": 0.0468,
+            "evidence_recall": 0.5288,
+            "ndcg": 0.4363,
+            "context_precision": 0.0717,
+            "tokens": 400.2125,
+            "p95_latency_ms": 6.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 937.75,
+            "graph_edges": 1301.5,
+            "redundancy": 0.0508,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          },
+          "M2-weighted-compress": {
+            "answer_f1": 0.0602,
+            "evidence_recall": 0.5482,
+            "ndcg": 0.4856,
+            "context_precision": 0.0809,
+            "tokens": 392.7812,
+            "p95_latency_ms": 27.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 937.75,
+            "graph_edges": 1301.5,
+            "redundancy": 0.0674,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          },
+          "M3-query-adaptive": {
+            "answer_f1": 0.0232,
+            "evidence_recall": 0.4452,
+            "ndcg": 0.3036,
+            "context_precision": 0.0678,
+            "tokens": 350.775,
+            "p95_latency_ms": 9.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 937.75,
+            "graph_edges": 1301.5,
+            "redundancy": 0.0478,
+            "candidates": 12.7812,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    ],
+    "interactions": [],
+    "pareto": [
+      {
+        "candidate": "M1-rrf",
+        "quality": 0.5288,
+        "cost_tokens": 400.2125,
+        "p95_latency_ms": 6.5
+      },
+      {
+        "candidate": "M2-weighted-compress",
+        "quality": 0.5482,
+        "cost_tokens": 392.7812,
+        "p95_latency_ms": 27.0
+      },
+      {
+        "candidate": "M3-query-adaptive",
+        "quality": 0.4452,
+        "cost_tokens": 350.775,
+        "p95_latency_ms": 9.5
+      }
+    ],
+    "by_seed": [
+      {
+        "candidate": "M1-rrf",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.5603,
+          "ndcg": 0.4524,
+          "redundancy": 0.0523,
+          "tokens": 398.9,
+          "p95_latency_ms": 5.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "M1-rrf",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.4973,
+          "ndcg": 0.4202,
+          "redundancy": 0.0494,
+          "tokens": 401.525,
+          "p95_latency_ms": 8.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "M2-weighted-compress",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.5793,
+          "ndcg": 0.5032,
+          "redundancy": 0.0697,
+          "tokens": 390.4375,
+          "p95_latency_ms": 31.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "M2-weighted-compress",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.5171,
+          "ndcg": 0.468,
+          "redundancy": 0.0652,
+          "tokens": 395.125,
+          "p95_latency_ms": 23.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "M3-query-adaptive",
+        "seed": 13,
+        "metrics": {
+          "evidence_recall": 0.4715,
+          "ndcg": 0.3225,
+          "redundancy": 0.0494,
+          "tokens": 352.925,
+          "p95_latency_ms": 8.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "candidate": "M3-query-adaptive",
+        "seed": 17,
+        "metrics": {
+          "evidence_recall": 0.419,
+          "ndcg": 0.2847,
+          "redundancy": 0.0462,
+          "tokens": 348.625,
+          "p95_latency_ms": 11.0,
+          "questions": 80,
+          "error_rate": 0.0
+        }
+      }
+    ],
+    "stage_waterfall": [
+      {
+        "stage": "raw_channels",
+        "description": "Per-channel candidates",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "candidates": 15.0
+        }
+      },
+      {
+        "stage": "fusion",
+        "description": "Fusion: rrf / weighted_rrf / query_adaptive",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "ndcg": 0.4363
+        }
+      },
+      {
+        "stage": "rerank",
+        "description": "Rerank: none / cross_encoder (fallback)",
+        "available": false,
+        "ms": null,
+        "metrics": {},
+        "reason": "cross_encoder fell back: sentence_transformers is not installed; no real rerank was applied."
+      },
+      {
+        "stage": "mmr",
+        "description": "MMR: none / mmr",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "redundancy": 0.0508
+        },
+        "reason": "redundancy is the only MMR proxy; no per-stage nDCG."
+      },
+      {
+        "stage": "decay",
+        "description": "Decay: none / time_decay",
+        "available": false,
+        "ms": null,
+        "metrics": {},
+        "reason": "M1/M2 do not enable decay; M3 inherits R0 time_decay. No per-stage decay metric was logged."
+      },
+      {
+        "stage": "compress",
+        "description": "Compress: none / extractive",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "tokens": 400.2125
+        }
+      },
+      {
+        "stage": "answer",
+        "description": "Answer metrics",
+        "available": true,
+        "ms": 6.5,
+        "metrics": {
+          "answer_f1": 0.0468
+        }
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 errors across 36 S6 runs; no failure taxonomy to report.",
+    "conversion": {
+      "definitions": {
+        "A": "answer_f1 > 0 (offline extractive)",
+        "R": "evidence_recall >= 1.0",
+        "C": "context_precision >= 1.0 (strict: no distractors)",
+        "S": "state_accuracy >= 1.0 (not recorded)"
+      },
+      "module": {
+        "P(A)": {
+          "n": 141,
+          "denominator": 480,
+          "value": 0.2938,
+          "status": "ok"
+        },
+        "P(R)": {
+          "n": 198,
+          "denominator": 480,
+          "value": 0.4125,
+          "status": "ok"
+        },
+        "P(C)": {
+          "n": 0,
+          "denominator": 480,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(S)": {
+          "n": 0,
+          "denominator": 480,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(A|R=1)": {
+          "n": 50,
+          "denominator": 198,
+          "value": 0.2525,
+          "status": "ok"
+        },
+        "P(A|C=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "observed_value": null,
+          "status": "insufficient_sample",
+          "reason": "strict C=1 (context_precision>=1.0) has only 0 questions; too few for a rate."
+        },
+        "P(A|S=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "not_available",
+          "reason": "state_accuracy is not recorded in runs/s6/e1.sqlite (0 rows)."
+        }
+      },
+      "global_answer_modules": {
+        "P(A)": {
+          "n": 562,
+          "denominator": 2400,
+          "value": 0.2342,
+          "status": "ok"
+        },
+        "P(R)": {
+          "n": 1013,
+          "denominator": 2400,
+          "value": 0.4221,
+          "status": "ok"
+        },
+        "P(C)": {
+          "n": 2,
+          "denominator": 2400,
+          "value": 0.0008,
+          "status": "ok"
+        },
+        "P(S)": {
+          "n": 0,
+          "denominator": 2400,
+          "value": 0.0,
+          "status": "ok"
+        },
+        "P(A|R=1)": {
+          "n": 189,
+          "denominator": 1013,
+          "value": 0.1866,
+          "status": "ok"
+        },
+        "P(A|C=1)": {
+          "n": 0,
+          "denominator": 2,
+          "value": null,
+          "observed_value": 0.0,
+          "status": "insufficient_sample",
+          "reason": "strict C=1 (context_precision>=1.0) has only 2 questions; too few for a rate."
+        },
+        "P(A|S=1)": {
+          "n": 0,
+          "denominator": 0,
+          "value": null,
+          "status": "not_available",
+          "reason": "state_accuracy is not recorded in runs/s6/e1.sqlite (0 rows)."
+        }
+      }
+    },
+    "bootstrap": {
+      "samples": 2000,
+      "seed": 2026,
+      "paired_by": "seed+qid",
+      "note": "Percentile bootstrap; descriptive only."
+    },
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 6,
+          "source": "runs/s6/e1.sqlite",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 0,
+          "source": null,
+          "status": "pending",
+          "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+        }
+      ],
+      "fake_factors": [
+        "post.mmr x decay interaction (not tested)",
+        "rerank cross_encoder (fallback)",
+        "rerank.params.top_n (fallback)"
+      ],
+      "a_level_only": true,
+      "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+      "not_available": [
+        "state_accuracy",
+        "judge_accuracy",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 6 行 / 在线 0 行（pending）；假因子 3 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+    },
+    "state_accuracy": null
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 6,
+        "source": "runs/s6/e1.sqlite",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 0,
+        "source": null,
+        "status": "pending",
+        "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+      }
+    ],
+    "fake_factors": [
+      "post.mmr x decay interaction (not tested)",
+      "rerank cross_encoder (fallback)",
+      "rerank.params.top_n (fallback)"
+    ],
+    "a_level_only": true,
+    "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+    "not_available": [
+      "state_accuracy",
+      "judge_accuracy",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 6 行 / 在线 0 行（pending）；假因子 3 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "Recall",
+        "value": 0.5074
+      },
+      "tokens_per_query": 381.2563,
+      "p95_latency_ms": 14.3333
+    },
+    "claims": [
+      "Offline A-level: M2 weighted_rrf+extractive Recall 0.5482 (+0.0194 vs M1), nDCG 0.4856 (+0.0493), Tokens 392.8 (-7.4), P95 27.0 ms vs 6.5 ms; quality=Recall 0.5482. | quality Recall=0.5074; Tokens=381.3; P95=14.3 ms.",
+      "M3 query_adaptive+R0 post is dominated offline: Recall 0.4452 (-0.0836), nDCG 0.3036, Tokens 350.8, P95 9.5 ms; filter/decay/MMR may remove evidence, but per-stage effects were not logged. | quality Recall=0.5074; Tokens=381.3; P95=14.3 ms.",
+      "cross_encoder rerank fell back (sentence_transformers missing); M2's gain is not evidence of real rerank. B-level blocked_on_ollama. | quality Recall=0.5074; Tokens=381.3; P95=14.3 ms.",
+      "Module aggregate over 6 runs: quality (Recall) = 0.5074, Tokens 381.3, P95 14.3 ms."
+    ],
+    "conditions": [
+      "Offline A-level only: hashing embedding + extractive answer; no LLM was called.",
+      "Development split (conv-26/30/43/44), 80 questions/seed, seeds 13/17.",
+      "One module is varied at a time; other modules are fixed at the S6 reference settings."
+    ],
+    "limitations": [
+      "answer_f1 is offline extractive, not an LLM F1; Judge is not_run.",
+      "P95 is runner-reported per-question seconds; it is not an API/local-GPU deployment latency.",
+      "cross_encoder rerank fell back because sentence-transformers is not installed.",
+      "state_accuracy is not recorded, so P(A|S=1) is not_available.",
+      "Paired bootstrap is descriptive; two seeds do not support a formal causal claim."
+    ],
+    "next_actions": [
+      "Run the same candidates with --online --judge when an API/Ollama endpoint is available.",
+      "Record state_accuracy and judge_accuracy before claiming U/state gains.",
+      "Install sentence-transformers or add an API rerank adapter before interpreting M2 rerank."
+    ]
+  },
+  "online": {
+    "status": "complete",
+    "report": "E1-M1-online.json",
+    "source": "eval/archive/s6-e1-online-40.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40,
+    "note": "Online numbers are kept in the separate -online report; this report stays offline-only."
+  },
+  "web": {
+    "route": "#/experiments/E1-M1",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-M1",
+      "E1-M2",
+      "E1-M3",
+      "E1-M4",
+      "E1-M5"
+    ],
+    "note": "This S6 module screen partially covers these catalog rows; see catalog for exact status."
+  }
+}

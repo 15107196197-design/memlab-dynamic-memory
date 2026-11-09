@@ -1,0 +1,904 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-U1-online",
+  "created_at": "2026-11-09T18:47:36+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "1096530",
+    "config_hashes": {
+      "U1-none-direct": null,
+      "U2-offline-valid": null,
+      "U3-offline-chain": null
+    },
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3",
+      "judge": "not_run"
+    },
+    "offline": false,
+    "data_mode": "online",
+    "provider": "ollama",
+    "source_db": "runs/s6/e1-online-40.sqlite",
+    "source_archive": "eval/archive/s6-e1-online-40.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 40,
+    "seeds": [
+      13
+    ],
+    "test_only": false,
+    "runs": 3
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-43-conv-44-4a85299c",
+        "candidate": "U1-none-direct",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 3984.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2883",
+        "metrics": {
+          "answer_f1": 0.2883,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.375,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 2795.8855,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.025,
+          "seconds": 2.8072,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.0,
+          "tokens": 377.375,
+          "tokens_total": 996.95,
+          "valid_units": 15.0,
+          "p95_latency_ms": 3984.0
+        }
+      },
+      {
+        "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-43-conv-44-fb710fe2",
+        "candidate": "U2-offline-valid",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 4652.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2998",
+        "metrics": {
+          "answer_f1": 0.2998,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.15,
+          "conflict_pairs": 0.05,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3187.7816,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.275,
+          "seconds": 3.1957,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.35,
+          "tokens": 377.375,
+          "tokens_total": 1069.55,
+          "valid_units": 12.65,
+          "p95_latency_ms": 4652.0
+        }
+      },
+      {
+        "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-43-conv-44-5fe535ee",
+        "candidate": "U3-offline-chain",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 377.375,
+        "latency_ms": 4476.0,
+        "candidates": 15.0,
+        "answer": "online LLM; F1=0.2921",
+        "metrics": {
+          "answer_f1": 0.2921,
+          "candidates": 15.0,
+          "channels": 2.0,
+          "citations": 0.15,
+          "conflict_pairs": 0.05,
+          "context_precision": 0.1316,
+          "evidence_recall": 0.7462,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 3161.2839,
+          "ndcg": 0.647,
+          "plan_nodes": 2.0,
+          "redundancy": 0.0886,
+          "refused": 0.275,
+          "seconds": 3.1721,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 2.35,
+          "tokens": 377.375,
+          "tokens_total": 1086.6,
+          "valid_units": 12.65,
+          "p95_latency_ms": 4476.0
+        }
+      }
+    ],
+    "metrics": {
+      "answer_f1": 0.2934,
+      "evidence_recall": 0.7462,
+      "ndcg": 0.647,
+      "tokens": 377.375,
+      "p95_latency_ms": 4370.667,
+      "questions": 120,
+      "error_rate": 0.0
+    },
+    "by_candidate": {
+      "U1-none-direct": {
+        "answer_f1": 0.2883,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.375,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 2795.8855,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.025,
+        "seconds": 2.8072,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.0,
+        "tokens": 377.375,
+        "tokens_total": 996.95,
+        "valid_units": 15.0,
+        "p95_seconds": 3.984,
+        "p95_latency_ms": 3984.0
+      },
+      "U2-offline-valid": {
+        "answer_f1": 0.2998,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.15,
+        "conflict_pairs": 0.05,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 3187.7816,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.275,
+        "seconds": 3.1957,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 2.35,
+        "tokens": 377.375,
+        "tokens_total": 1069.55,
+        "valid_units": 12.65,
+        "p95_seconds": 4.652,
+        "p95_latency_ms": 4652.0
+      },
+      "U3-offline-chain": {
+        "answer_f1": 0.2921,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.15,
+        "conflict_pairs": 0.05,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 3161.2839,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.275,
+        "seconds": 3.1721,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 2.35,
+        "tokens": 377.375,
+        "tokens_total": 1086.6,
+        "valid_units": 12.65,
+        "p95_seconds": 4.476,
+        "p95_latency_ms": 4476.0
+      }
+    },
+    "offline_reference": {
+      "report": "E1-U1.json",
+      "metrics": {
+        "evidence_recall": 0.5927,
+        "ndcg": 0.4061,
+        "state_accuracy": null,
+        "citations": 1.0,
+        "refused": 0.0,
+        "tokens": 363.625,
+        "p95_latency_ms": 34.1667,
+        "questions": 480,
+        "error_rate": 0.0
+      },
+      "by_candidate": {
+        "U1-none-direct": {
+          "role": "cost",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0214,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 42.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "U2-offline-valid": {
+          "role": "balanced",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 54.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "U3-offline-chain": {
+          "role": "quality",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 6.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    },
+    "source": {
+      "db": "runs/s6/e1-online-40.sqlite",
+      "archive": "eval/archive/s6-e1-online-40.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "answer_f1",
+      "baseline_value": 0.2883,
+      "candidate_value": 0.2998,
+      "delta": 0.0115,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "evidence_recall",
+      "baseline_value": 0.7462,
+      "candidate_value": 0.7462,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "ndcg",
+      "baseline_value": 0.647,
+      "candidate_value": 0.647,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "tokens",
+      "baseline_value": 377.375,
+      "candidate_value": 377.375,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U2-offline-valid",
+      "metric": "p95_latency_ms",
+      "baseline_value": 3984.0,
+      "candidate_value": 4652.0,
+      "delta": 668.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "answer_f1",
+      "baseline_value": 0.2883,
+      "candidate_value": 0.2921,
+      "delta": 0.0038,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "evidence_recall",
+      "baseline_value": 0.7462,
+      "candidate_value": 0.7462,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "ndcg",
+      "baseline_value": 0.647,
+      "candidate_value": 0.647,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "tokens",
+      "baseline_value": 377.375,
+      "candidate_value": 377.375,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "U1-none-direct",
+      "candidate": "U3-offline-chain",
+      "metric": "p95_latency_ms",
+      "baseline_value": 3984.0,
+      "candidate_value": 4476.0,
+      "delta": 492.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_candidate": {
+      "U1-none-direct": {
+        "answer_f1": 0.2883,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.375,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 2795.8855,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.025,
+        "seconds": 2.8072,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.0,
+        "tokens": 377.375,
+        "tokens_total": 996.95,
+        "valid_units": 15.0,
+        "p95_seconds": 3.984,
+        "p95_latency_ms": 3984.0
+      },
+      "U2-offline-valid": {
+        "answer_f1": 0.2998,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.15,
+        "conflict_pairs": 0.05,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 3187.7816,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.275,
+        "seconds": 3.1957,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 2.35,
+        "tokens": 377.375,
+        "tokens_total": 1069.55,
+        "valid_units": 12.65,
+        "p95_seconds": 4.652,
+        "p95_latency_ms": 4652.0
+      },
+      "U3-offline-chain": {
+        "answer_f1": 0.2921,
+        "candidates": 15.0,
+        "channels": 2.0,
+        "citations": 0.15,
+        "conflict_pairs": 0.05,
+        "context_precision": 0.1316,
+        "evidence_recall": 0.7462,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 3161.2839,
+        "ndcg": 0.647,
+        "plan_nodes": 2.0,
+        "redundancy": 0.0886,
+        "refused": 0.275,
+        "seconds": 3.1721,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 2.35,
+        "tokens": 377.375,
+        "tokens_total": 1086.6,
+        "valid_units": 12.65,
+        "p95_seconds": 4.476,
+        "p95_latency_ms": 4476.0
+      }
+    },
+    "offline_reference": {
+      "report": "E1-U1.json",
+      "metrics": {
+        "evidence_recall": 0.5927,
+        "ndcg": 0.4061,
+        "state_accuracy": null,
+        "citations": 1.0,
+        "refused": 0.0,
+        "tokens": 363.625,
+        "p95_latency_ms": 34.1667,
+        "questions": 480,
+        "error_rate": 0.0
+      },
+      "by_candidate": {
+        "U1-none-direct": {
+          "role": "cost",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0214,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 42.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "U2-offline-valid": {
+          "role": "balanced",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 54.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "U3-offline-chain": {
+          "role": "quality",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0223,
+            "evidence_recall": 0.5927,
+            "ndcg": 0.4061,
+            "context_precision": 0.0872,
+            "tokens": 363.625,
+            "p95_latency_ms": 6.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0639,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    },
+    "stage_waterfall": [
+      {
+        "stage": "retrieve",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "evidence_recall": 0.7462
+        }
+      },
+      {
+        "stage": "answer",
+        "available": true,
+        "ms": 4370.667,
+        "metrics": {
+          "answer_f1": 0.2934
+        }
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 errors; 18/18 online runs complete.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 6,
+          "source": "reports/experiments/E1-U1.json",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 3,
+          "source": "runs/s6/e1-online-40.sqlite",
+          "status": "complete"
+        }
+      ],
+      "fake_factors": [
+        "no Judge",
+        "1 seed",
+        "40 q",
+        "cross_encoder fallback (M)",
+        "state_accuracy not recorded online"
+      ],
+      "a_level_only": false,
+      "b_level": true,
+      "judge": "not_run",
+      "not_available": [
+        "judge_accuracy",
+        "state_accuracy",
+        "P(A|S) pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 6 行 / 在线 3 行；在线 B 级（LLM 答案），无 Judge、1 seed、40 题；不与离线数字混合。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "F1",
+        "value": 0.2934
+      },
+      "tokens_per_query": 377.375,
+      "p95_latency_ms": 4370.667
+    },
+    "claims": [
+      "Online B-level: U2 F1 0.2998, U3 0.2921, U1 0.2883; all Recall 0.7462; Tokens 377.4; P95 4.0/4.7/4.5 s. U2/U3 refuse more (0.275 vs 0.025). | quality F1=0.2934; Tokens=377.4; P95=4370.7 ms.",
+      "U2 is best on F1 by +0.0115 over U1 but the gap is small; state_accuracy is not recorded online, so P(A|S) is not_available. | quality F1=0.2934; Tokens=377.4; P95=4370.7 ms."
+    ],
+    "conditions": [
+      "Online LLM answer (qwen3.8:27b-q4_K_M), bge-m3 embedding; 4 dev conversations, 40 q, seed 13.",
+      "No LLM-as-Judge; 1 seed; 40 questions/config; descriptive only."
+    ],
+    "limitations": [
+      "No Judge, no second seed, no test split for E1 modules.",
+      "K is store-level only; tokens/P95 not available.",
+      "M2 rerank still fell back because sentence-transformers is absent."
+    ],
+    "next_actions": [
+      "Run a second seed and LLM-as-Judge before promoting these rankings.",
+      "Record state_accuracy online to compute P(A|S)."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 6,
+        "source": "reports/experiments/E1-U1.json",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 3,
+        "source": "runs/s6/e1-online-40.sqlite",
+        "status": "complete"
+      }
+    ],
+    "fake_factors": [
+      "no Judge",
+      "1 seed",
+      "40 q",
+      "cross_encoder fallback (M)",
+      "state_accuracy not recorded online"
+    ],
+    "a_level_only": false,
+    "b_level": true,
+    "judge": "not_run",
+    "not_available": [
+      "judge_accuracy",
+      "state_accuracy",
+      "P(A|S) pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 6 行 / 在线 3 行；在线 B 级（LLM 答案），无 Judge、1 seed、40 题；不与离线数字混合。"
+  },
+  "online": {
+    "status": "complete",
+    "source": "eval/archive/s6-e1-online-40.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40,
+    "results": {
+      "runs": [
+        {
+          "run_id": "s6-U-U1-none-direct-s13-conv-26-conv-30-conv-43-conv-44-4a85299c",
+          "candidate": "U1-none-direct",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 377.375,
+          "latency_ms": 3984.0,
+          "candidates": 15.0,
+          "answer": "online LLM; F1=0.2883",
+          "metrics": {
+            "answer_f1": 0.2883,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "citations": 0.375,
+            "conflict_pairs": 0.0,
+            "context_precision": 0.1316,
+            "evidence_recall": 0.7462,
+            "field_completeness": 1.0,
+            "graph_edges": 1973.75,
+            "graph_nodes": 1204.25,
+            "latency_ms": 2795.8855,
+            "ndcg": 0.647,
+            "plan_nodes": 2.0,
+            "redundancy": 0.0886,
+            "refused": 0.025,
+            "seconds": 2.8072,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 0.0,
+            "tokens": 377.375,
+            "tokens_total": 996.95,
+            "valid_units": 15.0,
+            "p95_latency_ms": 3984.0
+          }
+        },
+        {
+          "run_id": "s6-U-U2-offline-valid-s13-conv-26-conv-30-conv-43-conv-44-fb710fe2",
+          "candidate": "U2-offline-valid",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 377.375,
+          "latency_ms": 4652.0,
+          "candidates": 15.0,
+          "answer": "online LLM; F1=0.2998",
+          "metrics": {
+            "answer_f1": 0.2998,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "citations": 0.15,
+            "conflict_pairs": 0.05,
+            "context_precision": 0.1316,
+            "evidence_recall": 0.7462,
+            "field_completeness": 1.0,
+            "graph_edges": 1973.75,
+            "graph_nodes": 1204.25,
+            "latency_ms": 3187.7816,
+            "ndcg": 0.647,
+            "plan_nodes": 2.0,
+            "redundancy": 0.0886,
+            "refused": 0.275,
+            "seconds": 3.1957,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 2.35,
+            "tokens": 377.375,
+            "tokens_total": 1069.55,
+            "valid_units": 12.65,
+            "p95_latency_ms": 4652.0
+          }
+        },
+        {
+          "run_id": "s6-U-U3-offline-chain-s13-conv-26-conv-30-conv-43-conv-44-5fe535ee",
+          "candidate": "U3-offline-chain",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 377.375,
+          "latency_ms": 4476.0,
+          "candidates": 15.0,
+          "answer": "online LLM; F1=0.2921",
+          "metrics": {
+            "answer_f1": 0.2921,
+            "candidates": 15.0,
+            "channels": 2.0,
+            "citations": 0.15,
+            "conflict_pairs": 0.05,
+            "context_precision": 0.1316,
+            "evidence_recall": 0.7462,
+            "field_completeness": 1.0,
+            "graph_edges": 1973.75,
+            "graph_nodes": 1204.25,
+            "latency_ms": 3161.2839,
+            "ndcg": 0.647,
+            "plan_nodes": 2.0,
+            "redundancy": 0.0886,
+            "refused": 0.275,
+            "seconds": 3.1721,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 2.35,
+            "tokens": 377.375,
+            "tokens_total": 1086.6,
+            "valid_units": 12.65,
+            "p95_latency_ms": 4476.0
+          }
+        }
+      ],
+      "metrics": {
+        "answer_f1": 0.2934,
+        "tokens": 377.375,
+        "p95_latency_ms": 4370.667
+      }
+    }
+  },
+  "web": {
+    "route": "#/experiments/E1-U1-online",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-U1"
+    ],
+    "note": "Online B-level counterpart; offline kept separate."
+  }
+}

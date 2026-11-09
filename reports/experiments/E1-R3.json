@@ -1,0 +1,1958 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-R3",
+  "created_at": "2026-11-09T18:54:24+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "2c1e22a",
+    "config_hashes": {
+      "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0": "sha256:6553e4f0b4c1c20c511b2779a8a28f425b380a264f30af23395e2f986243befc",
+      "r-e1-r3-graph-retrieval-dispatch-007-021f2c52": "sha256:021f2c52619b16f03682b40a26459fd7a6a2f1f51b7160539c02903dfb59a0b2",
+      "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5": "sha256:29b68cb5e5478e748a86493b871d0e4d5c8668d3b9def3e0f2d1eac3932d1b8d",
+      "r-e1-r3-graph-retrieval-dispatch-005-42fda64a": "sha256:42fda64a96176c57b604d8d79ac9839898c6789ef53a08b7de8de33f88aad372",
+      "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78": "sha256:1a3b4a78458cbdd42dd9b63754bd8b9c9a55f64c9ddfcf68c27a812a98f483a4",
+      "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa": "sha256:10bb97fa6bbb9683c1d0eb6dcaf805c74e27e709e41152af2fc878fd24844f71",
+      "r-e1-r3-graph-retrieval-dispatch-011-215749ee": "sha256:215749ee76e0b1f2e88448d3e8cf301a76a0da30680fb8d06f741a8bbd6ad293",
+      "r-e1-r3-graph-retrieval-dispatch-010-bff67545": "sha256:bff67545537a10aa85120b77f5f2229b4fceba15ee8bde6768e2356a2e0694f0",
+      "r-e1-r3-graph-retrieval-dispatch-012-9c637b83": "sha256:9c637b8306e7842ffb31eda63fa288d23c38d4646df6a6a425038186e671059a",
+      "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434": "sha256:a4d6a434663cdc4b0b4998c22f2d46eadd59b29dd4787c894c4e2e6c8eb34381",
+      "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc": "sha256:3298ddbc780d61020f60b77239e7fc9386be33a0c1dd9aa4c9dd466431965412",
+      "r-e1-r3-graph-retrieval-dispatch-000-ae075e75": "sha256:ae075e751e5c4581c793409cc27799e383aca7d0bb17d977c9b317456a319d28",
+      "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad": "sha256:874eb7adfd54d9efaa4a4bfef5f650208286f83f566c7e69bdf64fd6ddd6c04e"
+    },
+    "model": {
+      "llm": "offline-extractive",
+      "embedding": "offline-hash",
+      "judge": "not_run"
+    },
+    "offline": true,
+    "data_mode": "offline",
+    "source_db": "runs/r3-graph/r3.sqlite",
+    "source_archive": "eval/archive/e1-r3-graph.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 61,
+    "configs": 13,
+    "seeds": [],
+    "test_only": false,
+    "subset": "LoCoMo category=1 (multi-hop)"
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0",
+        "candidate": "dual_channel/entity_triple",
+        "question": "61 multi-hop q · dual_channel/entity_triple",
+        "tokens": null,
+        "latency_ms": 26.868,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0341",
+        "metrics": {
+          "impl": "dual_channel",
+          "repr": "entity_triple",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0",
+          "config_hash": "sha256:6553e4f0b4c1c20c511b2779a8a28f425b380a264f30af23395e2f986243befc",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2318,
+          "answer_f1": 0.0341,
+          "latency_mean_ms": 6.8969,
+          "latency_p95_ms": 26.868,
+          "graph_nodes": 641,
+          "graph_edges": 837,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-007-021f2c52",
+        "candidate": "dual_channel/state_slot",
+        "question": "61 multi-hop q · dual_channel/state_slot",
+        "tokens": null,
+        "latency_ms": 23.526,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "dual_channel",
+          "repr": "state_slot",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-007-021f2c52",
+          "config_hash": "sha256:021f2c52619b16f03682b40a26459fd7a6a2f1f51b7160539c02903dfb59a0b2",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2324,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 11.3871,
+          "latency_p95_ms": 23.526,
+          "graph_nodes": 628,
+          "graph_edges": 339,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5",
+        "candidate": "dual_channel/three_layer",
+        "question": "61 multi-hop q · dual_channel/three_layer",
+        "tokens": null,
+        "latency_ms": 21.156,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0341",
+        "metrics": {
+          "impl": "dual_channel",
+          "repr": "three_layer",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5",
+          "config_hash": "sha256:29b68cb5e5478e748a86493b871d0e4d5c8668d3b9def3e0f2d1eac3932d1b8d",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2318,
+          "answer_f1": 0.0341,
+          "latency_mean_ms": 5.147,
+          "latency_p95_ms": 21.156,
+          "graph_nodes": 800,
+          "graph_edges": 1136,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-005-42fda64a",
+        "candidate": "entity_subgraph/entity_triple",
+        "question": "61 multi-hop q · entity_subgraph/entity_triple",
+        "tokens": null,
+        "latency_ms": 22.998,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "entity_subgraph",
+          "repr": "entity_triple",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-005-42fda64a",
+          "config_hash": "sha256:42fda64a96176c57b604d8d79ac9839898c6789ef53a08b7de8de33f88aad372",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2315,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 6.0475,
+          "latency_p95_ms": 22.998,
+          "graph_nodes": 641,
+          "graph_edges": 837,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78",
+        "candidate": "entity_subgraph/state_slot",
+        "question": "61 multi-hop q · entity_subgraph/state_slot",
+        "tokens": null,
+        "latency_ms": 19.102,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "entity_subgraph",
+          "repr": "state_slot",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78",
+          "config_hash": "sha256:1a3b4a78458cbdd42dd9b63754bd8b9c9a55f64c9ddfcf68c27a812a98f483a4",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2324,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 5.1035,
+          "latency_p95_ms": 19.102,
+          "graph_nodes": 628,
+          "graph_edges": 339,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa",
+        "candidate": "entity_subgraph/three_layer",
+        "question": "61 multi-hop q · entity_subgraph/three_layer",
+        "tokens": null,
+        "latency_ms": 21.14,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "entity_subgraph",
+          "repr": "three_layer",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa",
+          "config_hash": "sha256:10bb97fa6bbb9683c1d0eb6dcaf805c74e27e709e41152af2fc878fd24844f71",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2315,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 5.408,
+          "latency_p95_ms": 21.14,
+          "graph_nodes": 800,
+          "graph_edges": 1136,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-011-215749ee",
+        "candidate": "ppr/entity_triple",
+        "question": "61 multi-hop q · ppr/entity_triple",
+        "tokens": null,
+        "latency_ms": 48.651,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0341",
+        "metrics": {
+          "impl": "ppr",
+          "repr": "entity_triple",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-011-215749ee",
+          "config_hash": "sha256:215749ee76e0b1f2e88448d3e8cf301a76a0da30680fb8d06f741a8bbd6ad293",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2318,
+          "answer_f1": 0.0341,
+          "latency_mean_ms": 14.6468,
+          "latency_p95_ms": 48.651,
+          "graph_nodes": 641,
+          "graph_edges": 837,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-010-bff67545",
+        "candidate": "ppr/state_slot",
+        "question": "61 multi-hop q · ppr/state_slot",
+        "tokens": null,
+        "latency_ms": 38.455,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "ppr",
+          "repr": "state_slot",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-010-bff67545",
+          "config_hash": "sha256:bff67545537a10aa85120b77f5f2229b4fceba15ee8bde6768e2356a2e0694f0",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2379,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 8.3193,
+          "latency_p95_ms": 38.455,
+          "graph_nodes": 628,
+          "graph_edges": 339,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-012-9c637b83",
+        "candidate": "ppr/three_layer",
+        "question": "61 multi-hop q · ppr/three_layer",
+        "tokens": null,
+        "latency_ms": 37.807,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0342",
+        "metrics": {
+          "impl": "ppr",
+          "repr": "three_layer",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-012-9c637b83",
+          "config_hash": "sha256:9c637b8306e7842ffb31eda63fa288d23c38d4646df6a6a425038186e671059a",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.2381,
+          "answer_f1": 0.0342,
+          "latency_mean_ms": 7.5624,
+          "latency_p95_ms": 37.807,
+          "graph_nodes": 800,
+          "graph_edges": 1136,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434",
+        "candidate": "slot_expand/state_slot",
+        "question": "61 multi-hop q · slot_expand/state_slot",
+        "tokens": null,
+        "latency_ms": 24.865,
+        "candidates": 13.2459,
+        "answer": "offline; F1=0.0328",
+        "metrics": {
+          "impl": "slot_expand",
+          "repr": "state_slot",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434",
+          "config_hash": "sha256:a4d6a434663cdc4b0b4998c22f2d46eadd59b29dd4787c894c4e2e6c8eb34381",
+          "n": 61,
+          "evidence_recall": 0.2372,
+          "multi_hop_recall": 0.2372,
+          "ndcg": 0.235,
+          "answer_f1": 0.0328,
+          "latency_mean_ms": 6.6044,
+          "latency_p95_ms": 24.865,
+          "graph_nodes": 628,
+          "graph_edges": 339,
+          "candidates_mean": 13.2459
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc",
+        "candidate": "vector_only/entity_triple",
+        "question": "61 multi-hop q · vector_only/entity_triple",
+        "tokens": null,
+        "latency_ms": 23.741,
+        "candidates": 13.2787,
+        "answer": "offline; F1=0.0235",
+        "metrics": {
+          "impl": "vector_only",
+          "repr": "entity_triple",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc",
+          "config_hash": "sha256:3298ddbc780d61020f60b77239e7fc9386be33a0c1dd9aa4c9dd466431965412",
+          "n": 61,
+          "evidence_recall": 0.2257,
+          "multi_hop_recall": 0.2257,
+          "ndcg": 0.1988,
+          "answer_f1": 0.0235,
+          "latency_mean_ms": 7.802,
+          "latency_p95_ms": 23.741,
+          "graph_nodes": 641,
+          "graph_edges": 837,
+          "candidates_mean": 13.2787
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-000-ae075e75",
+        "candidate": "vector_only/state_slot",
+        "question": "61 multi-hop q · vector_only/state_slot",
+        "tokens": null,
+        "latency_ms": 211.717,
+        "candidates": 13.2787,
+        "answer": "offline; F1=0.0235",
+        "metrics": {
+          "impl": "vector_only",
+          "repr": "state_slot",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-000-ae075e75",
+          "config_hash": "sha256:ae075e751e5c4581c793409cc27799e383aca7d0bb17d977c9b317456a319d28",
+          "n": 61,
+          "evidence_recall": 0.2257,
+          "multi_hop_recall": 0.2257,
+          "ndcg": 0.1988,
+          "answer_f1": 0.0235,
+          "latency_mean_ms": 41.3323,
+          "latency_p95_ms": 211.717,
+          "graph_nodes": 628,
+          "graph_edges": 339,
+          "candidates_mean": 13.2787
+        }
+      },
+      {
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad",
+        "candidate": "vector_only/three_layer",
+        "question": "61 multi-hop q · vector_only/three_layer",
+        "tokens": null,
+        "latency_ms": 13.043,
+        "candidates": 13.2787,
+        "answer": "offline; F1=0.0235",
+        "metrics": {
+          "impl": "vector_only",
+          "repr": "three_layer",
+          "run_id": "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad",
+          "config_hash": "sha256:874eb7adfd54d9efaa4a4bfef5f650208286f83f566c7e69bdf64fd6ddd6c04e",
+          "n": 61,
+          "evidence_recall": 0.2257,
+          "multi_hop_recall": 0.2257,
+          "ndcg": 0.1988,
+          "answer_f1": 0.0235,
+          "latency_mean_ms": 4.7742,
+          "latency_p95_ms": 13.043,
+          "graph_nodes": 800,
+          "graph_edges": 1136,
+          "candidates_mean": 13.2787
+        }
+      }
+    ],
+    "metrics": {
+      "evidence_recall": 0.2372,
+      "ndcg": 0.2334,
+      "multi_hop_recall": 0.2372,
+      "answer_f1": 0.034,
+      "tokens": null,
+      "p95_latency_ms": 28.457,
+      "error_rate": 0.0,
+      "questions": 61,
+      "vector_only": {
+        "evidence_recall": 0.2257,
+        "ndcg": 0.1988,
+        "p95_latency_ms": 82.834
+      }
+    },
+    "cells": [
+      {
+        "impl": "dual_channel",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0",
+        "config_hash": "sha256:6553e4f0b4c1c20c511b2779a8a28f425b380a264f30af23395e2f986243befc",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 6.8969,
+        "latency_p95_ms": 26.868,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-007-021f2c52",
+        "config_hash": "sha256:021f2c52619b16f03682b40a26459fd7a6a2f1f51b7160539c02903dfb59a0b2",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2324,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 11.3871,
+        "latency_p95_ms": 23.526,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5",
+        "config_hash": "sha256:29b68cb5e5478e748a86493b871d0e4d5c8668d3b9def3e0f2d1eac3932d1b8d",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 5.147,
+        "latency_p95_ms": 21.156,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-005-42fda64a",
+        "config_hash": "sha256:42fda64a96176c57b604d8d79ac9839898c6789ef53a08b7de8de33f88aad372",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2315,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 6.0475,
+        "latency_p95_ms": 22.998,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78",
+        "config_hash": "sha256:1a3b4a78458cbdd42dd9b63754bd8b9c9a55f64c9ddfcf68c27a812a98f483a4",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2324,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 5.1035,
+        "latency_p95_ms": 19.102,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa",
+        "config_hash": "sha256:10bb97fa6bbb9683c1d0eb6dcaf805c74e27e709e41152af2fc878fd24844f71",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2315,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 5.408,
+        "latency_p95_ms": 21.14,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-011-215749ee",
+        "config_hash": "sha256:215749ee76e0b1f2e88448d3e8cf301a76a0da30680fb8d06f741a8bbd6ad293",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 14.6468,
+        "latency_p95_ms": 48.651,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-010-bff67545",
+        "config_hash": "sha256:bff67545537a10aa85120b77f5f2229b4fceba15ee8bde6768e2356a2e0694f0",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2379,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 8.3193,
+        "latency_p95_ms": 38.455,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-012-9c637b83",
+        "config_hash": "sha256:9c637b8306e7842ffb31eda63fa288d23c38d4646df6a6a425038186e671059a",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2381,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 7.5624,
+        "latency_p95_ms": 37.807,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "slot_expand",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434",
+        "config_hash": "sha256:a4d6a434663cdc4b0b4998c22f2d46eadd59b29dd4787c894c4e2e6c8eb34381",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.235,
+        "answer_f1": 0.0328,
+        "latency_mean_ms": 6.6044,
+        "latency_p95_ms": 24.865,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "vector_only",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc",
+        "config_hash": "sha256:3298ddbc780d61020f60b77239e7fc9386be33a0c1dd9aa4c9dd466431965412",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 7.802,
+        "latency_p95_ms": 23.741,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2787
+      },
+      {
+        "impl": "vector_only",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-000-ae075e75",
+        "config_hash": "sha256:ae075e751e5c4581c793409cc27799e383aca7d0bb17d977c9b317456a319d28",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 41.3323,
+        "latency_p95_ms": 211.717,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2787
+      },
+      {
+        "impl": "vector_only",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad",
+        "config_hash": "sha256:874eb7adfd54d9efaa4a4bfef5f650208286f83f566c7e69bdf64fd6ddd6c04e",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 4.7742,
+        "latency_p95_ms": 13.043,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2787
+      }
+    ],
+    "source": {
+      "db": "runs/r3-graph/r3.sqlite",
+      "archive": "eval/archive/e1-r3-graph.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/entity_triple",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/entity_triple",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03302,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/entity_triple",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01061,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/state_slot",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/state_slot",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03357,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/state_slot",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/three_layer",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/three_layer",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03302,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "dual_channel/three_layer",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01061,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/entity_triple",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/entity_triple",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03273,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/entity_triple",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/state_slot",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/state_slot",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03357,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/state_slot",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/three_layer",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/three_layer",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03273,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "entity_subgraph/three_layer",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/entity_triple",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/entity_triple",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03302,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/entity_triple",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01061,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/state_slot",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/state_slot",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0391,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/state_slot",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/three_layer",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/three_layer",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03929,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 7,
+      "worsened": 0,
+      "unchanged": 54,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "ppr/three_layer",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01067,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 4,
+      "worsened": 0,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "slot_expand/state_slot",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.01148,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "slot_expand/state_slot",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.03616,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 6,
+      "worsened": 0,
+      "unchanged": 55,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "vector_only",
+      "candidate": "slot_expand/state_slot",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0093,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 3,
+      "worsened": 1,
+      "unchanged": 57,
+      "note": "Graph dispatch vs vector_only on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/state_slot",
+      "candidate": "ppr/state_slot",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 61,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/state_slot",
+      "candidate": "ppr/state_slot",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.00553,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 1,
+      "worsened": 1,
+      "unchanged": 59,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/state_slot",
+      "candidate": "ppr/state_slot",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 61,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/entity_triple",
+      "candidate": "ppr/entity_triple",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 61,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/entity_triple",
+      "candidate": "ppr/entity_triple",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.00028,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 1,
+      "worsened": 2,
+      "unchanged": 58,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/entity_triple",
+      "candidate": "ppr/entity_triple",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": -5e-05,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 1,
+      "unchanged": 60,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/three_layer",
+      "candidate": "ppr/three_layer",
+      "metric": "evidence_recall",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 61,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/three_layer",
+      "candidate": "ppr/three_layer",
+      "metric": "ndcg",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.00656,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 2,
+      "worsened": 0,
+      "unchanged": 59,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    },
+    {
+      "baseline": "entity_subgraph/three_layer",
+      "candidate": "ppr/three_layer",
+      "metric": "answer_f1",
+      "baseline_value": null,
+      "candidate_value": null,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": true,
+      "significant": null,
+      "improved": 0,
+      "worsened": 0,
+      "unchanged": 61,
+      "note": "PPR vs entity_subgraph on the same 61 multi-hop questions; no CI in archive."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_impl": [
+      {
+        "impl": "dual_channel",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-008-6553e4f0",
+        "config_hash": "sha256:6553e4f0b4c1c20c511b2779a8a28f425b380a264f30af23395e2f986243befc",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 6.8969,
+        "latency_p95_ms": 26.868,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-007-021f2c52",
+        "config_hash": "sha256:021f2c52619b16f03682b40a26459fd7a6a2f1f51b7160539c02903dfb59a0b2",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2324,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 11.3871,
+        "latency_p95_ms": 23.526,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-009-29b68cb5",
+        "config_hash": "sha256:29b68cb5e5478e748a86493b871d0e4d5c8668d3b9def3e0f2d1eac3932d1b8d",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 5.147,
+        "latency_p95_ms": 21.156,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-005-42fda64a",
+        "config_hash": "sha256:42fda64a96176c57b604d8d79ac9839898c6789ef53a08b7de8de33f88aad372",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2315,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 6.0475,
+        "latency_p95_ms": 22.998,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-004-1a3b4a78",
+        "config_hash": "sha256:1a3b4a78458cbdd42dd9b63754bd8b9c9a55f64c9ddfcf68c27a812a98f483a4",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2324,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 5.1035,
+        "latency_p95_ms": 19.102,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-006-10bb97fa",
+        "config_hash": "sha256:10bb97fa6bbb9683c1d0eb6dcaf805c74e27e709e41152af2fc878fd24844f71",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2315,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 5.408,
+        "latency_p95_ms": 21.14,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-011-215749ee",
+        "config_hash": "sha256:215749ee76e0b1f2e88448d3e8cf301a76a0da30680fb8d06f741a8bbd6ad293",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2318,
+        "answer_f1": 0.0341,
+        "latency_mean_ms": 14.6468,
+        "latency_p95_ms": 48.651,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-010-bff67545",
+        "config_hash": "sha256:bff67545537a10aa85120b77f5f2229b4fceba15ee8bde6768e2356a2e0694f0",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2379,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 8.3193,
+        "latency_p95_ms": 38.455,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "ppr",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-012-9c637b83",
+        "config_hash": "sha256:9c637b8306e7842ffb31eda63fa288d23c38d4646df6a6a425038186e671059a",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.2381,
+        "answer_f1": 0.0342,
+        "latency_mean_ms": 7.5624,
+        "latency_p95_ms": 37.807,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "slot_expand",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-003-a4d6a434",
+        "config_hash": "sha256:a4d6a434663cdc4b0b4998c22f2d46eadd59b29dd4787c894c4e2e6c8eb34381",
+        "n": 61,
+        "evidence_recall": 0.2372,
+        "multi_hop_recall": 0.2372,
+        "ndcg": 0.235,
+        "answer_f1": 0.0328,
+        "latency_mean_ms": 6.6044,
+        "latency_p95_ms": 24.865,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2459
+      },
+      {
+        "impl": "vector_only",
+        "repr": "entity_triple",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-001-3298ddbc",
+        "config_hash": "sha256:3298ddbc780d61020f60b77239e7fc9386be33a0c1dd9aa4c9dd466431965412",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 7.802,
+        "latency_p95_ms": 23.741,
+        "graph_nodes": 641,
+        "graph_edges": 837,
+        "candidates_mean": 13.2787
+      },
+      {
+        "impl": "vector_only",
+        "repr": "state_slot",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-000-ae075e75",
+        "config_hash": "sha256:ae075e751e5c4581c793409cc27799e383aca7d0bb17d977c9b317456a319d28",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 41.3323,
+        "latency_p95_ms": 211.717,
+        "graph_nodes": 628,
+        "graph_edges": 339,
+        "candidates_mean": 13.2787
+      },
+      {
+        "impl": "vector_only",
+        "repr": "three_layer",
+        "run_id": "r-e1-r3-graph-retrieval-dispatch-002-874eb7ad",
+        "config_hash": "sha256:874eb7adfd54d9efaa4a4bfef5f650208286f83f566c7e69bdf64fd6ddd6c04e",
+        "n": 61,
+        "evidence_recall": 0.2257,
+        "multi_hop_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "latency_mean_ms": 4.7742,
+        "latency_p95_ms": 13.043,
+        "graph_nodes": 800,
+        "graph_edges": 1136,
+        "candidates_mean": 13.2787
+      }
+    ],
+    "paired_vs_vector_only": [
+      {
+        "impl": "dual_channel",
+        "repr": "entity_triple",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03302,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01061,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "state_slot",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03357,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "dual_channel",
+        "repr": "three_layer",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03302,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01061,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "entity_triple",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03273,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "state_slot",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03357,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "three_layer",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03273,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "ppr",
+        "repr": "entity_triple",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03302,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01061,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "ppr",
+        "repr": "state_slot",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.0391,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "ppr",
+        "repr": "three_layer",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03929,
+            "median_delta": 0.0,
+            "improved": 7,
+            "worsened": 0,
+            "unchanged": 54
+          },
+          "answer_f1": {
+            "mean_delta": 0.01067,
+            "median_delta": 0.0,
+            "improved": 4,
+            "worsened": 0,
+            "unchanged": 57
+          }
+        }
+      },
+      {
+        "impl": "slot_expand",
+        "repr": "state_slot",
+        "vs": "vector_only",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.01148,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "ndcg": {
+            "mean_delta": 0.03616,
+            "median_delta": 0.0,
+            "improved": 6,
+            "worsened": 0,
+            "unchanged": 55
+          },
+          "answer_f1": {
+            "mean_delta": 0.0093,
+            "median_delta": 0.0,
+            "improved": 3,
+            "worsened": 1,
+            "unchanged": 57
+          }
+        }
+      }
+    ],
+    "ppr_vs_entity_subgraph": [
+      {
+        "repr": "state_slot",
+        "vs": "entity_subgraph",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 0,
+            "unchanged": 61
+          },
+          "ndcg": {
+            "mean_delta": 0.00553,
+            "median_delta": 0.0,
+            "improved": 1,
+            "worsened": 1,
+            "unchanged": 59
+          },
+          "answer_f1": {
+            "mean_delta": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 0,
+            "unchanged": 61
+          }
+        }
+      },
+      {
+        "repr": "entity_triple",
+        "vs": "entity_subgraph",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 0,
+            "unchanged": 61
+          },
+          "ndcg": {
+            "mean_delta": 0.00028,
+            "median_delta": 0.0,
+            "improved": 1,
+            "worsened": 2,
+            "unchanged": 58
+          },
+          "answer_f1": {
+            "mean_delta": -5e-05,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 1,
+            "unchanged": 60
+          }
+        }
+      },
+      {
+        "repr": "three_layer",
+        "vs": "entity_subgraph",
+        "delta": {
+          "evidence_recall": {
+            "mean_delta": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 0,
+            "unchanged": 61
+          },
+          "ndcg": {
+            "mean_delta": 0.00656,
+            "median_delta": 0.0,
+            "improved": 2,
+            "worsened": 0,
+            "unchanged": 59
+          },
+          "answer_f1": {
+            "mean_delta": 0.0,
+            "median_delta": 0.0,
+            "improved": 0,
+            "worsened": 0,
+            "unchanged": 61
+          }
+        }
+      }
+    ],
+    "graph_channel_survival": [
+      {
+        "impl": "entity_subgraph",
+        "repr": "state_slot",
+        "questions": 61,
+        "graph_novel_candidates": 34,
+        "graph_novel_in_final": 0,
+        "final_units": 808,
+        "graph_sourced_final_units": 28
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "entity_triple",
+        "questions": 61,
+        "graph_novel_candidates": 91,
+        "graph_novel_in_final": 0,
+        "final_units": 808,
+        "graph_sourced_final_units": 26
+      },
+      {
+        "impl": "entity_subgraph",
+        "repr": "three_layer",
+        "questions": 61,
+        "graph_novel_candidates": 91,
+        "graph_novel_in_final": 0,
+        "final_units": 808,
+        "graph_sourced_final_units": 26
+      },
+      {
+        "impl": "ppr",
+        "repr": "three_layer",
+        "questions": 61,
+        "graph_novel_candidates": 88,
+        "graph_novel_in_final": 0,
+        "final_units": 808,
+        "graph_sourced_final_units": 30
+      }
+    ],
+    "stage_waterfall": [
+      {
+        "stage": "graph_candidates",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "graph_novel_candidates": "34-91"
+        }
+      },
+      {
+        "stage": "fusion",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "graph_novel_in_final": 0
+        },
+        "note": "graph-only candidates are dropped by fusion/budget."
+      },
+      {
+        "stage": "retrieve",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "evidence_recall": 0.2372
+        }
+      },
+      {
+        "stage": "answer",
+        "available": true,
+        "ms": 28.457,
+        "metrics": {
+          "answer_f1": 0.0316
+        }
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 error rows across 13 configs; flat recall is a fusion/graph-survival result.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 13,
+          "source": "runs/r3-graph/r3.sqlite",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 0,
+          "source": null,
+          "status": "pending",
+          "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+        }
+      ],
+      "fake_factors": [
+        "graph candidates do not survive fusion",
+        "real embedding",
+        "planner.analyzer=llm falls back to rule"
+      ],
+      "a_level_only": true,
+      "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+      "not_available": [
+        "state_accuracy",
+        "judge_accuracy",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 13 行 / 在线 0 行（pending）；假因子 3 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "evidence_recall",
+        "value": 0.2372
+      },
+      "tokens_per_query": null,
+      "p95_latency_ms": 28.457
+    },
+    "claims": [
+      "R3 dispatch 13 configs x 61 multi-hop q offline: graph cells final Recall 0.2372 (vector_only 0.2257); nDCG 0.2334; p95 28.5 ms; quality=Recall 0.2372, Tokens not_available, P95 28.5 ms. | quality Recall=0.2372; Tokens=not_available; P95=28.5 ms.",
+      "Graph-novel candidates are 34-91 per config, but 0 survive fusion; final recall is insensitive to graph impl/repr. This is a fusion/budget bottleneck, not evidence that graph is useless with a real model. | quality Recall=0.2372; Tokens=not_available; P95=28.5 ms.",
+      "Offline hash embedding is not semantic; planner.analyzer=llm falls back to rule in every cell; B-level blocked_on_ollama. | quality Recall=0.2372; Tokens=not_available; P95=28.5 ms."
+    ],
+    "conditions": [
+      "Offline A-level; LoCoMo category=1 multi-hop subset, 61 questions/config.",
+      "13 configs: 4 graph impls x 3 graph reprs + vector_only references.",
+      "No answer F1/Judge; B-level blocked."
+    ],
+    "limitations": [
+      "dual_channel is approximate (undirected, untyped edges; semantic channel is BM25).",
+      "Offline hash embedding is not semantic.",
+      "Graph-only candidates 0 survive fusion, so final recall cannot distinguish graph impl/repr.",
+      "planner.analyzer=llm falls back to rule in every cell."
+    ],
+    "next_actions": [
+      "Test fusion policies that preserve graph-only candidates.",
+      "Re-run with a real embedding / typed entity channels.",
+      "Add B-level F1/Judge before claiming graph value."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 13,
+        "source": "runs/r3-graph/r3.sqlite",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 0,
+        "source": null,
+        "status": "pending",
+        "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+      }
+    ],
+    "fake_factors": [
+      "graph candidates do not survive fusion",
+      "real embedding",
+      "planner.analyzer=llm falls back to rule"
+    ],
+    "a_level_only": true,
+    "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+    "not_available": [
+      "state_accuracy",
+      "judge_accuracy",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 13 行 / 在线 0 行（pending）；假因子 3 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+  },
+  "online": {
+    "status": "not_run",
+    "report": null,
+    "source": null,
+    "reason": "R3 graph dispatch is offline only; A's online S6 18-run archive has no R3 cells."
+  },
+  "web": {
+    "route": "#/experiments/E1-R3",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-R3",
+      "E1-S2"
+    ],
+    "note": "Graph retrieval dispatch; final recall flat because graph candidates do not survive fusion."
+  }
+}

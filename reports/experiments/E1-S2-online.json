@@ -1,0 +1,902 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-S2-online",
+  "created_at": "2026-11-09T18:47:36+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "1096530",
+    "config_hashes": {
+      "S1-state-slot": null,
+      "S2-entity-triple": null,
+      "S3-three-layer": null
+    },
+    "model": {
+      "llm": "qwen3.8:27b-q4_K_M",
+      "embedding": "bge-m3",
+      "judge": "not_run"
+    },
+    "offline": false,
+    "data_mode": "online",
+    "provider": "ollama",
+    "source_db": "runs/s6/e1-online-40.sqlite",
+    "source_archive": "eval/archive/s6-e1-online-40.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions": 40,
+    "seeds": [
+      13
+    ],
+    "test_only": false,
+    "runs": 3
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "s6-S-S1-state-slot-s13-conv-26-conv-30-conv-43-conv-44-175ee9aa",
+        "candidate": "S1-state-slot",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8246.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 752.0,
+          "graph_nodes": 958.75,
+          "latency_ms": 4659.1015,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.67,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_latency_ms": 8246.0
+        }
+      },
+      {
+        "run_id": "s6-S-S2-entity-triple-s13-conv-26-conv-30-conv-43-conv-44-ad574a5e",
+        "candidate": "S2-entity-triple",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8155.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 1381.75,
+          "graph_nodes": 972.75,
+          "latency_ms": 4621.5783,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.6327,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_latency_ms": 8155.0
+        }
+      },
+      {
+        "run_id": "s6-S-S3-three-layer-s13-conv-26-conv-30-conv-43-conv-44-935c4ddc",
+        "candidate": "S3-three-layer",
+        "question": "40 q · conv-26/30/43/44 · seed 13",
+        "tokens": 44.65,
+        "latency_ms": 8143.0,
+        "candidates": 2.5,
+        "answer": "online LLM; F1=0.1837",
+        "metrics": {
+          "answer_f1": 0.1837,
+          "candidates": 2.5,
+          "channels": 2.0,
+          "citations": 0.1,
+          "conflict_pairs": 0.0,
+          "context_precision": 0.4447,
+          "evidence_recall": 0.5269,
+          "field_completeness": 1.0,
+          "graph_edges": 1973.75,
+          "graph_nodes": 1204.25,
+          "latency_ms": 4628.5446,
+          "ndcg": 0.6161,
+          "plan_nodes": 2.0,
+          "redundancy": 0.1447,
+          "refused": 0.45,
+          "seconds": 4.6398,
+          "store_facts": 423.0,
+          "store_turns": 535.75,
+          "store_units": 958.75,
+          "superseded_units": 0.325,
+          "tokens": 44.65,
+          "tokens_total": 283.5,
+          "valid_units": 2.175,
+          "p95_latency_ms": 8143.0
+        }
+      }
+    ],
+    "metrics": {
+      "answer_f1": 0.1837,
+      "evidence_recall": 0.5269,
+      "ndcg": 0.6161,
+      "tokens": 44.65,
+      "p95_latency_ms": 8181.333,
+      "questions": 120,
+      "error_rate": 0.0
+    },
+    "by_candidate": {
+      "S1-state-slot": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 752.0,
+        "graph_nodes": 958.75,
+        "latency_ms": 4659.1015,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.67,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.246,
+        "p95_latency_ms": 8246.0
+      },
+      "S2-entity-triple": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 1381.75,
+        "graph_nodes": 972.75,
+        "latency_ms": 4621.5783,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.6327,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.155,
+        "p95_latency_ms": 8155.0
+      },
+      "S3-three-layer": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 4628.5446,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.6398,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.143,
+        "p95_latency_ms": 8143.0
+      }
+    },
+    "offline_reference": {
+      "report": "E1-S2.json",
+      "metrics": {
+        "evidence_recall": 0.5053,
+        "ndcg": 0.3556,
+        "graph_nodes": 1045.25,
+        "graph_edges": 1369.1667,
+        "tokens": 306.9125,
+        "p95_latency_ms": 47.3333,
+        "questions": 480,
+        "error_rate": 0.0
+      },
+      "by_candidate": {
+        "S1-state-slot": {
+          "role": "cost",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3563,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 92.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 958.75,
+            "graph_edges": 752.0,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "S2-entity-triple": {
+          "role": "balanced",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3553,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 40.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 972.75,
+            "graph_edges": 1381.75,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "S3-three-layer": {
+          "role": "quality",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3553,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 9.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    },
+    "source": {
+      "db": "runs/s6/e1-online-40.sqlite",
+      "archive": "eval/archive/s6-e1-online-40.json"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S2-entity-triple",
+      "metric": "answer_f1",
+      "baseline_value": 0.1837,
+      "candidate_value": 0.1837,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S2-entity-triple",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5269,
+      "candidate_value": 0.5269,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S2-entity-triple",
+      "metric": "ndcg",
+      "baseline_value": 0.6161,
+      "candidate_value": 0.6161,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S2-entity-triple",
+      "metric": "tokens",
+      "baseline_value": 44.65,
+      "candidate_value": 44.65,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S2-entity-triple",
+      "metric": "p95_latency_ms",
+      "baseline_value": 8246.0,
+      "candidate_value": 8155.0,
+      "delta": -91.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S3-three-layer",
+      "metric": "answer_f1",
+      "baseline_value": 0.1837,
+      "candidate_value": 0.1837,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S3-three-layer",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5269,
+      "candidate_value": 0.5269,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S3-three-layer",
+      "metric": "ndcg",
+      "baseline_value": 0.6161,
+      "candidate_value": 0.6161,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S3-three-layer",
+      "metric": "tokens",
+      "baseline_value": 44.65,
+      "candidate_value": 44.65,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    },
+    {
+      "baseline": "S1-state-slot",
+      "candidate": "S3-three-layer",
+      "metric": "p95_latency_ms",
+      "baseline_value": 8246.0,
+      "candidate_value": 8143.0,
+      "delta": -103.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Online, 1 seed x 40 q; descriptive delta without CI."
+    }
+  ],
+  "analysis": {
+    "main_effects": [],
+    "interactions": [],
+    "pareto": [],
+    "by_candidate": {
+      "S1-state-slot": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 752.0,
+        "graph_nodes": 958.75,
+        "latency_ms": 4659.1015,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.67,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.246,
+        "p95_latency_ms": 8246.0
+      },
+      "S2-entity-triple": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 1381.75,
+        "graph_nodes": 972.75,
+        "latency_ms": 4621.5783,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.6327,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.155,
+        "p95_latency_ms": 8155.0
+      },
+      "S3-three-layer": {
+        "answer_f1": 0.1837,
+        "candidates": 2.5,
+        "channels": 2.0,
+        "citations": 0.1,
+        "conflict_pairs": 0.0,
+        "context_precision": 0.4447,
+        "evidence_recall": 0.5269,
+        "field_completeness": 1.0,
+        "graph_edges": 1973.75,
+        "graph_nodes": 1204.25,
+        "latency_ms": 4628.5446,
+        "ndcg": 0.6161,
+        "plan_nodes": 2.0,
+        "redundancy": 0.1447,
+        "refused": 0.45,
+        "seconds": 4.6398,
+        "store_facts": 423.0,
+        "store_turns": 535.75,
+        "store_units": 958.75,
+        "superseded_units": 0.325,
+        "tokens": 44.65,
+        "tokens_total": 283.5,
+        "valid_units": 2.175,
+        "p95_seconds": 8.143,
+        "p95_latency_ms": 8143.0
+      }
+    },
+    "offline_reference": {
+      "report": "E1-S2.json",
+      "metrics": {
+        "evidence_recall": 0.5053,
+        "ndcg": 0.3556,
+        "graph_nodes": 1045.25,
+        "graph_edges": 1369.1667,
+        "tokens": 306.9125,
+        "p95_latency_ms": 47.3333,
+        "questions": 480,
+        "error_rate": 0.0
+      },
+      "by_candidate": {
+        "S1-state-slot": {
+          "role": "cost",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3563,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 92.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 958.75,
+            "graph_edges": 752.0,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "S2-entity-triple": {
+          "role": "balanced",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3553,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 40.5,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 972.75,
+            "graph_edges": 1381.75,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        },
+        "S3-three-layer": {
+          "role": "quality",
+          "runs": 2,
+          "metrics": {
+            "answer_f1": 0.0289,
+            "evidence_recall": 0.5053,
+            "ndcg": 0.3553,
+            "context_precision": 0.0862,
+            "tokens": 306.9125,
+            "p95_latency_ms": 9.0,
+            "field_completeness": 1.0,
+            "staleness": null,
+            "contradiction_rate": null,
+            "update_correctness": null,
+            "removed": null,
+            "units": null,
+            "graph_nodes": 1204.25,
+            "graph_edges": 1973.75,
+            "redundancy": 0.0596,
+            "candidates": 12.1562,
+            "channels": 2.0,
+            "plan_nodes": 2.0,
+            "citations": 1.0,
+            "refused": 0.0,
+            "questions": 160,
+            "error_rate": 0.0
+          }
+        }
+      }
+    },
+    "stage_waterfall": [
+      {
+        "stage": "retrieve",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "evidence_recall": 0.5269
+        }
+      },
+      {
+        "stage": "answer",
+        "available": true,
+        "ms": 8181.333,
+        "metrics": {
+          "answer_f1": 0.1837
+        }
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 errors; 18/18 online runs complete.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 6,
+          "source": "reports/experiments/E1-S2.json",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 3,
+          "source": "runs/s6/e1-online-40.sqlite",
+          "status": "complete"
+        }
+      ],
+      "fake_factors": [
+        "no Judge",
+        "1 seed",
+        "40 q",
+        "cross_encoder fallback (M)",
+        "state_accuracy not recorded online"
+      ],
+      "a_level_only": false,
+      "b_level": true,
+      "judge": "not_run",
+      "not_available": [
+        "judge_accuracy",
+        "state_accuracy",
+        "P(A|S) pairing",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 6 行 / 在线 3 行；在线 B 级（LLM 答案），无 Judge、1 seed、40 题；不与离线数字混合。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "F1",
+        "value": 0.1837
+      },
+      "tokens_per_query": 44.65,
+      "p95_latency_ms": 8181.333
+    },
+    "claims": [
+      "Online B-level: S1/S2/S3 all F1 0.1837 / Recall 0.5269; graph representation adds no measurable online gain. Tokens 44.65; P95 8.1-8.2 s. | quality F1=0.1837; Tokens=44.6; P95=8181.3 ms.",
+      "This matches the offline flat result (S1/S2/S3 Recall 0.5053) and R3 graph-survival result (0 graph-novel candidates survive fusion). | quality F1=0.1837; Tokens=44.6; P95=8181.3 ms."
+    ],
+    "conditions": [
+      "Online LLM answer (qwen3.8:27b-q4_K_M), bge-m3 embedding; 4 dev conversations, 40 q, seed 13.",
+      "No LLM-as-Judge; 1 seed; 40 questions/config; descriptive only."
+    ],
+    "limitations": [
+      "No Judge, no second seed, no test split for E1 modules.",
+      "K is store-level only; tokens/P95 not available.",
+      "M2 rerank still fell back because sentence-transformers is absent."
+    ],
+    "next_actions": [
+      "Run a second seed and LLM-as-Judge before promoting these rankings.",
+      "Record state_accuracy online to compute P(A|S)."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 6,
+        "source": "reports/experiments/E1-S2.json",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 3,
+        "source": "runs/s6/e1-online-40.sqlite",
+        "status": "complete"
+      }
+    ],
+    "fake_factors": [
+      "no Judge",
+      "1 seed",
+      "40 q",
+      "cross_encoder fallback (M)",
+      "state_accuracy not recorded online"
+    ],
+    "a_level_only": false,
+    "b_level": true,
+    "judge": "not_run",
+    "not_available": [
+      "judge_accuracy",
+      "state_accuracy",
+      "P(A|S) pairing",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 6 行 / 在线 3 行；在线 B 级（LLM 答案），无 Judge、1 seed、40 题；不与离线数字混合。"
+  },
+  "online": {
+    "status": "complete",
+    "source": "eval/archive/s6-e1-online-40.json",
+    "model": "qwen3.8:27b-q4_K_M",
+    "judge": "not_run",
+    "seeds": [
+      13
+    ],
+    "questions": 40,
+    "results": {
+      "runs": [
+        {
+          "run_id": "s6-S-S1-state-slot-s13-conv-26-conv-30-conv-43-conv-44-175ee9aa",
+          "candidate": "S1-state-slot",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 44.65,
+          "latency_ms": 8246.0,
+          "candidates": 2.5,
+          "answer": "online LLM; F1=0.1837",
+          "metrics": {
+            "answer_f1": 0.1837,
+            "candidates": 2.5,
+            "channels": 2.0,
+            "citations": 0.1,
+            "conflict_pairs": 0.0,
+            "context_precision": 0.4447,
+            "evidence_recall": 0.5269,
+            "field_completeness": 1.0,
+            "graph_edges": 752.0,
+            "graph_nodes": 958.75,
+            "latency_ms": 4659.1015,
+            "ndcg": 0.6161,
+            "plan_nodes": 2.0,
+            "redundancy": 0.1447,
+            "refused": 0.45,
+            "seconds": 4.67,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 0.325,
+            "tokens": 44.65,
+            "tokens_total": 283.5,
+            "valid_units": 2.175,
+            "p95_latency_ms": 8246.0
+          }
+        },
+        {
+          "run_id": "s6-S-S2-entity-triple-s13-conv-26-conv-30-conv-43-conv-44-ad574a5e",
+          "candidate": "S2-entity-triple",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 44.65,
+          "latency_ms": 8155.0,
+          "candidates": 2.5,
+          "answer": "online LLM; F1=0.1837",
+          "metrics": {
+            "answer_f1": 0.1837,
+            "candidates": 2.5,
+            "channels": 2.0,
+            "citations": 0.1,
+            "conflict_pairs": 0.0,
+            "context_precision": 0.4447,
+            "evidence_recall": 0.5269,
+            "field_completeness": 1.0,
+            "graph_edges": 1381.75,
+            "graph_nodes": 972.75,
+            "latency_ms": 4621.5783,
+            "ndcg": 0.6161,
+            "plan_nodes": 2.0,
+            "redundancy": 0.1447,
+            "refused": 0.45,
+            "seconds": 4.6327,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 0.325,
+            "tokens": 44.65,
+            "tokens_total": 283.5,
+            "valid_units": 2.175,
+            "p95_latency_ms": 8155.0
+          }
+        },
+        {
+          "run_id": "s6-S-S3-three-layer-s13-conv-26-conv-30-conv-43-conv-44-935c4ddc",
+          "candidate": "S3-three-layer",
+          "question": "40 q · conv-26/30/43/44 · seed 13",
+          "tokens": 44.65,
+          "latency_ms": 8143.0,
+          "candidates": 2.5,
+          "answer": "online LLM; F1=0.1837",
+          "metrics": {
+            "answer_f1": 0.1837,
+            "candidates": 2.5,
+            "channels": 2.0,
+            "citations": 0.1,
+            "conflict_pairs": 0.0,
+            "context_precision": 0.4447,
+            "evidence_recall": 0.5269,
+            "field_completeness": 1.0,
+            "graph_edges": 1973.75,
+            "graph_nodes": 1204.25,
+            "latency_ms": 4628.5446,
+            "ndcg": 0.6161,
+            "plan_nodes": 2.0,
+            "redundancy": 0.1447,
+            "refused": 0.45,
+            "seconds": 4.6398,
+            "store_facts": 423.0,
+            "store_turns": 535.75,
+            "store_units": 958.75,
+            "superseded_units": 0.325,
+            "tokens": 44.65,
+            "tokens_total": 283.5,
+            "valid_units": 2.175,
+            "p95_latency_ms": 8143.0
+          }
+        }
+      ],
+      "metrics": {
+        "answer_f1": 0.1837,
+        "tokens": 44.65,
+        "p95_latency_ms": 8181.333
+      }
+    }
+  },
+  "web": {
+    "route": "#/experiments/E1-S2-online",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-S2"
+    ],
+    "note": "Online B-level counterpart; offline kept separate."
+  }
+}

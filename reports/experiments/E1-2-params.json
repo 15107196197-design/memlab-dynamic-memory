@@ -1,0 +1,1967 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "E1-2-params",
+  "created_at": "2026-11-09T18:54:24+08:00",
+  "manifest": {
+    "git_commit": "2c1e22a11a204bc8f6648f0e3a565ac3f2ae03df",
+    "data_git_commit": "2c1e22a",
+    "config_hashes": {
+      "reference": "sha256:133e43a3ed2d4c2adfa4cd12c5a2fc15e9ca1d3f6e5d3f2dc6fe0618cc5663a3"
+    },
+    "model": {
+      "llm": "offline-extractive",
+      "embedding": "offline-hash",
+      "judge": "not_run"
+    },
+    "offline": true,
+    "data_mode": "offline",
+    "source_db": "runs/params/p1.sqlite + runs/params/p1-r4.sqlite + runs/params/p1-mmr-nodecay.sqlite + runs/params/p1-maxneighbors.sqlite",
+    "source_archive": "eval/archive/params-curves.json + params-*-corrected.json + e1-params-ext.json"
+  },
+  "dataset": {
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit_per_sample": 60,
+    "questions_per_level": 240,
+    "runs": 23,
+    "levels": 23,
+    "test_only": false
+  },
+  "results": {
+    "runs": [
+      {
+        "run_id": "r-e1.2-parameter-layer-000-92aa0b81",
+        "candidate": "schema.params.fields=6",
+        "factor": "schema.params.fields",
+        "module": "W4",
+        "level": "6",
+        "question": "240 q · schema.params.fields=6",
+        "tokens": 344.3,
+        "latency_ms": 14.516,
+        "candidates": 12.766667,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.460819,
+          "ndcg": 0.272566,
+          "tokens": 344.3,
+          "redundancy": 0.048928,
+          "context_precision": 0.069029,
+          "candidates": 12.766667,
+          "p95_latency_ms": 14.516,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-001-bee5c09e",
+        "candidate": "schema.params.fields=12",
+        "factor": "schema.params.fields",
+        "module": "W4",
+        "level": "12",
+        "question": "240 q · schema.params.fields=12",
+        "tokens": 345.995833,
+        "latency_ms": 28.85,
+        "candidates": 12.8125,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.459244,
+          "ndcg": 0.267128,
+          "tokens": 345.995833,
+          "redundancy": 0.048715,
+          "context_precision": 0.068361,
+          "candidates": 12.8125,
+          "p95_latency_ms": 28.85,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-016-d9e7b353",
+        "candidate": "post.decay.params.lambda=0.001",
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "level": "0.001",
+        "question": "240 q · post.decay.params.lambda=0.001",
+        "tokens": 344.575,
+        "latency_ms": 4.929,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.287273,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 4.929,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-017-985b764c",
+        "candidate": "post.decay.params.lambda=0.01",
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "level": "0.01",
+        "question": "240 q · post.decay.params.lambda=0.01",
+        "tokens": 344.575,
+        "latency_ms": 6.208,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.273696,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 6.208,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-018-166d83dc",
+        "candidate": "post.decay.params.lambda=0.05",
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "level": "0.05",
+        "question": "240 q · post.decay.params.lambda=0.05",
+        "tokens": 344.575,
+        "latency_ms": 8.995,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.275326,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 8.995,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-019-d6d8b65a",
+        "candidate": "post.compress.params.budget_tokens=500",
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "level": "500",
+        "question": "240 q · post.compress.params.budget_tokens=500",
+        "tokens": 340.445833,
+        "latency_ms": 8.792,
+        "candidates": 12.720833,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274588,
+          "tokens": 340.445833,
+          "redundancy": 0.049012,
+          "context_precision": 0.069558,
+          "candidates": 12.720833,
+          "p95_latency_ms": 8.792,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-020-cdceb4d3",
+        "candidate": "post.compress.params.budget_tokens=1000",
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "level": "1000",
+        "question": "240 q · post.compress.params.budget_tokens=1000",
+        "tokens": 344.575,
+        "latency_ms": 11.299,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 11.299,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-parameter-layer-021-85be1375",
+        "candidate": "post.compress.params.budget_tokens=2000",
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "level": "2000",
+        "question": "240 q · post.compress.params.budget_tokens=2000",
+        "tokens": 344.575,
+        "latency_ms": 5.32,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/params-curves.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 5.32,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-r4-k-corrected-000-322ce6af",
+        "candidate": "retrieval.k=10",
+        "factor": "retrieval.k",
+        "module": "R4",
+        "level": "10",
+        "question": "240 q · retrieval.k=10",
+        "tokens": 227.425,
+        "latency_ms": 26.112,
+        "candidates": 8.470833,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.420588,
+          "ndcg": 0.263787,
+          "tokens": 227.425,
+          "redundancy": 0.052897,
+          "context_precision": 0.08571,
+          "candidates": 8.470833,
+          "p95_latency_ms": 26.112,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-r4-k-corrected-001-133e43a3",
+        "candidate": "retrieval.k=15",
+        "factor": "retrieval.k",
+        "module": "R4",
+        "level": "15",
+        "question": "240 q · retrieval.k=15",
+        "tokens": 344.575,
+        "latency_ms": 5.928,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 5.928,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-r4-k-corrected-002-4d7f0110",
+        "candidate": "retrieval.k=25",
+        "factor": "retrieval.k",
+        "module": "R4",
+        "level": "25",
+        "question": "240 q · retrieval.k=25",
+        "tokens": 578.858333,
+        "latency_ms": 19.503,
+        "candidates": 21.454167,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.491282,
+          "ndcg": 0.270025,
+          "tokens": 578.858333,
+          "redundancy": 0.044546,
+          "context_precision": 0.04751,
+          "candidates": 21.454167,
+          "p95_latency_ms": 19.503,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-mmr-lambda-nodecay-000-fef9972d",
+        "candidate": "post.mmr.params.lambda=0.5",
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "level": "0.5",
+        "question": "240 q · post.mmr.params.lambda=0.5",
+        "tokens": 344.575,
+        "latency_ms": 4.393,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.326805,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 4.393,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-mmr-lambda-nodecay-001-bfb7b574",
+        "candidate": "post.mmr.params.lambda=0.7",
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "level": "0.7",
+        "question": "240 q · post.mmr.params.lambda=0.7",
+        "tokens": 344.575,
+        "latency_ms": 7.348,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.328202,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 7.348,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-mmr-lambda-nodecay-002-3b052f8b",
+        "candidate": "post.mmr.params.lambda=0.9",
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "level": "0.9",
+        "question": "240 q · post.mmr.params.lambda=0.9",
+        "tokens": 344.575,
+        "latency_ms": 4.011,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.329174,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 4.011,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-s2-max-neighbors-corrected-000-886e6b2e",
+        "candidate": "graph.retrieval.params.max_neighbors=10",
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "level": "10",
+        "question": "240 q · graph.retrieval.params.max_neighbors=10",
+        "tokens": 344.575,
+        "latency_ms": 7.852,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 7.852,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-s2-max-neighbors-corrected-001-133e43a3",
+        "candidate": "graph.retrieval.params.max_neighbors=40",
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "level": "40",
+        "question": "240 q · graph.retrieval.params.max_neighbors=40",
+        "tokens": 344.575,
+        "latency_ms": 12.473,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 12.473,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-s2-max-neighbors-corrected-002-cb6b0fb5",
+        "candidate": "graph.retrieval.params.max_neighbors=80",
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "level": "80",
+        "question": "240 q · graph.retrieval.params.max_neighbors=80",
+        "tokens": 344.575,
+        "latency_ms": 6.585,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "corrected",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 6.585,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-000-08625159",
+        "candidate": "fusion.params.rrf_k=10",
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "level": "10",
+        "question": "240 q · fusion.params.rrf_k=10",
+        "tokens": 341.858333,
+        "latency_ms": 10.858,
+        "candidates": 12.7375,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.471884,
+          "ndcg": 0.319232,
+          "tokens": 341.858333,
+          "redundancy": 0.05118,
+          "context_precision": 0.072196,
+          "candidates": 12.7375,
+          "p95_latency_ms": 10.858,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-001-e3030b6e",
+        "candidate": "fusion.params.rrf_k=30",
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "level": "30",
+        "question": "240 q · fusion.params.rrf_k=30",
+        "tokens": 341.5375,
+        "latency_ms": 4.246,
+        "candidates": 12.766667,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.466422,
+          "ndcg": 0.294359,
+          "tokens": 341.5375,
+          "redundancy": 0.050049,
+          "context_precision": 0.070203,
+          "candidates": 12.766667,
+          "p95_latency_ms": 4.246,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-002-92653e07",
+        "candidate": "fusion.params.rrf_k=60",
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "level": "60",
+        "question": "240 q · fusion.params.rrf_k=60",
+        "tokens": 344.575,
+        "latency_ms": 9.555,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 9.555,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-003-c10a5078",
+        "candidate": "fusion.params.rrf_k=100",
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "level": "100",
+        "question": "240 q · fusion.params.rrf_k=100",
+        "tokens": 344.045833,
+        "latency_ms": 12.857,
+        "candidates": 12.766667,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.442087,
+          "ndcg": 0.255834,
+          "tokens": 344.045833,
+          "redundancy": 0.047492,
+          "context_precision": 0.064925,
+          "candidates": 12.766667,
+          "p95_latency_ms": 12.857,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-004-7f8dd8c6",
+        "candidate": "post.filter.impl=none",
+        "factor": "post.filter.impl",
+        "module": "M4",
+        "level": "none",
+        "question": "240 q · post.filter.impl=none",
+        "tokens": 397.8875,
+        "latency_ms": 6.643,
+        "candidates": 15.0,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.550805,
+          "ndcg": 0.330982,
+          "tokens": 397.8875,
+          "redundancy": 0.050524,
+          "context_precision": 0.072833,
+          "candidates": 15.0,
+          "p95_latency_ms": 6.643,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      },
+      {
+        "run_id": "r-e1.2-param-ext-fusion-filter-005-133e43a3",
+        "candidate": "post.filter.impl=threshold",
+        "factor": "post.filter.impl",
+        "module": "M4",
+        "level": "threshold",
+        "question": "240 q · post.filter.impl=threshold",
+        "tokens": 344.575,
+        "latency_ms": 6.921,
+        "candidates": 12.7875,
+        "answer": "offline A-interface; answer F1/Judge intentionally not reported",
+        "source": "eval/archive/e1-params-ext.json",
+        "status": "complete",
+        "metrics": {
+          "evidence_recall": 0.46187,
+          "ndcg": 0.274561,
+          "tokens": 344.575,
+          "redundancy": 0.048976,
+          "context_precision": 0.069261,
+          "candidates": 12.7875,
+          "p95_latency_ms": 6.921,
+          "field_completeness": 1.0,
+          "error_rate": 0.0
+        }
+      }
+    ],
+    "metrics": {
+      "evidence_recall": 0.46187,
+      "ndcg": 0.274561,
+      "tokens": 344.575,
+      "redundancy": 0.048976,
+      "context_precision": 0.069261,
+      "p95_latency_ms": 5.928,
+      "questions_per_level": 240,
+      "runs": 23,
+      "error_rate": 0.0
+    },
+    "factors": [
+      {
+        "factor": "schema.params.fields",
+        "module": "W4",
+        "levels": [
+          6,
+          12
+        ],
+        "verdict": "tiny difference, but it is a lexical artifact, not extraction quality: the offline MetaSchemaExtractor stores the numeric value in structured.schema.fields, and store.search_text flattens every structured field into the BM25 text, so 6 vs 12 changes the index. field_completeness is 1.0 at both levels and the fact set is unchanged.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.001,
+          0.01,
+          0.05
+        ],
+        "verdict": "real but small and ranking-only: lambda=0.001 wins by +0.0136 nDCG vs 0.01 and +0.0119 vs 0.05; 0.01 is the low point, so the curve is non-monotone with a shallow dip. Recall, tokens and redundancy are unchanged because decay only reorders the same 15 candidates. Low decay roughly preserves the incoming order; stronger decay reorders by recency.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "levels": [
+          500,
+          1000,
+          2000
+        ],
+        "verdict": "only 500 bites: 340.4 vs 344.6 tokens (-1.2%) with recall/nDCG unchanged; 1000 and 2000 are identical to the 4000 default because the 15-unit context is only ~345 tokens. There is no quality/token tradeoff to tune at 1000/2000; 500 is a mild token-only saving.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "retrieval.k",
+        "module": "R4",
+        "levels": [
+          10,
+          15,
+          25
+        ],
+        "verdict": "R4 k is now live: 10/15/25 change mean candidates 8.47/12.79/21.45, Recall@15 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, tokens 227.4/344.6/578.9. k=25 buys +0.029 recall at -0.0045 nDCG and +234 tokens; k=10 saves 117 tokens at -0.041 recall. This is a real budget tradeoff, not a flat curve.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.5,
+          0.7,
+          0.9
+        ],
+        "verdict": "MMR lambda is live once decay is off: nDCG 0.3268 (0.5) / 0.3282 (0.7) / 0.3292 (0.9); recall, tokens and redundancy are unchanged because MMR only reorders. λ=0.9 is best by +0.0024 nDCG vs 0.5 (95% cluster CI [+0.0010, +0.0042], excludes 0). This is a small ranking-only effect. MMR×decay stage-order interaction is NOT tested; decay was fixed off.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "levels": [
+          10,
+          40,
+          80
+        ],
+        "verdict": "max_neighbors is now wired (GraphIndex.expand caps neighbours per frontier node; default None keeps old behaviour), but the 10/40/80 scan is still identical: graph_khop is used on only 23/240 questions and the 15-candidate budget is filled by other channels, so the cap is not binding. This is a query-routing/budget result, not evidence that the parameter is unread.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "levels": [
+          10,
+          30,
+          60,
+          100
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      },
+      {
+        "factor": "post.filter.impl",
+        "module": "M4",
+        "levels": [
+          "none",
+          "threshold"
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      }
+    ],
+    "source": {
+      "archive": "params-curves.json + corrected + e1-params-ext.json",
+      "db": "runs/params/*.sqlite"
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=6",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.460819,
+      "delta": -0.001051,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=6",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.272566,
+      "delta": -0.001995,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=6",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.3,
+      "delta": -0.275,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=12",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.459244,
+      "delta": -0.002626,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=12",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.267128,
+      "delta": -0.007433,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (schema.params.fields)",
+      "candidate": "schema.params.fields=12",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 345.995833,
+      "delta": 1.420833,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.001",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.001",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.287273,
+      "delta": 0.012712,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.001",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.01",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.01",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.273696,
+      "delta": -0.000865,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.01",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.05",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.05",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.275326,
+      "delta": 0.000765,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.decay.params.lambda)",
+      "candidate": "post.decay.params.lambda=0.05",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=500",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=500",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274588,
+      "delta": 2.7e-05,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=500",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 340.445833,
+      "delta": -4.129167,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=1000",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=1000",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=1000",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=2000",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=2000",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.compress.params.budget_tokens)",
+      "candidate": "post.compress.params.budget_tokens=2000",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=10",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.420588,
+      "delta": -0.041282,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=10",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.263787,
+      "delta": -0.010774,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=10",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 227.425,
+      "delta": -117.15,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=15",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=15",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=15",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=25",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.491282,
+      "delta": 0.029412,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=25",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.270025,
+      "delta": -0.004536,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (retrieval.k)",
+      "candidate": "retrieval.k=25",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 578.858333,
+      "delta": 234.283333,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.5",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.5",
+      "metric": "ndcg",
+      "baseline_value": 0.328202,
+      "candidate_value": 0.326805,
+      "delta": -0.001397,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.5",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.7",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.7",
+      "metric": "ndcg",
+      "baseline_value": 0.328202,
+      "candidate_value": 0.328202,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.7",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.9",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.9",
+      "metric": "ndcg",
+      "baseline_value": 0.328202,
+      "candidate_value": 0.329174,
+      "delta": 0.000972,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.mmr.params.lambda)",
+      "candidate": "post.mmr.params.lambda=0.9",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=10",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=10",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=10",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=40",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=40",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=40",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=80",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=80",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (graph.retrieval.params.max_neighbors)",
+      "candidate": "graph.retrieval.params.max_neighbors=80",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=10",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.471884,
+      "delta": 0.010014,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=10",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.319232,
+      "delta": 0.044671,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=10",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 341.858333,
+      "delta": -2.716667,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=30",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.466422,
+      "delta": 0.004552,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=30",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.294359,
+      "delta": 0.019798,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=30",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 341.5375,
+      "delta": -3.0375,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=60",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=60",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=60",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=100",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.442087,
+      "delta": -0.019783,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=100",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.255834,
+      "delta": -0.018727,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (fusion.params.rrf_k)",
+      "candidate": "fusion.params.rrf_k=100",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.045833,
+      "delta": -0.529167,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=none",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.550805,
+      "delta": 0.088935,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=none",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.330982,
+      "delta": 0.056421,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=none",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 397.8875,
+      "delta": 53.3125,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=threshold",
+      "metric": "evidence_recall",
+      "baseline_value": 0.46187,
+      "candidate_value": 0.46187,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=threshold",
+      "metric": "ndcg",
+      "baseline_value": 0.274561,
+      "candidate_value": 0.274561,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    },
+    {
+      "baseline": "reference (post.filter.impl)",
+      "candidate": "post.filter.impl=threshold",
+      "metric": "tokens",
+      "baseline_value": 344.575,
+      "candidate_value": 344.575,
+      "delta": 0.0,
+      "ci95": null,
+      "paired": false,
+      "significant": null,
+      "note": "Single-level curve; CI only available where C reported it in the correction tables."
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "schema.params.fields",
+        "module": "W4",
+        "levels": [
+          6,
+          12
+        ],
+        "verdict": "tiny difference, but it is a lexical artifact, not extraction quality: the offline MetaSchemaExtractor stores the numeric value in structured.schema.fields, and store.search_text flattens every structured field into the BM25 text, so 6 vs 12 changes the index. field_completeness is 1.0 at both levels and the fact set is unchanged.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.001,
+          0.01,
+          0.05
+        ],
+        "verdict": "real but small and ranking-only: lambda=0.001 wins by +0.0136 nDCG vs 0.01 and +0.0119 vs 0.05; 0.01 is the low point, so the curve is non-monotone with a shallow dip. Recall, tokens and redundancy are unchanged because decay only reorders the same 15 candidates. Low decay roughly preserves the incoming order; stronger decay reorders by recency.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "levels": [
+          500,
+          1000,
+          2000
+        ],
+        "verdict": "only 500 bites: 340.4 vs 344.6 tokens (-1.2%) with recall/nDCG unchanged; 1000 and 2000 are identical to the 4000 default because the 15-unit context is only ~345 tokens. There is no quality/token tradeoff to tune at 1000/2000; 500 is a mild token-only saving.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "retrieval.k",
+        "module": "R4",
+        "levels": [
+          10,
+          15,
+          25
+        ],
+        "verdict": "R4 k is now live: 10/15/25 change mean candidates 8.47/12.79/21.45, Recall@15 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, tokens 227.4/344.6/578.9. k=25 buys +0.029 recall at -0.0045 nDCG and +234 tokens; k=10 saves 117 tokens at -0.041 recall. This is a real budget tradeoff, not a flat curve.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.5,
+          0.7,
+          0.9
+        ],
+        "verdict": "MMR lambda is live once decay is off: nDCG 0.3268 (0.5) / 0.3282 (0.7) / 0.3292 (0.9); recall, tokens and redundancy are unchanged because MMR only reorders. λ=0.9 is best by +0.0024 nDCG vs 0.5 (95% cluster CI [+0.0010, +0.0042], excludes 0). This is a small ranking-only effect. MMR×decay stage-order interaction is NOT tested; decay was fixed off.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "levels": [
+          10,
+          40,
+          80
+        ],
+        "verdict": "max_neighbors is now wired (GraphIndex.expand caps neighbours per frontier node; default None keeps old behaviour), but the 10/40/80 scan is still identical: graph_khop is used on only 23/240 questions and the 15-candidate budget is filled by other channels, so the cap is not binding. This is a query-routing/budget result, not evidence that the parameter is unread.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "levels": [
+          10,
+          30,
+          60,
+          100
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      },
+      {
+        "factor": "post.filter.impl",
+        "module": "M4",
+        "levels": [
+          "none",
+          "threshold"
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      }
+    ],
+    "interactions": [],
+    "pareto": [],
+    "by_factor": [
+      {
+        "factor": "schema.params.fields",
+        "module": "W4",
+        "levels": [
+          6,
+          12
+        ],
+        "verdict": "tiny difference, but it is a lexical artifact, not extraction quality: the offline MetaSchemaExtractor stores the numeric value in structured.schema.fields, and store.search_text flattens every structured field into the BM25 text, so 6 vs 12 changes the index. field_completeness is 1.0 at both levels and the fact set is unchanged.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.decay.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.001,
+          0.01,
+          0.05
+        ],
+        "verdict": "real but small and ranking-only: lambda=0.001 wins by +0.0136 nDCG vs 0.01 and +0.0119 vs 0.05; 0.01 is the low point, so the curve is non-monotone with a shallow dip. Recall, tokens and redundancy are unchanged because decay only reorders the same 15 candidates. Low decay roughly preserves the incoming order; stronger decay reorders by recency.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "post.compress.params.budget_tokens",
+        "module": "M4",
+        "levels": [
+          500,
+          1000,
+          2000
+        ],
+        "verdict": "only 500 bites: 340.4 vs 344.6 tokens (-1.2%) with recall/nDCG unchanged; 1000 and 2000 are identical to the 4000 default because the 15-unit context is only ~345 tokens. There is no quality/token tradeoff to tune at 1000/2000; 500 is a mild token-only saving.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/params-curves.json"
+      },
+      {
+        "factor": "retrieval.k",
+        "module": "R4",
+        "levels": [
+          10,
+          15,
+          25
+        ],
+        "verdict": "R4 k is now live: 10/15/25 change mean candidates 8.47/12.79/21.45, Recall@15 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, tokens 227.4/344.6/578.9. k=25 buys +0.029 recall at -0.0045 nDCG and +234 tokens; k=10 saves 117 tokens at -0.041 recall. This is a real budget tradeoff, not a flat curve.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "post.mmr.params.lambda",
+        "module": "M4",
+        "levels": [
+          0.5,
+          0.7,
+          0.9
+        ],
+        "verdict": "MMR lambda is live once decay is off: nDCG 0.3268 (0.5) / 0.3282 (0.7) / 0.3292 (0.9); recall, tokens and redundancy are unchanged because MMR only reorders. λ=0.9 is best by +0.0024 nDCG vs 0.5 (95% cluster CI [+0.0010, +0.0042], excludes 0). This is a small ranking-only effect. MMR×decay stage-order interaction is NOT tested; decay was fixed off.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "graph.retrieval.params.max_neighbors",
+        "module": "S2",
+        "levels": [
+          10,
+          40,
+          80
+        ],
+        "verdict": "max_neighbors is now wired (GraphIndex.expand caps neighbours per frontier node; default None keeps old behaviour), but the 10/40/80 scan is still identical: graph_khop is used on only 23/240 questions and the 15-candidate budget is filled by other channels, so the cap is not binding. This is a query-routing/budget result, not evidence that the parameter is unread.",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "corrected"
+      },
+      {
+        "factor": "fusion.params.rrf_k",
+        "module": "M1",
+        "levels": [
+          10,
+          30,
+          60,
+          100
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      },
+      {
+        "factor": "post.filter.impl",
+        "module": "M4",
+        "levels": [
+          "none",
+          "threshold"
+        ],
+        "verdict": "difference detected in evidence_recall, ndcg, tokens, redundancy",
+        "wired": true,
+        "effective_in_e2e": true,
+        "source": "eval/archive/e1-params-ext.json"
+      }
+    ],
+    "corrections": [
+      "R4 retrieval.k is live after executor fix; old params-planner-k.json superseded.",
+      "MMR lambda is only testable with decay off; reference-r0-nodecay.json.",
+      "max_neighbors is wired but flat due to routing/budget, not unconsumed.",
+      "schema.params.evidence is a no_op; curve deleted.",
+      "P2 extension adds rrf_k and post.filter curves."
+    ],
+    "stage_waterfall": [
+      {
+        "stage": "raw_channels",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "candidates": 12.79
+        }
+      },
+      {
+        "stage": "fusion",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "ndcg": 0.2746
+        },
+        "note": "rrf_k 10 vs 60 nDCG +0.0448 (P2)."
+      },
+      {
+        "stage": "rerank",
+        "available": false,
+        "ms": null,
+        "reason": "sentence-transformers absent; cross_encoder fallback."
+      },
+      {
+        "stage": "mmr",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "ndcg_decay_off_best": 0.3292
+        },
+        "note": "decay off; MMR x decay interaction not tested."
+      },
+      {
+        "stage": "decay",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "ndcg_best": 0.2873
+        },
+        "note": "decay lambda=0.001 is the only real canonical-order effect."
+      },
+      {
+        "stage": "compress",
+        "available": true,
+        "ms": null,
+        "metrics": {
+          "tokens_best": 340.4
+        },
+        "note": "compress 500 saves 4.1 tokens; 1000/2000/4000 identical at this context size."
+      },
+      {
+        "stage": "answer",
+        "available": false,
+        "ms": null,
+        "reason": "No answer F1/Judge reported in this A-interface run."
+      }
+    ],
+    "failure_breakdown": [],
+    "failure_note": "0 errors across all corrected runs; flat curves are no-op/routing/fallback, not failures.",
+    "coverage_limits": {
+      "data_modes": [
+        {
+          "mode": "offline",
+          "rows": 23,
+          "source": "runs/params/*.sqlite",
+          "status": "complete"
+        },
+        {
+          "mode": "online",
+          "rows": 0,
+          "source": null,
+          "status": "pending",
+          "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+        }
+      ],
+      "fake_factors": [
+        "planner.params.k (never read)",
+        "schema.params.evidence (accepted but unread)",
+        "post.mmr x decay interaction (not tested)",
+        "graph channel (S1/S2/S3 no unique hits)",
+        "rerank cross_encoder / top_n (fallback)",
+        "P3 seed-17 / P4 order (cancelled)"
+      ],
+      "a_level_only": true,
+      "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+      "not_available": [
+        "state_accuracy",
+        "judge_accuracy",
+        "oracle_gap",
+        "llm_attribution"
+      ],
+      "summary_zh": "离线 23 行 / 在线 0 行（pending）；假因子 6 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+    }
+  },
+  "conclusion": {
+    "status": "partial",
+    "three_piece": {
+      "quality": {
+        "metric": "evidence_recall",
+        "value": 0.46187
+      },
+      "tokens_per_query": 344.575,
+      "p95_latency_ms": 5.928
+    },
+    "claims": [
+      "R4 retrieval.k corrected: 10/15/25 Recall 0.4206/0.4619/0.4913, nDCG 0.2638/0.2746/0.2700, Tokens 227.4/344.6/578.9; k=25 recall +0.0295 +234.3 tokens, k=10 recall -0.0417 -117.2 tokens; nDCG n.s. | quality Recall=0.4619; Tokens=344.6; P95=5.9 ms.",
+      "MMR with decay off: lambda 0.9 vs 0.5 nDCG +0.00236 (95% cluster CI [+0.00098,+0.00417]); recall/tokens unchanged; MMR x decay interaction NOT tested. | quality Recall=0.4619; Tokens=344.6; P95=5.9 ms.",
+      "max_neighbors is wired (10/40/80) but flat: only 23/240 questions route to graph_khop and the 15-candidate budget saturates; flat is a routing/budget result, not an unwired parameter. | quality Recall=0.4619; Tokens=344.6; P95=5.9 ms.",
+      "schema.params.evidence is no_op (never read); fields 6 vs 12 is a BM25 lexical artifact; P2 extension: rrf_k 10 vs 60 nDCG +0.0448, filter none vs threshold recall +0.0886 / nDCG +0.0564. | quality Recall=0.4619; Tokens=344.6; P95=5.9 ms.",
+      "P3 seed 17 and P4 order are cancelled; E1-M3 is blocked_on_config because main rejects post.order list and c2-post-order.patch is not merged. | quality Recall=0.4619; Tokens=344.6; P95=5.9 ms."
+    ],
+    "conditions": [
+      "Offline A-level; 4 dev conversations, 60 q/conversation, 240 q/level.",
+      "Corrected R4/MMR/max_neighbors artifacts supersede the old params-curves table.",
+      "No answer F1, no Judge; interface/curve study only."
+    ],
+    "limitations": [
+      "Hashing embedding is not semantic.",
+      "MMR x decay interaction is not tested; MMR scan fixes decay off.",
+      "P3 seed 17 and P4 order are cancelled; do not cite them.",
+      "P95 is per-question runner latency, not deployment latency."
+    ],
+    "next_actions": [
+      "Merge c2-post-order.patch and rerun E1-M3 on main before citing order effects.",
+      "Wire planner.params.k or remove it from the spec.",
+      "Add a real cross-encoder before M6/top_n conclusions."
+    ]
+  },
+  "coverage_limits": {
+    "data_modes": [
+      {
+        "mode": "offline",
+        "rows": 23,
+        "source": "runs/params/*.sqlite",
+        "status": "complete"
+      },
+      {
+        "mode": "online",
+        "rows": 0,
+        "source": null,
+        "status": "pending",
+        "reason": "Online/B-level run is executing in a separate session; no online rows are mixed into this report."
+      }
+    ],
+    "fake_factors": [
+      "planner.params.k (never read)",
+      "schema.params.evidence (accepted but unread)",
+      "post.mmr x decay interaction (not tested)",
+      "graph channel (S1/S2/S3 no unique hits)",
+      "rerank cross_encoder / top_n (fallback)",
+      "P3 seed-17 / P4 order (cancelled)"
+    ],
+    "a_level_only": true,
+    "a_level_note": "Only A-level interface metrics (Recall/nDCG/tokens/P95); answer_f1 is offline extractive; no LLM Judge/B-level.",
+    "not_available": [
+      "state_accuracy",
+      "judge_accuracy",
+      "oracle_gap",
+      "llm_attribution"
+    ],
+    "summary_zh": "离线 23 行 / 在线 0 行（pending）；假因子 6 项；仅 A 级接口指标，不是 B 级/LLM 结论。"
+  },
+  "online": {
+    "status": "not_run",
+    "report": null,
+    "source": null,
+    "reason": "E1.2 params are offline A-level only; no online counterpart."
+  },
+  "web": {
+    "route": "#/experiments/E1-2-params",
+    "published": true
+  },
+  "coverage": {
+    "catalog_rows": [
+      "E1-W4",
+      "E1-S2",
+      "E1-R4",
+      "E1-M4",
+      "E1-M6"
+    ],
+    "note": "Corrected E1.2 parameter layer; R4 k live, max_neighbors wired but flat, evidence no_op, MMR decay-off only."
+  }
+}
