@@ -168,8 +168,12 @@ class WebAppTests(unittest.TestCase):
         modules = {item["module"] for item in data["items"]}
         for module in ("W", "S", "R", "M", "U", "K", "E2", "E3", "E4", "E5"):
             self.assertIn(module, modules)
-        self.assertGreater(data["status_counts"].get("done", 0), 0)
-        self.assertGreater(data["status_counts"].get("blocked", 0), 0)
+        # 2026-11-09 schema: offline evidence is partial+grade=offline;
+        # blocked is split into blocked_on_code / blocked_on_hardware.
+        self.assertGreater(data["status_counts"].get("partial", 0), 0)
+        self.assertGreater(data["status_counts"].get("blocked_on_code", 0), 0)
+        self.assertGreater(data["status_counts"].get("blocked_on_hardware", 0), 0)
+        self.assertGreater(data["status_counts"].get("no_op", 0) + data["status_counts"].get("not_wired", 0), 0)
 
     def test_evaluation_archive_is_available(self):
         data = webapp.get("/api/v2/evaluation")
@@ -177,6 +181,17 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("full", data["qa"]["test"]["summary"])
         self.assertIn("vector", data["qa"]["test"]["summary"])
         self.assertIn("test", data["split"])
+
+    def test_c_artifacts_and_project_reports_are_separate(self):
+        art = webapp.get("/api/v2/artifacts")
+        for key in ("state_accuracy", "e1_adoption", "e3_offline", "planner_k"):
+            self.assertTrue(art["artifacts"][key]["available"], key)
+        ev = webapp.get("/api/v2/evaluation")
+        self.assertIn("qa", ev)
+        ids = {r["experiment_id"] for r in ev["project_reports"]}
+        self.assertIn("final-w3-test-offline", ids)
+        final = next(r for r in ev["project_reports"] if r["experiment_id"] == "final-w3-test-offline")
+        self.assertIn("baseline_metrics", final["results"])
 
     def test_system_exposes_provenance(self):
         data = webapp.get("/api/v2/system")
@@ -187,9 +202,9 @@ class WebAppTests(unittest.TestCase):
 
     def test_static_shell_has_v2_navigation(self):
         html = (Path(__file__).resolve().parents[1] / "web" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("#/memories", html)
-        self.assertIn("#/ask2", html)
-        self.assertIn("#/lab", html)
+        for route in ("#/memories", "#/ask2", "#/lab", "#/graph2", "#/evaluation2", "#/system"):
+            self.assertIn(route, html)
+        self.assertIn("#/home", html)
         self.assertIn("/v2.js", html)
 
 

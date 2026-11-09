@@ -154,7 +154,7 @@ async function renderHome(root) {
   try { course = (await api("/api/v2/course")).samples; } catch (err) { course = []; }
   const courseRibbon = course.length ? `<div class="card pad" style="margin:18px 0">
       <div class="row" style="justify-content:space-between"><b>课程 6 段：4 开发 + 2 测试</b><a class="small" href="#/memories">进入记忆库 →</a></div>
-      <div class="row" style="margin-top:10px">${course.map((c) => `<a class="chip" href="#/memories">${esc(c.id)} <span>${c.split === "test" ? "测试" : "开发"}</span></a>`).join("")}</div>
+      <div class="row" style="margin-top:10px">${course.map((c) => `<a class="chip" href="#/memories">${esc(c.id)} <span>${c.split === "test" ? "测试" : "开发"}</span>${c.split === "test" ? `<em class="test-badge">只读/不调参</em>` : ""}</a>`).join("")}</div>
     </div>` : "";
 
   root.innerHTML = `

@@ -973,6 +973,47 @@ def _graph_view(sample_id: str, representation: str, query: str, limit: int = 18
     }
 
 
+C_ARTIFACTS = {
+    "state_accuracy": "eval/archive/state-accuracy.json",
+    "e1_adoption": "eval/archive/e1-adoption-offline.json",
+    "e3_offline": "eval/archive/e3-offline.json",
+    "planner_k": "eval/archive/params-planner-k-corrected.json",
+}
+
+
+def _c_artifacts() -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, rel in C_ARTIFACTS.items():
+        path = ROOT / rel
+        if not path.is_file():
+            out[key] = {"available": False, "path": rel, "reason": "file not found"}
+            continue
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+            out[key] = {"available": True, "path": rel, **data}
+        except (OSError, json.JSONDecodeError) as exc:
+            out[key] = {"available": False, "path": rel, "reason": str(exc)}
+    return out
+
+
+def _project_reports() -> list[dict[str, Any]]:
+    out = []
+    for item in _report_list()["experiments"]:
+        try:
+            report = _report_get(item["experiment_id"])
+        except Exception:
+            continue
+        out.append({
+            "experiment_id": report.get("experiment_id"),
+            "dataset": report.get("dataset"),
+            "results": report.get("results"),
+            "conclusion": report.get("conclusion"),
+            "manifest": report.get("manifest"),
+            "created_at": report.get("created_at"),
+        })
+    return out
+
+
 def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     args = args or {}
     route = path[len("/api/v2"):] if path.startswith("/api/v2") else path
@@ -1081,6 +1122,9 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             "memories": units[start:start + size],
         }
 
+    if route == "/artifacts":
+        return {"available": True, "artifacts": _c_artifacts()}
+
     if route == "/graph/options":
         return graph_options()
 
@@ -1093,7 +1137,7 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             return {"available": False, "reason": "eval/results.json not found"}
         data = json.loads(path.read_text(encoding="utf-8"))
         return {"available": True, "source": "eval/results.json", "reports": _report_list()["experiments"],
-                "hardware": HARDWARE, **data}
+                "project_reports": _project_reports(), "hardware": HARDWARE, **data}
 
     if route == "/system":
         reports = _report_list()["experiments"]

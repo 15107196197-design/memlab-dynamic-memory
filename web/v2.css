@@ -111,3 +111,4 @@
 .prov-col li { margin-bottom: 8px; }
 .prov-col li b { font-size: 13px; }
 @media (max-width: 820px) { .prov-grid { grid-template-columns: 1fr; } }
+.test-badge { font-style: normal; font-size: 10px; color: #7a2f2f; background: #fdf6f6; border: 1px solid #e6c5c5; border-radius: 999px; padding: 0 5px; margin-left: 4px; }

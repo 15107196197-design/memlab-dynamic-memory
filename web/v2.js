@@ -29,16 +29,18 @@
     </div>`;
   };
   const interval = (v) => {
-    if (!v) return "—";
+    if (!v) return "not_available";
     const start = v.start ? String(v.start).slice(0, 10) : "?";
     const end = v.end ? String(v.end).slice(0, 10) : "";
     return end ? `${start} → ${end}` : start;
   };
+  const na = (v) => (v === null || v === undefined || v === "" ? "not_available" : v);
+  const REL_LABEL = { RETAIN: "保留 RETAIN", UPDATE: "更新 UPDATE", SUPERSEDE: "替代 SUPERSEDE", CONFLICT: "冲突 CONFLICT" };
 
+  const courseSamples = () => (app.samples || []).filter((s) => s.split === "development" || s.split === "test");
+  const extensionSamples = () => (app.samples || []).filter((s) => s.split === "extension" || !["development", "test"].includes(s.split));
   function courseChips() {
-    const order = { development: 0, test: 1, extension: 2 };
-    return (app.samples || []).slice().sort((a, b) => (order[a.split] ?? 9) - (order[b.split] ?? 9))
-      .map((s) => `<button class="chip ${s.id === app.sampleId ? "on" : ""}" data-sample="${esc(s.id)}">${esc(s.id)} <span>${esc(splitLabel(s))}</span></button>`).join("");
+    return courseSamples().map((s) => `<button class="chip ${s.id === app.sampleId ? "on" : ""}" data-sample="${esc(s.id)}">${esc(s.id)} <span>${esc(splitLabel(s))}</span>${s.split === "test" ? `<em class="test-badge">只读/不调参</em>` : ""}</button>`).join("");
   }
 
   async function switchSample(id) {
@@ -52,8 +54,9 @@
     const s = v2sample();
     root.innerHTML = `${header("MEMORY EXPLORER · 记忆库", "记忆库", "结构化 Memory v2、原始证据与关系；课程 4 段开发 + 2 段测试，另有扩展集。")}
       <div class="row" style="margin:18px 0 8px">${courseChips()}</div>
-      <div class="note">当前：<b>${esc(app.sampleId)}</b> · ${esc(splitLabel(s))} · ${esc((s.speakers || []).join(" 与 "))}
-        <span class="muted">（顶部下拉也可切换）</span><br><span class="muted small">内容来源：继承的 data/facts + data/states（qwen3.8:27b 旧抽取）；v2 映射/证据/关系展示为本项目新增。</span></div>
+      <details style="margin-bottom:10px"><summary class="small muted">扩展集（extension，不参与课程 4+2）</summary><div class="row" style="margin:8px 0">${extensionSamples().map((x) => `<button class="chip ${x.id === app.sampleId ? "on" : ""}" data-sample="${esc(x.id)}">${esc(x.id)} <span>${esc(splitLabel(x))}</span></button>`).join("")}</div></details>
+      <div class="note">当前：<b>${esc(app.sampleId)}</b> · ${esc(splitLabel(s))} · ${esc((s.speakers || []).join(" 与 "))} ${s.split === "test" ? `<span class="pill blocked">测试集 · 只读 / 不调参</span>` : ""}
+        <span class="muted">（顶部下拉也可切换）</span><br><span class="muted small">内容来源：继承的 data/facts + data/states（cached facts/states，非实时抽取）；v2 映射/证据/关系展示为本项目新增。</span></div>
       <div class="toolbar">
         <input id="v2-q" class="field" placeholder="搜索 content / entity / id…">
         <select id="v2-kind" class="field"><option value="fact" selected>结构化事实 Fact</option><option value="event">事件 Event</option><option value="turn">对话轮次 Turn</option><option value="">全部类型 All</option></select>
@@ -113,6 +116,7 @@
         detail.innerHTML = `
           <div class="pad">
             <div class="row"><span class="mono">${esc(m.memory_id)}</span>${statePill(st.state)}<span class="muted">${esc(m.kind)}</span></div>
+            <div class="note small">来源：cached facts/states（继承 data/facts / data/states，非实时抽取）</div>
             <h3 style="margin:14px 0 8px">原始内容</h3><p>${esc(m.text)}</p>
             <h3 style="margin:14px 0 8px">结构化字段</h3>
             <table class="v2-table"><tbody>
@@ -208,8 +212,12 @@
             <div class="muted small" style="margin-top:8px">${esc(st.explanation || "")}</div>
           </div>
           <div class="card pad"><h3>候选 · Candidates（${(out.candidates || []).length}）</h3>
-            <div class="v2-cands">${(out.candidates || []).map((m) => `<button class="v2-item" data-mem="${esc(m.memory_id)}" title="查看详情"><div class="row"><span class="mono">${esc(m.memory_id)}</span>${statePill(m.state)}</div><div class="v2-text">${esc(m.text)}</div></button>`).join("") || `<p class="muted">—</p>`}</div>
+            <div class="v2-cands">${(out.candidates || []).map((m) => `<button class="v2-item" data-mem="${esc(m.memory_id)}" title="查看详情"><div class="row"><span class="mono">${esc(m.memory_id)}</span>${statePill(m.state)}</div><div class="v2-text">${esc(m.text)}</div></button>`).join("") || `<p class="muted">not_available</p>`}</div>
           </div>
+        </div>
+        <div class="card pad">
+          <h3>关系 · Relations <span class="muted small">RETAIN / UPDATE / SUPERSEDE / CONFLICT</span></h3>
+          ${(out.relations || []).length ? (out.relations || []).map((r) => `<div class="v2-rel"><b>${esc(REL_LABEL[r.type] || r.type || "not_available")}</b> <span class="mono">${esc(r.head_id || "not_available")} → ${esc(r.tail_id || "not_available")}</span>${r.reason ? `<div class="muted small">${esc(r.reason)}</div>` : ""}</div>`).join("") : `<p class="muted">not_available（本次候选之间没有可展示关系）</p>`}
         </div>
         <div class="card pad">
           <h3>Pipeline trace · 执行轨迹</h3>
@@ -341,6 +349,8 @@
 
     const configEl = $("#v2-lab-config");
     const checkEl = $("#v2-lab-check");
+    const runBtn = $("#v2-lab-run");
+    runBtn.disabled = true;
     let lastCheck = null;
 
     const axisField = (axis, config) => {
@@ -389,8 +399,9 @@
       $("#v2-lab-axes").innerHTML = modulesHtml(config);
       setAxisValues(config);
       lastCheck = null;
+      runBtn.disabled = true;
       $("#v2-lab-hash").textContent = "";
-      checkEl.textContent = "未校验（not validated）";
+      checkEl.textContent = "未校验（not validated）；校验通过前 Run 禁用。";
       $("#v2-lab-link").innerHTML = "";
     };
     $("#v2-lab-preset").onchange = fill;
@@ -417,6 +428,7 @@
         } else return;
         configEl.value = JSON.stringify(config, null, 2);
         lastCheck = null;
+        runBtn.disabled = true;
         $("#v2-lab-hash").textContent = "";
         checkEl.textContent = "配置已改变（config changed）；点“校验配置”确认可运行。";
       } catch (err) { checkEl.textContent = "配置文件不是合法 JSON"; }
@@ -427,8 +439,9 @@
         const cfg = JSON.parse(configEl.value);
         const check = await api("/api/v2/config/validate", { config: cfg });
         lastCheck = check;
+        runBtn.disabled = !(check.valid && check.runnable);
         $("#v2-lab-hash").textContent = check.config_hash || "";
-        checkEl.innerHTML = `<b>${check.valid && check.runnable ? "可运行（runnable）" : "不可运行（not runnable）"}</b><br>${(check.problems || []).map((p) => esc(p)).join("<br>") || "no problems"}<br><span class="muted">${(check.warnings || []).map((w) => esc(w)).join("<br>")}</span>`;
+        checkEl.innerHTML = `<b>${check.valid && check.runnable ? "可运行（runnable）" : "不可运行（not runnable）— Run 已禁用"}</b><br>${(check.problems || []).map((p) => esc(p)).join("<br>") || "no problems"}<br><span class="muted">${(check.warnings || []).map((w) => esc(w)).join("<br>")}</span>`;
       } catch (err) { checkEl.textContent = err.message; }
     };
 
@@ -460,10 +473,10 @@
     };
   }
 
-  const PLAN_STATUS = { done: "已完成", partial: "部分完成", pending: "待做", blocked: "阻塞", unknown: "未知" };
+  const PLAN_STATUS = { done: "已完成", partial: "部分完成", pending: "待做", blocked: "阻塞", no_op: "未接线 / no-op", blocked_on_code: "代码阻塞", blocked_on_hardware: "硬件/模型阻塞", not_wired: "未接线", unknown: "未知" };
   function planTable(items) {
     return `<table class="v2-table"><thead><tr><th>ID</th><th>阶段</th><th>模块</th><th>实验（要回答什么）</th><th>指标</th><th>状态</th><th>证据/去向</th></tr></thead><tbody>
-      ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "")}</div></td><td class="small">${(x.metrics || []).map((m) => esc(m)).join(" / ")}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">没有匹配的实验。</td></tr>`}
+      ${(items || []).map((x) => `<tr><td class="mono">${esc(x.id)}</td><td>${esc(x.stage)}</td><td>${esc(x.module)}</td><td><b>${esc(x.title)}</b><div class="muted small">${esc(x.question || "not_available")}</div></td><td class="small">${(x.metrics || []).length ? (x.metrics || []).map((m) => esc(m)).join(" / ") : "not_available"}</td><td><span class="pill ${esc(x.status || "")}">${esc(PLAN_STATUS[x.status] || x.status || "—")}</span></td><td class="small">${esc(x.evidence || "not_available")}${x.link ? `<br><a href="${esc(x.link)}">去查看 →</a>` : ""}</td></tr>`).join("") || `<tr><td colspan="7" class="muted">没有匹配的实验。</td></tr>`}
     </tbody></table>`;
   }
 
@@ -544,28 +557,28 @@
     const tabBody = (tab) => {
       if (tab === "results") {
         return `<table class="v2-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
-          ${(report.results.runs || []).map((r) => `<tr><td class="mono">${esc(r.run_id)}</td><td>${esc(r.question || "")}</td><td>${esc(r.tokens ?? "—")}</td><td>${esc(r.latency_ms ?? "—")}</td><td>${esc(r.candidates ?? "—")}</td><td>${esc((r.answer || "").slice(0, 80))}</td></tr>`).join("")}
+          ${(report.results.runs || []).map((r) => `<tr><td class="mono">${esc(r.run_id)}</td><td>${esc(na(r.question))}</td><td>${esc(na(r.tokens))}</td><td>${esc(na(r.latency_ms))}</td><td>${esc(na(r.candidates))}</td><td>${esc(r.answer ? r.answer.slice(0, 80) : "not_available")}</td></tr>`).join("")}
         </tbody></table><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre>`;
       }
       if (tab === "comparison") {
         return `<table class="v2-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th></tr></thead><tbody>
-          ${(report.comparisons || []).map((r) => `<tr><td>${esc(r.metric)}</td><td>${esc(r.baseline_value ?? "—")}</td><td>${esc(r.candidate_value ?? "—")}</td><td>${esc(r.delta ?? "—")}</td></tr>`).join("")}
+          ${(report.comparisons || []).map((r) => `<tr><td>${esc(r.metric)}</td><td>${esc(na(r.baseline_value))}</td><td>${esc(na(r.candidate_value))}</td><td>${esc(na(r.delta))}</td></tr>`).join("")}
         </tbody></table>`;
       }
       if (tab === "analysis") {
         const cats = report.analysis.by_category || [];
-        return `<h3>By category 按类别</h3>${cats.length ? `<table class="v2-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>${cats.map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(c.answer_f1 ?? "—")}</td><td>${esc(c.evidence_recall ?? "—")}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">—</p>`}
-          <h3 style="margin-top:14px">Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(s.ms)} ms</span></div>`).join("") || `<p class="muted">—</p>`}
+        return `<h3>By category 按类别</h3>${cats.length ? `<table class="v2-table"><thead><tr><th>category</th><th>n</th><th>F1</th><th>Recall</th></tr></thead><tbody>${cats.map((c) => `<tr><td>${esc(c.category)}</td><td>${esc(c.n)}</td><td>${esc(na(c.answer_f1))}</td><td>${esc(na(c.evidence_recall))}</td></tr>`).join("")}</tbody></table>` : `<p class="muted">not_available</p>`}
+          <h3 style="margin-top:14px">Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(na(s.ms))} ms</span></div>`).join("") || `<p class="muted">not_available</p>`}
           <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
       }
       if (tab === "plan") {
         return `<p class="muted small">来自 04-experiments 的固定实验清单；状态是当前仓库的覆盖情况，不是统计结论。</p>${planPanel(plan.items, "v2-rep-plan")}`;
       }
       return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
-        <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
-        <h3>Conditions 适用条件</h3><ul>${(c.conditions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
-        <h3>Limitations 局限</h3><ul>${(c.limitations || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
-        <h3>Next actions 下一步</h3><ul>${(c.next_actions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>`;
+        <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
+        <h3>Conditions 适用条件</h3><ul>${(c.conditions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
+        <h3>Limitations 局限</h3><ul>${(c.limitations || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>
+        <h3>Next actions 下一步</h3><ul>${(c.next_actions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>not_available</li>"}</ul>`;
     };
     root.innerHTML = `${header("EXPERIMENT REPORT · 实验报告", `实验 ${report.experiment_id}`, `schema: ${esc(report.schema)} · ${esc(report.created_at)}`)}
       <div class="seg" id="v2-rep-tabs">${Object.entries(tabs).map(([k, v], i) => `<button data-tab="${k}" class="${i === 0 ? "on" : ""}">${v}</button>`).join("")}</div>
@@ -660,8 +673,40 @@
     await draw();
   }
 
+  function cArtifactsHtml(artifacts) {
+    const a = artifacts || {};
+    const sa = a.state_accuracy || {};
+    const e1 = a.e1_adoption || {};
+    const e3 = a.e3_offline || {};
+    const pk = a.planner_k || {};
+    const saRows = Object.entries(sa.summary || {}).map(([name, x]) => `<tr><td>${esc(name)}</td><td>${esc(na(x.state_accuracy_item_mean))}</td><td>${esc(na(x.valid_set_exact))}</td><td>${esc(na(x.evidence_recall))}</td><td>${esc(na(x.items))}</td></tr>`).join("");
+    const e1Rows = Object.entries(e1.baselines || {}).map(([name, x]) => {
+      const m = x.metrics || {};
+      return `<tr><td>${esc(name)}</td><td>${esc(na(m.evidence_recall))}</td><td>${esc(na(m.ndcg))}</td><td>${esc(na(m.tokens))}</td></tr>`;
+    }).join("");
+    const e3Rows = (e3.main_effects?.evidence_recall || []).map((x) => `<tr><td>${esc(x.factor)}</td><td>${esc(x.low)} → ${esc(x.high)}</td><td>${esc(na(x.delta_high_minus_low))}</td><td>${esc(JSON.stringify(x.ci95 ?? "not_available"))}</td><td>${x.ci_excludes_zero ? "yes" : "no"}</td></tr>`).join("");
+    const pkRows = (pk.rows || []).map((x) => `<tr><td>${esc(x.level)}</td><td>${esc(na(x.evidence_recall))}</td><td>${esc(na(x.ndcg))}</td><td>${esc(na(x.tokens))}</td><td>${esc(na(x.latency_ms))}</td></tr>`).join("");
+    const raw = (label, data) => `<details style="margin-top:8px"><summary class="small muted">原始 JSON · ${esc(label)}</summary><pre class="v2-pre">${esc(JSON.stringify(data, null, 2))}</pre></details>`;
+    return `<div class="v2-cols" style="margin-top:16px">
+      <div class="card pad"><h3>状态准确率 · State accuracy</h3>
+        ${sa.available === false ? `<p class="note warn">not_available：${esc(sa.reason || "file missing")}</p>` : `<table class="v2-table"><thead><tr><th>candidate</th><th>item mean</th><th>valid exact</th><th>recall</th><th>items</th></tr></thead><tbody>${saRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table><p class="muted small">${esc(sa.benchmark_note || "")}</p>${raw("state-accuracy", sa)}`}
+      </div>
+      <div class="card pad"><h3>E1.1 模块采纳 · Adoption</h3>
+        ${e1.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>baseline</th><th>recall</th><th>nDCG</th><th>tokens</th></tr></thead><tbody>${e1Rows || `<tr><td colspan="4" class="muted">not_available</td></tr>`}</tbody></table>${raw("e1-adoption", e1)}`}
+      </div>
+    </div>
+    <div class="v2-cols" style="margin-top:14px">
+      <div class="card pad"><h3>E3 组合 · Interactions</h3>
+        ${e3.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>factor</th><th>low → high</th><th>delta</th><th>CI95</th><th>excludes 0</th></tr></thead><tbody>${e3Rows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table>${raw("e3-offline", e3)}`}
+      </div>
+      <div class="card pad"><h3>R4 planner K · Params</h3>
+        ${pk.available === false ? `<p class="note warn">not_available</p>` : `<table class="v2-table"><thead><tr><th>k</th><th>recall</th><th>nDCG</th><th>tokens</th><th>latency</th></tr></thead><tbody>${pkRows || `<tr><td colspan="5" class="muted">not_available</td></tr>`}</tbody></table><p class="muted small">${esc(pk.harness_blocker || "")}</p>${raw("planner-k", pk)}`}
+      </div>
+    </div>`;
+  }
+
   async function renderEvaluation2(root) {
-    const [data, plan] = await Promise.all([api("/api/v2/evaluation"), api("/api/v2/experiments/plan").catch(() => ({ items: [] }))]);
+    const [data, plan, art] = await Promise.all([api("/api/v2/evaluation"), api("/api/v2/experiments/plan").catch(() => ({ items: [] })), api("/api/v2/artifacts").catch(() => ({ artifacts: {} }))]);
     if (!data.available) { root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "")}<p class="note warn">${esc(data.reason)}</p>`; return; }
     const test = data.qa?.test || {};
     const retrieval = data.retrieval?.test || {};
@@ -675,12 +720,26 @@
     const rrows = Object.entries(retrieval.summary || {}).filter(([k]) => k !== "dynamic_candidates").map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v["@15"] ?? "—")}</td></tr>`).join("");
     root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "课程要求的 F1 / Recall@K / 状态准确率，以及 Full Text / Vector RAG 对照。归档结果来自 eval/results.json，明确标注模型与 split。")}
       ${hardwareBanner(data.hardware)}
+      <h3 style="margin-top:18px">继承 27B 归档 · 只读</h3>
       <div class="note"><b>继承上一版的归档结果</b>（不是本项目新跑）：<span class="mono">${esc(data.source)}</span> · 模型 ${esc(data.answer_model || "—")} / ${esc(data.embedding_model || "—")} · 测试对话 ${esc((data.split?.test || []).join(", "))} · 归档时间 ${esc(data.generated_at || "—")}。<br><span class="muted small">本项目自己的 test 离线结果在下方 Web 实验报告 final-w3；两表不能混成一个结论。</span></div>
       <div class="v2-cols">
         <div class="card pad"><h3>QA（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>F1</th><th>evidence recall</th><th>sec</th><th>state acc</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table>
           <p class="muted small">这是归档的 27B 结果；当前 W2 的 offline 单题不写入此表。</p></div>
         <div class="card pad"><h3>Retrieval Recall@15（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>@15</th></tr></thead><tbody>${rrows || `<tr><td colspan="2" class="muted">—</td></tr>`}</tbody></table></div>
       </div>
+      <div class="card pad" style="margin-top:16px"><h3>本项目 offline/online 实验 · 新跑</h3>
+        <p class="muted small">来自本项目 Web/批处理报告；与上方 27B 归档分开，不混表。缺失字段写 not_available。</p>
+        <table class="v2-table"><thead><tr><th>experiment</th><th>config</th><th>F1</th><th>Recall</th><th>state</th><th>tokens</th><th>P95</th><th>status</th></tr></thead><tbody>
+        ${(data.project_reports || []).map((r) => {
+          const m = r.results?.metrics || {};
+          const b = r.results?.baseline_metrics;
+          if (b) return `<tr><td class="mono">${esc(r.experiment_id)}</td><td>B0 baseline</td><td>${esc(na(b.answer_f1))}</td><td>${esc(na(b.evidence_recall))}</td><td>${esc(na(b.state_accuracy))}</td><td>${esc(na(b.tokens))}</td><td>${esc(na(b.p95_latency_ms))}</td><td>${esc(r.conclusion?.status || "not_available")}</td></tr>
+            <tr><td class="mono">${esc(r.experiment_id)}</td><td>R0 candidate</td><td>${esc(na(m.answer_f1))}</td><td>${esc(na(m.evidence_recall))}</td><td>${esc(na(m.state_accuracy))}</td><td>${esc(na(m.tokens))}</td><td>${esc(na(m.p95_latency_ms))}</td><td>${esc(r.conclusion?.status || "not_available")}</td></tr>`;
+          return `<tr><td class="mono">${esc(r.experiment_id)}</td><td>${esc(r.dataset?.split || "not_available")}</td><td>${esc(na(m.answer_f1))}</td><td>${esc(na(m.evidence_recall))}</td><td>${esc(na(m.state_accuracy))}</td><td>${esc(na(m.tokens))}</td><td>${esc(na(m.p95_latency_ms))}</td><td>${esc(r.conclusion?.status || "not_available")}</td></tr>`;
+        }).join("") || `<tr><td colspan="8" class="muted">not_available</td></tr>`}
+        </tbody></table>
+      </div>
+      <div class="card pad" style="margin-top:16px"><h3>C 新产物 · A-level artifacts</h3>${cArtifactsHtml(art.artifacts)}</div>
       <div class="card pad" style="margin-top:16px"><h3>实验计划矩阵 <span class="muted small">Experiment plan</span></h3>
         <p class="muted small">课程设计里每个实验原本要回答什么、用什么指标、当前状态。不是所有都已跑；状态见标签。</p>
         ${planPanel(plan.items, "v2-eval-plan")}
