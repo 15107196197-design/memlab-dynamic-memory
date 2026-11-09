@@ -1,0 +1,122 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "G2-E2-WR-schema-graph",
+  "title": "E2 W x R: structured schema x graph retrieval on the multi-hop subset",
+  "design": "full_factorial",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H1",
+    "H5"
+  ],
+  "environment": {
+    "llm": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "multi_hop",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category",
+    "categories": [
+      1
+    ],
+    "repeat": 1
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "offline": true,
+    "note": "2x2 W (schema.impl) x R (graph.retrieval.impl) interaction on the same 61 multi-hop questions. legacy_flat is closed with temporal.model=record_time because the reference bi-temporal model requires meta_schema.",
+    "derived_rules": [
+      {
+        "when": {
+          "schema.impl": "legacy_flat"
+        },
+        "set": {
+          "temporal.model": "record_time",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Flat schema has no bi-temporal fields."
+      },
+      {
+        "when": {
+          "temporal.model": "record_time"
+        },
+        "set": {
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Record-time model has no validity intervals."
+      }
+    ]
+  },
+  "factors": [
+    {
+      "id": "schema.impl",
+      "axis": "schema",
+      "levels": [
+        "legacy_flat",
+        "meta_schema"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "field_completeness"
+      ]
+    },
+    {
+      "id": "graph.retrieval.impl",
+      "axis": "graph.retrieval",
+      "levels": [
+        "vector_only",
+        "entity_subgraph"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "graph_nodes",
+        "graph_edges"
+      ]
+    }
+  ],
+  "metrics": [
+    "evidence_recall",
+    "ndcg",
+    "field_completeness",
+    "answer_f1",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "subgroups": [
+      "category",
+      "multi_hop"
+    ],
+    "interaction": "difference_of_differences"
+  },
+  "budget": {
+    "max_configs": 4,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/graph-completion"
+  }
+}

@@ -1,0 +1,1257 @@
+{
+  "schema": "memlab/graph-completion@1",
+  "experiment": "G2 graph completion",
+  "generated_at": "2026-11-09T19:03:24+08:00",
+  "protocol": {
+    "offline": true,
+    "executor": "e2e",
+    "llm": "offline-extractive",
+    "embedding": "offline-hash",
+    "subset": "LoCoMo category=1 (multi-hop)",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "questions_per_config": 61,
+    "k": 15,
+    "cells": 14,
+    "note": "A-level offline only. A online 27B numbers are a pre-wiring harness and are not comparable."
+  },
+  "p0_1_event_sparse": {
+    "db": "runs/graph-completion/event_sparse.sqlite",
+    "spec": "configs/experiments/g2-e1-s2-event-sparse.json",
+    "cells": [
+      {
+        "run_id": "r-g2-e1-s2-event-sparse-000-68923660",
+        "factors": {
+          "graph.repr.impl": "event_sparse",
+          "graph.retrieval.impl": "vector_only"
+        },
+        "config_hash": "sha256:68923660487ac317484ba437286e9fcdaae277d16265fb5838cd3e05aca75701",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "context_precision": 0.0589,
+        "candidates": 13.2787,
+        "graph_nodes": 790.9672,
+        "graph_edges": 245.918,
+        "latency_mean_ms": 32.9579,
+        "latency_p95_ms": 200.144,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "event_sparse",
+          "graph_retrieval": "vector_only",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 0,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.0207,
+          "temporal": 0.1667
+        },
+        "channel_unique_gold": {
+          "bm25": 60,
+          "dense": 3
+        },
+        "channel_unique_questions": {
+          "bm25": 39,
+          "dense": 3
+        },
+        "graph_novel_candidates": 0,
+        "graph_novel_gold_candidates": 0,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 0,
+        "final_units": 810,
+        "final_channel_mix": {
+          "bm25": 296,
+          "dense": 531,
+          "temporal": 33
+        }
+      },
+      {
+        "run_id": "r-g2-e1-s2-event-sparse-001-29507aad",
+        "factors": {
+          "graph.repr.impl": "event_sparse",
+          "graph.retrieval.impl": "entity_subgraph"
+        },
+        "config_hash": "sha256:29507aad39d5493f82ef9eae9b279227b05ea1810a7874ac9f3929d262ce95e1",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2372,
+        "ndcg": 0.2324,
+        "answer_f1": 0.0342,
+        "context_precision": 0.0625,
+        "candidates": 13.2459,
+        "graph_nodes": 790.9672,
+        "graph_edges": 245.918,
+        "latency_mean_ms": 6.0879,
+        "latency_p95_ms": 25.705,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "event_sparse",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 8,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.02,
+          "temporal": 0.1667,
+          "graph_khop": 0.3063
+        },
+        "channel_unique_gold": {
+          "bm25": 54,
+          "dense": 2
+        },
+        "channel_unique_questions": {
+          "bm25": 35,
+          "dense": 2
+        },
+        "graph_novel_candidates": 11,
+        "graph_novel_gold_candidates": 4,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 26,
+        "final_units": 808,
+        "final_channel_mix": {
+          "bm25": 364,
+          "dense": 459,
+          "temporal": 33,
+          "graph_khop": 26
+        }
+      }
+    ],
+    "paired_vs_vector_only": {
+      "evidence_recall": {
+        "n": 61,
+        "mean_delta": 0.0115,
+        "median_delta": 0.0,
+        "improved": 2,
+        "worsened": 0,
+        "unchanged": 59
+      },
+      "ndcg": {
+        "n": 61,
+        "mean_delta": 0.0336,
+        "median_delta": 0.0,
+        "improved": 7,
+        "worsened": 0,
+        "unchanged": 54
+      },
+      "answer_f1": {
+        "n": 61,
+        "mean_delta": 0.0107,
+        "median_delta": 0.0,
+        "improved": 4,
+        "worsened": 0,
+        "unchanged": 57
+      }
+    },
+    "graph_unique_hits": {
+      "graph_novel_candidates": 11,
+      "graph_novel_gold_candidates": 4,
+      "graph_novel_in_final": 0,
+      "graph_novel_gold_in_final": 0
+    }
+  },
+  "p0_2_wr": {
+    "db": "runs/graph-completion/wr.sqlite",
+    "spec": "configs/experiments/g2-e2-wr.json",
+    "cells": [
+      {
+        "run_id": "r-g2-e2-wr-schema-graph-000-af9e3963",
+        "factors": {
+          "schema.impl": "legacy_flat",
+          "graph.retrieval.impl": "vector_only"
+        },
+        "config_hash": "sha256:af9e39638a11e95892344c55e0c76bb0d2f9881952ba2075c418b29814e5e357",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.1908,
+        "ndcg": 0.1934,
+        "answer_f1": 0.0171,
+        "context_precision": 0.0493,
+        "candidates": 13.2787,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 21.8227,
+        "latency_p95_ms": 135.96,
+        "field_completeness": 0.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "legacy_flat",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "vector_only",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 0,
+        "channel_recall": {
+          "bm25": 0.3398,
+          "dense": 0.0263,
+          "temporal": 0.1667
+        },
+        "channel_unique_gold": {
+          "bm25": 53,
+          "dense": 2
+        },
+        "channel_unique_questions": {
+          "bm25": 37,
+          "dense": 2
+        },
+        "graph_novel_candidates": 0,
+        "graph_novel_gold_candidates": 0,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 0,
+        "final_units": 810,
+        "final_channel_mix": {
+          "bm25": 296,
+          "dense": 534,
+          "temporal": 35
+        }
+      },
+      {
+        "run_id": "r-g2-e2-wr-schema-graph-001-7df7991a",
+        "factors": {
+          "schema.impl": "legacy_flat",
+          "graph.retrieval.impl": "entity_subgraph"
+        },
+        "config_hash": "sha256:7df7991a49be183041b1aa75363e041d1afee3fc533ed0ce183d7771e74f4b7b",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.199,
+        "ndcg": 0.2184,
+        "answer_f1": 0.0276,
+        "context_precision": 0.05,
+        "candidates": 13.2951,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 5.8754,
+        "latency_p95_ms": 23.711,
+        "field_completeness": 0.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "legacy_flat",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 8,
+        "channel_recall": {
+          "bm25": 0.3398,
+          "dense": 0.0165,
+          "temporal": 0.1667,
+          "graph_khop": 0.3063
+        },
+        "channel_unique_gold": {
+          "bm25": 48,
+          "dense": 1
+        },
+        "channel_unique_questions": {
+          "bm25": 33,
+          "dense": 1
+        },
+        "graph_novel_candidates": 88,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 28,
+        "final_units": 811,
+        "final_channel_mix": {
+          "bm25": 367,
+          "dense": 462,
+          "temporal": 35,
+          "graph_khop": 28
+        }
+      },
+      {
+        "run_id": "r-g2-e2-wr-schema-graph-002-70fe3398",
+        "factors": {
+          "schema.impl": "meta_schema",
+          "graph.retrieval.impl": "vector_only"
+        },
+        "config_hash": "sha256:70fe3398a789d4ab0dff7d35adb634507bfb65325a6f84f1675b1c3e9fae5d1e",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2257,
+        "ndcg": 0.1988,
+        "answer_f1": 0.0235,
+        "context_precision": 0.0589,
+        "candidates": 13.2787,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 5.2021,
+        "latency_p95_ms": 14.793,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "vector_only",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 0,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.0207,
+          "temporal": 0.1667
+        },
+        "channel_unique_gold": {
+          "bm25": 60,
+          "dense": 3
+        },
+        "channel_unique_questions": {
+          "bm25": 39,
+          "dense": 3
+        },
+        "graph_novel_candidates": 0,
+        "graph_novel_gold_candidates": 0,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 0,
+        "final_units": 810,
+        "final_channel_mix": {
+          "bm25": 296,
+          "dense": 531,
+          "temporal": 33
+        }
+      },
+      {
+        "run_id": "r-g2-e2-wr-schema-graph-003-ee0aab77",
+        "factors": {
+          "schema.impl": "meta_schema",
+          "graph.retrieval.impl": "entity_subgraph"
+        },
+        "config_hash": "sha256:ee0aab77f9b54bb6e90b6a46cde4a391785544b8e38b9cf78d2f2032f1aac597",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2372,
+        "ndcg": 0.2315,
+        "answer_f1": 0.0342,
+        "context_precision": 0.0625,
+        "candidates": 13.2459,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 8.8543,
+        "latency_p95_ms": 34.422,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 8,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.02,
+          "temporal": 0.1667,
+          "graph_khop": 0.3063
+        },
+        "channel_unique_gold": {
+          "bm25": 54,
+          "dense": 2
+        },
+        "channel_unique_questions": {
+          "bm25": 35,
+          "dense": 2
+        },
+        "graph_novel_candidates": 91,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 26,
+        "final_units": 808,
+        "final_channel_mix": {
+          "bm25": 364,
+          "dense": 459,
+          "temporal": 33,
+          "graph_khop": 26
+        }
+      }
+    ],
+    "interaction": {
+      "evidence_recall": {
+        "n": 61,
+        "difference_in_differences": 0.0033,
+        "median_dod": 0.0,
+        "positive": 1,
+        "negative": 0,
+        "zero": 60,
+        "cell_means": {
+          "a0_b0": 0.1908,
+          "a1_b0": 0.2257,
+          "a0_b1": 0.199,
+          "a1_b1": 0.2372
+        }
+      },
+      "ndcg": {
+        "n": 61,
+        "difference_in_differences": 0.0078,
+        "median_dod": 0.0,
+        "positive": 5,
+        "negative": 0,
+        "zero": 56,
+        "cell_means": {
+          "a0_b0": 0.1934,
+          "a1_b0": 0.1988,
+          "a0_b1": 0.2184,
+          "a1_b1": 0.2315
+        }
+      }
+    },
+    "orientation": "DoD = graph gain under meta_schema minus graph gain under legacy_flat; positive means structured writes make the graph more effective",
+    "graph_on_minus_off": {
+      "legacy_flat": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0082,
+          "median_delta": 0.0,
+          "improved": 1,
+          "worsened": 0,
+          "unchanged": 60
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.025,
+          "median_delta": 0.0,
+          "improved": 6,
+          "worsened": 0,
+          "unchanged": 55
+        }
+      },
+      "meta_schema": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0115,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 0,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.0327,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        }
+      }
+    },
+    "meta_minus_legacy": {
+      "vector_only": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0348,
+          "median_delta": 0.0,
+          "improved": 9,
+          "worsened": 1,
+          "unchanged": 51
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.0054,
+          "median_delta": 0.0,
+          "improved": 13,
+          "worsened": 10,
+          "unchanged": 38
+        }
+      },
+      "entity_subgraph": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0381,
+          "median_delta": 0.0,
+          "improved": 10,
+          "worsened": 1,
+          "unchanged": 50
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.0132,
+          "median_delta": 0.0,
+          "improved": 17,
+          "worsened": 7,
+          "unchanged": 37
+        }
+      }
+    }
+  },
+  "p0_3_m1_route": {
+    "db": "runs/graph-completion/m1-route.sqlite",
+    "spec": "configs/experiments/g2-e1-m1-graph-route.json",
+    "cells": [
+      {
+        "run_id": "r-g2-e1-m1-graph-route-000-5cf01171",
+        "factors": {
+          "graph.retrieval.impl": "vector_only",
+          "fusion.impl": "rrf"
+        },
+        "config_hash": "sha256:5cf01171096981bd4d34f289c6aa1051730e556af6931cec582762ee63040260",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2407,
+        "ndcg": 0.2708,
+        "answer_f1": 0.0468,
+        "context_precision": 0.0669,
+        "candidates": 13.1639,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 4.8367,
+        "latency_p95_ms": 15.182,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "vector_only",
+          "fusion": "rrf",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 0,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.0207,
+          "temporal": 0.1667
+        },
+        "channel_unique_gold": {
+          "bm25": 60,
+          "dense": 3
+        },
+        "channel_unique_questions": {
+          "bm25": 39,
+          "dense": 3
+        },
+        "graph_novel_candidates": 0,
+        "graph_novel_gold_candidates": 0,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 0,
+        "final_units": 803,
+        "final_channel_mix": {
+          "bm25": 417,
+          "dense": 403,
+          "temporal": 33
+        }
+      },
+      {
+        "run_id": "r-g2-e1-m1-graph-route-001-75a1bec4",
+        "factors": {
+          "graph.retrieval.impl": "vector_only",
+          "fusion.impl": "weighted_rrf"
+        },
+        "config_hash": "sha256:75a1bec4b4ed0e16c2b9d4b3e01e4e4a7509bf07aa2e87ab5fcf2ce83d8246fa",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.0279,
+        "ndcg": 0.0398,
+        "answer_f1": 0.0101,
+        "context_precision": 0.0073,
+        "candidates": 13.3443,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 5.0283,
+        "latency_p95_ms": 14.884,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "vector_only",
+          "fusion": "weighted_rrf",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 0,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.0207,
+          "temporal": 0.1667
+        },
+        "channel_unique_gold": {
+          "bm25": 60,
+          "dense": 3
+        },
+        "channel_unique_questions": {
+          "bm25": 39,
+          "dense": 3
+        },
+        "graph_novel_candidates": 0,
+        "graph_novel_gold_candidates": 0,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 0,
+        "final_units": 814,
+        "final_channel_mix": {
+          "dense": 781,
+          "bm25": 50,
+          "temporal": 33
+        }
+      },
+      {
+        "run_id": "r-g2-e1-m1-graph-route-002-bcd4e0ac",
+        "factors": {
+          "graph.retrieval.impl": "entity_subgraph",
+          "fusion.impl": "rrf"
+        },
+        "config_hash": "sha256:bcd4e0ac15ff097b24814c583c5ed42e4186d50462dab32a69e3069125874387",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.2456,
+        "ndcg": 0.2776,
+        "answer_f1": 0.0489,
+        "context_precision": 0.0685,
+        "candidates": 13.1475,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 5.7305,
+        "latency_p95_ms": 19.178,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "rrf",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 8,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.02,
+          "temporal": 0.1667,
+          "graph_khop": 0.3063
+        },
+        "channel_unique_gold": {
+          "bm25": 54,
+          "dense": 2
+        },
+        "channel_unique_questions": {
+          "bm25": 35,
+          "dense": 2
+        },
+        "graph_novel_candidates": 91,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 44,
+        "graph_novel_gold_in_final": 2,
+        "graph_sourced_final_units": 70,
+        "final_units": 802,
+        "final_channel_mix": {
+          "bm25": 425,
+          "dense": 348,
+          "temporal": 33,
+          "graph_khop": 70
+        }
+      },
+      {
+        "run_id": "r-g2-e1-m1-graph-route-003-6dff8163",
+        "factors": {
+          "graph.retrieval.impl": "entity_subgraph",
+          "fusion.impl": "weighted_rrf"
+        },
+        "config_hash": "sha256:6dff81630249efc869fa53b73ccf041dc54811203acbe5527f5bc56cdba82bce",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.0795,
+        "ndcg": 0.1019,
+        "answer_f1": 0.0194,
+        "context_precision": 0.0208,
+        "candidates": 13.3607,
+        "graph_nodes": 974.0656,
+        "graph_edges": 1347.2295,
+        "latency_mean_ms": 7.5473,
+        "latency_p95_ms": 17.081,
+        "field_completeness": 1.0,
+        "unique_gold_hits": null,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": null,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "weighted_rrf",
+          "channels": [
+            "dense",
+            "bm25",
+            "graph",
+            "temporal"
+          ]
+        },
+        "routing": {
+          "single_hop": 50,
+          "temporal": 3,
+          "multi_hop": 8
+        },
+        "questions_with_graph": 8,
+        "channel_recall": {
+          "bm25": 0.356,
+          "dense": 0.02,
+          "temporal": 0.1667,
+          "graph_khop": 0.3063
+        },
+        "channel_unique_gold": {
+          "bm25": 54,
+          "dense": 2
+        },
+        "channel_unique_questions": {
+          "bm25": 35,
+          "dense": 2
+        },
+        "graph_novel_candidates": 91,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0,
+        "graph_sourced_final_units": 26,
+        "final_units": 815,
+        "final_channel_mix": {
+          "dense": 676,
+          "bm25": 154,
+          "temporal": 33,
+          "graph_khop": 26
+        }
+      }
+    ],
+    "interaction": {
+      "evidence_recall": {
+        "n": 61,
+        "difference_in_differences": 0.0467,
+        "median_dod": 0.0,
+        "positive": 6,
+        "negative": 0,
+        "zero": 55,
+        "cell_means": {
+          "a0_b0": 0.2407,
+          "a1_b0": 0.2456,
+          "a0_b1": 0.0279,
+          "a1_b1": 0.0795
+        }
+      },
+      "ndcg": {
+        "n": 61,
+        "difference_in_differences": 0.0553,
+        "median_dod": 0.0,
+        "positive": 5,
+        "negative": 1,
+        "zero": 55,
+        "cell_means": {
+          "a0_b0": 0.2708,
+          "a1_b0": 0.2776,
+          "a0_b1": 0.0398,
+          "a1_b1": 0.1019
+        }
+      }
+    },
+    "orientation": "DoD = graph gain under weighted_rrf minus graph gain under rrf; positive means the fusion method changes how much the graph route adds",
+    "graph_on_minus_off": {
+      "rrf": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0049,
+          "median_delta": 0.0,
+          "improved": 1,
+          "worsened": 1,
+          "unchanged": 59
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.0068,
+          "median_delta": 0.0,
+          "improved": 5,
+          "worsened": 1,
+          "unchanged": 55
+        }
+      },
+      "weighted_rrf": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": 0.0516,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": 0.0621,
+          "median_delta": 0.0,
+          "improved": 7,
+          "worsened": 0,
+          "unchanged": 54
+        }
+      }
+    },
+    "weighted_rrf_minus_rrf": {
+      "vector_only": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": -0.2128,
+          "median_delta": 0.0,
+          "improved": 2,
+          "worsened": 30,
+          "unchanged": 29
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": -0.231,
+          "median_delta": 0.0,
+          "improved": 3,
+          "worsened": 29,
+          "unchanged": 29
+        }
+      },
+      "entity_subgraph": {
+        "evidence_recall": {
+          "n": 61,
+          "mean_delta": -0.1661,
+          "median_delta": 0.0,
+          "improved": 4,
+          "worsened": 25,
+          "unchanged": 32
+        },
+        "ndcg": {
+          "n": 61,
+          "mean_delta": -0.1757,
+          "median_delta": 0.0,
+          "improved": 5,
+          "worsened": 28,
+          "unchanged": 28
+        }
+      }
+    },
+    "route_arm_unique_hits": {
+      "definition": "candidate-level: gold memory units returned by graph_khop but by no non-graph channel; final counts units that survive into the merged context. Gold turns unique to one channel are in each cell's channel_unique_gold.",
+      "rrf": {
+        "graph_novel_candidates": 91,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 44,
+        "graph_novel_gold_in_final": 2
+      },
+      "weighted_rrf": {
+        "graph_novel_candidates": 91,
+        "graph_novel_gold_candidates": 2,
+        "graph_novel_in_final": 0,
+        "graph_novel_gold_in_final": 0
+      }
+    }
+  },
+  "p1_r2_single_channel": {
+    "db": "runs/graph-completion/single-channel.sqlite",
+    "spec": "configs/experiments/g2-e1-r2-single-channel.json",
+    "cells": [
+      {
+        "run_id": "r-g2-e1-r2-single-channel-000-f741a2ce",
+        "factors": {
+          "retrieval.channels": [
+            "bm25"
+          ]
+        },
+        "config_hash": "sha256:f741a2ceebd68a420fe57befc437f341b8c49177b02bff310dbffc10e0603fff",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.356,
+        "ndcg": 0.3971,
+        "answer_f1": null,
+        "context_precision": 0.0962,
+        "candidates": 15.0,
+        "graph_nodes": null,
+        "graph_edges": null,
+        "latency_mean_ms": 2.4437,
+        "latency_p95_ms": 17.041,
+        "field_completeness": null,
+        "unique_gold_hits": 0.0,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": 0.0,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "bm25"
+          ]
+        }
+      },
+      {
+        "run_id": "r-g2-e1-r2-single-channel-001-d796b4d7",
+        "factors": {
+          "retrieval.channels": [
+            "dense"
+          ]
+        },
+        "config_hash": "sha256:d796b4d7c9fd1e53f02b5ecd1b308565a92659e6f22d05d617de77ee0bde8680",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.0367,
+        "ndcg": 0.0635,
+        "answer_f1": null,
+        "context_precision": 0.0087,
+        "candidates": 15.0,
+        "graph_nodes": null,
+        "graph_edges": null,
+        "latency_mean_ms": 12.617,
+        "latency_p95_ms": 96.004,
+        "field_completeness": null,
+        "unique_gold_hits": 0.0492,
+        "unique_gold_hits_total": 3,
+        "unique_candidates": 14.4098,
+        "unique_candidates_total": 879,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "dense"
+          ]
+        }
+      },
+      {
+        "run_id": "r-g2-e1-r2-single-channel-002-39102457",
+        "factors": {
+          "retrieval.channels": [
+            "graph_khop"
+          ]
+        },
+        "config_hash": "sha256:3910245720869857ef7a6f2182d5977529fc690853fa5471d2dba703c5667139",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.1854,
+        "ndcg": 0.2959,
+        "answer_f1": null,
+        "context_precision": 0.0688,
+        "candidates": 15.0,
+        "graph_nodes": null,
+        "graph_edges": null,
+        "latency_mean_ms": 0.96,
+        "latency_p95_ms": 1.591,
+        "field_completeness": null,
+        "unique_gold_hits": 0.0656,
+        "unique_gold_hits_total": 4,
+        "unique_candidates": 11.0,
+        "unique_candidates_total": 671,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "graph_khop"
+          ]
+        }
+      },
+      {
+        "run_id": "r-g2-e1-r2-single-channel-003-bd6d6189",
+        "factors": {
+          "retrieval.channels": [
+            "temporal"
+          ]
+        },
+        "config_hash": "sha256:bd6d61897073062739729a2d38d969db555ae1f32ca63c9270d99574430fa720",
+        "status": "complete",
+        "n": 61,
+        "errors": 0,
+        "evidence_recall": 0.356,
+        "ndcg": 0.3971,
+        "answer_f1": null,
+        "context_precision": 0.0962,
+        "candidates": 15.0,
+        "graph_nodes": null,
+        "graph_edges": null,
+        "latency_mean_ms": 0.82,
+        "latency_p95_ms": 1.309,
+        "field_completeness": null,
+        "unique_gold_hits": 0.0,
+        "unique_gold_hits_total": 0,
+        "unique_candidates": 0.0,
+        "unique_candidates_total": 0,
+        "config": {
+          "schema": "meta_schema",
+          "graph_repr": "three_layer",
+          "graph_retrieval": "entity_subgraph",
+          "fusion": "query_adaptive_weights",
+          "channels": [
+            "temporal"
+          ]
+        }
+      }
+    ],
+    "channel_summary": [
+      {
+        "channel": "bm25",
+        "run_id": "r-g2-e1-r2-single-channel-000-f741a2ce",
+        "n": 61,
+        "evidence_recall": 0.356,
+        "ndcg": 0.3971,
+        "context_precision": 0.0962,
+        "candidates": 15.0,
+        "unique_gold_hits_total": 0,
+        "unique_candidates_total": 0,
+        "latency_mean_ms": 2.4437
+      },
+      {
+        "channel": "dense",
+        "run_id": "r-g2-e1-r2-single-channel-001-d796b4d7",
+        "n": 61,
+        "evidence_recall": 0.0367,
+        "ndcg": 0.0635,
+        "context_precision": 0.0087,
+        "candidates": 15.0,
+        "unique_gold_hits_total": 3,
+        "unique_candidates_total": 879,
+        "latency_mean_ms": 12.617
+      },
+      {
+        "channel": "graph_khop",
+        "run_id": "r-g2-e1-r2-single-channel-002-39102457",
+        "n": 61,
+        "evidence_recall": 0.1854,
+        "ndcg": 0.2959,
+        "context_precision": 0.0688,
+        "candidates": 15.0,
+        "unique_gold_hits_total": 4,
+        "unique_candidates_total": 671,
+        "latency_mean_ms": 0.96
+      },
+      {
+        "channel": "temporal",
+        "run_id": "r-g2-e1-r2-single-channel-003-bd6d6189",
+        "n": 61,
+        "evidence_recall": 0.356,
+        "ndcg": 0.3971,
+        "context_precision": 0.0962,
+        "candidates": 15.0,
+        "unique_gold_hits_total": 0,
+        "unique_candidates_total": 0,
+        "latency_mean_ms": 0.82
+      }
+    ],
+    "bm25_temporal_identical_questions": 61
+  },
+  "deviations": [
+    "retrieval.channels is validated but never consumed by RuleRouterPlanner; P0-3 therefore expresses the graph route with graph.retrieval.impl=vector_only/entity_subgraph (bm25+dense vs bm25+graph_khop), not as an added third channel.",
+    "When the graph is on, the router returns bm25+graph_khop and drops dense; the requested bm25+dense+graph_khop union does not exist without changing retrieve.py, which this session was told not to touch.",
+    "P1 single channels are executed by eval/graph_completion_analyze.py, not by the S5 runner, because no planner can select dense/graph/temporal alone from retrieval.channels.",
+    "legacy_flat in P0-2 is closed with temporal.model=record_time because reference bi-temporal requires meta_schema; the W effect therefore carries the schema's temporal projection with it."
+  ],
+  "limitations": [
+    "Offline hashing embeddings are not semantic; vector_only is a weak dense baseline, not bge-m3.",
+    "Only 4 development conversations and 61 category-1 questions per configuration; single seed; no significance claim.",
+    "The rule analyzer routes only 8/61 category-1 questions to the graph channel; most final cells cannot exercise the graph.",
+    "Under R0 query_adaptive fusion (R3/S2/E2), graph-novel candidates enter the final context 0 times. Under plain RRF they can enter (44 units), but only 2 are gold and final Recall moves +0.0049 with 1 question improved and 1 worsened, so the final metric stays effectively insensitive to graph representation/retrieval.",
+    "answer_f1 is an extractive string-overlap baseline, not an LLM answer; P2 rerank is blocked on hardware and no filter is used as a rerank substitute."
+  ],
+  "completeness": [
+    {
+      "id": "E1-S2a",
+      "experiment": "图表示 state_slot/entity_triple/three_layer",
+      "status": "done",
+      "evidence": "R3 13 cells: final Recall 0.2372 for every graph repr; NDCG 0.2315-0.2324; graph-novel 0 survive."
+    },
+    {
+      "id": "E1-S2b",
+      "experiment": "图表示 event_sparse",
+      "status": "done",
+      "evidence": "G2 2 cells: vector_only 0.2257 / entity_subgraph 0.2372; same +0.0115 as the other reprs; event_sparse graph 791 nodes / 246 edges."
+    },
+    {
+      "id": "E1-R3",
+      "experiment": "图检索 impl (slot_expand/entity_subgraph/dual_channel/ppr)",
+      "status": "done",
+      "evidence": "R3 13 cells: all final Recall 0.2372; PPR NDCG +0.0003..+0.0066, p95 1.6-2x; graph-novel 34-91, 0 survive."
+    },
+    {
+      "id": "E1-R2",
+      "experiment": "单通道 bm25/dense/graph/temporal",
+      "status": "partial",
+      "evidence": "G2 4 single-channel cells; bm25 0.3560, temporal 0.3560 (identical fallback), graph 0.1854, dense 0.0367; unique gold bm25 0 / dense 3 / graph 4 / temporal 0."
+    },
+    {
+      "id": "E1-M1",
+      "experiment": "路线臂 (graph off/on) x fusion (rrf/weighted_rrf)",
+      "status": "partial",
+      "evidence": "G2 4 cells; graph adds +0.0049 recall under RRF but weighted RRF collapses to 0.0279/0.0795; under RRF 44 graph-novel units enter context, 2 of them gold."
+    },
+    {
+      "id": "E2-WR",
+      "experiment": "W x R: schema x graph",
+      "status": "partial",
+      "evidence": "G2 4 cells; graph gain +0.0082 (legacy) vs +0.0115 (meta), DoD +0.0033 recall; field completeness 0 vs 1."
+    },
+    {
+      "id": "E2-SM",
+      "experiment": "S x M: graph repr x rerank",
+      "status": "blocked_on_hardware",
+      "evidence": "No GPU / sentence-transformers; cross_encoder falls back. Not run; no filter used as rerank."
+    },
+    {
+      "id": "E3",
+      "experiment": "图组合 (state_slot vs three_layer in 2^(5-1))",
+      "status": "done",
+      "evidence": "E3 offline 240 q: graph main effect 0.0 on recall and NDCG; graph+rerank interaction 0.0."
+    }
+  ],
+  "p2_sxm": {
+    "status": "blocked_on_hardware",
+    "reason": "cross_encoder reranker needs sentence-transformers / GPU; no model weights available offline.",
+    "guard": "No threshold filter or other stage is reported as a rerank substitute. The design is recorded but not run.",
+    "requested_design": "graph.repr.impl x rerank.impl (none / cross_encoder), fixed retrieval and fusion",
+    "next": "Run when a cross-encoder is installed; keep the same 61-question paired subset."
+  },
+  "headline": {
+    "graph_novel_reaches_context_under_default_R0_fusion": false,
+    "graph_novel_ever_reaches_context": true,
+    "graph_novel_gold_reaches_context_under_plain_RRF": 2,
+    "final_recall_flat_across_graph_impl_and_repr": true,
+    "route_limiter": "rule analyzer routes 8/61 category-1 questions to graph",
+    "fusion_limiter": "under R0 query_adaptive fusion, graph-novel candidates are cut by fusion/filter/top-15; plain RRF admits 44 but only 2 are gold",
+    "W_effect": "meta_schema +0.0348 recall vs legacy_flat under vector_only; +0.0381 under graph"
+  }
+}
