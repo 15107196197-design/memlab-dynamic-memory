@@ -824,6 +824,8 @@ def _report_list() -> dict[str, Any]:
         if not directory.is_dir():
             continue
         for path in directory.glob("*.json"):
+            if path.name.startswith("._"):
+                continue  # macOS AppleDouble metadata copied by tar/Finder
             try:
                 data = json.loads(path.read_text(encoding="utf-8"))
                 experiment_id = data.get("experiment_id", path.stem)
@@ -831,7 +833,7 @@ def _report_list() -> dict[str, Any]:
                                         "created_at": data.get("created_at"),
                                         "status": (data.get("conclusion") or {}).get("status"),
                                         "schema": data.get("schema")}
-            except (OSError, json.JSONDecodeError):
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
                 continue
     ordered = sorted(items.values(), key=lambda item: item.get("created_at") or "", reverse=True)
     return {"experiments": ordered, "count": len(ordered)}
