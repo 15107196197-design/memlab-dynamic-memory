@@ -626,6 +626,7 @@ S5 的 `Runner` 默认执行器仍是 `Runtime.answer`，R0 会被 `guards.requi
 - [HANDOFF.md](HANDOFF.md)
 - [PHASE-CHECKLIST.md](PHASE-CHECKLIST.md)
 - [GOAL-AUDIT.md](GOAL-AUDIT.md)
+- [COMPONENT-SOURCING.md](COMPONENT-SOURCING.md)
 - [S5-REPORT.md](S5-REPORT.md)
 - [README.md](README.md)
 - [01-audit.md](01-audit.md)
