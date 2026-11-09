@@ -11,13 +11,17 @@ from __future__ import annotations
 
 import json
 import re
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from collections import Counter
 from functools import lru_cache
 from typing import Any
 from urllib.parse import unquote
 
 from memlab import cache as lab_cache
+from memlab import registry
 from memlab import config as lab_config
 from memlab import export as lab_export
 from memlab import manifest as lab_manifest, model
@@ -38,6 +42,24 @@ COURSE_IDS = legacy_config.SPLIT["development"] + legacy_config.SPLIT["test"]
 _SHARED_CACHE = lab_cache.ArtifactCache(ROOT / "cache" / "web")
 _CONTEXTS: dict[tuple[str, str, bool], Any] = {}
 _PIPELINES: dict[tuple[str, str, bool], E2EPipeline] = {}
+_JOBS: dict[str, dict[str, Any]] = {}
+_JOBS_LOCK = threading.RLock()
+_JOBS_EXECUTOR = ThreadPoolExecutor(max_workers=1)
+AXES = [
+    {"id": "schema", "label": "Schema", "path": "schema.impl"},
+    {"id": "write.resolver", "label": "Write resolver", "path": "write.resolver.impl"},
+    {"id": "write.auditor", "label": "Write auditor", "path": "write.auditor.impl"},
+    {"id": "graph.repr", "label": "Graph repr", "path": "graph.repr.impl"},
+    {"id": "planner", "label": "Planner", "path": "planner.impl"},
+    {"id": "fusion", "label": "Fusion", "path": "fusion.impl"},
+    {"id": "rerank", "label": "Rerank", "path": "rerank.impl"},
+    {"id": "post.filter", "label": "Post filter", "path": "post.filter.impl"},
+    {"id": "post.mmr", "label": "Post MMR", "path": "post.mmr.impl"},
+    {"id": "post.decay", "label": "Post decay", "path": "post.decay.impl"},
+    {"id": "post.compress", "label": "Post compress", "path": "post.compress.impl"},
+    {"id": "logic.state_resolver", "label": "State resolver", "path": "logic.state_resolver", "string": True},
+    {"id": "answer", "label": "Answerer", "path": "answer.impl"},
+]
 
 
 class WebError(ValueError):
@@ -316,6 +338,181 @@ def _run(body: dict[str, Any]) -> dict[str, Any]:
     return _run_module(sample_id, question, cfg, bool(body.get("offline", True)), k, as_of)
 
 
+def _set_path(data: dict[str, Any], path: str, value: Any) -> None:
+    parts = path.split(".")
+    node = data
+    for part in parts[:-1]:
+        nxt = node.get(part)
+        if not isinstance(nxt, dict):
+            nxt = {}
+            node[part] = nxt
+        node = nxt
+    node[parts[-1]] = value
+
+
+def axes() -> dict[str, Any]:
+    impls = registry.list_implementations()
+    out = []
+    for axis in AXES:
+        names = impls.get(axis["id"], [])
+        if not names:
+            continue
+        out.append({**axis, "available": names})
+    return {"axes": out, "count": len(out)}
+
+
+def _job_submit(body: dict[str, Any]) -> dict[str, Any]:
+    job_id = f"job-{time.strftime('%Y%m%d-%H%M%S')}-{len(_JOBS) + 1:03d}"
+    with _JOBS_LOCK:
+        _JOBS[job_id] = {"job_id": job_id, "status": "queued", "created_at": datetime.now().isoformat(timespec="seconds"),
+                         "updated_at": datetime.now().isoformat(timespec="seconds"), "body": body, "result": None,
+                         "error": None, "cancel": False}
+    _JOBS_EXECUTOR.submit(_job_work, job_id, body)
+    return _job_get(job_id)
+
+
+def _job_work(job_id: str, body: dict[str, Any]) -> None:
+    with _JOBS_LOCK:
+        job = _JOBS.get(job_id)
+        if not job or job.get("cancel"):
+            return
+        job["status"] = "running"
+        job["updated_at"] = datetime.now().isoformat(timespec="seconds")
+    try:
+        result = _run(body)
+        with _JOBS_LOCK:
+            _JOBS[job_id].update({"status": "done", "result": result, "updated_at": datetime.now().isoformat(timespec="seconds")})
+    except Exception as exc:  # noqa: BLE001 - job boundary must report, not kill the queue
+        with _JOBS_LOCK:
+            _JOBS[job_id].update({"status": "error", "error": f"{type(exc).__name__}: {exc}",
+                                  "updated_at": datetime.now().isoformat(timespec="seconds")})
+
+
+def _job_get(job_id: str) -> dict[str, Any]:
+    with _JOBS_LOCK:
+        job = _JOBS.get(job_id)
+        if job is None:
+            raise WebError(f"unknown job: {job_id}", 404)
+        data = {key: value for key, value in job.items() if key != "body"}
+        return data
+
+
+def _job_cancel(job_id: str) -> dict[str, Any]:
+    with _JOBS_LOCK:
+        job = _JOBS.get(job_id)
+        if job is None:
+            raise WebError(f"unknown job: {job_id}", 404)
+        job["cancel"] = True
+        if job["status"] == "queued":
+            job["status"] = "cancelled"
+        job["updated_at"] = datetime.now().isoformat(timespec="seconds")
+    return _job_get(job_id)
+
+
+def _safe_id(value: str) -> str:
+    value = str(value).strip()
+    if not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", value):
+        raise WebError("invalid experiment id", 400)
+    return value
+
+
+def _report_dir() -> Any:
+    return ROOT / "reports" / "experiments"
+
+
+def _load_runs(run_ids: list[str]) -> list[dict[str, Any]]:
+    runs = []
+    for run_id in run_ids:
+        path = ROOT / "runs" / "web" / f"{_safe_id(run_id)}.json"
+        if not path.is_file():
+            raise WebError(f"unknown web run: {run_id}", 404)
+        runs.append(json.loads(path.read_text(encoding="utf-8")))
+    return runs
+
+
+def _build_report(experiment_id: str, body: dict[str, Any]) -> dict[str, Any]:
+    run_ids = body.get("run_ids") or []
+    if not isinstance(run_ids, list) or len(run_ids) < 2:
+        raise WebError("run_ids must contain at least a baseline and a candidate", 422)
+    runs = _load_runs([str(r) for r in run_ids])
+    baseline, candidate = runs[0], runs[-1]
+    def metric(run, key):
+        if key == "tokens":
+            return run.get("tokens")
+        if key == "latency_ms":
+            return run.get("latency_ms")
+        if key == "candidates":
+            return len(run.get("candidates") or [])
+        return None
+    comparisons = []
+    for key in ("tokens", "latency_ms", "candidates"):
+        b, c = metric(baseline, key), metric(candidate, key)
+        delta = None if b is None or c is None else round(float(c) - float(b), 4)
+        comparisons.append({"baseline": baseline.get("run_id"), "candidate": candidate.get("run_id"),
+                            "metric": key, "baseline_value": b, "candidate_value": c,
+                            "delta": delta, "paired": False, "significant": False})
+    stages: dict[str, float] = {}
+    for step in candidate.get("trace") or []:
+        stage = str(step.get("stage") or "unknown")
+        stages[stage] = round(stages.get(stage, 0.0) + float(step.get("ms") or 0.0), 3)
+    conclusion = body.get("conclusion") if isinstance(body.get("conclusion"), dict) else {
+        "status": "inconclusive",
+        "claims": ["This is a single-question Web smoke, not a statistical experiment."],
+        "conditions": ["Needs a multi-question run with a fixed baseline and CI before a claim."],
+        "limitations": ["answer_f1 is not recorded for a gold-free Web run; no significance test."],
+        "next_actions": ["Run the same config on a fixed question set (W2 batch) and rebuild this report."],
+    }
+    report = {
+        "schema": "memlab/experiment-report@1",
+        "experiment_id": _safe_id(experiment_id),
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+        "manifest": {"git_commit": lab_manifest.git_commit(), "config_hash": candidate.get("config_hash"),
+                     "model": candidate.get("model"), "offline": candidate.get("offline")},
+        "dataset": {"split": "single_question", "samples": [candidate.get("question")],
+                    "questions": 1, "seeds": [], "test_only": False},
+        "results": {"runs": [{"run_id": r.get("run_id"), "question": r.get("question"),
+                               "config_hash": r.get("config_hash"), "tokens": r.get("tokens"),
+                               "latency_ms": r.get("latency_ms"), "candidates": len(r.get("candidates") or []),
+                               "answer": (r.get("answer") or {}).get("answer")} for r in runs],
+                    "metrics": {"answer_f1": None, "evidence_recall": None, "state_accuracy": None,
+                                "tokens": candidate.get("tokens"), "p95_latency_ms": candidate.get("latency_ms"),
+                                "error_rate": 0.0}},
+        "comparisons": comparisons,
+        "analysis": {"main_effects": [], "interactions": [], "pareto": [],
+                     "stage_waterfall": [{"stage": k, "ms": v} for k, v in stages.items()],
+                     "failure_breakdown": []},
+        "conclusion": conclusion,
+        "web": {"route": f"#/experiments/{_safe_id(experiment_id)}", "published": True},
+    }
+    directory = _report_dir()
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / f"{_safe_id(experiment_id)}.json").write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+    return report
+
+
+def _report_list() -> dict[str, Any]:
+    directory = _report_dir()
+    items = []
+    if directory.is_dir():
+        for path in sorted(directory.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                items.append({"experiment_id": data.get("experiment_id", path.stem),
+                              "created_at": data.get("created_at"),
+                              "status": (data.get("conclusion") or {}).get("status"),
+                              "schema": data.get("schema")})
+            except (OSError, json.JSONDecodeError):
+                continue
+    return {"experiments": items, "count": len(items)}
+
+
+def _report_get(experiment_id: str) -> dict[str, Any]:
+    path = _report_dir() / f"{_safe_id(experiment_id)}.json"
+    if not path.is_file():
+        raise WebError(f"unknown experiment report: {experiment_id}", 404)
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
     args = args or {}
     route = path[len("/api/v2"):] if path.startswith("/api/v2") else path
@@ -328,6 +525,20 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             summary["role"] = "test" if summary.get("split") == "test" else summary.get("split")
             items.append(summary)
         return {"ids": ids, "samples": items, "count": len(items)}
+
+    if route == "/config/axes":
+        return axes()
+
+    if route == "/experiments":
+        return _report_list()
+
+    match = re.fullmatch(r"/jobs/([^/]+)", route)
+    if match:
+        return _job_get(unquote(match.group(1)))
+
+    match = re.fullmatch(r"/experiments/([^/]+)/report", route)
+    if match:
+        return _report_get(unquote(match.group(1)))
 
     if route == "/config/presets":
         presets = []
@@ -391,6 +602,13 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
             "memories": units[start:start + size],
         }
 
+    if route == "/evaluation":
+        path = ROOT / "eval" / "results.json"
+        if not path.is_file():
+            return {"available": False, "reason": "eval/results.json not found"}
+        data = json.loads(path.read_text(encoding="utf-8"))
+        return {"available": True, "source": "eval/results.json", "reports": _report_list()["experiments"], **data}
+
     if route == "/system":
         return {
             "commit": lab_manifest.git_commit(),
@@ -431,4 +649,12 @@ def post(path: str, body: dict[str, Any]) -> dict[str, Any]:
         return _validate(data)
     if route == "/runs":
         return _run(body)
+    if route == "/jobs":
+        return _job_submit(body)
+    match = re.fullmatch(r"/jobs/([^/]+)/cancel", route)
+    if match:
+        return _job_cancel(unquote(match.group(1)))
+    match = re.fullmatch(r"/experiments/([^/]+)/report", route)
+    if match:
+        return _build_report(unquote(match.group(1)), body)
     raise WebError(f"unknown v2 route: {route}", 404)

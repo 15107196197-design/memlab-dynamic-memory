@@ -72,7 +72,7 @@ const app = {
 };
 
 const VIEWS = Object.assign({ home: renderHome, conversation: renderConversation, changes: renderChanges, graph: renderGraph, ask: renderAsk, evaluation: renderEvaluation }, window.V2VIEWS || {});
-const currentView = () => { const v = location.hash.replace(/^#\//, "").split("?")[0]; return VIEWS[v] ? v : "home"; };
+const currentView = () => { const v = location.hash.replace(/^#\//, "").split("?")[0].split("/")[0]; return VIEWS[v] ? v : "home"; };
 const sampleInfo = () => app.samples.find((s) => s.id === app.sampleId) || {};
 const turnOf = (memoryId) => app.turnById.get(memoryId);
 const changeCount = (slot) => slot.relations.filter((r) => r.type !== "RETAIN").length;

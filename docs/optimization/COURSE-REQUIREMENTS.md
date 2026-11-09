@@ -86,12 +86,12 @@
 | 结构化 Memory 内容/时间/来源 | `memlab.MemoryUnit` v2、`model.from_sample` | 有 | Web 未展示 v2 + evidence |
 | 统一 JSON 导出 | `memlab.export.export_v2` / v1 兼容 | **W1 有** | `/api/v2/export?schema=2` + 6 段 bundle 已接；旧 `/api/export` 仍 v1 |
 | Web 查看记忆/证据 | 旧 `web/` + W1 `#/memories` | **W1 有** | v2 详情/evidence/关系/JSON 已接 |
-| 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | **W1 有基础** | `#/ask2` 单题 trace/state/candidates 已接；异步/实验详情 W2 |
+| 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | **W1/W2 有** | `#/ask2` 单题 + `#/lab` 异步 + 实验详情四 tab |
 | 当前有效 Memory + 回答 | `StateView` + U AnswerResult + legacy dynamic | 有 | Web 未展示新 StateView/引用/拒答 |
-| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | 有 | W1 只做单题 run；评测对照/状态指标页 W2 |
+| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | **W2 有归档页** | `#/evaluation2` 展示 test 归档；Web 单题报告 F1/Recall 为 null，不冒充 |
 | Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
-| Web 交付 / 源码 / JSON / 结果 / 报告 | 旧 UI + W1 `/api/v2` | **W1 部分** | W1 已交付记忆/提问/基础实验台；W2/W3 补实验详情/评测/test 2 段/报告 |
-| 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；S5/S7a 有指标/SQLite | 部分 | 报告 JSON + 实验详情页四 tab 未实现 |
+| Web 交付 / 源码 / JSON / 结果 / 报告 | 旧 UI + W1/W2 `/api/v2` | **W2 部分** | 已交付记忆/提问/实验台/报告四 tab/评测归档；W3 补 test 最终评测/报告/复现 |
+| 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；W2 report API + `#/experiments` 四 tab | **W2 有** | 单题报告默认 `inconclusive`；批量多题/CI 待 W2b |
 | Bonus：图/多跳/合并/时间/冲突 | S3/S4 已实现多数 | 超出 | 需在 Lab 中可插拔呈现 |
 
 **结论：** 能力层“只多不少”；**交付层目前少 5 项**（6 段/default、v2 JSON 下载、v2 记忆/证据页、状态 trace 页、Lab/对照/最终交付页）。W1–W3 补齐后，严格满足并超过 PDF。

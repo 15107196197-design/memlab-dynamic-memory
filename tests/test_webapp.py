@@ -1,5 +1,6 @@
 """W1 Web API tests: additive /api/v2, no browser/LLM required."""
 import json
+import time
 import unittest
 from pathlib import Path
 
@@ -55,6 +56,48 @@ class WebAppTests(unittest.TestCase):
         self.assertGreater(out["latency_ms"], 0)
         self.assertTrue(out["trace"])
         self.assertGreater(len(out["candidates"]), 0)
+
+    def test_axes_are_registry_backed(self):
+        data = webapp.get("/api/v2/config/axes")
+        by_id = {axis["id"]: axis for axis in data["axes"]}
+        self.assertIn("schema", by_id)
+        self.assertIn("fusion", by_id)
+        self.assertIn("logic.state_resolver", by_id)
+        self.assertIn("meta_schema", by_id["schema"]["available"])
+
+    def test_async_job_completes(self):
+        job = webapp.post("/api/v2/jobs", {
+            "sample": "conv-26", "preset": "B0",
+            "question": "What did Caroline do last Friday?", "offline": True,
+        })
+        deadline = time.time() + 20
+        while time.time() < deadline:
+            state = webapp.get(f"/api/v2/jobs/{job['job_id']}")
+            if state["status"] in ("done", "error"):
+                break
+            time.sleep(0.1)
+        self.assertEqual(state["status"], "done", state.get("error"))
+        self.assertIn("run_id", state["result"])
+
+    def test_report_has_four_sections_and_is_published(self):
+        base = webapp.post("/api/v2/runs", {"sample": "conv-26", "preset": "B0",
+                                             "question": "What did Caroline do last Friday?", "offline": True})
+        cand = webapp.post("/api/v2/runs", {"sample": "conv-26", "preset": "R0",
+                                             "question": "What did Caroline do last Friday?", "offline": True})
+        report = webapp.post("/api/v2/experiments/w1-test/report", {"run_ids": [base["run_id"], cand["run_id"]]})
+        self.assertEqual(report["schema"], "memlab/experiment-report@1")
+        for key in ("results", "comparisons", "analysis", "conclusion"):
+            self.assertIn(key, report)
+        self.assertEqual(report["conclusion"]["status"], "inconclusive")
+        self.assertTrue(report["web"]["published"])
+        self.assertEqual(webapp.get("/api/v2/experiments/w1-test/report")["experiment_id"], "w1-test")
+
+    def test_evaluation_archive_is_available(self):
+        data = webapp.get("/api/v2/evaluation")
+        self.assertTrue(data["available"])
+        self.assertIn("full", data["qa"]["test"]["summary"])
+        self.assertIn("vector", data["qa"]["test"]["summary"])
+        self.assertIn("test", data["split"])
 
     def test_static_shell_has_v2_navigation(self):
         html = (Path(__file__).resolve().parents[1] / "web" / "index.html").read_text(encoding="utf-8")

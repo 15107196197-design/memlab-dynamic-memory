@@ -26,11 +26,11 @@
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
 | 当前 commit | `git log -1 --oneline`；S7b-A 提交 `4fc1571`；前序 `5a68024`（审计遗留项收尾）、`65d2f41`（HANDOFF pin）、`29261f1`（控制面 P0/P1） |
 | 分支 | `main` |
-| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 Web MVP 代码已接入**（`/api/v2` + v2 记忆/提问/实验台/系统页，旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
-| 测试 | `python -m unittest discover -s tests -t .` → **229 passed**（223 + Web 6） |
+| 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾 + S7b-A 已提交；**W1 + W2 核心 Web 已接入**（`/api/v2`、v2 记忆/提问、轴编辑器、异步 job、实验报告四 tab、评测归档页；旧 `/api/*` 保留）；`activity-dashboard/` 是未跟踪原型 |
+| 测试 | `python -m unittest discover -s tests -t .` → **233 passed**（223 + Web 10） |
 | 已实现 | S1–S5 + hardening + S7a + S6；控制面 runnable/no-op 门禁、per-plan dataset、ok/error resume、config_hash 去重；`graph.repr=event_sparse`（离线确定性版）；spec `deferred` 记录 + sweep 报告；E4 的 B0/CHEAP/QUALITY 独立配置；**S7b-A** offline 耦合 screen；**provider adapter**（Ollama + OpenAI-compatible）、**LLM Judge**、**CLI/preflight** |
-| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**Web W2–W3**（实验台轴编辑/异步批量/实验详情四 tab/最终 test 评测；W1 已实现）；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
-| 当前阶段 | **W1 Web MVP 已完成**：6 段 / v2 Memory / v2 JSON / 提问与状态 / 基础实验台 / 系统页；旧 API 保留。下一步 W2（轴编辑器、异步 run、实验详情四 tab、test 评测）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
+| 未实现 | 真实模型尚未接入（无 Ollama/key），因此 S6 B 级尚未实跑；E1.2 参数/E1.3 模块 LLM、S7b-B 正式结论（Oracle/LLM 归因）；**W2 批量多题实验报告 / W3 最终 test 评测/截图/复现包**；E1b 的 hmem/structmem/amem、community、cot、llm_summary 已**正式延后**（见 §5.1.8） |
+| 当前阶段 | **W2 核心已完成**：轴配置器 + runnable gate、异步 job、实验详情 Results/Comparison/Analysis/Conclusion、评测归档页；W1 记忆/JSON/提问保留。下一步 W2b（批量多题实验报告）/ W3（test 最终评测、截图、复现包）。真实模型仍未接入，B 级待跑；见 [WEB-DESIGN.md](WEB-DESIGN.md)、[COURSE-REQUIREMENTS.md](COURSE-REQUIREMENTS.md)、[RUNBOOK.md](RUNBOOK.md) |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -698,9 +698,24 @@ C. <降级子集>：...；结果只能标 <A 级/未验证>
 - 边界：W1 是单题同步；没有异步 job、轴编辑器、批量实验、实验详情四 tab、test 2 段最终评测（W2/W3）。legacy 模式无 Ollama 会返回 502。Safari remote automation 未启用，未做自动截图验收。
 - 结果数据：未产生正式实验 run；offline 单题仅用于接口冒烟，不写入候选表。
 
+### 5.1.11 W2 Web 实验台/报告（2026-11-09）
+
+- 目标：让每个插拔配置可校验/可运行，并把实验的 results/comparisons/analysis/conclusion 呈现到 Web。
+- 已实现：
+  - `GET /api/v2/config/axes`：13 条 registry-backed 轴（schema/write/graph/planner/fusion/rerank/post/logic/answer），供 Lab 下拉。
+  - `POST /api/v2/jobs` + `GET /api/v2/jobs/{id}` + cancel：单 worker 异步队列；前端轮询；作业结果与同步 `runs` 共用 `_run`。
+  - Lab 页：preset + 13 轴下拉 + JSON + validate + `runnable/problems/hash` + 异步运行 + 结果/trace。
+  - `GET/POST /api/v2/experiments/{id}/report`：`memlab/experiment-report@1`，四段 results/comparisons/analysis/conclusion；无 conclusion 显示 `not_analyzed`；单题报告明确标 `inconclusive`。
+  - `#/experiments/<id>`：四个 tab；可从 baseline/candidate run_id 生成报告；`GET /api/v2/experiments` 列表。
+  - `GET /api/v2/evaluation` + `#/evaluation2`：test 归档 Full/Vector/Hybrid/Dynamic F1/Recall/状态/latency，标明 `eval/results.json` 27B 来源。
+- 测试：**233 passed**；新增 axes/async job/report/evaluation 测试。
+- 边界：报告目前基于单题/两条 Web run；`answer_f1/evidence_recall/state_accuracy` 无 gold 时为 `null`，不冒充统计结论。批量多题、跨 seed、CI、实验详情自动统计是 W2b/W3。`reports/experiments` 被 gitignore，最终归档 W3 处理。
+- 兼容：旧 `/api/*`、旧 tab 不变；W1 的 sync `/api/v2/runs` 保留。
+
 ### 5.2 未开始
 - [x] W1 Web MVP：6 段入口、记忆库 v2、v2 JSON 下载、提问/状态页、基础实验台、系统页、旧 API 兼容（2026-11-09，229 tests）
-- [ ] W2 Web 实验台：轴配置器 + runnable gate + 异步 run + 瀑布/Pareto + 评测对照 + **实验详情四 tab（Results/Comparison/Analysis/Conclusion）**（P0/P1）
+- [x] W2 核心 Web 实验台：轴配置器 + runnable gate + 异步 job + 实验详情四 tab + 评测归档页（2026-11-09，233 tests）
+- [ ] W2b：批量多题/固定题集 + 真实 F1/Recall/状态指标写入报告 + CI/结论状态自动判定
 - [ ] 实验报告器：`memlab/experiment-report@1`（results/comparisons/analysis/conclusion）落盘 + Web API；每次实验强制
 - [ ] W3 Web 交付：6 段/test 评测、截图/演示、复现包、报告素材（最终报告前）
 - [ ] E0 基线复现

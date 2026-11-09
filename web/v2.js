@@ -202,54 +202,204 @@
     $("#v2-run").onclick = run;
   }
 
+  const getPath = (obj, path) => path.split(".").reduce((node, key) => (node && typeof node === "object" ? node[key] : undefined), obj);
+  const setPath = (obj, path, value) => {
+    const parts = path.split(".");
+    let node = obj;
+    for (const part of parts.slice(0, -1)) {
+      if (!node[part] || typeof node[part] !== "object") node[part] = {};
+      node = node[part];
+    }
+    node[parts[parts.length - 1]] = value;
+  };
+
+  async function waitJob(id) {
+    for (;;) {
+      const job = await api(`/api/v2/jobs/${encodeURIComponent(id)}`);
+      if (["done", "error", "cancelled"].includes(job.status)) return job;
+      await new Promise((resolve) => setTimeout(resolve, 700));
+    }
+  }
+
   async function renderLab2(root) {
-    const list = await presets();
+    const [list, axisData] = await Promise.all([presets(), api("/api/v2/config/axes")]);
+    const axes = axisData.axes;
     const options = list.filter((p) => !p.error).map((p) => `<option value="${esc(p.name)}" ${p.name === "B0" ? "selected" : ""}>${esc(p.name)}</option>`).join("");
-    root.innerHTML = `${header("EXPERIMENT LAB", "实验台", "每个插拔配置都先校验，再运行；不可运行项会给出原因，不会静默 fallback。")}
+    root.innerHTML = `${header("EXPERIMENT LAB", "实验台", "每改一个轴就校验一次；可运行才允许运行，不可运行会给出 available/problem，不静默 fallback。")}
       <div class="v2-cols">
         <div class="card pad">
-          <h3>配置</h3>
+          <div class="row" style="justify-content:space-between"><h3>配置</h3><span class="muted small">W2 · async job</span></div>
           <div class="toolbar"><select id="v2-lab-preset" class="field">${options}</select><button id="v2-lab-validate" class="btn">校验</button></div>
-          <textarea id="v2-lab-config" class="field mono" style="min-height:300px;font-size:12px"></textarea>
+          <div id="v2-lab-axes" class="v2-axes"></div>
+          <textarea id="v2-lab-config" class="field mono" style="min-height:240px;font-size:12px"></textarea>
           <div id="v2-lab-check" class="note"></div>
         </div>
         <div class="card pad">
           <h3>运行</h3>
-          <p class="muted small">当前 ${esc(app.sampleId)}；W1 为单题同步运行，异步批量/实验详情四 tab 在 W2。</p>
+          <p class="muted small">当前 ${esc(app.sampleId)}；单题异步运行，服务端串行，可轮询状态。</p>
           <textarea id="v2-lab-question" class="field" placeholder="问题"></textarea>
-          <label class="small"><input type="checkbox" id="v2-lab-offline" checked> offline</label>
+          <label class="small"><input type="checkbox" id="v2-lab-offline" checked> offline 演示</label>
           <div class="row" style="margin-top:10px"><button id="v2-lab-run" class="btn primary">运行</button><span id="v2-lab-status" class="muted small"></span></div>
+          <div id="v2-lab-link" class="note"></div>
         </div>
       </div>
       <div id="v2-lab-out" style="margin-top:18px"></div>`;
+
+    const configEl = $("#v2-lab-config");
+    const checkEl = $("#v2-lab-check");
+    let lastCheck = null;
+    const axisHtml = (config) => axes.map((axis) => {
+      const current = getPath(config, axis.path);
+      const opts = axis.available.map((n) => `<option value="${esc(n)}" ${String(n) === String(current) ? "selected" : ""}>${esc(n)}</option>`).join("");
+      return `<label class="v2-axis"><span>${esc(axis.label)}</span><select data-path="${esc(axis.path)}" data-string="${axis.string ? "1" : "0"}">${opts}</select></label>`;
+    }).join("");
+    const setAxisValues = (config) => {
+      $$("#v2-lab-axes select").forEach((sel) => {
+        const v = getPath(config, sel.dataset.path);
+        if (v !== undefined) sel.value = String(v);
+      });
+    };
     const fill = () => {
       const p = list.find((x) => x.name === $("#v2-lab-preset").value);
-      $("#v2-lab-config").value = JSON.stringify(p?.config || {}, null, 2);
+      const config = p?.config || {};
+      configEl.value = JSON.stringify(config, null, 2);
+      $("#v2-lab-axes").innerHTML = axisHtml(config);
+      setAxisValues(config);
+      lastCheck = null;
+      checkEl.textContent = "未校验";
+      $("#v2-lab-link").innerHTML = "";
     };
     $("#v2-lab-preset").onchange = fill;
     fill();
+    $("#v2-lab-axes").onchange = (event) => {
+      const sel = event.target.closest("select[data-path]");
+      if (!sel) return;
+      try {
+        const config = JSON.parse(configEl.value);
+        setPath(config, sel.dataset.path, sel.value);
+        configEl.value = JSON.stringify(config, null, 2);
+        lastCheck = null;
+        checkEl.textContent = "配置已改变；点“校验”确认可运行。";
+      } catch (err) { checkEl.textContent = "配置文件不是合法 JSON"; }
+    };
     $("#v2-lab-validate").onclick = async () => {
       try {
-        const cfg = JSON.parse($("#v2-lab-config").value);
+        const cfg = JSON.parse(configEl.value);
         const check = await api("/api/v2/config/validate", { config: cfg });
-        $("#v2-lab-check").innerHTML = `<b>${check.valid && check.runnable ? "可运行" : "不可运行"}</b> · ${esc(check.config_hash || "")}<br>${(check.problems || []).map((p) => esc(p)).join("<br>") || "no problems"}<br><span class="muted">${(check.warnings || []).map((w) => esc(w)).join("<br>")}</span>`;
-      } catch (err) { $("#v2-lab-check").textContent = err.message; }
+        lastCheck = check;
+        checkEl.innerHTML = `<b>${check.valid && check.runnable ? "可运行" : "不可运行"}</b> · ${esc(check.config_hash || "")}<br>${(check.problems || []).map((p) => esc(p)).join("<br>") || "no problems"}<br><span class="muted">${(check.warnings || []).map((w) => esc(w)).join("<br>")}</span>`;
+      } catch (err) { checkEl.textContent = err.message; }
     };
     $("#v2-lab-run").onclick = async () => {
       const q = $("#v2-lab-question").value.trim();
       if (!q) return;
-      $("#v2-lab-status").textContent = "运行中…";
+      $("#v2-lab-status").textContent = "提交…";
       $("#v2-lab-run").disabled = true;
       try {
-        const cfg = JSON.parse($("#v2-lab-config").value);
-        const out = await api("/api/v2/runs", { sample: app.sampleId, question: q, config: cfg, offline: $("#v2-lab-offline").checked });
+        const cfg = JSON.parse(configEl.value);
+        const job = await api("/api/v2/jobs", { sample: app.sampleId, question: q, config: cfg, offline: $("#v2-lab-offline").checked });
+        $("#v2-lab-status").innerHTML = `<span class="spinner"></span> ${esc(job.status)}`;
+        const done = await waitJob(job.job_id);
+        if (done.status !== "done") throw new Error(done.error || done.status);
+        const out = done.result;
         $("#v2-lab-out").innerHTML = renderRun(out);
         $("#v2-lab-status").textContent = `完成 · ${out.latency_ms ?? "?"} ms`;
+        window.__v2lastRuns = [out.run_id];
+        $("#v2-lab-link").innerHTML = `run: <span class="mono">${esc(out.run_id)}</span> · <a href="#/experiments/${esc(out.run_id)}">生成/查看实验报告 →</a>`;
       } catch (err) {
         $("#v2-lab-out").innerHTML = `<p class="note warn">${esc(err.message)}</p>`;
         $("#v2-lab-status").textContent = "失败";
       } finally { $("#v2-lab-run").disabled = false; }
     };
+  }
+
+  async function renderExperiment(root) {
+    const path = location.hash.replace(/^#\//, "").split("?")[0].split("/");
+    const id = path[1] || "";
+    const list = await api("/api/v2/experiments");
+    let report = null;
+    if (id) {
+      try { report = await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`); } catch (err) { report = null; }
+    }
+    if (!report) {
+      const runs = window.__v2lastRuns || [];
+      root.innerHTML = `${header("EXPERIMENT REPORT", "实验详情", "报告必须有 Results / Comparison / Analysis / Conclusion 四段；单题冒烟会标 inconclusive，不冒充统计结论。")}
+        <div class="card pad">
+          <h3>${id ? "生成报告" : "已有报告"}</h3>
+          ${id ? `<p class="muted">实验 id：<span class="mono">${esc(id)}</span></p>` : ""}
+          <div class="toolbar">
+            <input id="v2-rep-base" class="field" placeholder="baseline run_id" value="${esc(runs[0] || "")}">
+            <input id="v2-rep-cand" class="field" placeholder="candidate run_id" value="${esc(runs[runs.length - 1] || "")}">
+            <button id="v2-rep-build" class="btn primary">生成</button>
+          </div>
+          <div id="v2-rep-status" class="note"></div>
+          <h3 style="margin-top:18px">已有报告</h3>
+          ${list.experiments.length ? list.experiments.map((r) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:7px 0"><a href="#/experiments/${esc(r.experiment_id)}">${esc(r.experiment_id)}</a><span class="muted small">${esc(r.status || "")}</span></div>`).join("") : `<p class="muted">暂无报告。</p>`}
+        </div>`;
+      $("#v2-rep-build").onclick = async () => {
+        if (!id) { $("#v2-rep-status").textContent = "请先从实验台运行并打开对应 run 的实验报告链接。"; return; }
+        try {
+          $("#v2-rep-status").textContent = "生成中…";
+          await api(`/api/v2/experiments/${encodeURIComponent(id)}/report`, { run_ids: [$("#v2-rep-base").value.trim(), $("#v2-rep-cand").value.trim()] });
+          renderExperiment(root);
+        } catch (err) { $("#v2-rep-status").textContent = err.message; }
+      };
+      return;
+    }
+    const c = report.conclusion || {};
+    const tabs = { results: "Results", comparison: "Comparison", analysis: "Analysis", conclusion: "Conclusion" };
+    const tabBody = (tab) => {
+      if (tab === "results") {
+        return `<table class="v2-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
+          ${(report.results.runs || []).map((r) => `<tr><td class="mono">${esc(r.run_id)}</td><td>${esc(r.question || "")}</td><td>${esc(r.tokens ?? "—")}</td><td>${esc(r.latency_ms ?? "—")}</td><td>${esc(r.candidates ?? "—")}</td><td>${esc((r.answer || "").slice(0, 80))}</td></tr>`).join("")}
+        </tbody></table><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre>`;
+      }
+      if (tab === "comparison") {
+        return `<table class="v2-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th></tr></thead><tbody>
+          ${(report.comparisons || []).map((r) => `<tr><td>${esc(r.metric)}</td><td>${esc(r.baseline_value ?? "—")}</td><td>${esc(r.candidate_value ?? "—")}</td><td>${esc(r.delta ?? "—")}</td></tr>`).join("")}
+        </tbody></table>`;
+      }
+      if (tab === "analysis") {
+        return `<h3>Stage waterfall</h3>${(report.analysis.stage_waterfall || []).map((s) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:6px 0"><span>${esc(s.stage)}</span><span class="mono">${esc(s.ms)} ms</span></div>`).join("") || `<p class="muted">—</p>`}
+          <pre class="v2-pre">${esc(JSON.stringify(report.analysis, null, 2))}</pre>`;
+      }
+      return `<div class="row"><span class="pill ${esc(c.status || "")}">${esc(c.status || "not_analyzed")}</span><span class="mono">${esc(report.experiment_id)}</span></div>
+        <h3 style="margin-top:14px">Claims</h3><ul>${(c.claims || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
+        <h3>Conditions</h3><ul>${(c.conditions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
+        <h3>Limitations</h3><ul>${(c.limitations || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>
+        <h3>Next actions</h3><ul>${(c.next_actions || []).map((x) => `<li>${esc(x)}</li>`).join("") || "<li>—</li>"}</ul>`;
+    };
+    root.innerHTML = `${header("EXPERIMENT REPORT", `实验 ${report.experiment_id}`, `schema: ${esc(report.schema)} · ${esc(report.created_at)}`)}
+      <div class="seg" id="v2-rep-tabs">${Object.entries(tabs).map(([k, v], i) => `<button data-tab="${k}" class="${i === 0 ? "on" : ""}">${v}</button>`).join("")}</div>
+      <div class="card pad" id="v2-rep-body" style="margin-top:14px">${tabBody("results")}</div>
+      <p class="muted small" style="margin-top:12px"><a href="#/experiments">全部实验报告</a> · <a href="#/lab">回实验台</a></p>`;
+    $$("#v2-rep-tabs button").forEach((b) => (b.onclick = () => {
+      $$("#v2-rep-tabs button").forEach((x) => x.classList.toggle("on", x === b));
+      $("#v2-rep-body").innerHTML = tabBody(b.dataset.tab);
+    }));
+  }
+
+  async function renderEvaluation2(root) {
+    const data = await api("/api/v2/evaluation");
+    if (!data.available) { root.innerHTML = `${header("EVALUATION", "评测对照", "")}<p class="note warn">${esc(data.reason)}</p>`; return; }
+    const test = data.qa?.test || {};
+    const retrieval = data.retrieval?.test || {};
+    const state = data.state?.by_split?.test || {};
+    const methods = Object.keys(test.summary || {});
+    const rows = methods.map((m) => {
+      const q = test.summary[m] || {};
+      const st = state[m] || {};
+      return `<tr><td>${esc(m)}</td><td>${esc(q.f1 ?? "—")}</td><td>${esc(q.evidence_recall ?? "—")}</td><td>${esc(q.mean_seconds ?? "—")}</td><td>${esc(st.memory_state_accuracy ?? "—")}</td></tr>`;
+    }).join("");
+    const rrows = Object.entries(retrieval.summary || {}).filter(([k]) => k !== "dynamic_candidates").map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v["@15"] ?? "—")}</td></tr>`).join("");
+    root.innerHTML = `${header("EVALUATION", "评测对照", "课程要求的 F1 / Recall@K / 状态准确率，以及 Full Text / Vector RAG 对照。归档结果来自 eval/results.json，明确标注模型与 split。")}
+      <div class="note">来源：<span class="mono">${esc(data.source)}</span> · 模型 ${esc(data.answer_model || "—")} / ${esc(data.embedding_model || "—")} · 测试对话 ${esc((data.split?.test || []).join(", "))} · 归档时间 ${esc(data.generated_at || "—")}</div>
+      <div class="v2-cols">
+        <div class="card pad"><h3>QA（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>F1</th><th>evidence recall</th><th>sec</th><th>state acc</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table>
+          <p class="muted small">这是归档的 27B 结果；当前 W2 的 offline 单题不写入此表。</p></div>
+        <div class="card pad"><h3>Retrieval Recall@15（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>@15</th></tr></thead><tbody>${rrows || `<tr><td colspan="2" class="muted">—</td></tr>`}</tbody></table></div>
+      </div>
+      <div class="card pad" style="margin-top:16px"><h3>Web 实验报告</h3>${data.reports?.length ? data.reports.map((r) => `<div class="row" style="justify-content:space-between;border-bottom:1px solid var(--line-2);padding:7px 0"><a href="#/experiments/${esc(r.experiment_id)}">${esc(r.experiment_id)}</a><span class="muted small">${esc(r.status || "not_analyzed")}</span></div>`).join("") : `<p class="muted">还没有 Web 实验报告；去实验台运行 baseline + candidate 后生成。</p>`}</div>`;
   }
 
   async function renderSystem(root) {
@@ -268,5 +418,5 @@
     };
   }
 
-  window.V2VIEWS = { memories: renderMemories, ask2: renderAsk2, lab: renderLab2, system: renderSystem };
+  window.V2VIEWS = { memories: renderMemories, ask2: renderAsk2, lab: renderLab2, experiments: renderExperiment, evaluation2: renderEvaluation2, system: renderSystem };
 })();

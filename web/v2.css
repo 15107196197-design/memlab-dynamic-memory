@@ -38,3 +38,7 @@
 .v2-step { padding: 6px 0; border-bottom: 1px solid var(--line-2); font-size: 13px; }
 .v2-step > .mono { margin-right: 8px; }
 @media (max-width: 820px) { .v2-split, .v2-cols { grid-template-columns: 1fr; } }
+.v2-axes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; margin: 10px 0; }
+.v2-axis { display: flex; flex-direction: column; gap: 3px; font-size: 12px; color: var(--muted); }
+.v2-axis select { border: 1px solid var(--line); border-radius: 6px; padding: 5px 6px; font-size: 12px; color: var(--ink); background: #fff; }
+@media (max-width: 640px) { .v2-axes { grid-template-columns: 1fr; } }
