@@ -21,13 +21,14 @@
 |---|---|
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
-| 基线 commit | `ff6c7a1` |
+| 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
+| 当前 commit | S0 `420ed0b`；S1 见 `git log -1 --oneline` |
 | 分支 | `main` |
-| 工作区状态 | `docs/optimization/`、`configs/`、`eval/archive/legacy-b0-results.json` 已提交（S0 commit）；`memwb/` 业务代码未改 |
-| 测试 | `python -m unittest discover -s tests -t .` → **38 passed** |
-| 已实现 | 现有 `memwb` 原型：四方法、BM25/向量/RRF、状态槽/版本链、F1/Recall/状态评测、Web |
-| 未实现 | `memlab` 运行时、注册表、MemoryUnit v2、图/规划/重排/双时间/审计、实验控制面、Lab UI |
-| 当前阶段 | **S0 完成**：remote 已冻结、tag 已打、基线已归档、首次提交完成；准备进入 S1 |
+| 工作区状态 | S1 新增 `memlab/` 与 `tests/test_memlab.py` 并已提交；`memwb/`、`server.py`、`web/` 未改 |
+| 测试 | `python -m unittest discover -s tests -t .` → **77 passed**（旧 38 + 新增 39） |
+| 已实现 | `memwb` 原型（四方法、BM25/向量/RRF、状态槽/版本链、评测、Web）+ `memlab` S1 骨架（contracts/registry/config/manifest/LLM 包装/legacy 适配） |
+| 未实现 | MemoryUnit v2 迁移、图/规划/重排/双时间/审计、实验控制面、Lab UI |
+| 当前阶段 | **S1 完成**：契约/注册表/config/manifest/legacy 适配已落地，旧测试全过、legacy 行为不变；准备进入 S2 |
 
 ## 1.1 仓库、远程与迁移（本地 → 个人 → 团队）
 
@@ -171,6 +172,20 @@ artifacts/
 | `configs/experiments/e3-factorial.json` | E3 模块间组合 + E3b/E3c |
 | `configs/experiments/e4-environment-grid.json` | LLM × 规模 × 场景环境网格 |
 
+### 1.2.1 S1 代码资产（`memlab/`）
+
+| 文件 | 内容 | 后续会话怎么用 |
+|---|---|---|
+| `memlab/contracts.py` | `MemoryUnit`、`Relation`、`Span`、`Interval`、`QueryFrame`、`Plan`/`PlanNode`、`Candidate`、`StateView`、`WriteDecision` | S2 迁移 v1→v2；S3/S4 阶段输入输出 |
+| `memlab/registry.py` | `register`/`build`/`get`/`list_implementations`；重复注册报错；未知实现列出可用项 | 所有新实现用 `@register(axis, name)` 挂载 |
+| `memlab/config.py` | `RunConfig`、`canonical_json`、`digest`、`config_hash`；结构 + 目录 + 能力三重校验 | S5 编译器的配置入口 |
+| `memlab/manifest.py` | `RunManifest`、`build_manifest`、`git_commit`/`dataset_hash`/`prompt_hash` | 每次 run 写 manifest；S5 写入 SQLite |
+| `memlab/llm.py` | `LLMClient`/`EmbeddingClient`：`fingerprint()`、tokens/latency 记账，生成行为不变 | S2 缓存键用 `fingerprint()` |
+| `memlab/legacy.py` | `legacy_full/vector/hybrid/dynamic` 适配器，转发 `memwb.pipeline.answer` | B0 对照，永久保留 |
+| `memlab/runtime.py` | `Runtime`：config + 两个 client + method 适配器 + manifest | S3 起作为 `ctx` 扩展 |
+| `tests/test_memlab.py` | 39 个 S1 测试（含 10 题 × 4 方法 legacy 对照） | 回归门禁 |
+
+
 ---
 
 ## 2. 不可丢的架构不变量
@@ -202,6 +217,11 @@ artifacts/
 | LLM 归因 | **LLM 阶梯 + 同 LLM 全文对照 + 方差分解 + 中介** | 回答“是系统好还是 LLM 强” |
 | E3 主设计 | **5 模块 on/off + E3b 参数 + E3c 时序** | 避免 Schema/Temporal 结构性零单元格 |
 | 默认部署 | 最终是 **条件策略**，不是单一配置 | 不同 LLM/规模/场景最优不同 |
+| legacy 方法挂哪个轴 | `method` 轴 + `legacy_*` 名字 | 不占用未来 W/S/R/M/U/K 轴；配置可写 `"method": {"impl": ...}`，缺省 `legacy_dynamic` |
+| 配置校验依据 | `configs/variants.json` 是“已声明目录”，注册表是“本版本已实现” | S1 只实现 legacy，但必须能加载已声明 R0 配置；实现缺失留给后续会话报错 |
+| token 记账方式 | 包装层临时代理 `memwb.llm.post` 读取 `prompt_eval_count`/`eval_count` | 不改 `memwb` 生成行为；mock 时 tokens 记 `None`，不编造 |
+| legacy 适配验收口径 | 输出 JSON 去掉 `steps[].ms` 后逐字节一致；10 题 × 4 方法 | 计时天然不同，其余必须 0 差异 |
+
 
 ---
 
@@ -242,6 +262,12 @@ artifacts/
 - [x] S0：归档 `eval/results.json` → `eval/archive/legacy-b0-results.json`
 - [x] S0：38 个测试通过（2026-11-09）
 - [x] S0：首次提交完成（见 `git log -1 --oneline`）
+- [x] S1：`memlab/` 骨架（contracts/registry/config/manifest/llm/legacy/runtime）
+- [x] S1：`RunConfig` 三重校验（结构/目录/能力），拒绝 `graph.repr=none` + 非 `vector_only`
+- [x] S1：`RunManifest` 记录 commit/config/dataset/model/seed/judge/prompt/created_at
+- [x] S1：四个 legacy 适配器注册到 `method` 轴，10 题 × 4 方法与旧版 0 差异
+- [x] S1：77 个测试通过（2026-11-09），未 push upstream
+
 
 ### 5.1.1 B0 基线指标（归档值，未重跑）
 
@@ -256,10 +282,23 @@ artifacts/
 
 检索（test，351 题）：BM25@15 0.6817；Vector@15 0.5824；Hybrid@15 0.7353；Dynamic 候选召回 0.7681（平均 21.55 条）。
 
+### 5.1.2 S1 legacy 对照记录（mock LLM，固定 10 题）
+
+> 协议：conv-26 前 10 个可答题；`memory.build` 与 retriever 固定输入，`llm.generate` 为固定回复（答案用 gold，故 F1=1.0 两侧都相同）；比较“旧 `memwb.pipeline.answer`”与“`memlab` 适配器”的完整输出。测试：`tests/test_memlab.py::LegacyParityTests`。
+
+| 方法 | 输出差异（去 `steps.ms`） | F1（两侧） | 证据 Recall（两侧） | 状态标注 |
+|---|---:|---:|---:|---|
+| full | 0 / 10 | 1.0 | 1.0 | — |
+| vector | 0 / 10 | 1.0 | 0.1 | — |
+| hybrid | 0 / 10 | 1.0 | 0.1 | — |
+| dynamic | 0 / 10 | 1.0 | 0.1 | 3 条/题，逐题一致 |
+
+结论：S1 适配层未改变 legacy 行为（答案、`valid_memory_ids`、状态、检索轮次、关系、`steps` 名称/描述全部一致；仅耗时不同）。F1/Recall 数值只用于对照，不代表 B0 真实效果；真实指标仍以 §5.1.1 归档值为准。
+
 ### 5.2 未开始
-- [ ] `memlab` 代码骨架
-- [ ] `memlab` 测试
-- [ ] 实验 runner / SQLite / analysis
+- [ ] MemoryUnit v2 迁移 / export v2 / 内容寻址缓存（S2）
+- [ ] W/S/R 六模块实现与测试（S3，M/U/K 在 S4）
+- [ ] 实验 runner / SQLite / analysis（S5）
 - [ ] E0 基线复现
 - [ ] E1 六模块实验
 - [ ] E2/E3/E4/E5
@@ -310,6 +349,24 @@ artifacts/
 - 下个会话先读：
 ```
 
+### 7.1 交接记录（最新在上）
+
+### 2026-11-09 / S1 / 会话
+- 本次完成：`memlab` 骨架全部落地——contracts、registry、config（canonical hash + 三重校验）、manifest、LLM/Embedding 包装、四个 legacy 适配器、Runtime；39 个新测试。
+- 改动文件：新增 `memlab/{__init__,contracts,registry,config,manifest,llm,legacy,runtime}.py`、`tests/test_memlab.py`；更新本 HANDOFF。`memwb/`、`server.py`、`web/` 零改动。
+- 测试：`python -m unittest discover -s tests -t .` → **77 passed**（旧 38 + 新 39）；未 push upstream。
+- 新增 run_id / 指标：无真实 run（未跑 Ollama）。legacy 对照：10 题 × 4 方法，输出差异 0（去 `steps.ms`），记录见 §5.1.2。
+- 关键决策（新增/变更）：legacy 方法挂 `method` 轴；配置校验以 `configs/variants.json` 为“已声明目录”；token 记账用 `memwb.llm.post` 临时代理，不改生成行为；适配器验收口径为去计时后逐字节一致。
+- 未解决问题：
+  1. `RunConfig` 的 `retrieval.k` / `graph.retrieval.params.limit` 尚未自动注入 `Runtime.answer`（S5 编译器负责 effective config）。
+  2. `MemLab` 尚未覆盖 `memwb` 的 embedding 缓存键（S2 内容寻址统一处理）。
+  3. `run_id` 只保证可读，尚未与 SQLite 主键/分片规则对齐（S5）。
+- 下一步 3 件事：
+  1. S2：MemoryUnit v1→v2 适配、export v2、`ArtifactCache` 内容寻址（prompt/schema/impl/params/model）。
+  2. S2 测试：换 `prompt_hash` / `schema_version` 必须缓存 miss；v1 export 仍可读。
+  3. 保持 77 测试全过；在 HANDOFF 记录迁移前后字段差异。
+- 下个会话先读：本文件 §1、§2、§3；`02-architecture.md` 的 2.5/2.9/2.12；`memory.py`、`export.py`、`extraction.py`；`configs/reference-b0.json`。
+
 ---
 
 ## 8. 新会话应该带什么、不应该带什么
@@ -347,15 +404,15 @@ artifacts/
 
 ---
 
-## 10. 建议的下一步（M0）
+## 10. 建议的下一步（S2）
 
-1. `git tag legacy-b0`，归档 `eval/`。
-2. 新增 `memlab/experiments/manifest.py`：记录 git commit、config hash、dataset hash、model digest、seed、judge。
-3. 新增 `memlab/llm.py` 包装现有 `memwb.llm`，加 `fingerprint()` 与 token/latency 记录。
-4. 把现有四方法包成 `legacy_*` 适配器（行为不变）。
-5. 跑 38 个测试 + 10 题冒烟，确认 B0 输出一致。
+1. `memlab/model.py`：把现有 turns/facts/states 适配为 `MemoryUnit` v2（缺时间标 `unknown`，不伪造）。
+2. `memlab/export.py`：`memory-export@2`，保留 v1 读取（`?schema=v1` 或 legacy 函数）。
+3. `memlab/cache.py`：`ArtifactCache`，键 = stage/input/impl/params/prompt_hash/model_fingerprint/schema_version。
+4. 测试：v1↔v2 往返、换 prompt/schema 缓存 miss、同输入二次读取 hit、旧 export 可读。
+5. 前置检查：确认 S1 的 `RunConfig.config_hash` 与 `LLMClient.fingerprint()` 直接进入缓存键，不再另造哈希。
 
-**验收：** 同一配置两次运行，核心指标差异 ≤ 0.01；manifest 完整；旧测试全过。
+**验收：** 旧 77 个测试全过；新增缓存失效测试；10 条记忆迁移前后字段差异写进 HANDOFF §5。
 
 ---
 
