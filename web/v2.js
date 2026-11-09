@@ -12,6 +12,18 @@
   const splitLabel = (s) => SPLIT_LABEL[s.split] || s.split || "—";
   const statePill = (state) => `<span class="v1-shape">${({ ACTIVE: "●", HISTORICAL: "○", CONFLICT: "◇", UNRESOLVED: "◌" }[state] || "◌")}</span> <span>${esc(STATE_LABEL[state] || state || "not_available")}</span>`;
   const statusBadge = (status, label) => `<span class="badge ${esc(status || "ready")}">${esc(label || status || "ready")}</span>`;
+  // Dotted-path helpers used by the experiment lab axis editor (config like graph.repr.impl).
+  const getPath = (obj, path) => String(path || "").split(".").filter(Boolean)
+    .reduce((cur, key) => (cur == null ? undefined : cur[key]), obj);
+  const setPath = (obj, path, value) => {
+    const keys = String(path || "").split(".").filter(Boolean);
+    let cur = obj;
+    keys.forEach((key, i) => {
+      if (i === keys.length - 1) cur[key] = value;
+      else { if (cur[key] == null || typeof cur[key] !== "object") cur[key] = {}; cur = cur[key]; }
+    });
+    return obj;
+  };
   const optionLabel = (axis, name) => {
     const st = axis?.option_status?.[name];
     return st ? `${name} · ${st.label_zh || st.status}` : name;
