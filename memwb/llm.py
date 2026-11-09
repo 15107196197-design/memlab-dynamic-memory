@@ -43,10 +43,22 @@ def embedding_options():
     return model_options()
 
 
-def generate(prompt, json_mode=False, model=None, max_tokens=None):
+def generate(prompt, json_mode=False, model=None, max_tokens=None, *,
+             temperature=None, num_ctx=None, options=None):
     """Deterministic generation. Truncation and context shifting are disabled so that
-    an over-long prompt fails loudly instead of silently dropping evidence."""
-    num_ctx = config.context_size()
+    an over-long prompt fails loudly instead of silently dropping evidence.
+
+    ``temperature``, ``num_ctx`` and ``options`` are optional overrides used by the
+    MemLab wrapper; when omitted the legacy defaults are unchanged.
+    """
+    effective_ctx = config.context_size() if num_ctx is None else int(num_ctx)
+    effective_options = {
+        "temperature": 0 if temperature is None else float(temperature),
+        "num_ctx": effective_ctx,
+        **model_options(),
+    }
+    if options:
+        effective_options.update(dict(options))
     body = {
         "model": model or config.answer_model(),
         "prompt": prompt,
@@ -54,14 +66,14 @@ def generate(prompt, json_mode=False, model=None, max_tokens=None):
         "think": False,
         "truncate": False,
         "shift": False,
-        "options": {"temperature": 0, "num_ctx": num_ctx, **model_options()},
+        "options": effective_options,
     }
     if max_tokens:
         body["options"]["num_predict"] = max_tokens
     if json_mode:
         body["format"] = "json"
     payload = post("/api/generate", body)
-    if payload.get("prompt_eval_count", 0) >= num_ctx - 16:
+    if payload.get("prompt_eval_count", 0) >= effective_ctx - 16:
         raise ContextOverflow("Model context window was exhausted; results cannot be reliably scored")
     if max_tokens and payload.get("eval_count", 0) >= max_tokens:
         raise ValueError("Model output hit the token limit")
