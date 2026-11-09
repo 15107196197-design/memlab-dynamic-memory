@@ -82,13 +82,13 @@
 
 | 课程要求 | 现有实现 | 是否已有 | 交付缺口 |
 |---|---|---|---|
-| 6 段数据 4+2 | `dataset` + `config.SPLIT`，10 段齐全 | 数据层有 | Web 默认只展示 6 段、test 评测页未接 |
+| 6 段数据 4+2 | `dataset` + `config.SPLIT`，10 段齐全 | 有 | W3 已跑 test 2 段（offline）并上 Web |
 | 结构化 Memory 内容/时间/来源 | `memlab.MemoryUnit` v2、`model.from_sample` | 有 | Web 未展示 v2 + evidence |
 | 统一 JSON 导出 | `memlab.export.export_v2` / v1 兼容 | **W1 有** | `/api/v2/export?schema=2` + 6 段 bundle 已接；旧 `/api/export` 仍 v1 |
 | Web 查看记忆/证据 | 旧 `web/` + W1 `#/memories` | **W1 有** | v2 详情/evidence/关系/JSON 已接 |
 | 动态检索 + RETAIN/UPDATE/SUPERSEDE/CONFLICT | S3 W/S/R + S4 M/U/K + legacy dynamic | **W1/W2 有** | `#/ask2` 单题 + `#/lab` 异步 + 实验详情四 tab |
 | 当前有效 Memory + 回答 | `StateView` + U AnswerResult + legacy dynamic | 有 | Web 未展示新 StateView/引用/拒答 |
-| F1 / Recall@K / 状态准确率 | `memwb.evaluation` + `eval/state_benchmark.json` + S5 SQLite | **W2b 有批量** | Web 批量报告计算 F1/Recall/按类别；状态准确率仍 `not_available`（无模块标注） |
+| F1 / Recall@K / 状态准确率 | + W3 test 2 段 | **W3 有 F1/Recall** | `#/evaluation2` + W3-REPORT；状态准确率仍 `not_available` |
 | Full Text / Vector RAG 对照 | legacy full/vector/hybrid/dynamic + `eval/results.json` | 有 | Web 对比页未接 |
 | Web 交付 / 源码 / JSON / 结果 / 报告 | 旧 UI + W1/W2 `/api/v2` | **W2 部分** | 已交付记忆/提问/实验台/报告四 tab/评测归档；W3 补 test 最终评测/报告/复现 |
 | 实验后结果/对照/分析/结论上 Web | 04 §4.15.7 契约；W2b batch + report API + `#/experiments` 四 tab | **W2b 有** | 批量 ≥10 题给 descriptive 结论；CI/bootstrap 待 W3 |

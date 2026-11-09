@@ -1,0 +1,385 @@
+{
+  "schema": "memlab/experiment-report@1",
+  "experiment_id": "final-w3-test-offline",
+  "created_at": "2026-11-09T14:45:51",
+  "manifest": {
+    "git_commit": "ac4dec9",
+    "config_hashes": {
+      "B0": "sha256:92516d1940459430590fdc82c9bee0a6e3b7b79105f84c7539a2b9670b2c4091",
+      "R0": "sha256:b86df99795c15eb179af33f34aec3ff38a76c4a7f6b94ac8278c68dc57ca8bd4"
+    },
+    "model": {
+      "llm": "offline-extractive",
+      "embedding": "offline-hash"
+    },
+    "offline": true
+  },
+  "dataset": {
+    "split": "test",
+    "samples": [
+      "conv-41",
+      "conv-42"
+    ],
+    "questions": 80,
+    "seeds": [
+      13,
+      17
+    ],
+    "test_only": true
+  },
+  "results": {
+    "runs": [
+      {
+        "preset": "B0",
+        "sample": "conv-41",
+        "seed": 13,
+        "run_id": "batch-20261109-144540-92516d19-conv-41-s13",
+        "metrics": {
+          "answer_f1": 0.0488,
+          "evidence_recall": 0.6,
+          "state_accuracy": null,
+          "tokens": 935.35,
+          "p95_latency_ms": 23.342,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "B0",
+        "sample": "conv-41",
+        "seed": 17,
+        "run_id": "batch-20261109-144540-92516d19-conv-41-s17",
+        "metrics": {
+          "answer_f1": 0.0305,
+          "evidence_recall": 0.55,
+          "state_accuracy": null,
+          "tokens": 941.3,
+          "p95_latency_ms": 23.26,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "B0",
+        "sample": "conv-42",
+        "seed": 13,
+        "run_id": "batch-20261109-144541-92516d19-conv-42-s13",
+        "metrics": {
+          "answer_f1": 0.0094,
+          "evidence_recall": 0.4833,
+          "state_accuracy": null,
+          "tokens": 882.1,
+          "p95_latency_ms": 21.423,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "B0",
+        "sample": "conv-42",
+        "seed": 17,
+        "run_id": "batch-20261109-144541-92516d19-conv-42-s17",
+        "metrics": {
+          "answer_f1": 0.053,
+          "evidence_recall": 0.5405,
+          "state_accuracy": null,
+          "tokens": 926.65,
+          "p95_latency_ms": 23.726,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-41",
+        "seed": 13,
+        "run_id": "batch-20261109-144549-b86df997-conv-41-s13",
+        "metrics": {
+          "answer_f1": 0.0095,
+          "evidence_recall": 0.4,
+          "state_accuracy": null,
+          "tokens": 1103.45,
+          "p95_latency_ms": 76.123,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-41",
+        "seed": 17,
+        "run_id": "batch-20261109-144549-b86df997-conv-41-s17",
+        "metrics": {
+          "answer_f1": 0.0051,
+          "evidence_recall": 0.55,
+          "state_accuracy": null,
+          "tokens": 1123.65,
+          "p95_latency_ms": 32.618,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-42",
+        "seed": 13,
+        "run_id": "batch-20261109-144550-b86df997-conv-42-s13",
+        "metrics": {
+          "answer_f1": 0.0053,
+          "evidence_recall": 0.3,
+          "state_accuracy": null,
+          "tokens": 853.85,
+          "p95_latency_ms": 13.096,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      },
+      {
+        "preset": "R0",
+        "sample": "conv-42",
+        "seed": 17,
+        "run_id": "batch-20261109-144551-b86df997-conv-42-s17",
+        "metrics": {
+          "answer_f1": 0.0015,
+          "evidence_recall": 0.3571,
+          "state_accuracy": null,
+          "tokens": 882.95,
+          "p95_latency_ms": 16.029,
+          "error_rate": 0.0,
+          "questions": 20
+        }
+      }
+    ],
+    "metrics": {
+      "questions": 80,
+      "answer_f1": 0.0054,
+      "evidence_recall": 0.4018,
+      "state_accuracy": null,
+      "tokens": 990.975,
+      "p95_latency_ms": 44.663,
+      "error_rate": 0.0
+    },
+    "baseline_metrics": {
+      "questions": 80,
+      "answer_f1": 0.0354,
+      "evidence_recall": 0.5435,
+      "state_accuracy": null,
+      "tokens": 921.35,
+      "p95_latency_ms": 23.726,
+      "error_rate": 0.0
+    }
+  },
+  "comparisons": [
+    {
+      "baseline": "B0",
+      "candidate": "R0",
+      "metric": "answer_f1",
+      "baseline_value": 0.0354,
+      "candidate_value": 0.0054,
+      "delta": -0.03,
+      "ci95": [
+        -0.0575,
+        -0.0104
+      ],
+      "paired": true,
+      "significant": true
+    },
+    {
+      "baseline": "B0",
+      "candidate": "R0",
+      "metric": "evidence_recall",
+      "baseline_value": 0.5435,
+      "candidate_value": 0.4018,
+      "delta": -0.1417,
+      "ci95": [
+        -0.3268,
+        -0.0066
+      ],
+      "paired": true,
+      "significant": true
+    }
+  ],
+  "analysis": {
+    "main_effects": [
+      {
+        "factor": "config",
+        "levels": [
+          "B0",
+          "R0"
+        ],
+        "metrics": {
+          "B0": {
+            "questions": 80,
+            "answer_f1": 0.0354,
+            "evidence_recall": 0.5435,
+            "state_accuracy": null,
+            "tokens": 921.35,
+            "p95_latency_ms": 23.726,
+            "error_rate": 0.0
+          },
+          "R0": {
+            "questions": 80,
+            "answer_f1": 0.0054,
+            "evidence_recall": 0.4018,
+            "state_accuracy": null,
+            "tokens": 990.975,
+            "p95_latency_ms": 44.663,
+            "error_rate": 0.0
+          }
+        }
+      }
+    ],
+    "interactions": [],
+    "pareto": [],
+    "by_category": {
+      "B0": [
+        {
+          "category": "1",
+          "n": 20,
+          "answer_f1": 0.0349,
+          "evidence_recall": 0.3488
+        },
+        {
+          "category": "2",
+          "n": 20,
+          "answer_f1": 0.0091,
+          "evidence_recall": 0.95
+        },
+        {
+          "category": "3",
+          "n": 20,
+          "answer_f1": 0.0111,
+          "evidence_recall": 0.175
+        },
+        {
+          "category": "4",
+          "n": 20,
+          "answer_f1": 0.0866,
+          "evidence_recall": 0.7
+        }
+      ],
+      "R0": [
+        {
+          "category": "1",
+          "n": 20,
+          "answer_f1": 0.0041,
+          "evidence_recall": 0.1321
+        },
+        {
+          "category": "2",
+          "n": 20,
+          "answer_f1": 0.0095,
+          "evidence_recall": 0.725
+        },
+        {
+          "category": "3",
+          "n": 20,
+          "answer_f1": 0.0,
+          "evidence_recall": 0.15
+        },
+        {
+          "category": "4",
+          "n": 20,
+          "answer_f1": 0.0078,
+          "evidence_recall": 0.6
+        }
+      ]
+    },
+    "by_seed": {
+      "B0": [
+        {
+          "seed": 13,
+          "questions": 40,
+          "answer_f1": 0.0291,
+          "evidence_recall": 0.5417,
+          "state_accuracy": null,
+          "tokens": 908.725,
+          "p95_latency_ms": 23.342,
+          "error_rate": 0.0
+        },
+        {
+          "seed": 17,
+          "questions": 40,
+          "answer_f1": 0.0418,
+          "evidence_recall": 0.5452,
+          "state_accuracy": null,
+          "tokens": 933.975,
+          "p95_latency_ms": 23.726,
+          "error_rate": 0.0
+        }
+      ],
+      "R0": [
+        {
+          "seed": 13,
+          "questions": 40,
+          "answer_f1": 0.0074,
+          "evidence_recall": 0.35,
+          "state_accuracy": null,
+          "tokens": 978.65,
+          "p95_latency_ms": 76.123,
+          "error_rate": 0.0
+        },
+        {
+          "seed": 17,
+          "questions": 40,
+          "answer_f1": 0.0033,
+          "evidence_recall": 0.4536,
+          "state_accuracy": null,
+          "tokens": 1003.3,
+          "p95_latency_ms": 32.618,
+          "error_rate": 0.0
+        }
+      ]
+    },
+    "stage_waterfall": [
+      {
+        "stage": "e2e",
+        "ms": 41.724
+      },
+      {
+        "stage": "merge",
+        "ms": 0.228
+      },
+      {
+        "stage": "retrieve",
+        "ms": 6.634
+      },
+      {
+        "stage": "use",
+        "ms": 0.034
+      }
+    ],
+    "failure_breakdown": [],
+    "bootstrap": {
+      "samples": 1000,
+      "seed": 2026,
+      "pairs_f1": 69,
+      "pairs_recall": 69
+    }
+  },
+  "conclusion": {
+    "status": "not_supported",
+    "claims": [
+      "R0 F1 -0.0300 vs B0; 95% bootstrap CI [-0.0575, -0.0104] excludes 0 in the negative direction."
+    ],
+    "conditions": [
+      "Frozen B0/R0 configs; no test-time tuning.",
+      "Test split conv-41/conv-42; questions stratified by category.",
+      "Offline extractive answer + hashing embedding; this is NOT an LLM-quality claim."
+    ],
+    "limitations": [
+      "No real Ollama/API model: F1 is offline extractive, not B-level.",
+      "state_accuracy is not recorded for the module pipeline; only F1/Recall are comparable.",
+      "Two seeds and 20 questions/sample; bootstrap resamples questions, not conversations."
+    ],
+    "next_actions": [
+      "Re-run --online with the frozen configs when a model endpoint is available.",
+      "Add state_accuracy from a frozen module-pipeline benchmark before reporting it."
+    ]
+  },
+  "web": {
+    "route": "#/experiments/final-w3-test-offline",
+    "published": true
+  },
+  "elapsed_seconds": 16.1
+}

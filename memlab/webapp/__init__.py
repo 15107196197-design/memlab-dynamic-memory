@@ -410,7 +410,8 @@ def _run_batch(sample_id: str, cfg: lab_config.RunConfig, offline: bool,
             "answer_f1": round(sum(values["f1"]) / len(values["f1"]), 4) if values["f1"] else None,
             "evidence_recall": round(sum(values["recall"]) / len(values["recall"]), 4) if values["recall"] else None,
         })
-    run_id = f"batch-{time.strftime('%Y%m%d-%H%M%S')}-{cfg.config_hash.split(':')[-1][:8]}-s{seed}"
+    run_id = (f"batch-{time.strftime('%Y%m%d-%H%M%S')}-"
+              f"{cfg.config_hash.split(':')[-1][:8]}-{sample_id}-s{seed}")
     payload = {
         "kind": "batch", "run_id": run_id, "sample": sample_id, "preset": cfg.preset,
         "config_hash": cfg.config_hash, "offline": bool(offline), "seed": seed,
@@ -529,6 +530,10 @@ def _safe_id(value: str) -> str:
 
 def _report_dir() -> Any:
     return ROOT / "reports" / "experiments"
+
+
+def _archive_report_dir() -> Any:
+    return ROOT / "eval" / "archive" / "experiments"
 
 
 def _load_runs(run_ids: list[str]) -> list[dict[str, Any]]:
@@ -655,26 +660,30 @@ def _build_report(experiment_id: str, body: dict[str, Any]) -> dict[str, Any]:
 
 
 def _report_list() -> dict[str, Any]:
-    directory = _report_dir()
-    items = []
-    if directory.is_dir():
-        for path in sorted(directory.glob("*.json"), key=lambda p: p.stat().st_mtime, reverse=True):
+    items: dict[str, dict[str, Any]] = {}
+    for directory in (_report_dir(), _archive_report_dir()):
+        if not directory.is_dir():
+            continue
+        for path in directory.glob("*.json"):
             try:
                 data = json.loads(path.read_text(encoding="utf-8"))
-                items.append({"experiment_id": data.get("experiment_id", path.stem),
-                              "created_at": data.get("created_at"),
-                              "status": (data.get("conclusion") or {}).get("status"),
-                              "schema": data.get("schema")})
+                experiment_id = data.get("experiment_id", path.stem)
+                items[experiment_id] = {"experiment_id": experiment_id,
+                                        "created_at": data.get("created_at"),
+                                        "status": (data.get("conclusion") or {}).get("status"),
+                                        "schema": data.get("schema")}
             except (OSError, json.JSONDecodeError):
                 continue
-    return {"experiments": items, "count": len(items)}
+    ordered = sorted(items.values(), key=lambda item: item.get("created_at") or "", reverse=True)
+    return {"experiments": ordered, "count": len(ordered)}
 
 
 def _report_get(experiment_id: str) -> dict[str, Any]:
-    path = _report_dir() / f"{_safe_id(experiment_id)}.json"
-    if not path.is_file():
-        raise WebError(f"unknown experiment report: {experiment_id}", 404)
-    return json.loads(path.read_text(encoding="utf-8"))
+    name = f"{_safe_id(experiment_id)}.json"
+    for path in (_report_dir() / name, _archive_report_dir() / name):
+        if path.is_file():
+            return json.loads(path.read_text(encoding="utf-8"))
+    raise WebError(f"unknown experiment report: {experiment_id}", 404)
 
 
 def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:

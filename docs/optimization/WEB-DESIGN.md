@@ -386,6 +386,8 @@ UI 选择轴
 
 ### W3 · 最终交付整合
 
+> **状态（2026-11-09）：offline 最终评测已完成。** `scripts/final_w3.py` + `eval/archive/final-w3.json` + `#/evaluation2`；online/B 级、slides/截图/复现包仍待。
+
 **依赖：** W2、S10/E5（可用 offline/真实标签）。
 
 **范围：**
