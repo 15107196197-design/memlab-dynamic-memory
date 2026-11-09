@@ -295,6 +295,10 @@ class Compiler:
             return self._fractional()
         if design == "environment_grid":
             return self._environment_grid()
+        if design == "coupling_analysis":
+            raise spec_module.SpecError([
+                "coupling_analysis is analysis-only; use memlab.experiments.coupling_cli"
+            ])
         raise spec_module.SpecError([f"design {design!r} is not supported by the S5 compiler"])
 
 
