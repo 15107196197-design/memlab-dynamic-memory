@@ -38,14 +38,14 @@
 
 | 角色 | 路径 / URL | 状态 | 可写 | 用途 |
 |---|---|---|---|---|
-| **上游快照** | `/Users/chenxiaoyan/Downloads/dynamic-memory-workbench-main-2/` | 无 `.git`，约 12 MB，内容等于 `ff6c7a1` 去掉 `docs/`、`configs/` | 只读 | 溯源、对照、灾难恢复 |
-| **当前工作副本** | `/Users/chenxiaoyan/Documents/deepseek-harness/default-workspace/repo/` | 有 `.git`，已有 `docs/`、`configs/` | 可写 | 现阶段开发/实验的 canonical 副本 |
+| **上游快照** | `dynamic-memory-workbench-main-2/`（本地快照目录，按需放在工作区旁） | 无 `.git`，约 12 MB，内容等于 `ff6c7a1` 去掉 `docs/`、`configs/` | 只读 | 溯源、对照、灾难恢复 |
+| **当前工作副本** | `repo/`（本仓库根，相对 workspace） | 有 `.git`，已有 `docs/`、`configs/` | 可写 | 现阶段开发/实验的 canonical 副本 |
 | **推荐长期副本** | `~/Projects/dynamic-memory-workbench/`（待建） | 稳定路径，脱离 agent workspace | 可写 | 长期开发；避免工作区清理影响 |
 | **上游 remote** | `https://github.com/hunmingtianzi-boop/dynamic-memory-workbench.git` | 已改名 `upstream`；push URL 已设为 `no_push` | **禁止 push** | 只 fetch/rebase/对照 |
 | **个人 remote** | `TBD`（新建个人仓库） | 待创建 | 可写 | 个人备份/展示/论文复现 |
 | **团队 remote** | `TBD`（团队仓库） | 待创建 | 可写 | 团队协作/评审/交付 |
 
-> **不要把 Downloads 快照当工作副本。** 它没有 `.git`，没有历史、没有 remote；直接改会静默分叉，之后无法归因。它只作为“上游原始快照”保留。
+> **不要把上游快照目录当工作副本。** 它没有 `.git`，没有历史、没有 remote；直接改会静默分叉，之后无法归因。它只作为“上游原始快照”保留。
 
 ### 当前 git 身份（重要）
 

@@ -17,7 +17,7 @@
 ## 1. 刷新命令（每次写提示词前跑）
 
 ```bash
-cd /Users/chenxiaoyan/Documents/deepseek-harness/default-workspace/repo
+cd repo        # 从 workspace 根进入
 date "+%H:%M:%S"; git log --oneline -3; git status --short
 ls reports/experiments/*.json | wc -l
 python3 -c "import json,collections;d=json.load(open('configs/experiment-catalog.json'));print(d['count'],collections.Counter(x['status'] for x in d['items']))"

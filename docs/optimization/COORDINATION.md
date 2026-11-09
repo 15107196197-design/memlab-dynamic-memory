@@ -112,8 +112,8 @@ python -m unittest discover -s tests -t .
 
 - S3 在 `repo/` 里看不到 `repo-hardening/` 的文件变化；两边工作区独立。
 - `git worktree list` / `git branch` 会显示 `hardening/s1s2`，但 S3 不主动看不会发现。
-- 如果希望 S3 知道分工，把本文件的绝对路径发给它：
-  `/Users/chenxiaoyan/Documents/deepseek-harness/default-workspace/repo-hardening/docs/optimization/COORDINATION.md`
+- 如果希望 S3 知道分工，把本文件的相对路径发给它：
+  `repo-hardening/docs/optimization/COORDINATION.md`（相对 workspace 根）
 
 ## 当前验证
 

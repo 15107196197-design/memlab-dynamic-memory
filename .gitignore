@@ -1,17 +1,98 @@
+# Python / OS / local environment
 __pycache__/
 **/__pycache__/
-*.pyc
+*.py[cod]
 *.tmp
 *.log
 .env
 .DS_Store
 **/._*
+.venv/
+.venv-memlab/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.dsh-office.*/
+
+# Local data, caches and generated artifacts
 cache/
 data/imported/
-runs/
-reports/
 artifacts/
-eval/*.tmp
-.venv-memlab/
 activity-dashboard/
-reports/_build/__pycache__/
+
+# ---------------------------------------------------------------------------
+# reports/: report-build source plus submitted evidence.
+# Everything else under reports/ is generated.  Add new evidence explicitly;
+# do not use `git add -f`.
+# ---------------------------------------------------------------------------
+reports/**
+!reports/_build/
+!reports/_build/build_catalog.py
+!reports/_build/build_offline_reports.py
+!reports/_build/build_online_reports.py
+!reports/_build/build_runlog_reports.py
+!reports/_build/compute_offline.py
+!reports/_build/offline_summary.json
+!reports/audit/
+!reports/audit/data-audit.json
+!reports/experiments/
+!reports/experiments/E1-2-params.json
+!reports/experiments/E1-K1-online.json
+!reports/experiments/E1-K1.json
+!reports/experiments/E1-M1-online.json
+!reports/experiments/E1-M1.json
+!reports/experiments/E1-R1-online.json
+!reports/experiments/E1-R1.json
+!reports/experiments/E1-R3.json
+!reports/experiments/E1-S2-online.json
+!reports/experiments/E1-S2.json
+!reports/experiments/E1-U1-online.json
+!reports/experiments/E1-U1.json
+!reports/experiments/E1-W1-online.json
+!reports/experiments/E1-W1.json
+!reports/experiments/E2-1-online.json
+!reports/experiments/E2-1.json
+!reports/experiments/E2-2-online.json
+!reports/experiments/E3-1-online.json
+!reports/experiments/E5-1-online.json
+!reports/experiments/E5-1.json
+!reports/experiments/M2-online.json
+!reports/experiments/final-w3-test-offline.json
+!reports/experiments/final-w3-test-online-before-fix.json
+!reports/experiments/final-w3-test-online-fixed.json
+!reports/experiments/final-w3-test-online.json
+!reports/experiments/lab-M-20261109-201217.json
+!reports/experiments/lab-smoke.json
+!reports/narratives/
+!reports/narratives/overview.json
+!reports/narratives/experiments/
+!reports/narratives/experiments/E1-2-params.json
+!reports/narratives/experiments/E1-K1-online.json
+!reports/narratives/experiments/E1-M1-online.json
+!reports/narratives/experiments/E1-M1.json
+!reports/narratives/experiments/E1-R1-online.json
+!reports/narratives/experiments/E1-R1.json
+!reports/narratives/experiments/E1-R3.json
+!reports/narratives/experiments/E1-S2-online.json
+!reports/narratives/experiments/E1-S2.json
+!reports/narratives/experiments/E1-U1-online.json
+!reports/narratives/experiments/E1-U1.json
+!reports/narratives/experiments/E1-W1-online.json
+!reports/narratives/experiments/E1-W1.json
+!reports/narratives/experiments/E2-1-online.json
+!reports/narratives/experiments/E2-2-online.json
+!reports/narratives/experiments/E3-1-online.json
+!reports/narratives/experiments/M2-online.json
+!reports/narratives/experiments/final-w3-test-offline.json
+!reports/narratives/experiments/final-w3-test-online.json
+
+# ---------------------------------------------------------------------------
+# runs/: runtime databases and logs are generated.  Only the graph-completion
+# evidence databases are kept; add any future submitted run output explicitly.
+# ---------------------------------------------------------------------------
+runs/**
+!runs/graph-completion/
+!runs/graph-completion/event_sparse.sqlite
+!runs/graph-completion/m1-route.sqlite
+!runs/graph-completion/single-channel.sqlite
+!runs/graph-completion/wr.sqlite
