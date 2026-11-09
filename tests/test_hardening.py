@@ -7,7 +7,7 @@ import unittest
 from datetime import datetime
 from unittest.mock import patch
 
-from memlab import cache, config, guards, legacy, model
+from memlab import cache, config, guards, legacy, model, runtime, store
 from memlab.llm import LLMClient
 from memwb import llm as legacy_llm
 
@@ -35,6 +35,12 @@ class GuardTests(unittest.TestCase):
         message = str(caught.exception)
         self.assertIn("schema.impl=meta_schema", message)
         self.assertIn("legacy_*", message)
+
+    def test_runtime_rejects_r0_and_accepts_b0(self):
+        with self.assertRaises(guards.UnimplementedPipeline):
+            runtime.Runtime.load(REFERENCE_R0)
+        machine = runtime.Runtime.load(REFERENCE_B0)
+        self.assertEqual(machine.method, "legacy_dynamic")
 
 
 class LLMRequestTests(unittest.TestCase):
@@ -114,6 +120,10 @@ class ValidityTests(unittest.TestCase):
         unit = model.from_fact(self.fact(state="ACTIVE"))
         self.assertTrue(model.validity_known(unit))
         self.assertTrue(model.is_valid_at(unit, datetime(2024, 1, 1)))
+
+    def test_store_filters_unknown_historical_out(self):
+        unit = model.from_fact(self.fact())
+        self.assertFalse(store.valid_at(unit, datetime(2024, 1, 1)))
 
 
 if __name__ == "__main__":

@@ -439,20 +439,18 @@ class MemoryStore:
 
 
 def valid_at(unit: MemoryUnit, moment: Any) -> bool:
-    """Half-open validity test; unknown event time falls back to ingest time."""
+    """Half-open validity test; unknown validity is treated as not valid.
+
+    A HISTORICAL fact with no recorded invalidating relation has ``end=None`` in
+    its interval; reading that as "open-ended" would keep stale facts alive.  The
+    three-valued :func:`memlab.model.is_valid_at` distinguishes True/False/unknown,
+    and this conservative wrapper maps unknown to False for retrieval filtering.
+    """
     if isinstance(moment, str):
         parsed = model.parse_time(moment)
         if parsed is None:
             return False
         moment = parsed
-    interval = unit.valid_interval or unit.t_event
-    if interval is not None and interval.start is not None:
-        if moment < interval.start:
-            return False
-        if interval.end is not None and moment >= interval.end:
-            return False
-        return True
-    ingest = unit.t_ingest
-    if ingest is not None and ingest.start is not None:
-        return ingest.start <= moment
-    return False
+    decided = model.is_valid_at(unit, moment)
+    # Unknown validity is not evidence of validity: exclude it from as-of results.
+    return bool(decided) if decided is not None else False

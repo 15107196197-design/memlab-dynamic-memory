@@ -12,6 +12,7 @@ from typing import Any, Mapping
 from . import config as lab_config
 from . import legacy
 from .cache import ArtifactCache
+from .guards import require_runnable
 from .llm import EmbeddingClient, LLMClient
 from .manifest import RunManifest, build_manifest
 from .registry import build
@@ -30,6 +31,7 @@ class Runtime:
             self.config = config
         else:
             self.config = lab_config.RunConfig.from_dict(config)
+        require_runnable(self.config)
         environment = self.config.get("environment", {}) or {}
         self.llm = llm or LLMClient.from_environment(environment.get("llm") or {})
         self.embedding = embedding or EmbeddingClient.from_environment(environment.get("embedding") or {})

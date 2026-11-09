@@ -446,6 +446,11 @@ def is_valid_at(unit: MemoryUnit, moment: datetime) -> bool | None:
     if not validity_known(unit):
         return None
     interval = unit.valid_interval
-    if interval is None:
-        return True
-    return interval.contains(moment)
+    if interval is not None and interval.start is not None:
+        return interval.contains(moment)
+    # An active fact with no event time is observed at ingest time; this preserves
+    # the legacy temporal filter while never treating an unknown endpoint as valid.
+    ingest = unit.t_ingest
+    if ingest is not None and ingest.start is not None:
+        return ingest.start <= moment
+    return True
