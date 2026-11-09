@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E2-1-online",
+  "source_report": "reports/experiments/E2-1-online.json",
+  "title_zh": "E2 转化率 · 在线 27B：检索命中后答对率更高",
+  "subtitle_zh": "E2-1-online · 4 段开发集 · 600 题 · seed 13",
+  "headline_zh": "检索命中后答对率 0.5657，比总体高 0.0457",
+  "status_zh": "部分支持",
+  "summary_zh": "问：检索命中是否提高答对率。答：命中后答对率高 0.0457，在线方向为正。",
+  "analysis_zh": "把 600 道题拆成“检索是否命中”和“答案是否正确”两步。总体答对率 P(A) 为 0.5200，检索命中率 P(R) 为 0.4567；在命中的 274 题里，答对率 P(A|R=1) 为 0.5657，比总体高 0.0457。分模块看，U 的 0.6282 最高，其次是 S 的 0.5882、M 的 0.5818、W 的 0.5417，R 只有 0.4286。机制上，证据到位后答对率上升，说明检索对答案有正向作用；这与离线负转化不同，因为离线是抽取式作答。边界：单 seed、无区间；P(A|S) 因在线没有状态准确率而不可得；P(A|C) 只有 94 题，分母偏小。",
+  "evidence": [
+    {
+      "text_zh": "检索命中后的答对率 P(A|R=1) 为 0.5657。",
+      "value": "0.5657",
+      "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A|R=1)\"].value"
+    },
+    {
+      "text_zh": "总体答对率 P(A) 为 0.5200。",
+      "value": "0.52",
+      "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A)\"].value"
+    },
+    {
+      "text_zh": "检索命中率 P(R) 为 0.4567。",
+      "value": "0.4567",
+      "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(R)\"].value"
+    },
+    {
+      "text_zh": "P(A|C=1) 为 0.4149，只有 94 题。",
+      "value": "0.4149",
+      "source": "reports/experiments/E2-1-online.json#analysis.conversion[\"P(A|C=1)\"].value"
+    },
+    {
+      "text_zh": "U 模块的 P(A|R=1) 最高，为 0.6282。",
+      "value": "0.6282",
+      "source": "reports/experiments/E2-1-online.json#analysis.by_module.U[\"P(A|R=1)\"].value"
+    }
+  ],
+  "caveats_zh": [
+    "单 seed、无区间；0.0457 只能算描述性转化差。",
+    "P(A|S) 不可得：在线没有 state_accuracy，状态基准也未和答案配对。",
+    "P(A|C) 只有 94 题，分母偏小；无 Judge。"
+  ],
+  "next_zh": "补第二 seed 与状态准确率，让 P(A|S) 可算。",
+  "metrics_zh": [
+    {
+      "key": "conversion",
+      "label_zh": "转化率（P(A|R=1)）",
+      "value": "0.5657"
+    },
+    {
+      "key": "retrieval_hit",
+      "label_zh": "检索命中率（P(R)）",
+      "value": "0.4567"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "160.5"
+    }
+  ]
+}

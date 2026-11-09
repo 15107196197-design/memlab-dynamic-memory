@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-U1-online",
+  "source_report": "reports/experiments/E1-U1-online.json",
+  "title_zh": "U 使用 · 在线 27B：校验提分，代价是拒答",
+  "subtitle_zh": "E1-U1-online · 4 段开发集 · 40 题/候选 · seed 13",
+  "headline_zh": "U2 的 F1 0.2998 最高，但拒答率 0.275",
+  "status_zh": "部分支持",
+  "summary_zh": "问：加答案校验能不能提高答对率。答：能小幅提高 F1，但会拒答更多问题。",
+  "analysis_zh": "比较三种使用策略：U1 直接作答，U2 只保留离线校验通过的证据，U3 再串证据链。三者的证据召回都是 0.7462，说明检索输入相同，差别只在作答。U2 的 F1 为 0.2998，比 U1 高 0.0115，U3 为 0.2921。代价是拒答率从 U1 的 0.025 升到 0.275，P95 也从 4.0 秒升到 4.7 秒。机制上，校验会过滤掉证据不足的答案，提高答对的精度，但更多问题被拒答。边界：差距只有 0.0115，单 seed、40 题，没有区间；在线没有记录状态准确率，所以 P(A|S) 算不出来，不能把 U2 说成全面更好。",
+  "evidence": [
+    {
+      "text_zh": "U2 的答案 F1 为 0.2998，U1 为 0.2883。",
+      "value": "0.2998",
+      "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.answer_f1"
+    },
+    {
+      "text_zh": "三种策略的证据召回都是 0.7462。",
+      "value": "0.7462",
+      "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U1-none-direct.evidence_recall"
+    },
+    {
+      "text_zh": "U2 的拒答率为 0.275，U1 只有 0.025。",
+      "value": "0.275",
+      "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.refused"
+    },
+    {
+      "text_zh": "U3 的答案 F1 为 0.2921。",
+      "value": "0.2921",
+      "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U3-offline-chain.answer_f1"
+    },
+    {
+      "text_zh": "U1 的拒答率为 0.025。",
+      "value": "0.025",
+      "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U1-none-direct.refused"
+    }
+  ],
+  "caveats_zh": [
+    "40 题、单 seed、无区间；F1 差距只有 0.0115。",
+    "在线未记录 state_accuracy，P(A|S) 不可得。",
+    "无 Judge；拒答率 0.275 会直接影响可用性，不能只看 F1。"
+  ],
+  "next_zh": "把 state_accuracy 接入在线评测，按“质量—拒答—成本”三件套选型。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，U2）",
+      "value": "0.2998"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall）",
+      "value": "0.7462"
+    },
+    {
+      "key": "refused",
+      "label_zh": "拒答率（refused，U2）",
+      "value": "0.275"
+    }
+  ]
+}

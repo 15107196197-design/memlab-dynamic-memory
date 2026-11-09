@@ -1,0 +1,56 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E2-2-online",
+  "source_report": "reports/experiments/E2-2-online.json",
+  "title_zh": "E2-2 Oracle · 在线 27B：证据给满，答案仍是瓶颈",
+  "subtitle_zh": "E2-2-online · 4 段开发集 · 80 题 · seed 13 · retrieval oracle",
+  "headline_zh": "给全 gold 证据，F1 也只有 0.2437",
+  "status_zh": "部分支持",
+  "summary_zh": "问：把 gold 证据直接给模型，能答对多少。答：F1 只有 0.2437，答案环节仍是瓶颈。",
+  "analysis_zh": "把检索替换成 oracle：直接把 gold 证据注入上下文，合并与使用仍用冻结的 R0，共 80 题。答案 F1 为 0.2437，每题材元 232.15，单题延迟 2.2 秒。这个数回答的是“证据给全时还能答对多少”，不是系统召回的对照。F1 只有 0.2437，说明即使证据齐全，作答与拒答策略仍是瓶颈；oracle 的召回 0.6611 是 gold 注入构造出来的，不能和系统召回比高低。边界：只做了 retrieval oracle，write、store、merge、state、answer 的 oracle 都没跑，所以算不出完整的 oracle gap；也没有 Judge。",
+  "evidence": [
+    {
+      "text_zh": "oracle 的答案 F1 为 0.2437。",
+      "value": "0.2437",
+      "source": "reports/experiments/E2-2-online.json#results.metrics.answer_f1"
+    },
+    {
+      "text_zh": "oracle 的证据召回为 0.6611，是构造值。",
+      "value": "0.6611",
+      "source": "reports/experiments/E2-2-online.json#results.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "每题材元 232.15。",
+      "value": "232.15",
+      "source": "reports/experiments/E2-2-online.json#results.metrics.tokens"
+    },
+    {
+      "text_zh": "单题延迟 2217.14 毫秒。",
+      "value": "2217.14",
+      "source": "reports/experiments/E2-2-online.json#results.metrics.latency_ms"
+    }
+  ],
+  "caveats_zh": [
+    "oracle 召回 0.6611 是 gold 注入构造出来的，不能和系统召回比。",
+    "只做了 retrieval oracle，其余 oracle 未跑，算不出完整 oracle gap。",
+    "80 题、单 seed；无 Judge。"
+  ],
+  "next_zh": "补 write/store/merge/state/answer oracle，才能算完整的 oracle gap。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1）",
+      "value": "0.2437"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，构造值）",
+      "value": "0.6611"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "232.15"
+    }
+  ]
+}

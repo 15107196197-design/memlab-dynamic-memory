@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-S2-online",
+  "source_report": "reports/experiments/E1-S2-online.json",
+  "title_zh": "S 存储 · 在线 27B：三种图表示结果相同，是未接线",
+  "subtitle_zh": "E1-S2-online · 4 段开发集 · 40 题/候选 · seed 13 · not_wired",
+  "headline_zh": "三种图表示同为 0.1837：接口未接线",
+  "status_zh": "部分支持",
+  "summary_zh": "问：三种图表示有没有差别。答：结果完全相同，因为图检索接口没有接线。",
+  "analysis_zh": "比较三种图表示：S1 状态槽、S2 实体三元组、S3 三层图。三者的答案 F1 都是 0.1837，召回都是 0.5269，每题材元都是 44.65，连 P95 也只差 0.1 秒。四位小数完全一致，不是“三种表示效果相同”，而是图检索接口没有接线：graph.retrieval.impl 只被读取，没有被检索路径消费。因此本轮只能报告 not_wired，不能写成“图表示无差异”。边界：这是接线问题，不是模型或数据问题；离线 R3 也看到图候选在融合后 0 条存活，但那是另一个融合瓶颈，不能拿来补这个结论。下一步先把接口接上再重跑。",
+  "evidence": [
+    {
+      "text_zh": "S1 的答案 F1 为 0.1837。",
+      "value": "0.1837",
+      "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.answer_f1"
+    },
+    {
+      "text_zh": "S2 的答案 F1 也是 0.1837。",
+      "value": "0.1837",
+      "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S2-entity-triple.answer_f1"
+    },
+    {
+      "text_zh": "S3 的答案 F1 同样为 0.1837。",
+      "value": "0.1837",
+      "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S3-three-layer.answer_f1"
+    },
+    {
+      "text_zh": "三种表示的证据召回都是 0.5269。",
+      "value": "0.5269",
+      "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.evidence_recall"
+    },
+    {
+      "text_zh": "三种表示的每题材元都是 44.65。",
+      "value": "44.65",
+      "source": "reports/experiments/E1-S2-online.json#results.by_candidate.S1-state-slot.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "三种表示完全相同是未接线（not_wired），不是“无差异”。",
+    "40 题、单 seed；无 Judge。",
+    "不能拿离线 R3 的融合瓶颈来替代本实验的接线结论。"
+  ],
+  "next_zh": "把 graph.retrieval.impl 接到检索路径，再重跑 S1/S2/S3。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，S1/S2/S3）",
+      "value": "0.1837"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall）",
+      "value": "0.5269"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "44.65"
+    }
+  ]
+}

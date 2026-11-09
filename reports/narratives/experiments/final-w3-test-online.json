@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "final-w3-test-online",
+  "source_report": "reports/experiments/final-w3-test-online.json",
+  "title_zh": "B0 与 R0 · 在线 27B：更省更快的代价是召回",
+  "subtitle_zh": "final-w3-test-online · test 2 段 · 80 题/配置 · seeds 13/17",
+  "headline_zh": "R0 的 F1 与 B0 无显著差异，召回低 0.2032",
+  "status_zh": "无定论",
+  "summary_zh": "问：在 test 上 R0 是否比 B0 更好。答：F1 没有显著差异，召回显著更低，R0 更省更快。",
+  "analysis_zh": "在 test 两段对话上比较冻结的 B0 与 R0，各 80 题、两个 seed。R0 的答案 F1 为 0.1520，B0 为 0.1883，差 −0.0363，配对 bootstrap 的 95% 区间 [−0.1351, 0.0575] 跨 0，所以 F1 无定论。但 R0 的证据召回从 0.5435 降到 0.3403，差 −0.2032，区间 [−0.3509, −0.048] 不含 0，召回显著更低。机制上，R0 把每题材元从 924.6 压到 319.3、P95 从 16.0 秒降到 8.4 秒，省成本的同时丢了证据；答案 F1 没同步下降，说明模型能靠剩余证据作答，但召回损失是确定的。边界：只有 2 段 test、bootstrap 按题不按对话，也没有第二 Judge。",
+  "evidence": [
+    {
+      "text_zh": "B0 的答案 F1 为 0.1883，R0 为 0.1520。",
+      "value": "0.1883",
+      "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+    },
+    {
+      "text_zh": "F1 差 −0.0363，95% bootstrap 区间 [−0.1351, 0.0575] 跨 0。",
+      "value": "-0.0363",
+      "source": "reports/experiments/final-w3-test-online.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "B0 的证据召回为 0.5435，R0 只有 0.3403。",
+      "value": "0.5435",
+      "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.evidence_recall"
+    },
+    {
+      "text_zh": "召回差 −0.2032，区间 [−0.3509, −0.048] 不含 0。",
+      "value": "-0.2032",
+      "source": "reports/experiments/final-w3-test-online.json#comparisons[1].delta"
+    },
+    {
+      "text_zh": "R0 每题材元 319.3，B0 为 924.6。",
+      "value": "319.3",
+      "source": "reports/experiments/final-w3-test-online.json#results.metrics.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "80 题只覆盖 2 段 test，bootstrap 按题重采样，不按对话。",
+    "没有第二 Judge、也没有人工 kappa，F1 是单评审口径。",
+    "state_accuracy 未记录，只能比较 F1 与召回。"
+  ],
+  "next_zh": "扩大 test 对话数并按对话做 cluster bootstrap，再加第二 Judge。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，R0）",
+      "value": "0.152"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，R0）",
+      "value": "0.3403"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "319.3"
+    }
+  ]
+}

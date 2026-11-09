@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "final-w3-test-offline",
+  "source_report": "reports/experiments/final-w3-test-offline.json",
+  "title_zh": "B0 与 R0 · 离线对照：只用于口径说明",
+  "subtitle_zh": "final-w3-test-offline · test 2 段 · 80 题/配置 · seeds 13/17",
+  "headline_zh": "离线口径下 R0 的 F1 反而低 0.0300",
+  "status_zh": "不支持",
+  "summary_zh": "问：离线口径下 R0 是否更好。答：更差，但离线 F1 不能当 LLM F1。",
+  "analysis_zh": "这是离线口径的 B0/R0 对照，只用来解释口径，不进入在线结论。B0 的抽取式 F1 为 0.0354，R0 为 0.0054，差 −0.0300，95% 区间 [−0.0575, −0.0104] 不含 0；召回 0.5435 对 0.4018，差 −0.1417，区间也不含 0。也就是说，离线口径下 R0 更差，方向和在线召回一致，但 F1 的数值完全不能当 LLM F1 用。机制上，离线用抽取式作答，R0 的候选更少，抽不到答案就直接掉分。边界：80 题、2 段 test、bootstrap 按题；没有 Judge，也没有状态准确率。",
+  "evidence": [
+    {
+      "text_zh": "B0 的离线抽取式 F1 为 0.0354，R0 为 0.0054。",
+      "value": "0.0354",
+      "source": "reports/experiments/final-w3-test-offline.json#results.baseline_metrics.answer_f1"
+    },
+    {
+      "text_zh": "F1 差 −0.0300，95% 区间 [−0.0575, −0.0104]。",
+      "value": "-0.03",
+      "source": "reports/experiments/final-w3-test-offline.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "B0 的召回为 0.5435，R0 为 0.4018。",
+      "value": "0.5435",
+      "source": "reports/experiments/final-w3-test-offline.json#results.baseline_metrics.evidence_recall"
+    },
+    {
+      "text_zh": "召回差 −0.1417，区间不含 0。",
+      "value": "-0.1417",
+      "source": "reports/experiments/final-w3-test-offline.json#comparisons[1].delta"
+    },
+    {
+      "text_zh": "R0 每题材元 990.975。",
+      "value": "990.975",
+      "source": "reports/experiments/final-w3-test-offline.json#results.metrics.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "离线 F1 是抽取式，不是 LLM F1，不能写成在线答案质量。",
+    "80 题、2 段 test，bootstrap 按题不按对话。",
+    "无 Judge、无 state_accuracy。"
+  ],
+  "next_zh": "只把离线当口径参照，正式结论以在线 B0/R0 为准。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，R0，抽取式）",
+      "value": "0.0054"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，R0）",
+      "value": "0.4018"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，R0）",
+      "value": "990.975"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-M1",
+  "source_report": "reports/experiments/E1-M1.json",
+  "title_zh": "M 合并 · 离线：M2 召回反超，和在线相反",
+  "subtitle_zh": "E1-M1 · 4 段开发集 · 480 题 · seeds 13/17",
+  "headline_zh": "离线 M2 召回 0.5482，反超 M1",
+  "status_zh": "部分支持",
+  "summary_zh": "问：离线时 M1 与 M2 谁召回更高。答：M2 更高且显著，和在线方向相反。",
+  "analysis_zh": "离线口径下比较 M1 与 M2。M2 的召回为 0.5482，比 M1 的 0.5288 高 0.0194，区间 [0.0021, 0.0393] 不含 0；nDCG 为 0.4856，比 M1 高 0.0493，区间也不含 0。M2 每题材元还少 7.4，但 P95 从 6.5 毫秒升到 27.0 毫秒。机制上，M2 的加权与压缩在离线抽取式作答下保留了更多可抽取的证据。边界：离线 F1 是抽取式，不是 LLM F1；cross-encoder 仍是回退实现，所以这个召回优势不能直接搬到在线；在线方向相反，M1 反而更好。",
+  "evidence": [
+    {
+      "text_zh": "M2 的召回为 0.5482，M1 为 0.5288。",
+      "value": "0.5482",
+      "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "召回差 0.0194，区间 [0.0021, 0.0393] 不含 0。",
+      "value": "0.0194",
+      "source": "reports/experiments/E1-M1.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "M2 的 nDCG 为 0.4856。",
+      "value": "0.4856",
+      "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.ndcg"
+    },
+    {
+      "text_zh": "M2 每题材元 392.7812。",
+      "value": "392.7812",
+      "source": "reports/experiments/E1-M1.json#results.by_candidate.M2-weighted-compress.metrics.tokens"
+    },
+    {
+      "text_zh": "M1 的召回为 0.5288。",
+      "value": "0.5288",
+      "source": "reports/experiments/E1-M1.json#results.by_candidate.M1-rrf.metrics.evidence_recall"
+    }
+  ],
+  "caveats_zh": [
+    "离线 F1 是抽取式，不是 LLM F1。",
+    "cross-encoder 是回退实现，不能当作真重排结论。",
+    "在线与离线方向相反，两组不能互相替代。"
+  ],
+  "next_zh": "修好 cross-encoder 后重跑离线与在线，确认方向差异来自哪里。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，M2）",
+      "value": "0.5482"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，M2）",
+      "value": "0.4856"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，M2）",
+      "value": "392.7812"
+    }
+  ]
+}

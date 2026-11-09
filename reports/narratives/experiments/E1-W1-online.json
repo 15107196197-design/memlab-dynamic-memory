@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-W1-online",
+  "source_report": "reports/experiments/E1-W1-online.json",
+  "title_zh": "W 写入 · 在线 27B：元数据略提 F1，召回反降",
+  "subtitle_zh": "E1-W1-online · 4 段开发集 · 40 题/候选 · seed 13",
+  "headline_zh": "W2 的 F1 0.1837 最高，W1 召回 0.5564",
+  "status_zh": "部分支持",
+  "summary_zh": "问：元数据写入是否比旧式追加更好。答：F1 略高，召回反而更低，两个指标各指一个赢家。",
+  "analysis_zh": "比较三种写入表示：W1 旧式追加，W2 元数据追加，W3 元数据加 mem0 摘要。W2 的 F1 为 0.1837，比 W1 高 0.0138，W3 最低，为 0.1540。但召回方向相反：W1 为 0.5564，W2 为 0.5269，W1 更好。机制上，元数据让答案更规整，候选条数却从 2.6 降到 2.5；W3 的摘要压缩丢细节，召回掉到 0.4487。三者的拒答率都在 0.45 到 0.475，偏高，说明当前作答策略本身保守。边界：单 seed、40 题、无区间，F1 与召回各指一个赢家，不能合成“W2 更好”的结论。",
+  "evidence": [
+    {
+      "text_zh": "W2 的答案 F1 为 0.1837，W1 为 0.1699。",
+      "value": "0.1837",
+      "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.answer_f1"
+    },
+    {
+      "text_zh": "W1 的证据召回为 0.5564，W2 为 0.5269。",
+      "value": "0.5564",
+      "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W1-legacy-append.evidence_recall"
+    },
+    {
+      "text_zh": "W3 的答案 F1 只有 0.1540，召回 0.4487。",
+      "value": "0.154",
+      "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W3-meta-mem0.answer_f1"
+    },
+    {
+      "text_zh": "W 的拒答率在 0.45 到 0.475 之间。",
+      "value": "0.45",
+      "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W1-legacy-append.refused"
+    },
+    {
+      "text_zh": "W2 每题材元 44.65。",
+      "value": "44.65",
+      "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "40 题、单 seed、无区间，F1 与召回方向相反。",
+    "W 的拒答率 0.45–0.475 偏高，F1 差距可能被拒答策略放大。",
+    "无 Judge；W3 的摘要损失没有单独分解。"
+  ],
+  "next_zh": "补 seed 与 Judge，并单独分解 mem0 摘要带来的证据损失。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，W2）",
+      "value": "0.1837"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，W1）",
+      "value": "0.5564"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，W2）",
+      "value": "44.65"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E3-1-online",
+  "source_report": "reports/experiments/E3-1-online.json",
+  "title_zh": "E3 组合 · 在线 27B：融合小胜，证据链拖后腿",
+  "subtitle_zh": "E3-1-online · 4 段开发集 · 60 题/格 · seed 13",
+  "headline_zh": "加权融合 F1 0.1764，比单通道高 0.0264",
+  "status_zh": "部分支持",
+  "summary_zh": "问：融合与作答方式怎么组合最好。答：加权融合加直接作答最好，证据链反而更低。",
+  "analysis_zh": "把融合方式与作答方式做成 2×2：单通道或加权融合，直接作答或证据链。加权融合加直接作答的 F1 为 0.1764，单通道加直接作答为 0.1500，高 0.0264；召回 0.3026 对 0.2860，高 0.0166。同一融合下，直接作答比证据链高 0.0157。机制上，加权融合把两路候选合并，补到少量单通道漏掉的证据；证据链增加约束，反而更容易拒答。边界：每格 60 题、单 seed、无重复与区间，也没做交互显著性检验，所以只能作描述性结论，不能说融合与作答方式存在交互。",
+  "evidence": [
+    {
+      "text_zh": "加权融合加直接作答的 F1 为 0.1764。",
+      "value": "0.1764",
+      "source": "reports/experiments/E3-1-online.json#analysis.by_cell[2].metrics.answer_f1"
+    },
+    {
+      "text_zh": "单通道加直接作答的 F1 为 0.1500。",
+      "value": "0.15",
+      "source": "reports/experiments/E3-1-online.json#analysis.by_cell[0].metrics.answer_f1"
+    },
+    {
+      "text_zh": "加权融合的召回为 0.3026。",
+      "value": "0.3026",
+      "source": "reports/experiments/E3-1-online.json#analysis.by_cell[2].metrics.evidence_recall"
+    },
+    {
+      "text_zh": "同一融合下，证据链的 F1 为 0.1607。",
+      "value": "0.1607",
+      "source": "reports/experiments/E3-1-online.json#analysis.by_cell[3].metrics.answer_f1"
+    },
+    {
+      "text_zh": "加权/直接比单通道/直接高 0.0264。",
+      "value": "0.0264",
+      "source": "reports/experiments/E3-1-online.json#comparisons[0].delta"
+    }
+  ],
+  "caveats_zh": [
+    "60 题/格、单 seed、无重复与 CI。",
+    "未做 fusion × answer 的交互显著性检验。",
+    "无 Judge；证据链的拒答率更高，需结合可用性看。"
+  ],
+  "next_zh": "补 seed 与配对 CI，再做 fusion × answer 交互检验。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，加权/直接）",
+      "value": "0.1764"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，加权）",
+      "value": "0.3026"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "48.57"
+    }
+  ]
+}

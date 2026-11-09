@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-R3",
+  "source_report": "reports/experiments/E1-R3.json",
+  "title_zh": "E1-R3 图检索 · 离线：图候选进不了最终上下文",
+  "subtitle_zh": "E1-R3 · 4 段开发集 · 61 道多跳题 · 13 个图配置",
+  "headline_zh": "13 个图配置召回都是 0.2372",
+  "status_zh": "部分支持",
+  "summary_zh": "问：图检索的候选能不能进最终上下文。答：34 到 91 条图候选，0 条存活。",
+  "analysis_zh": "用 13 个图配置跑 61 道多跳题，最后召回都是 0.2372，纯向量是 0.2257，只高 0.0115；nDCG 0.2334，P95 28.5 毫秒。图通道确实产出了 34 到 91 条图候选，但融合后 0 条存活，所以最终召回对图实现和图表示都不敏感。这不是“图没用”，而是融合与候选预算把图信号挡在外面。边界：dual_channel 是近似实现，语义通道用 BM25；离线哈希嵌入不是语义；planner 的 LLM 分析器在每个格子里都回退成规则，所以不能把差异归给图。",
+  "evidence": [
+    {
+      "text_zh": "13 个图配置的最终召回都是 0.2372。",
+      "value": "0.2372",
+      "source": "reports/experiments/E1-R3.json#results.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "纯向量的召回为 0.2257。",
+      "value": "0.2257",
+      "source": "reports/experiments/E1-R3.json#results.metrics.vector_only.evidence_recall"
+    },
+    {
+      "text_zh": "entity_subgraph 产出 91 条图候选。",
+      "value": "91",
+      "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_candidates"
+    },
+    {
+      "text_zh": "融合后存活的图候选为 0 条。",
+      "value": "0",
+      "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_in_final"
+    },
+    {
+      "text_zh": "P95 延迟为 28.457 毫秒。",
+      "value": "28.457",
+      "source": "reports/experiments/E1-R3.json#results.metrics.p95_latency_ms"
+    }
+  ],
+  "caveats_zh": [
+    "图候选在融合后 0 条存活，最终召回无法区分图实现。",
+    "dual_channel 是近似实现，语义通道用 BM25；嵌入是哈希。",
+    "planner 的 LLM 分析器全部回退成规则。"
+  ],
+  "next_zh": "调整融合预算让图候选有存活机会，再比较图实现。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，图配置）",
+      "value": "0.2372"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG）",
+      "value": "0.2334"
+    },
+    {
+      "key": "p95_latency_ms",
+      "label_zh": "P95 延迟（p95 latency）",
+      "value": "28.457"
+    }
+  ]
+}

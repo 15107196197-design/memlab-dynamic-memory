@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-R1",
+  "source_report": "reports/experiments/E1-R1.json",
+  "title_zh": "R 检索 · 离线：DAG 与无规划持平",
+  "subtitle_zh": "E1-R1 · 4 段开发集 · 480 题 · seeds 13/17",
+  "headline_zh": "离线 DAG 召回 0.4704，与无规划持平",
+  "status_zh": "部分支持",
+  "summary_zh": "问：离线 DAG 规划有没有收益。答：与无规划持平，规则路由反而更差。",
+  "analysis_zh": "离线比较三种规划。R3 DAG 的召回为 0.4704，与 R1 无规划完全相同，区间 [0, 0]；nDCG 为 0.3696，比 R1 低 0.0015，也不显著。R2 规则路由反而更差：召回 0.4452，比 R1 低 0.0252，区间 [−0.0524, −0.0005] 不含 0；nDCG 低 0.0675。机制上，R3 没有真正展开多节点计划，R2 的选择在离线哈希嵌入下选错了通道。边界：离线 F1 是抽取式；规划器是规则分析器；在线方向又相反，R2 在线最好。两组不能互相替代。",
+  "evidence": [
+    {
+      "text_zh": "R3 的召回为 0.4704，与 R1 相同。",
+      "value": "0.4704",
+      "source": "reports/experiments/E1-R1.json#results.by_candidate.R3-dag.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "R2 的召回为 0.4452，比 R1 低 0.0252。",
+      "value": "0.4452",
+      "source": "reports/experiments/E1-R1.json#results.by_candidate.R2-rule-router.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "R2 的召回差 −0.0252，区间 [−0.0524, −0.0005]。",
+      "value": "-0.0252",
+      "source": "reports/experiments/E1-R1.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "R1 的 nDCG 为 0.3711。",
+      "value": "0.3711",
+      "source": "reports/experiments/E1-R1.json#results.by_candidate.R1-planner-none.metrics.ndcg"
+    },
+    {
+      "text_zh": "R3 的 P95 为 19.5 毫秒。",
+      "value": "19.5",
+      "source": "reports/experiments/E1-R1.json#results.by_candidate.R3-dag.metrics.p95_latency_ms"
+    }
+  ],
+  "caveats_zh": [
+    "R3 与 R1 完全相同，需确认 DAG 是否真的展开。",
+    "离线用哈希嵌入，规划器是规则分析器。",
+    "在线方向相反（R2 在线最好），两组不能互相替代。"
+  ],
+  "next_zh": "检查 DAG 计划展开，并在语义嵌入下重跑规划对照。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，R3）",
+      "value": "0.4704"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，R1）",
+      "value": "0.3711"
+    },
+    {
+      "key": "p95_latency_ms",
+      "label_zh": "P95 延迟（p95 latency，R3）",
+      "value": "19.5"
+    }
+  ]
+}

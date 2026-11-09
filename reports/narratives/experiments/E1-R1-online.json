@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-R1-online",
+  "source_report": "reports/experiments/E1-R1-online.json",
+  "title_zh": "R 检索 · 在线 27B：规则路由小胜，DAG 无收益",
+  "subtitle_zh": "E1-R1-online · 4 段开发集 · 40 题/候选 · seed 13",
+  "headline_zh": "R2 规则路由 F1 0.1540，比无规划高 0.0297",
+  "status_zh": "部分支持",
+  "summary_zh": "问：规则路由和 DAG 规划能不能帮检索。答：规则路由小幅领先，DAG 与不规划持平。",
+  "analysis_zh": "比较三种检索规划：R1 不做规划，R2 规则路由，R3 DAG 计划。R2 的 F1 为 0.1540，比 R1 高 0.0297；召回 0.4487，比 R1 高 0.0308；每题材元还少 1.7。R3 与 R1 完全一致，F1、召回、nDCG 都相同，说明 DAG 在当前配置下没有真正展开多节点计划。机制上，规则路由按问题类型选通道，收益小但方向一致；R3 的计划节点没有带来新证据。边界：单 seed、40 题、无区间，0.0297 只能算描述性差异；规划器仍用规则分析器，没有用上 LLM 规划。",
+  "evidence": [
+    {
+      "text_zh": "R2 的答案 F1 为 0.1540，R1 为 0.1243。",
+      "value": "0.154",
+      "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.answer_f1"
+    },
+    {
+      "text_zh": "R2 比 R1 高 0.0297。",
+      "value": "0.0297",
+      "source": "reports/experiments/E1-R1-online.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "R2 的证据召回为 0.4487。",
+      "value": "0.4487",
+      "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.evidence_recall"
+    },
+    {
+      "text_zh": "R3 的答案 F1 与 R1 相同，为 0.1243。",
+      "value": "0.1243",
+      "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R3-dag.answer_f1"
+    },
+    {
+      "text_zh": "R2 每题材元 54.325。",
+      "value": "54.325",
+      "source": "reports/experiments/E1-R1-online.json#results.by_candidate.R2-rule-router.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "40 题、单 seed、无区间；0.0297 是描述性差异。",
+    "R3 与 R1 完全相同，需先确认 DAG 是否真的展开多节点计划。",
+    "规划器仍用规则分析器；无 Judge。"
+  ],
+  "next_zh": "补 seed/CI，并检查 DAG 的计划展开是否真的生效。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，R2）",
+      "value": "0.154"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，R2）",
+      "value": "0.4487"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，R2）",
+      "value": "54.325"
+    }
+  ]
+}

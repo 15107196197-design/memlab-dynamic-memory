@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-S2",
+  "source_report": "reports/experiments/E1-S2.json",
+  "title_zh": "S 存储 · 离线：三种图表示召回相同",
+  "subtitle_zh": "E1-S2 · 4 段开发集 · 480 题 · seeds 13/17",
+  "headline_zh": "离线三种图表示召回同为 0.5053",
+  "status_zh": "部分支持",
+  "summary_zh": "问：离线三种图表示有没有差别。答：召回完全相同，图表示未被消费。",
+  "analysis_zh": "离线比较三种图表示。S1、S2、S3 的召回都是 0.5053，nDCG 分别 0.3563、0.3553、0.3553，几乎一样。S3 的边数是 1973.75，S1 是 752，但更大的图没有带来召回。这和在线一致：图表示接口没有被检索路径消费，所以三种表示结果相同，不能读成“图表示无差异”。在线实验也出现同样的一致性，说明问题不在数据或模型，而在接线与融合预算。边界：离线用的是哈希嵌入，不是语义向量；图候选在 R3 融合后 0 条存活，说明瓶颈在融合预算，不在图本身；无 Judge。",
+  "evidence": [
+    {
+      "text_zh": "S1 的召回为 0.5053。",
+      "value": "0.5053",
+      "source": "reports/experiments/E1-S2.json#results.by_candidate.S1-state-slot.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "S2 的召回也是 0.5053。",
+      "value": "0.5053",
+      "source": "reports/experiments/E1-S2.json#results.by_candidate.S2-entity-triple.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "S3 的召回同样为 0.5053。",
+      "value": "0.5053",
+      "source": "reports/experiments/E1-S2.json#results.by_candidate.S3-three-layer.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "S1 的边数为 752。",
+      "value": "752",
+      "source": "reports/experiments/E1-S2.json#results.by_candidate.S1-state-slot.metrics.graph_edges"
+    },
+    {
+      "text_zh": "S3 的边数为 1973.75。",
+      "value": "1973.75",
+      "source": "reports/experiments/E1-S2.json#results.by_candidate.S3-three-layer.metrics.graph_edges"
+    }
+  ],
+  "caveats_zh": [
+    "三种表示相同是“未被消费”，不能读成“无差异”。",
+    "离线用哈希嵌入，不是语义向量。",
+    "图候选在融合后 0 条存活；无 Judge。"
+  ],
+  "next_zh": "先把图表示接入检索路径，再比较 S1/S2/S3。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall）",
+      "value": "0.5053"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，S1）",
+      "value": "0.3563"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "306.9125"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-M1-online",
+  "source_report": "reports/experiments/E1-M1-online.json",
+  "title_zh": "M 合并 · 在线 27B：RRF 融合效果最好",
+  "subtitle_zh": "E1-M1-online · 4 段开发集 · 40 题/候选 · seed 13",
+  "headline_zh": "M1 融合 F1 0.3064，比 M2 高 0.079",
+  "status_zh": "部分支持",
+  "summary_zh": "问：三种合并方式哪种答得更准。答：RRF 融合的答案 F1 最高，但每题上下文也最多。",
+  "analysis_zh": "比较三种合并方式：M1 用倒数排名融合（RRF），M2 加权重再压缩，M3 按问题类型自适应。结果 M1 的答案 F1 为 0.3064，比 M2 高 0.079，比 M3 高 0.1524；证据召回 0.6983，也是三者最高。原因是 M1 保留两路候选、压缩最少，M2 的压缩丢掉部分证据，M3 平均只取 2.2 个候选。代价是 M1 每题材元 403.8、P95 延迟 17.0 秒，都高于 M3。边界要说清：M2 的 cross-encoder 仍是回退实现，所以这不是“重排不如融合”的结论；离线 M2 召回反而更高，在线与离线方向相反，不能互相替代。",
+  "evidence": [
+    {
+      "text_zh": "M1 的答案 F1 为 0.3064，是三种合并方式中最高。",
+      "value": "0.3064",
+      "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.answer_f1"
+    },
+    {
+      "text_zh": "M2 的答案 F1 为 0.2274，比 M1 低 0.079。",
+      "value": "0.2274",
+      "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M2-weighted-compress.answer_f1"
+    },
+    {
+      "text_zh": "M1 的证据召回为 0.6983。",
+      "value": "0.6983",
+      "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.evidence_recall"
+    },
+    {
+      "text_zh": "M3 的答案 F1 只有 0.1540，候选数 2.225。",
+      "value": "0.154",
+      "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M3-query-adaptive.answer_f1"
+    },
+    {
+      "text_zh": "M1 每题材元 403.825。",
+      "value": "403.825",
+      "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.tokens"
+    }
+  ],
+  "caveats_zh": [
+    "40 题/候选、单 seed、无 bootstrap 置信区间。",
+    "M2 的 cross-encoder 仍是回退实现，不能当作真重排结论。",
+    "没有 LLM Judge；M3 的候选数只有 2.2，F1 差距可能混入拒答策略。"
+  ],
+  "next_zh": "补第二个 seed 与 Judge，修好 cross-encoder 后重跑 M2。",
+  "metrics_zh": [
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，M1）",
+      "value": "0.3064"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall）",
+      "value": "0.6983"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question）",
+      "value": "403.8"
+    }
+  ]
+}

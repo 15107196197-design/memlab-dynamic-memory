@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-2-params",
+  "source_report": "reports/experiments/E1-2-params.json",
+  "title_zh": "E1-2 参数 · 离线：k 换召回，rrf_k 换排序",
+  "subtitle_zh": "E1-2-params · 4 段开发集 · 240 题/档 · 23 个配置",
+  "headline_zh": "k=25 召回 0.4913，比默认高 0.0295",
+  "status_zh": "部分支持",
+  "summary_zh": "问：检索参数往哪调有收益。答：k=25 换召回，rrf_k=10 换排序，但都加成本。",
+  "analysis_zh": "参数扫描只覆盖检索侧，answer F1 不参与。k 从 15 调到 25，召回从 0.4619 升到 0.4913，高 0.0295，但每题材元多 234.3；k 降到 10，召回掉 0.0417，省 117.2。nDCG 对 k 不敏感。MMR 在关闭衰减时，lambda 0.9 比 0.5 的 nDCG 高 0.00236，区间 [0.00098, 0.00417] 不含 0；rrf_k 10 比 60 的 nDCG 高 0.0448。max_neighbors 虽然接线，但只有 23/240 题走到 graph_khop，预算饱和，所以是平的。边界：嵌入是哈希，不是语义；P95 是单题运行延迟；MMR 与衰减的交互没测。",
+  "evidence": [
+    {
+      "text_zh": "k=25 的召回为 0.491282。",
+      "value": "0.491282",
+      "source": "reports/experiments/E1-2-params.json#comparisons[30].candidate_value"
+    },
+    {
+      "text_zh": "默认 k=15 的召回为 0.46187。",
+      "value": "0.46187",
+      "source": "reports/experiments/E1-2-params.json#comparisons[30].baseline_value"
+    },
+    {
+      "text_zh": "k=25 的每题材元为 578.858333。",
+      "value": "578.858333",
+      "source": "reports/experiments/E1-2-params.json#comparisons[32].candidate_value"
+    },
+    {
+      "text_zh": "rrf_k=10 的 nDCG 为 0.319232。",
+      "value": "0.319232",
+      "source": "reports/experiments/E1-2-params.json#comparisons[52].candidate_value"
+    },
+    {
+      "text_zh": "filter=none 的召回为 0.550805。",
+      "value": "0.550805",
+      "source": "reports/experiments/E1-2-params.json#comparisons[63].candidate_value"
+    }
+  ],
+  "caveats_zh": [
+    "嵌入是哈希，不是语义；结果不能直接外推到 bge-m3。",
+    "P95 是单题运行延迟，不是部署延迟。",
+    "MMR 与衰减的交互没测；max_neighbors 只有 23/240 题真正走到图路径。"
+  ],
+  "next_zh": "在语义嵌入下重跑 k 与 rrf_k，并补 MMR × 衰减交互。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，k=25）",
+      "value": "0.4913"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，rrf_k=10）",
+      "value": "0.3192"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，k=25）",
+      "value": "578.9"
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "M2-online",
+  "source_report": "reports/experiments/M2-online.json",
+  "title_zh": "M2 重排 · 在线 27B：排序更准，证据更少",
+  "subtitle_zh": "M2-online · 4 段开发集 · 40 题/配置 · seed 13",
+  "headline_zh": "重排把 nDCG 提到 0.5123，召回却掉 0.2287",
+  "status_zh": "部分支持",
+  "summary_zh": "问：cross-encoder 重排是否全面提升。答：排序质量升，召回和 F1 降，是 trade-off。",
+  "analysis_zh": "比较 M2 重排开与不开：不开时 F1 0.2844、召回 0.5785、nDCG 0.4315；开 cross-encoder 后 F1 0.2373、召回 0.3498、nDCG 0.5123。排序质量升了 0.0808，但召回掉了 0.2287，F1 掉了 0.0471，每题材元从 376.5 降到 47.3，拒答率从 0.175 升到 0.55。机制上，重排把候选压到更少、更靠前的证据，排序更准但覆盖更窄。边界：单 seed、40 题/配置、无区间，且只跑了一次 GPU；不能据此说重排更好或更差，只能说它是拿召回换排序与成本。",
+  "evidence": [
+    {
+      "text_zh": "不开重排时 F1 为 0.2844，开重排后为 0.2373。",
+      "value": "0.2844",
+      "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.answer_f1"
+    },
+    {
+      "text_zh": "不开重排时召回为 0.5785，开重排后为 0.3498。",
+      "value": "0.5785",
+      "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.evidence_recall"
+    },
+    {
+      "text_zh": "重排把 nDCG 从 0.4315 提到 0.5123。",
+      "value": "0.5123",
+      "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.ndcg"
+    },
+    {
+      "text_zh": "重排后每题材元降到 47.25。",
+      "value": "47.25",
+      "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.tokens"
+    },
+    {
+      "text_zh": "重排后拒答率升到 0.55。",
+      "value": "0.55",
+      "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.refused"
+    }
+  ],
+  "caveats_zh": [
+    "单 seed、40 题/配置、无区间，只跑了一次 GPU。",
+    "重排是拿召回换 nDCG 与 tokens，不是全面胜利。",
+    "拒答率升到 0.55；无 Judge。"
+  ],
+  "next_zh": "在更多题/seed 上做配对 CI，并试“重排但保底召回”的折中。",
+  "metrics_zh": [
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，重排）",
+      "value": "0.5123"
+    },
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，重排）",
+      "value": "0.3498"
+    },
+    {
+      "key": "answer_f1",
+      "label_zh": "答案 F1（answer_f1，重排）",
+      "value": "0.2373"
+    }
+  ]
+}

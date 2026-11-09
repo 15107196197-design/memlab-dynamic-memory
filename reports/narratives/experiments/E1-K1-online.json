@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-K1-online",
+  "source_report": "reports/experiments/E1-K1-online.json",
+  "title_zh": "K 维护 · 在线 27B：归档略胜，只有存储级指标",
+  "subtitle_zh": "E1-K1-online · 4 段开发集 · 40 题 · store-level",
+  "headline_zh": "K3 更新正确率 0.8086，清掉 490.75 条",
+  "status_zh": "部分支持",
+  "summary_zh": "问：归档与去重能不能改善记忆维护。答：归档的存储级指标略好，但没有答案级证据。",
+  "analysis_zh": "K 这组只测存储级维护，不测答案。比较 K1 不维护、K2 去重、K3 归档 90 天。K3 的更新正确率为 0.8086，比 K1 高 0.0172；陈旧率 0.2234，比 K1 低 0.008；矛盾率 0.4000，比 K1 低 0.0224；代价是清掉 490.75 条单元。K2 只清 8.5 条，三项指标几乎不动。机制上，归档把过时事实移出有效集，更新正确率和陈旧率同时改善；去重没有触及过时问题。边界：K 没有答案 F1、召回、每题材元和 P95，不能和 W/S/R/M/U 比；指标按题重复计数，不是独立样本，也没有 Judge。",
+  "evidence": [
+    {
+      "text_zh": "K3 的更新正确率为 0.8086，K1 为 0.7914。",
+      "value": "0.8086",
+      "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.update_correctness"
+    },
+    {
+      "text_zh": "K3 的陈旧率为 0.2234，K1 为 0.2314。",
+      "value": "0.2234",
+      "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.staleness"
+    },
+    {
+      "text_zh": "K3 的矛盾率为 0.4000，K1 为 0.4224。",
+      "value": "0.4",
+      "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.contradiction_rate"
+    },
+    {
+      "text_zh": "K3 清掉 490.75 条单元，K2 只清 8.5 条。",
+      "value": "490.75",
+      "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.removed"
+    },
+    {
+      "text_zh": "K1 的更新正确率为 0.7914。",
+      "value": "0.7914",
+      "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K1-none.update_correctness"
+    }
+  ],
+  "caveats_zh": [
+    "只有存储级指标，不能和 W/S/R/M/U 比答案 F1。",
+    "指标按题重复计数，不是独立样本。",
+    "无 Judge、无第二 seed；K3 清掉 490.75 条，是否误删未人工核查。"
+  ],
+  "next_zh": "给 K 接上答案级评测，再判断归档是否真的帮到回答。",
+  "metrics_zh": [
+    {
+      "key": "update_correctness",
+      "label_zh": "更新正确率（update_correctness，K3）",
+      "value": "0.8086"
+    },
+    {
+      "key": "staleness",
+      "label_zh": "陈旧率（staleness，K3）",
+      "value": "0.2234"
+    },
+    {
+      "key": "removed",
+      "label_zh": "清掉单元（removed，K3）",
+      "value": "490.75"
+    }
+  ]
+}

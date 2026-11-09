@@ -1,0 +1,61 @@
+{
+  "schema": "memlab/narrative@1",
+  "experiment_id": "E1-W1",
+  "source_report": "reports/experiments/E1-W1.json",
+  "title_zh": "W 写入 · 离线：W2 召回略高但不显著",
+  "subtitle_zh": "E1-W1 · 4 段开发集 · 480 题 · seeds 13/17",
+  "headline_zh": "离线 W2 召回高 0.0300，但区间跨 0",
+  "status_zh": "部分支持",
+  "summary_zh": "问：离线 W2 是否优于 W1。答：召回高 0.0300 但区间跨 0，不算显著。",
+  "analysis_zh": "离线比较三种写入表示。W2 的召回为 0.5053，比 W1 的 0.4753 高 0.0300，但区间 [−0.0005, 0.0629] 跨 0，不算显著；nDCG 反而低 0.0091。W2 每题材元少 4.6，P95 从 11.0 毫秒升到 57.0 毫秒。W3 更差：召回 0.4452，nDCG 0.3036，P95 167.5 毫秒，三项都输给 W1。机制上，元数据写入让证据更规整，但摘要与审计增加了开销。边界：离线 F1 是抽取式；cross-encoder 回退；W2 的召回优势不显著，不能写成“元数据更好”。",
+  "evidence": [
+    {
+      "text_zh": "W2 的召回为 0.5053，W1 为 0.4753。",
+      "value": "0.5053",
+      "source": "reports/experiments/E1-W1.json#results.by_candidate.W2-meta-append.metrics.evidence_recall"
+    },
+    {
+      "text_zh": "召回差 0.0300，区间 [−0.0005, 0.0629] 跨 0。",
+      "value": "0.03",
+      "source": "reports/experiments/E1-W1.json#comparisons[0].delta"
+    },
+    {
+      "text_zh": "W1 的 nDCG 为 0.3644，W2 为 0.3553。",
+      "value": "0.3644",
+      "source": "reports/experiments/E1-W1.json#results.by_candidate.W1-legacy-append.metrics.ndcg"
+    },
+    {
+      "text_zh": "W2 每题材元 306.9125。",
+      "value": "306.9125",
+      "source": "reports/experiments/E1-W1.json#results.by_candidate.W2-meta-append.metrics.tokens"
+    },
+    {
+      "text_zh": "W3 的召回为 0.4452。",
+      "value": "0.4452",
+      "source": "reports/experiments/E1-W1.json#results.by_candidate.W3-meta-mem0.metrics.evidence_recall"
+    }
+  ],
+  "caveats_zh": [
+    "W2 的召回区间 [−0.0005, 0.0629] 跨 0，不算显著。",
+    "离线 F1 是抽取式；cross-encoder 回退。",
+    "W3 更差，但摘要与审计的开销没有单独分解。"
+  ],
+  "next_zh": "扩大样本并补 CI，再判断元数据写入是否值得。",
+  "metrics_zh": [
+    {
+      "key": "evidence_recall",
+      "label_zh": "证据召回（evidence_recall，W2）",
+      "value": "0.5053"
+    },
+    {
+      "key": "ndcg",
+      "label_zh": "排序质量（nDCG，W1）",
+      "value": "0.3644"
+    },
+    {
+      "key": "tokens",
+      "label_zh": "每题材元（tokens/question，W2）",
+      "value": "306.9125"
+    }
+  ]
+}

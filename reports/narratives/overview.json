@@ -1,0 +1,153 @@
+{
+  "schema": "memlab/narrative@1",
+  "updated_at": "2026-11-09T21:00:00+08:00",
+  "headline_zh": "在线 27B 上融合与校验能小幅提分，但没有一项结论达到可推广强度",
+  "overall_zh": "做对了什么：本轮把单因素、B0/R0 test 对照、转化率、oracle、2×2 和重排放进同一套在线 27B 口径，数字都能回到报告 JSON。M1 的 RRF 融合 F1 0.3064 是六个模块里最高，U2 的 0.2998 紧随其后；检索命中后答对率 0.5657，比总体高 0.0457，说明检索对答案有正向作用。\n\n没证明什么：B0 与 R0 的 F1 差 −0.0363，区间跨 0，只能算无定论；召回显著低 0.2032，是唯一确定的负向结论。三种图表示结果完全相同，是接口未接线，不能读成“无差异”。重排把 nDCG 提高 0.0808，同时把召回压低 0.2287，不是全面胜利。所有实验都缺 Judge、第二 seed 和状态准确率。\n\n下一步：先补第二 seed、LLM Judge 和按对话的 cluster bootstrap，再修图检索接线与 cross-encoder 回退；在此之前，任何“某模块更好”的说法都只按描述性结论使用，不升级为可推广结论。",
+  "blocks": [
+    {
+      "id": "baseline",
+      "title_zh": "与全文/向量基线比",
+      "en": "baseline",
+      "headline_zh": "归档全文 0.5589 最高，但不能与本轮直接比",
+      "body_zh": "上一版 27B 归档在 test 120 题上给出 Full 0.5589、Vector 0.3623、Hybrid 0.3986、Dynamic 0.4157；Full 不做检索，Recall 不适用。本轮 B0 为 0.1883、R0 为 0.1520，题集、答案器与评测口径都不同，只能当参照，不能据此说“系统退步”。真正可比的是同一轮内的 B0/R0 对照。",
+      "route": "#/experiments/final-w3-test-online",
+      "evidence": [
+        {
+          "text_zh": "归档 Full 的 F1 为 0.5589。",
+          "value": "0.5589",
+          "source": "eval/results.json#qa.test.summary.full.f1"
+        },
+        {
+          "text_zh": "归档 Vector 的 F1 为 0.3623。",
+          "value": "0.3623",
+          "source": "eval/results.json#qa.test.summary.vector.f1"
+        },
+        {
+          "text_zh": "归档 Dynamic 的 F1 为 0.4157。",
+          "value": "0.4157",
+          "source": "eval/results.json#qa.test.summary.dynamic.f1"
+        },
+        {
+          "text_zh": "本轮 B0 的 F1 为 0.1883。",
+          "value": "0.1883",
+          "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+        }
+      ]
+    },
+    {
+      "id": "b0r0",
+      "title_zh": "B0 与 R0 的在线对照",
+      "en": "B0 vs R0",
+      "headline_zh": "R0 的 F1 与 B0 无显著差异，召回低 0.2032",
+      "body_zh": "test 两段、各 80 题、seeds 13/17。B0 的 F1 0.1883、召回 0.5435；R0 的 F1 0.1520、召回 0.3403。F1 差 −0.0363，95% 区间 [−0.1351, 0.0575] 跨 0；召回差 −0.2032，区间 [−0.3509, −0.048] 不含 0。R0 更省更快（319.3 vs 924.6 tokens），但代价是确定的召回损失。结论：无定论，不能说 R0 更好。",
+      "route": "#/experiments/final-w3-test-online",
+      "evidence": [
+        {
+          "text_zh": "B0 的 F1 为 0.1883，R0 为 0.1520。",
+          "value": "0.1883",
+          "source": "reports/experiments/final-w3-test-online.json#results.baseline_metrics.answer_f1"
+        },
+        {
+          "text_zh": "F1 差 −0.0363，区间跨 0。",
+          "value": "-0.0363",
+          "source": "reports/experiments/final-w3-test-online.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "召回差 −0.2032，区间不含 0。",
+          "value": "-0.2032",
+          "source": "reports/experiments/final-w3-test-online.json#comparisons[1].delta"
+        }
+      ]
+    },
+    {
+      "id": "modules",
+      "title_zh": "六个模块谁最好",
+      "en": "modules",
+      "headline_zh": "M1 融合 0.3064 最高，U2 0.2998 紧随",
+      "body_zh": "在线 27B、40 题/候选、单 seed。W 最好 W2 0.1837；S 三种表示都是 0.1837，但属 not_wired；R2 0.1540；M1 0.3064；U2 0.2998；K3 只有存储级更新正确率 0.8086。M1 的代价是 403.8 tokens，U2 的代价是拒答率 0.275。除 M 与 U 外，其余模块的 F1 都在 0.18 附近，差距没有区间支撑。",
+      "route": "#/experiments/E1-M1-online",
+      "evidence": [
+        {
+          "text_zh": "M1 的 F1 为 0.3064，是六模块最高。",
+          "value": "0.3064",
+          "source": "reports/experiments/E1-M1-online.json#results.by_candidate.M1-rrf.answer_f1"
+        },
+        {
+          "text_zh": "U2 的 F1 为 0.2998。",
+          "value": "0.2998",
+          "source": "reports/experiments/E1-U1-online.json#results.by_candidate.U2-offline-valid.answer_f1"
+        },
+        {
+          "text_zh": "W2 的 F1 为 0.1837。",
+          "value": "0.1837",
+          "source": "reports/experiments/E1-W1-online.json#results.by_candidate.W2-meta-append.answer_f1"
+        },
+        {
+          "text_zh": "K3 的更新正确率为 0.8086。",
+          "value": "0.8086",
+          "source": "reports/experiments/E1-K1-online.json#analysis.by_candidate.K3-archive.update_correctness"
+        }
+      ]
+    },
+    {
+      "id": "graph",
+      "title_zh": "图检索有没有用",
+      "en": "graph",
+      "headline_zh": "图检索没有可测增益：图通道召回 0.2372",
+      "body_zh": "在线 S1/S2/S3 完全相同，是 graph.retrieval.impl 未被消费的 not_wired；离线 R3 的 13 个图配置召回都是 0.2372，只比纯向量高 0.0115。图通道能产出 34 到 91 条候选，但融合后 0 条存活，瓶颈在融合预算。因此既不能证明图有用，也不能证明图没用；当前只能说“测不到”，不能下结论。",
+      "route": "#/experiments/E1-R3",
+      "evidence": [
+        {
+          "text_zh": "图配置的最终召回为 0.2372。",
+          "value": "0.2372",
+          "source": "reports/experiments/E1-R3.json#results.metrics.evidence_recall"
+        },
+        {
+          "text_zh": "纯向量的召回为 0.2257。",
+          "value": "0.2257",
+          "source": "reports/experiments/E1-R3.json#results.metrics.vector_only.evidence_recall"
+        },
+        {
+          "text_zh": "entity_subgraph 产出 91 条图候选。",
+          "value": "91",
+          "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_candidates"
+        },
+        {
+          "text_zh": "融合后存活的图候选为 0 条。",
+          "value": "0",
+          "source": "reports/experiments/E1-R3.json#analysis.graph_channel_survival[1].graph_novel_in_final"
+        }
+      ]
+    },
+    {
+      "id": "combo",
+      "title_zh": "组合与重排的代价",
+      "en": "combination",
+      "headline_zh": "融合 +0.0264 很薄；重排拿 nDCG 换召回",
+      "body_zh": "E3 2×2 里，加权融合加直接作答 0.1764，比单通道 0.1500 高 0.0264；证据链反而低 0.0157。M2 重排把 nDCG 从 0.4315 提到 0.5123，却把召回从 0.5785 压到 0.3498、F1 从 0.2844 压到 0.2373。两者都说明：组合有收益但很薄，重排是拿覆盖换排序，不能当全面改进。",
+      "route": "#/experiments/E3-1-online",
+      "evidence": [
+        {
+          "text_zh": "加权融合比单通道高 0.0264。",
+          "value": "0.0264",
+          "source": "reports/experiments/E3-1-online.json#comparisons[0].delta"
+        },
+        {
+          "text_zh": "重排后 nDCG 为 0.5123。",
+          "value": "0.5123",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.ndcg"
+        },
+        {
+          "text_zh": "重排后召回为 0.3498。",
+          "value": "0.3498",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.cross_encoder.evidence_recall"
+        },
+        {
+          "text_zh": "不开重排的召回为 0.5785。",
+          "value": "0.5785",
+          "source": "reports/experiments/M2-online.json#analysis.by_candidate.none.evidence_recall"
+        }
+      ]
+    }
+  ]
+}
