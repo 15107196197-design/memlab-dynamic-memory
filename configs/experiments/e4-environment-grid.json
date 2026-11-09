@@ -1,0 +1,182 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E4-environment-grid",
+  "title": "Environment-conditioned optimal configurations across LLM capability, data scale and scene",
+  "design": "environment_grid",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H8",
+    "H9",
+    "H10"
+  ],
+  "grid": {
+    "llm": [
+      {
+        "id": "L1_7b",
+        "model": "qwen2.5:7b",
+        "level": "weak"
+      },
+      {
+        "id": "L2_27b",
+        "model": "qwen3.8:27b-q4_K_M",
+        "level": "medium"
+      },
+      {
+        "id": "L3_72b",
+        "model": "qwen2.5:72b",
+        "level": "strong"
+      }
+    ],
+    "data_scale": [
+      {
+        "id": "S1_test2",
+        "samples": [
+          "conv-41",
+          "conv-42"
+        ],
+        "question_limit": 351,
+        "approx_tokens": 45000
+      },
+      {
+        "id": "S2_course6",
+        "samples": [
+          "conv-26",
+          "conv-30",
+          "conv-41",
+          "conv-42",
+          "conv-43",
+          "conv-44"
+        ],
+        "question_limit": 885,
+        "approx_tokens": 130000
+      },
+      {
+        "id": "S3_locomo10",
+        "samples": [
+          "conv-26",
+          "conv-30",
+          "conv-41",
+          "conv-42",
+          "conv-43",
+          "conv-44",
+          "conv-47",
+          "conv-48",
+          "conv-49",
+          "conv-50"
+        ],
+        "question_limit": 1540,
+        "approx_tokens": 215000
+      }
+    ],
+    "scene": [
+      {
+        "id": "personal_assistant",
+        "adapter": "locomo",
+        "status": "ready"
+      },
+      {
+        "id": "coding",
+        "adapter": "synthetic_coding",
+        "status": "planned"
+      },
+      {
+        "id": "customer_service",
+        "adapter": "multiwoz",
+        "status": "planned"
+      }
+    ]
+  },
+  "candidates": [
+    {
+      "id": "B0",
+      "config": "B0_legacy",
+      "role": "control"
+    },
+    {
+      "id": "R0",
+      "config": "R0_reference",
+      "role": "reference"
+    },
+    {
+      "id": "CHEAP",
+      "config": "R0_cheap",
+      "role": "low_cost"
+    },
+    {
+      "id": "QUALITY",
+      "config": "R0_quality",
+      "role": "high_cost"
+    },
+    {
+      "id": "E3_WINNER",
+      "config": "pending_e3",
+      "role": "interaction_winner"
+    }
+  ],
+  "protocol": {
+    "minimum_cells": 9,
+    "full_cells": 27,
+    "questions_per_cell_screening": 60,
+    "questions_per_cell_confirmation": 120,
+    "sequential_halving": {
+      "enabled": true,
+      "rounds": 3,
+      "keep_fraction": 0.5
+    },
+    "fixed": {
+      "context_budget": 32768,
+      "query_mix": "balanced",
+      "seed": 13,
+      "judge": "qwen3.8:27b-q4_K_M",
+      "candidate_budget": 15
+    }
+  },
+  "selection": {
+    "objective": "maximize judge_accuracy subject to tokens_per_query <= 8000 and p95_latency_ms <= 60000",
+    "fallback_objective": "maximize 0.6 * normalized_f1 + 0.3 * normalized_state_accuracy + 0.1 * normalized_recall_at_15",
+    "report": [
+      "per_cell_best",
+      "global_best",
+      "regret",
+      "conditional_gain",
+      "pareto_front",
+      "strategy_table",
+      "config_x_environment_interaction"
+    ]
+  },
+  "metrics": [
+    "answer_f1",
+    "judge_accuracy",
+    "state_accuracy",
+    "as_of_accuracy",
+    "recall@15",
+    "ndcg@15",
+    "tokens_per_query",
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "model": "mixed_effects",
+    "formula": "metric ~ config * llm * scale * scene + (1|question)",
+    "interaction_test": "likelihood_ratio",
+    "cluster_by": "conversation",
+    "bootstrap_samples": 1000,
+    "correction": "holm",
+    "conditional_policy": {
+      "method": "depth_2_decision_tree",
+      "max_depth": 2,
+      "min_samples_leaf": 3
+    }
+  },
+  "budget": {
+    "max_cells": 27,
+    "max_configs_per_cell": 5,
+    "max_gpu_hours": 140,
+    "max_api_usd": 500
+  },
+  "output": {
+    "runs_dir": "runs/e4",
+    "report": "reports/e4-environment.html"
+  }
+}

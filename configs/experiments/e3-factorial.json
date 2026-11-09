@@ -1,0 +1,334 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E3-module-combinations",
+  "title": "Module adoption combinations: does using modules together beat using them alone?",
+  "design": "fractional_factorial",
+  "resolution": "V",
+  "generator": {
+    "base_factors": 5,
+    "fraction": "2^(5-1)",
+    "runs": 16,
+    "center_points": 4,
+    "note": "Resolution V half-fraction of the five module-adoption factors. Temporal is tested in the nested E3c design because it is only defined when schema.bitemporal is true."
+  },
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H6",
+    "H7"
+  ],
+  "environment": {
+    "llm_level": "L2",
+    "llm": "qwen3.8:27b-q4_K_M",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 120,
+    "stratify": "category",
+    "confirmation_question_limit": 351
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "randomise_run_order": true,
+    "block_by": "conversation",
+    "repeat": 2,
+    "confirmation_repeat": 2,
+    "derived_rules": [
+      {
+        "when": {
+          "graph.repr.impl": "none"
+        },
+        "set": {
+          "graph.retrieval.impl": "vector_only"
+        },
+        "reason": "No graph index to retrieve from."
+      },
+      {
+        "when": {
+          "schema.impl": "legacy_flat"
+        },
+        "set": {
+          "schema.params.bitemporal": false,
+          "temporal.model": "record_time",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Flat schema has no bi-temporal fields."
+      },
+      {
+        "when": {
+          "temporal.model": "record_time"
+        },
+        "set": {
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Record-time model has no validity intervals."
+      },
+      {
+        "when": {
+          "planner.impl": "none"
+        },
+        "set": {
+          "planner.params.granularity": "coarse",
+          "planner.params.parallelism": 1
+        },
+        "reason": "Planner parameters have no effect when the planner is off."
+      }
+    ]
+  },
+  "factors": [
+    {
+      "id": "schema",
+      "path": "schema.impl",
+      "low": "legacy_flat",
+      "high": "meta_schema",
+      "hypothesis": "H1/H9"
+    },
+    {
+      "id": "graph",
+      "path": "graph.repr.impl",
+      "low": "state_slot",
+      "high": "three_layer",
+      "hypothesis": "H5/H6"
+    },
+    {
+      "id": "planner",
+      "path": "planner.impl",
+      "low": "none",
+      "high": "dag",
+      "hypothesis": "H4"
+    },
+    {
+      "id": "rerank",
+      "path": "rerank.impl",
+      "low": "none",
+      "high": "cross_encoder",
+      "hypothesis": "H2/H6"
+    },
+    {
+      "id": "fusion",
+      "path": "fusion.impl",
+      "low": "single_channel",
+      "high": "query_adaptive_weights",
+      "hypothesis": "H2"
+    }
+  ],
+  "primary_interactions": [
+    {
+      "pair": [
+        "graph",
+        "rerank"
+      ],
+      "hypothesis": "H6",
+      "prediction": "Coarse graph + reranker may match fine graph + no reranker; if so, prefer the cheaper combination."
+    },
+    {
+      "pair": [
+        "schema",
+        "rerank"
+      ],
+      "hypothesis": "H1",
+      "prediction": "Structured extraction may reduce the marginal value of reranking."
+    },
+    {
+      "pair": [
+        "planner",
+        "graph"
+      ],
+      "hypothesis": "H4/H5",
+      "prediction": "DAG planning can compensate for a simpler graph by decomposing the query."
+    },
+    {
+      "pair": [
+        "fusion",
+        "rerank"
+      ],
+      "hypothesis": "H2",
+      "prediction": "Reranking may absorb most of the fusion gain."
+    }
+  ],
+  "supplementary_designs": [
+    {
+      "id": "E3b-parameter-pairs",
+      "design": "targeted_2x2",
+      "question": "Do parameter interactions change the best combination?",
+      "pairs": [
+        {
+          "factors": [
+            {
+              "id": "graph.k_hop",
+              "levels": [
+                1,
+                3
+              ]
+            },
+            {
+              "id": "planner.granularity",
+              "levels": [
+                "coarse",
+                "fine"
+              ]
+            }
+          ],
+          "hypothesis": "H4"
+        },
+        {
+          "factors": [
+            {
+              "id": "schema.params.fields",
+              "levels": [
+                6,
+                12
+              ]
+            },
+            {
+              "id": "rerank.impl",
+              "levels": [
+                "none",
+                "cross_encoder"
+              ]
+            }
+          ],
+          "hypothesis": "H1"
+        },
+        {
+          "factors": [
+            {
+              "id": "fusion.params.rrf_k",
+              "levels": [
+                10,
+                100
+              ]
+            },
+            {
+              "id": "rerank.params.top_n",
+              "levels": [
+                20,
+                100
+              ]
+            }
+          ],
+          "hypothesis": "H2"
+        },
+        {
+          "factors": [
+            {
+              "id": "post.decay.params.lambda",
+              "levels": [
+                0.001,
+                0.05
+              ]
+            },
+            {
+              "id": "query_type",
+              "levels": [
+                "current",
+                "history"
+              ]
+            }
+          ],
+          "hypothesis": "H7"
+        }
+      ],
+      "questions_per_cell": 120,
+      "note": "Only run a pair when the corresponding main effect or interaction is significant in E3."
+    },
+    {
+      "id": "E3c-temporal-nested",
+      "design": "nested_factorial",
+      "question": "Does conflict policy interact with query type, and does the interaction depend on schema?",
+      "factors": [
+        {
+          "id": "write_policy",
+          "path": "write.resolver.impl",
+          "levels": [
+            "overwrite",
+            "bitemporal_invalidate"
+          ]
+        },
+        {
+          "id": "query_type",
+          "levels": [
+            "current",
+            "as_of",
+            "history"
+          ]
+        }
+      ],
+      "condition": "schema.impl == meta_schema and schema.params.bitemporal == true",
+      "control": "schema.impl == legacy_flat (temporal policy collapses to keep_both)",
+      "runs": 6,
+      "metrics": [
+        "as_of_accuracy",
+        "valid_set_exact",
+        "temporal_consistency",
+        "answer_f1"
+      ],
+      "note": "Do not force conflict policy into the main 2^(5-1) design: it is only defined when schema has bi-temporal fields. Also separate write-time policy (overwrite vs bitemporal_invalidate) from read-time filtering (fixed as_of=query_time)."
+    }
+  ],
+  "metrics": [
+    "recall@15",
+    "ndcg@15",
+    "plan_correctness",
+    "avg_steps",
+    "state_accuracy",
+    "valid_set_exact",
+    "as_of_accuracy",
+    "answer_f1",
+    "judge_accuracy",
+    "faithfulness",
+    "tokens_per_query",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "bootstrap_samples": 1000,
+    "model": "mixed_effects",
+    "formula": "metric ~ A*B + (1|question) + (1|conversation)",
+    "report": [
+      "main_effects",
+      "two_way_interactions",
+      "partial_eta_squared",
+      "interaction_plots",
+      "additive_vs_interaction_model",
+      "superadditive_subadditive",
+      "cost_quality_pareto"
+    ],
+    "correction": "holm",
+    "confirmation_rule": "A significant interaction is confirmed only if it replicates on the held-out question set with the same sign and a 95% CI excluding zero."
+  },
+  "budget": {
+    "max_configs": 20,
+    "max_questions_per_config": 120,
+    "max_confirmation_questions": 351,
+    "max_gpu_hours": 50,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/e3",
+    "report": "reports/e3-combinations.html"
+  }
+}

@@ -1,0 +1,273 @@
+{
+ "generated_at": "2026-11-04T23:51:51",
+ "answer_model": "qwen3.8:27b-q4_K_M",
+ "embedding_model": "bge-m3",
+ "split": {
+  "development": [
+   "conv-26",
+   "conv-30",
+   "conv-43",
+   "conv-44"
+  ],
+  "test": [
+   "conv-41",
+   "conv-42"
+  ],
+  "extension": [
+   "conv-47",
+   "conv-48",
+   "conv-49",
+   "conv-50"
+  ]
+ },
+ "retrieval": {
+  "test": {
+   "questions": 351,
+   "summary": {
+    "bm25": {
+     "@5": 0.5936,
+     "@10": 0.6545,
+     "@15": 0.6817,
+     "@20": 0.7076,
+     "@30": 0.7317
+    },
+    "vector": {
+     "@5": 0.4269,
+     "@10": 0.5186,
+     "@15": 0.5824,
+     "@20": 0.6315,
+     "@30": 0.7075
+    },
+    "hybrid": {
+     "@5": 0.5749,
+     "@10": 0.665,
+     "@15": 0.7353,
+     "@20": 0.7535,
+     "@30": 0.7834
+    },
+    "dynamic_candidates": {
+     "recall": 0.7681,
+     "mean_candidates": 21.547,
+     "hybrid@same_size": 0.7587
+    }
+   },
+   "by_category": {
+    "multi-hop": {
+     "n": 68,
+     "bm25@15": 0.4268,
+     "vector@15": 0.3225,
+     "hybrid@15": 0.4536,
+     "dynamic_candidates": 0.5346
+    },
+    "temporal": {
+     "n": 67,
+     "bm25@15": 0.791,
+     "vector@15": 0.7239,
+     "hybrid@15": 0.7985,
+     "dynamic_candidates": 0.8209
+    },
+    "open-domain": {
+     "n": 19,
+     "bm25@15": 0.1974,
+     "vector@15": 0.2368,
+     "hybrid@15": 0.25,
+     "dynamic_candidates": 0.3553
+    },
+    "single-hop": {
+     "n": 197,
+     "bm25@15": 0.7792,
+     "vector@15": 0.6574,
+     "hybrid@15": 0.8579,
+     "dynamic_candidates": 0.8706
+    }
+   },
+   "samples": [
+    "conv-41",
+    "conv-42"
+   ]
+  }
+ },
+ "qa": {
+  "test": {
+   "questions": 120,
+   "summary": {
+    "full": {
+     "attempted": 120,
+     "errors": 0,
+     "f1": 0.5589,
+     "f1_success_only": 0.5589,
+     "evidence_recall": null,
+     "mean_seconds": 23.2333,
+     "by_category": {
+      "multi-hop": 0.6262,
+      "temporal": 0.5627,
+      "open-domain": 0.1729,
+      "single-hop": 0.7061
+     }
+    },
+    "vector": {
+     "attempted": 120,
+     "errors": 0,
+     "f1": 0.3623,
+     "f1_success_only": 0.3623,
+     "evidence_recall": 0.5201,
+     "mean_seconds": 12.5617,
+     "by_category": {
+      "multi-hop": 0.2648,
+      "temporal": 0.5438,
+      "open-domain": 0.1158,
+      "single-hop": 0.426
+     }
+    },
+    "hybrid": {
+     "attempted": 120,
+     "errors": 0,
+     "f1": 0.3986,
+     "f1_success_only": 0.3986,
+     "evidence_recall": 0.6222,
+     "mean_seconds": 12.7242,
+     "by_category": {
+      "multi-hop": 0.2698,
+      "temporal": 0.5824,
+      "open-domain": 0.117,
+      "single-hop": 0.5134
+     }
+    },
+    "dynamic": {
+     "attempted": 120,
+     "errors": 1,
+     "f1": 0.4157,
+     "f1_success_only": 0.4192,
+     "evidence_recall": 0.6631,
+     "mean_seconds": 56.9642,
+     "by_category": {
+      "multi-hop": 0.3017,
+      "temporal": 0.5981,
+      "open-domain": 0.2281,
+      "single-hop": 0.4624
+     }
+    }
+   }
+  }
+ },
+ "state": {
+  "items": 17,
+  "annotation": "自建参考集：课程标注未随数据提供，因此由项目组对照 LoCoMo 原文，标注了问题、相关轮次的有效性（当前有效/已过时）和它们之间的关系。两种关系都说得通时，两者都算对。只对列出的轮次评分，其他检索到的记忆不计分。",
+  "by_split": {
+   "development": {
+    "vector": {
+     "items": 5,
+     "errors": 0,
+     "memory_state_accuracy": 0.0909,
+     "labelled_memories": 11,
+     "relation_accuracy": null,
+     "relation_accuracy_direct": null,
+     "labelled_relations": 6,
+     "valid_memory_exact_match": 0.2,
+     "evidence_recall": 0.1667,
+     "answer_f1": 0.1862
+    },
+    "hybrid": {
+     "items": 5,
+     "errors": 0,
+     "memory_state_accuracy": 0.2727,
+     "labelled_memories": 11,
+     "relation_accuracy": null,
+     "relation_accuracy_direct": null,
+     "labelled_relations": 6,
+     "valid_memory_exact_match": 0.0,
+     "evidence_recall": 0.6,
+     "answer_f1": 0.5721
+    },
+    "dynamic": {
+     "items": 5,
+     "errors": 0,
+     "memory_state_accuracy": 0.6364,
+     "labelled_memories": 11,
+     "relation_accuracy": 0.5,
+     "relation_accuracy_direct": 0.0,
+     "labelled_relations": 6,
+     "valid_memory_exact_match": 0.6,
+     "evidence_recall": 0.6,
+     "answer_f1": 0.4542
+    }
+   },
+   "test": {
+    "vector": {
+     "items": 12,
+     "errors": 0,
+     "memory_state_accuracy": 0.4783,
+     "labelled_memories": 23,
+     "relation_accuracy": null,
+     "relation_accuracy_direct": null,
+     "labelled_relations": 11,
+     "valid_memory_exact_match": 0.5,
+     "evidence_recall": 0.7222,
+     "answer_f1": 0.2652
+    },
+    "hybrid": {
+     "items": 12,
+     "errors": 0,
+     "memory_state_accuracy": 0.5217,
+     "labelled_memories": 23,
+     "relation_accuracy": null,
+     "relation_accuracy_direct": null,
+     "labelled_relations": 11,
+     "valid_memory_exact_match": 0.4167,
+     "evidence_recall": 0.8194,
+     "answer_f1": 0.2055
+    },
+    "dynamic": {
+     "items": 12,
+     "errors": 0,
+     "memory_state_accuracy": 0.8261,
+     "labelled_memories": 23,
+     "relation_accuracy": 0.5455,
+     "relation_accuracy_direct": 0.3636,
+     "labelled_relations": 11,
+     "valid_memory_exact_match": 0.75,
+     "evidence_recall": 0.8889,
+     "answer_f1": 0.2204
+    }
+   }
+  },
+  "overall": {
+   "vector": {
+    "items": 17,
+    "errors": 0,
+    "memory_state_accuracy": 0.3529,
+    "labelled_memories": 34,
+    "relation_accuracy": null,
+    "relation_accuracy_direct": null,
+    "labelled_relations": 17,
+    "valid_memory_exact_match": 0.4118,
+    "evidence_recall": 0.5588,
+    "answer_f1": 0.242
+   },
+   "hybrid": {
+    "items": 17,
+    "errors": 0,
+    "memory_state_accuracy": 0.4412,
+    "labelled_memories": 34,
+    "relation_accuracy": null,
+    "relation_accuracy_direct": null,
+    "labelled_relations": 17,
+    "valid_memory_exact_match": 0.2941,
+    "evidence_recall": 0.7549,
+    "answer_f1": 0.3133
+   },
+   "dynamic": {
+    "items": 17,
+    "errors": 0,
+    "memory_state_accuracy": 0.7647,
+    "labelled_memories": 34,
+    "relation_accuracy": 0.5294,
+    "relation_accuracy_direct": 0.2353,
+    "labelled_relations": 17,
+    "valid_memory_exact_match": 0.7059,
+    "evidence_recall": 0.8039,
+    "answer_f1": 0.2891
+   }
+  }
+ }
+}

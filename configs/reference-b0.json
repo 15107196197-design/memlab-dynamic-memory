@@ -1,0 +1,136 @@
+{
+  "schema": {
+    "impl": "legacy_flat",
+    "params": {
+      "extract_model": "qwen3.8:27b-q4_K_M"
+    }
+  },
+  "preset": "B0",
+  "description": "Legacy baseline: reproduces the current dynamic-memory-workbench behaviour as closely as possible. Used as the control for adoption and leave-one-out experiments.",
+  "environment": {
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "temperature": 0,
+      "context": 32768,
+      "digest": null
+    },
+    "embedding": {
+      "provider": "ollama",
+      "model": "bge-m3",
+      "digest": null
+    },
+    "judge": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "prompt_hash": null
+    },
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "noise": 0.0,
+    "update_rate": "static",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "question_limit": 120,
+    "stratify": "category",
+    "repeat": 2
+  },
+  "write": {
+    "resolver": {
+      "impl": "append"
+    },
+    "auditor": {
+      "impl": "none"
+    }
+  },
+  "graph": {
+    "repr": {
+      "impl": "state_slot"
+    },
+    "retrieval": {
+      "impl": "slot_expand",
+      "params": {
+        "limit": 8
+      }
+    }
+  },
+  "planner": {
+    "impl": "none",
+    "params": {
+      "k": 15
+    }
+  },
+  "retrieval": {
+    "channels": [
+      "dense",
+      "bm25"
+    ],
+    "k": 15,
+    "depth": 30
+  },
+  "fusion": {
+    "impl": "rrf",
+    "params": {
+      "rrf_k": 60
+    }
+  },
+  "rerank": {
+    "impl": "none"
+  },
+  "post": {
+    "mmr": {
+      "impl": "none"
+    },
+    "filter": {
+      "impl": "none"
+    },
+    "decay": {
+      "impl": "none"
+    },
+    "compress": {
+      "impl": "none"
+    }
+  },
+  "temporal": {
+    "model": "version_chain",
+    "params": {
+      "conflict_policy": "keep_both"
+    }
+  },
+  "logic": {
+    "state_resolver": "query_llm",
+    "audit": "llm_audit",
+    "consistency": "none",
+    "evidence_chain": false
+  },
+  "answer": {
+    "impl": "valid_history",
+    "params": {
+      "verifier": "none",
+      "max_tokens": 256
+    }
+  },
+  "evaluation": {
+    "metrics": [
+      "recall@5",
+      "recall@10",
+      "recall@15",
+      "state_accuracy",
+      "valid_set_exact",
+      "relation_accuracy",
+      "answer_f1",
+      "tokens_per_query",
+      "p50_latency_ms",
+      "p95_latency_ms",
+      "error_rate"
+    ],
+    "judge_model": "qwen3.8:27b-q4_K_M",
+    "bootstrap_samples": 1000,
+    "cluster_by": "conversation"
+  }
+}

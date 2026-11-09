@@ -1,0 +1,785 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1.2-E1.3-variant-parameter-and-llm-screening",
+  "title": "Module-internal variant, parameter and module-LLM screening",
+  "design": "single_factor_variant_and_parameter",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H7"
+  ],
+  "environment": {
+    "llm_level": "L2",
+    "llm": "qwen3.8:27b-q4_K_M",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 120,
+    "stratify": "category",
+    "repeat": 2
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "tier_order": [
+      "tier0",
+      "tier1"
+    ],
+    "stop_rules": {
+      "max_error_rate": 0.05,
+      "min_completed_questions": 100,
+      "abort_on_context_overflow_rate": 0.2
+    },
+    "derived_rules": [
+      {
+        "when": {
+          "schema.impl": [
+            "legacy_flat",
+            "hmem",
+            "structmem",
+            "amem"
+          ]
+        },
+        "set": {
+          "schema.params.bitemporal": false,
+          "temporal.model": "version_chain",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Only meta_schema emits bi-temporal fields in the first implementation; other schemas collapse to record time."
+      },
+      {
+        "when": {
+          "graph.repr.impl": "none"
+        },
+        "set": {
+          "graph.retrieval.impl": "vector_only"
+        },
+        "reason": "No graph index to retrieve from."
+      },
+      {
+        "when": {
+          "schema.params.bitemporal": false
+        },
+        "set": {
+          "temporal.model": "version_chain",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Bi-temporal query and edge invalidation require bi-temporal fields."
+      },
+      {
+        "when": {
+          "temporal.model": "record_time"
+        },
+        "set": {
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Record-time model has no validity intervals; fall back to keep_both."
+      },
+      {
+        "when": {
+          "planner.impl": "none"
+        },
+        "set": {
+          "planner.params.granularity": "coarse",
+          "planner.params.parallelism": 1
+        },
+        "reason": "Granularity/parallelism have no effect without a planner."
+      },
+      {
+        "when": {
+          "post.mmr.impl": "none"
+        },
+        "set": {
+          "post.mmr.params.lambda": 0.7
+        },
+        "reason": "MMR lambda has no effect when MMR is off."
+      },
+      {
+        "when": {
+          "post.decay.impl": "none"
+        },
+        "set": {
+          "post.decay.params.lambda": 0.0
+        },
+        "reason": "Decay lambda has no effect when decay is off."
+      }
+    ],
+    "dependency_closure": true,
+    "note": "Apply derived_rules in order after overriding one factor; record the effective config and config_hash. Factors with applies_when are skipped when the condition does not hold."
+  },
+  "factors": [
+    {
+      "id": "schema.impl",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        "legacy_flat",
+        "hmem",
+        "structmem",
+        "amem",
+        "meta_schema"
+      ],
+      "hypothesis": "H1",
+      "metrics": [
+        "state_accuracy",
+        "answer_f1",
+        "as_of_accuracy"
+      ]
+    },
+    {
+      "id": "schema.params.fields",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        6,
+        8,
+        10,
+        12
+      ],
+      "hypothesis": "H1",
+      "metrics": [
+        "answer_f1",
+        "schema_validity",
+        "field_completeness"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "schema.params.evidence",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        false,
+        true
+      ],
+      "metrics": [
+        "citation_precision",
+        "faithfulness",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "schema.params.bitemporal",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        false,
+        true
+      ],
+      "metrics": [
+        "as_of_accuracy",
+        "temporal_consistency"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "schema.params.scene_plugin",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        "none",
+        "static",
+        "dynamic"
+      ],
+      "hypothesis": "H10",
+      "metrics": [
+        "answer_f1",
+        "schema_validity"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "schema.params.few_shot",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        0,
+        2,
+        3
+      ],
+      "hypothesis": "H1",
+      "metrics": [
+        "answer_f1",
+        "schema_validity"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "schema.params.cot",
+      "tier": "tier1",
+      "axis": "schema",
+      "levels": [
+        false,
+        true
+      ],
+      "metrics": [
+        "answer_f1",
+        "field_completeness"
+      ],
+      "applies_when": {
+        "schema.impl": "meta_schema"
+      }
+    },
+    {
+      "id": "graph.repr.impl",
+      "tier": "tier0",
+      "axis": "graph.repr",
+      "levels": [
+        "none",
+        "entity_triple",
+        "event_sparse",
+        "three_layer",
+        "community"
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "answer_f1",
+        "tokens_per_query",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "graph.repr.params.community_resolution",
+      "tier": "tier0",
+      "axis": "graph.repr",
+      "levels": [
+        0.5,
+        1.0,
+        2.0
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query"
+      ],
+      "applies_when": {
+        "graph.repr.impl": "community"
+      }
+    },
+    {
+      "id": "graph.retrieval.impl",
+      "tier": "tier0",
+      "axis": "graph.retrieval",
+      "levels": [
+        "vector_only",
+        "entity_subgraph",
+        "dual_channel",
+        "community_summary"
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "graph.retrieval.params.k_hop",
+      "tier": "tier0",
+      "axis": "graph.retrieval",
+      "levels": [
+        1,
+        2,
+        3
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "tokens_per_query"
+      ],
+      "applies_when": {
+        "graph.retrieval.impl": [
+          "entity_subgraph",
+          "dual_channel"
+        ]
+      }
+    },
+    {
+      "id": "planner.impl",
+      "tier": "tier1",
+      "axis": "planner",
+      "levels": [
+        "none",
+        "rule_router",
+        "reaper",
+        "dag"
+      ],
+      "hypothesis": "H4",
+      "metrics": [
+        "plan_correctness",
+        "answer_f1",
+        "avg_steps",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "planner.params.planner_model",
+      "tier": "tier1",
+      "axis": "planner",
+      "levels": [
+        "7B",
+        "27B"
+      ],
+      "hypothesis": "H4",
+      "metrics": [
+        "plan_correctness",
+        "p95_latency_ms"
+      ],
+      "applies_when": {
+        "planner.impl": [
+          "rule_router",
+          "reaper",
+          "dag"
+        ]
+      }
+    },
+    {
+      "id": "planner.params.dynamic_decision",
+      "tier": "tier1",
+      "axis": "planner",
+      "levels": [
+        false,
+        true
+      ],
+      "hypothesis": "H4",
+      "metrics": [
+        "avg_steps",
+        "tokens_per_query",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "planner.impl": [
+          "rule_router",
+          "reaper",
+          "dag",
+          "rl_router"
+        ]
+      }
+    },
+    {
+      "id": "planner.params.granularity",
+      "tier": "tier1",
+      "axis": "planner",
+      "levels": [
+        "coarse",
+        "medium",
+        "fine"
+      ],
+      "hypothesis": "H4",
+      "metrics": [
+        "plan_correctness",
+        "answer_f1",
+        "avg_steps"
+      ],
+      "applies_when": {
+        "planner.impl": [
+          "rule_router",
+          "reaper",
+          "dag"
+        ]
+      }
+    },
+    {
+      "id": "planner.params.parallelism",
+      "tier": "tier1",
+      "axis": "planner",
+      "levels": [
+        1,
+        2,
+        4
+      ],
+      "metrics": [
+        "p50_latency_ms",
+        "p95_latency_ms",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "planner.impl": [
+          "rule_router",
+          "reaper",
+          "dag"
+        ]
+      }
+    },
+    {
+      "id": "fusion.impl",
+      "tier": "tier0",
+      "axis": "fusion",
+      "levels": [
+        "single_channel",
+        "rrf",
+        "weighted_rrf",
+        "query_adaptive_weights"
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "recall@15",
+        "ndcg@15",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "fusion.params.rrf_k",
+      "tier": "tier0",
+      "axis": "fusion",
+      "levels": [
+        10,
+        30,
+        60,
+        100
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "recall@15",
+        "ndcg@15"
+      ]
+    },
+    {
+      "id": "rerank.impl",
+      "tier": "tier0",
+      "axis": "rerank",
+      "levels": [
+        "none",
+        "cross_encoder"
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "ndcg@15",
+        "answer_f1",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "rerank.params.model",
+      "tier": "tier0",
+      "axis": "rerank",
+      "levels": [
+        "BAAI/bge-reranker-base",
+        "BAAI/bge-reranker-v2-m3"
+      ],
+      "hypothesis": "H2",
+      "metrics": [
+        "ndcg@15",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "rerank.impl": "cross_encoder"
+      }
+    },
+    {
+      "id": "post.mmr.impl",
+      "tier": "tier0",
+      "axis": "post.mmr",
+      "levels": [
+        "none",
+        "mmr"
+      ],
+      "metrics": [
+        "redundancy_rate",
+        "answer_f1",
+        "tokens_per_query"
+      ]
+    },
+    {
+      "id": "post.mmr.params.lambda",
+      "tier": "tier0",
+      "axis": "post.mmr",
+      "levels": [
+        0.3,
+        0.5,
+        0.7,
+        0.9
+      ],
+      "metrics": [
+        "redundancy_rate",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "post.mmr.impl": "mmr"
+      }
+    },
+    {
+      "id": "post.filter.impl",
+      "tier": "tier0",
+      "axis": "post.filter",
+      "levels": [
+        "none",
+        "threshold"
+      ],
+      "metrics": [
+        "redundancy_rate",
+        "answer_f1",
+        "tokens_per_query"
+      ]
+    },
+    {
+      "id": "post.compress.impl",
+      "tier": "tier0",
+      "axis": "post.compress",
+      "levels": [
+        "none",
+        "extractive",
+        "llm_summary"
+      ],
+      "metrics": [
+        "tokens_per_query",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "post.decay.impl",
+      "tier": "tier0",
+      "axis": "post.decay",
+      "levels": [
+        "none",
+        "time_decay"
+      ],
+      "hypothesis": "H7",
+      "metrics": [
+        "staleness",
+        "as_of_accuracy",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "post.decay.params.lambda",
+      "tier": "tier0",
+      "axis": "post.decay",
+      "levels": [
+        0.001,
+        0.005,
+        0.01,
+        0.05
+      ],
+      "hypothesis": "H7",
+      "metrics": [
+        "staleness",
+        "answer_f1"
+      ],
+      "applies_when": {
+        "post.decay.impl": "time_decay"
+      }
+    },
+    {
+      "id": "temporal.model",
+      "tier": "tier1",
+      "axis": "temporal",
+      "levels": [
+        "record_time",
+        "event_time",
+        "bitemporal"
+      ],
+      "hypothesis": "H3",
+      "metrics": [
+        "as_of_accuracy",
+        "state_accuracy",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "temporal.params.conflict_policy",
+      "tier": "tier1",
+      "axis": "temporal",
+      "levels": [
+        "overwrite",
+        "keep_both",
+        "invalidate_edge",
+        "conflict_flag"
+      ],
+      "hypothesis": "H3",
+      "metrics": [
+        "state_accuracy",
+        "valid_set_exact",
+        "temporal_consistency",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "forgetting.policy",
+      "tier": "tier1",
+      "axis": "forgetting",
+      "levels": [
+        "none",
+        "time_decay",
+        "archive"
+      ],
+      "hypothesis": "H7",
+      "metrics": [
+        "staleness",
+        "answer_f1",
+        "tokens_per_query"
+      ]
+    },
+    {
+      "id": "logic.audit",
+      "tier": "tier1",
+      "axis": "logic",
+      "levels": [
+        "none",
+        "rule_consistency",
+        "llm_audit",
+        "adversarial"
+      ],
+      "metrics": [
+        "hallucination_rate",
+        "relation_accuracy",
+        "answer_f1",
+        "tokens_per_query"
+      ]
+    },
+    {
+      "id": "logic.params.audit_model",
+      "tier": "tier1",
+      "axis": "logic",
+      "levels": [
+        "7B",
+        "27B"
+      ],
+      "metrics": [
+        "hallucination_rate",
+        "relation_accuracy"
+      ],
+      "applies_when": {
+        "logic.audit": [
+          "llm_audit",
+          "adversarial"
+        ]
+      }
+    },
+    {
+      "id": "logic.consistency",
+      "tier": "tier1",
+      "axis": "logic",
+      "levels": [
+        "none",
+        "pair_scan"
+      ],
+      "hypothesis": "H3",
+      "metrics": [
+        "temporal_consistency",
+        "answer_f1"
+      ]
+    },
+    {
+      "id": "logic.state_resolver",
+      "tier": "tier1",
+      "axis": "logic",
+      "levels": [
+        "none",
+        "offline_slot",
+        "query_llm",
+        "bitemporal"
+      ],
+      "hypothesis": "H3",
+      "metrics": [
+        "state_accuracy",
+        "valid_set_exact",
+        "relation_accuracy"
+      ]
+    },
+    {
+      "id": "answer.impl",
+      "tier": "tier1",
+      "axis": "answer",
+      "levels": [
+        "direct",
+        "valid_history",
+        "evidence_chain",
+        "citation_required"
+      ],
+      "metrics": [
+        "answer_f1",
+        "faithfulness",
+        "citation_precision"
+      ]
+    }
+  ],
+  "metrics": [
+    "recall@5",
+    "recall@10",
+    "recall@15",
+    "ndcg@15",
+    "plan_correctness",
+    "avg_steps",
+    "state_accuracy",
+    "valid_set_exact",
+    "relation_accuracy",
+    "as_of_accuracy",
+    "temporal_consistency",
+    "staleness",
+    "hallucination_rate",
+    "answer_f1",
+    "judge_accuracy",
+    "faithfulness",
+    "citation_precision",
+    "tokens_per_query",
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "bootstrap_samples": 1000,
+    "correction": "holm",
+    "effect_size": [
+      "cohens_d",
+      "cliffs_delta"
+    ],
+    "subgroups": [
+      "category",
+      "temporal_intent",
+      "multi_hop"
+    ],
+    "cost_normalisation": [
+      "per_1k_tokens",
+      "per_100ms"
+    ]
+  },
+  "budget": {
+    "max_configs": 90,
+    "max_questions_per_config": 120,
+    "max_gpu_hours": 80,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/e1",
+    "report": "reports/e1-screening.html"
+  }
+}

@@ -1,0 +1,409 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1.1-module-adoption",
+  "title": "Module-internal plug/unplug: adoption and leave-one-out from B0/R0",
+  "design": "single_factor_adoption",
+  "reference_configs": {
+    "off": "../../configs/reference-b0.json",
+    "on": "../../configs/reference-r0.json"
+  },
+  "hypotheses": [
+    "H1",
+    "H2",
+    "H3",
+    "H4",
+    "H5",
+    "H7"
+  ],
+  "environment": {
+    "llm_level": "L2",
+    "llm": "qwen3.8:27b-q4_K_M",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 120,
+    "stratify": "category",
+    "repeat": 2
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "baselines": [
+      "add_from_B0",
+      "remove_from_R0"
+    ],
+    "report_both": true,
+    "note": "add_from_B0 estimates standalone value; remove_from_R0 estimates marginal value in the full system. A large gap between them is a signal of synergy or substitution and is followed up in E3.",
+    "derived_rules": [
+      {
+        "when": {
+          "graph.repr.impl": "none"
+        },
+        "set": {
+          "graph.retrieval.impl": "vector_only"
+        },
+        "reason": "No graph index."
+      },
+      {
+        "when": {
+          "schema.impl": "legacy_flat"
+        },
+        "set": {
+          "schema.params.bitemporal": false,
+          "temporal.model": "record_time",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Flat schema has no bi-temporal fields."
+      },
+      {
+        "when": {
+          "temporal.model": "record_time"
+        },
+        "set": {
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Record-time model has no validity intervals."
+      },
+      {
+        "when": {
+          "planner.impl": "none"
+        },
+        "set": {
+          "planner.params.granularity": "coarse",
+          "planner.params.parallelism": 1
+        },
+        "reason": "Planner parameters have no effect when the planner is off."
+      }
+    ]
+  },
+  "modules": [
+    {
+      "id": "graph",
+      "name": "GraphRAG",
+      "off": {
+        "graph.repr.impl": "state_slot"
+      },
+      "on": {
+        "graph.repr.impl": "entity_triple"
+      },
+      "min_prereq": [
+        "entity extraction"
+      ],
+      "primary_metrics": [
+        "recall@15",
+        "ndcg@15",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "multi-hop",
+        "relational"
+      ]
+    },
+    {
+      "id": "planner",
+      "name": "Retrieval planner",
+      "off": {
+        "planner.impl": "none"
+      },
+      "on": {
+        "planner.impl": "rule_router"
+      },
+      "min_prereq": [
+        "query analyzer"
+      ],
+      "primary_metrics": [
+        "plan_correctness",
+        "avg_steps",
+        "answer_f1",
+        "p95_latency_ms"
+      ],
+      "expected_subgroups": [
+        "multi-hop",
+        "dependent"
+      ]
+    },
+    {
+      "id": "schema",
+      "name": "Structured schema",
+      "off": {
+        "schema.impl": "legacy_flat"
+      },
+      "on": {
+        "schema.impl": "meta_schema"
+      },
+      "min_prereq": [
+        "MemoryUnit v2"
+      ],
+      "primary_metrics": [
+        "field_completeness",
+        "state_accuracy",
+        "as_of_accuracy",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "temporal",
+        "multi-hop"
+      ]
+    },
+    {
+      "id": "fusion",
+      "name": "Multi-channel fusion",
+      "off": {
+        "fusion.impl": "single_channel"
+      },
+      "on": {
+        "fusion.impl": "rrf"
+      },
+      "min_prereq": [
+        "two retrieval channels"
+      ],
+      "primary_metrics": [
+        "recall@15",
+        "ndcg@15",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "open-domain",
+        "fuzzy"
+      ]
+    },
+    {
+      "id": "rerank",
+      "name": "Cross-encoder reranker",
+      "off": {
+        "rerank.impl": "none"
+      },
+      "on": {
+        "rerank.impl": "cross_encoder"
+      },
+      "min_prereq": [
+        "candidate set"
+      ],
+      "primary_metrics": [
+        "ndcg@15",
+        "answer_f1",
+        "p95_latency_ms"
+      ],
+      "expected_subgroups": [
+        "open-domain",
+        "ambiguous"
+      ]
+    },
+    {
+      "id": "temporal",
+      "name": "Bi-temporal memory",
+      "off": {
+        "temporal.model": "version_chain"
+      },
+      "on": {
+        "temporal.model": "bitemporal"
+      },
+      "min_prereq": [
+        "meta_schema",
+        "schema.bitemporal=true"
+      ],
+      "primary_metrics": [
+        "as_of_accuracy",
+        "state_accuracy",
+        "temporal_consistency"
+      ],
+      "expected_subgroups": [
+        "time-reasoning",
+        "knowledge-update"
+      ],
+      "add_baseline": "R0_only",
+      "note": "Cannot be added to B0 without the structured schema; use remove_from_R0 and E1b for the temporal comparison."
+    },
+    {
+      "id": "audit",
+      "name": "Logic audit",
+      "off": {
+        "logic.audit": "none"
+      },
+      "on": {
+        "logic.audit": "llm_audit"
+      },
+      "min_prereq": [
+        "structured relations/evidence"
+      ],
+      "primary_metrics": [
+        "hallucination_rate",
+        "relation_accuracy",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "noisy",
+        "conflicting"
+      ]
+    },
+    {
+      "id": "filter",
+      "name": "Relevance/staleness filter",
+      "off": {
+        "post.filter.impl": "none"
+      },
+      "on": {
+        "post.filter.impl": "threshold"
+      },
+      "min_prereq": [
+        "scores"
+      ],
+      "primary_metrics": [
+        "redundancy_rate",
+        "answer_f1",
+        "tokens_per_query"
+      ],
+      "expected_subgroups": [
+        "long-context"
+      ]
+    },
+    {
+      "id": "mmr",
+      "name": "MMR diversification",
+      "off": {
+        "post.mmr.impl": "none"
+      },
+      "on": {
+        "post.mmr.impl": "mmr"
+      },
+      "min_prereq": [
+        "fused candidates"
+      ],
+      "primary_metrics": [
+        "redundancy_rate",
+        "answer_f1",
+        "tokens_per_query"
+      ],
+      "expected_subgroups": [
+        "long-context"
+      ]
+    },
+    {
+      "id": "decay",
+      "name": "Time decay",
+      "off": {
+        "post.decay.impl": "none"
+      },
+      "on": {
+        "post.decay.impl": "time_decay"
+      },
+      "min_prereq": [
+        "t_event"
+      ],
+      "primary_metrics": [
+        "staleness",
+        "as_of_accuracy",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "long-term"
+      ]
+    },
+    {
+      "id": "compress",
+      "name": "Context compression",
+      "off": {
+        "post.compress.impl": "none"
+      },
+      "on": {
+        "post.compress.impl": "extractive"
+      },
+      "min_prereq": [
+        "candidate set"
+      ],
+      "primary_metrics": [
+        "tokens_per_query",
+        "p95_latency_ms",
+        "answer_f1"
+      ],
+      "expected_subgroups": [
+        "large-scale"
+      ]
+    },
+    {
+      "id": "resolver",
+      "name": "Mem0-style write resolver",
+      "off": {
+        "write.resolver.impl": "append"
+      },
+      "on": {
+        "write.resolver.impl": "mem0_4action"
+      },
+      "min_prereq": [
+        "similar-memory retrieval"
+      ],
+      "primary_metrics": [
+        "duplicate_rate",
+        "contradiction_rate",
+        "state_accuracy"
+      ],
+      "expected_subgroups": [
+        "streaming",
+        "knowledge-update"
+      ]
+    }
+  ],
+  "metrics": [
+    "recall@15",
+    "ndcg@15",
+    "plan_correctness",
+    "avg_steps",
+    "state_accuracy",
+    "valid_set_exact",
+    "as_of_accuracy",
+    "temporal_consistency",
+    "staleness",
+    "hallucination_rate",
+    "duplicate_rate",
+    "answer_f1",
+    "judge_accuracy",
+    "faithfulness",
+    "tokens_per_query",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "bootstrap_samples": 1000,
+    "correction": "holm",
+    "effects": [
+      "add_from_B0",
+      "remove_from_R0",
+      "difference_between_effects"
+    ],
+    "subgroups": [
+      "category",
+      "multi_hop",
+      "temporal_intent",
+      "query_type"
+    ],
+    "report_both": true
+  },
+  "budget": {
+    "max_configs": 26,
+    "max_questions_per_config": 120,
+    "max_gpu_hours": 35,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/e1a",
+    "report": "reports/e1a-adoption.html"
+  }
+}

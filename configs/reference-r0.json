@@ -1,0 +1,234 @@
+{
+  "schema": {
+    "impl": "meta_schema",
+    "params": {
+      "fields": 8,
+      "evidence": true,
+      "bitemporal": true,
+      "scene_plugin": "static",
+      "few_shot": 2,
+      "strict_json": true
+    }
+  },
+  "preset": "R0",
+  "description": "Reference architecture: all five optimisation axes wired, with defaults chosen from the literature review. This is a hypothesis, not the final best configuration.",
+  "environment": {
+    "llm": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "temperature": 0,
+      "context": 32768,
+      "digest": null
+    },
+    "embedding": {
+      "provider": "ollama",
+      "model": "bge-m3",
+      "digest": null
+    },
+    "judge": {
+      "provider": "ollama",
+      "model": "qwen3.8:27b-q4_K_M",
+      "prompt_hash": null
+    },
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "noise": 0.0,
+    "update_rate": "static",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "question_limit": 120,
+    "stratify": "category",
+    "repeat": 2
+  },
+  "write": {
+    "resolver": {
+      "impl": "mem0_4action",
+      "params": {
+        "top_k": 8,
+        "similarity": "cosine",
+        "threshold": 0.82
+      }
+    },
+    "consolidator": {
+      "impl": "dedupe",
+      "params": {
+        "threshold": 0.9
+      }
+    },
+    "auditor": {
+      "impl": "llm_audit",
+      "params": {
+        "max_pairs": 48
+      }
+    }
+  },
+  "graph": {
+    "repr": {
+      "impl": "three_layer",
+      "params": {
+        "layers": [
+          "entity",
+          "event",
+          "topic"
+        ],
+        "topic_resolution": 1.0,
+        "incremental": true
+      }
+    },
+    "retrieval": {
+      "impl": "dual_channel",
+      "params": {
+        "k_hop": 2,
+        "max_neighbors": 40,
+        "channel_weights": {
+          "entity": 0.6,
+          "semantic": 0.4
+        }
+      }
+    }
+  },
+  "planner": {
+    "impl": "rule_router",
+    "params": {
+      "granularity": "medium",
+      "max_subquestions": 4,
+      "parallelism": 4,
+      "dynamic_decision": true,
+      "temporal_forced": true,
+      "analyzer": "llm",
+      "planner_model": "qwen3.8:27b-q4_K_M"
+    }
+  },
+  "retrieval": {
+    "channels": [
+      "dense",
+      "bm25",
+      "graph",
+      "temporal"
+    ],
+    "k": 15,
+    "depth": 30
+  },
+  "fusion": {
+    "impl": "query_adaptive_weights",
+    "params": {
+      "base_weights": {
+        "dense": 0.45,
+        "bm25": 0.35,
+        "graph": 0.2
+      },
+      "rules": [
+        "proper_noun->bm25",
+        "multi_hop->graph",
+        "fuzzy_intent->dense"
+      ]
+    }
+  },
+  "rerank": {
+    "impl": "cross_encoder",
+    "params": {
+      "model": "BAAI/bge-reranker-v2-m3",
+      "top_n": 50,
+      "batch_size": 16
+    }
+  },
+  "post": {
+    "mmr": {
+      "impl": "mmr",
+      "params": {
+        "lambda": 0.7,
+        "similarity": "cosine"
+      }
+    },
+    "dedupe": {
+      "impl": "dedupe",
+      "params": {
+        "threshold": 0.9
+      }
+    },
+    "decay": {
+      "impl": "time_decay",
+      "params": {
+        "lambda": 0.005,
+        "unit": "day",
+        "except_history": true
+      }
+    },
+    "compress": {
+      "impl": "extractive",
+      "params": {
+        "budget_tokens": 4000
+      }
+    },
+    "filter": {
+      "impl": "threshold",
+      "params": {
+        "min_relevance": 0.2,
+        "drop_stale": true,
+        "drop_conflicting": false
+      }
+    }
+  },
+  "temporal": {
+    "model": "bitemporal",
+    "params": {
+      "as_of": "query_time",
+      "conflict_policy": "invalidate_edge",
+      "precision": "day"
+    }
+  },
+  "logic": {
+    "state_resolver": "query_llm",
+    "audit": "adversarial",
+    "consistency": "pair_scan",
+    "evidence_chain": true,
+    "params": {
+      "audit_rounds": 2,
+      "max_pairs": 48
+    }
+  },
+  "answer": {
+    "impl": "valid_history",
+    "params": {
+      "verifier": "citation",
+      "max_tokens": 256,
+      "abstain_when_unsupported": true
+    }
+  },
+  "evaluation": {
+    "metrics": [
+      "recall@5",
+      "recall@10",
+      "recall@15",
+      "ndcg@15",
+      "state_accuracy",
+      "valid_set_exact",
+      "relation_accuracy",
+      "as_of_accuracy",
+      "answer_f1",
+      "judge_accuracy",
+      "faithfulness",
+      "citation_precision",
+      "tokens_per_query",
+      "p50_latency_ms",
+      "p95_latency_ms",
+      "error_rate"
+    ],
+    "judge_model": "qwen3.8:27b-q4_K_M",
+    "bootstrap_samples": 1000,
+    "cluster_by": "conversation"
+  },
+  "forgetting": {
+    "policy": "time_decay",
+    "params": {
+      "lambda": 0.005,
+      "unit": "day",
+      "archive_after_days": 180
+    }
+  }
+}

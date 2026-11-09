@@ -1,0 +1,317 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1-M-merge-architecture",
+  "title": "Merge module: route combinations, fusion, reranking, post-processing and order",
+  "module": "M",
+  "design": "multi_stage_screening",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H2",
+    "H6"
+  ],
+  "environment": {
+    "llm_level": "L2",
+    "llm": "qwen3.8:27b-q4_K_M",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "balanced",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 120,
+    "stratify": "category"
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "stage_waterfall": true,
+    "note": "Each stage records metrics before/after so we can see where gain or loss happens. Do not change two stages at once."
+  },
+  "stages": [
+    {
+      "id": "M1-route-fusion",
+      "question": "Which recall route combination and fusion method is best, before reranking?",
+      "factors": [
+        {
+          "id": "routes",
+          "levels": [
+            "dense",
+            "sparse",
+            "dense+sparse",
+            "dense+sparse+graph",
+            "dense+sparse+temporal",
+            "all"
+          ]
+        },
+        {
+          "id": "fusion",
+          "levels": [
+            "rrf",
+            "weighted_rrf",
+            "linear",
+            "query_adaptive_weights"
+          ]
+        }
+      ],
+      "fixed": {
+        "rerank": "none",
+        "mmr": "none",
+        "decay": "none",
+        "compress": "none"
+      },
+      "design": "full_factorial",
+      "runs": 24,
+      "metrics": [
+        "recall@5",
+        "recall@10",
+        "recall@15",
+        "ndcg@15",
+        "channel_unique_hits",
+        "context_precision"
+      ]
+    },
+    {
+      "id": "M2-rerank-scale",
+      "question": "Does reranking help more at larger data scale?",
+      "factors": [
+        {
+          "id": "rerank",
+          "levels": [
+            "none",
+            "cross_encoder_base",
+            "cross_encoder_v2_m3",
+            "llm_reranker"
+          ]
+        },
+        {
+          "id": "data_scale",
+          "levels": [
+            "S1",
+            "S2",
+            "S3"
+          ]
+        }
+      ],
+      "fixed": {
+        "routes": "dense+sparse+graph",
+        "fusion": "query_adaptive_weights",
+        "mmr": "none",
+        "decay": "none",
+        "compress": "none"
+      },
+      "design": "full_factorial",
+      "runs": 12,
+      "metrics": [
+        "ndcg@10",
+        "ndcg@20",
+        "answer_f1",
+        "judge_accuracy",
+        "tokens_per_query",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "M3-order",
+      "question": "Does the order of fusion, rerank, MMR, decay and compression matter?",
+      "factors": [
+        {
+          "id": "order",
+          "levels": [
+            "fusion->rerank->mmr->decay->compress",
+            "rerank->fusion->mmr->decay->compress",
+            "fusion->decay->rerank->mmr->compress",
+            "fusion->rerank->compress->mmr->decay"
+          ]
+        }
+      ],
+      "fixed": {
+        "routes": "dense+sparse+graph",
+        "fusion": "query_adaptive_weights",
+        "rerank": "cross_encoder_v2_m3",
+        "mmr": "mmr",
+        "decay": "time_decay",
+        "compress": "extractive"
+      },
+      "design": "one_way",
+      "runs": 4,
+      "metrics": [
+        "ndcg@15",
+        "context_precision",
+        "redundancy_rate",
+        "tokens_per_query",
+        "answer_f1",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "M4-post-params",
+      "question": "How should MMR lambda, decay lambda and compression budget be set?",
+      "factors": [
+        {
+          "id": "mmr_lambda",
+          "levels": [
+            0.3,
+            0.5,
+            0.7,
+            0.9
+          ]
+        },
+        {
+          "id": "decay_lambda",
+          "levels": [
+            0.001,
+            0.005,
+            0.01,
+            0.05
+          ]
+        },
+        {
+          "id": "compress_budget",
+          "levels": [
+            1000,
+            2000,
+            4000,
+            8000
+          ]
+        }
+      ],
+      "fixed": {
+        "routes": "dense+sparse+graph",
+        "fusion": "query_adaptive_weights",
+        "rerank": "cross_encoder_v2_m3"
+      },
+      "design": "one_factor_at_a_time",
+      "runs": 12,
+      "metrics": [
+        "redundancy_rate",
+        "compression_ratio",
+        "tokens_per_query",
+        "answer_f1",
+        "faithfulness",
+        "p95_latency_ms"
+      ]
+    },
+    {
+      "id": "M5-dynamic-weights",
+      "question": "Does query-adaptive weighting beat static weighting?",
+      "factors": [
+        {
+          "id": "weighting",
+          "levels": [
+            "static",
+            "query_adaptive"
+          ]
+        },
+        {
+          "id": "query_type",
+          "levels": [
+            "fact",
+            "multi_hop",
+            "temporal",
+            "open_domain"
+          ]
+        }
+      ],
+      "fixed": {
+        "routes": "dense+sparse+graph",
+        "rerank": "cross_encoder_v2_m3"
+      },
+      "design": "two_by_four",
+      "runs": 8,
+      "metrics": [
+        "ndcg@15",
+        "recall@15",
+        "answer_f1",
+        "tokens_per_query"
+      ]
+    },
+    {
+      "id": "M6-candidate-depth",
+      "question": "How deep should candidates be before reranking?",
+      "factors": [
+        {
+          "id": "candidate_depth",
+          "levels": [
+            20,
+            50,
+            100
+          ]
+        },
+        {
+          "id": "rerank_top_n",
+          "levels": [
+            10,
+            20,
+            50
+          ]
+        }
+      ],
+      "fixed": {
+        "routes": "dense+sparse+graph",
+        "fusion": "query_adaptive_weights",
+        "rerank": "cross_encoder_v2_m3"
+      },
+      "design": "full_factorial",
+      "runs": 9,
+      "metrics": [
+        "ndcg@10",
+        "ndcg@20",
+        "rerank_cost",
+        "answer_f1",
+        "p95_latency_ms"
+      ]
+    }
+  ],
+  "evaluation": {
+    "tiers": {
+      "A": [
+        "recall@15",
+        "ndcg@15",
+        "context_precision",
+        "redundancy_rate",
+        "tokens_per_query",
+        "p95_latency_ms"
+      ],
+      "B": [
+        "answer_f1",
+        "judge_accuracy",
+        "faithfulness"
+      ]
+    },
+    "stage_waterfall": [
+      "raw_channels",
+      "after_fusion",
+      "after_rerank",
+      "after_mmr",
+      "after_decay",
+      "after_compress",
+      "answer"
+    ],
+    "analysis": [
+      "reranker_gain_vs_candidate_recall",
+      "compression_loss_vs_token_saving",
+      "mmr_redundancy_vs_answer_f1",
+      "route_unique_hits",
+      "pareto_front"
+    ]
+  },
+  "budget": {
+    "max_configs": 70,
+    "max_gpu_hours": 30,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/e1-m",
+    "report": "reports/e1-merge.html"
+  }
+}

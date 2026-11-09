@@ -1,0 +1,1570 @@
+{
+  "schema": "memlab/variants@1",
+  "updated": "2026-11-09",
+  "description": "Machine-readable catalogue of switchable implementations for the five optimisation axes plus answer/verification. The canonical narrative is docs/optimization/03-variants.md.",
+  "axes": {
+    "schema": {
+      "config_root": "schema",
+      "description": "Structured extraction and memory-unit schema.",
+      "variants": [
+        {
+          "id": "legacy_flat",
+          "name": "Legacy flat facts",
+          "source": "current memwb/extraction.py PROMPT",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "extract_model": "inherits environment.llm"
+          },
+          "requires": [],
+          "notes": "B0 control. entity/attribute/value/event/time_expression only."
+        },
+        {
+          "id": "meta_schema",
+          "name": "Meta schema + scene plugin",
+          "source": "report 5.3",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "fields": 8,
+            "evidence": true,
+            "bitemporal": true,
+            "scene_plugin": "static",
+            "few_shot": 2,
+            "strict_json": true
+          },
+          "requires": [
+            "MemoryUnit v2"
+          ],
+          "notes": "Six dimensions: fact/temporal/relation/intent/episode/reflection."
+        },
+        {
+          "id": "hmem",
+          "name": "H-MEM hierarchical split",
+          "source": "H-MEM",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "max_keywords": 8,
+            "profile_fields": 6
+          },
+          "requires": [
+            "MemoryUnit v2"
+          ],
+          "notes": "Domain -> category -> keywords -> episode/profile.",
+          "calibrated_priority": "P1",
+          "calibration_note": "Red R11; P0/P1 depending on prompt engineering capacity."
+        },
+        {
+          "id": "structmem",
+          "name": "StructMem fact/relation separation",
+          "source": "StructMem",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "relation_types": [
+              "causal",
+              "temporal",
+              "dependency"
+            ],
+            "causal": true
+          },
+          "requires": [
+            "MemoryUnit v2"
+          ],
+          "notes": "Separates what happened from why/next.",
+          "calibrated_priority": "P1",
+          "calibration_note": "Red R13; P0/P1 depending on prompt engineering capacity."
+        },
+        {
+          "id": "amem",
+          "name": "A-MEM three-stage tags",
+          "source": "A-MEM",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "max_keywords": 8,
+            "max_tags": 5
+          },
+          "requires": [
+            "MemoryUnit v2"
+          ],
+          "notes": "Lightweight fast path.",
+          "calibrated_priority": "P1",
+          "calibration_note": "Red R14 (fast path)."
+        },
+        {
+          "id": "dual_channel_schema",
+          "name": "Fast/deep dual channel",
+          "source": "report 5.2",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "complexity_threshold": 0.5
+          },
+          "requires": [
+            "amem",
+            "hmem"
+          ],
+          "notes": "A-MEM for simple turns, H-MEM for complex ones."
+        },
+        {
+          "id": "dynamic_schema",
+          "name": "Generated schema",
+          "source": "StructGPT-style meta prompt",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "max_fields": 12,
+            "samples": 3
+          },
+          "requires": [
+            "scene pack",
+            "MemoryUnit v2"
+          ],
+          "notes": "Generate a JSON schema per scene/task.",
+          "calibrated_priority": "P1",
+          "calibration_note": "Red R15."
+        }
+      ]
+    },
+    "graph.repr": {
+      "config_root": "graph.repr",
+      "description": "Graph representation built at write time.",
+      "variants": [
+        {
+          "id": "state_slot",
+          "name": "State-slot version chain",
+          "source": "current memwb/states.py",
+          "priority": "P0",
+          "status": "port",
+          "params": {},
+          "requires": [
+            "state slots"
+          ],
+          "notes": "Legacy B0: same-slot version chains only, no entity/event graph."
+        },
+        {
+          "id": "none",
+          "name": "No graph",
+          "source": "control",
+          "priority": "P0",
+          "status": "new",
+          "params": {},
+          "requires": [],
+          "notes": "Vector/BM25 only."
+        },
+        {
+          "id": "entity_triple",
+          "name": "Entity-relation triples",
+          "source": "LightRAG",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "max_neighbors": 40,
+            "incremental": true
+          },
+          "requires": [
+            "entity extraction"
+          ],
+          "notes": "Cheapest useful graph."
+        },
+        {
+          "id": "event_sparse",
+          "name": "Sparse event graph",
+          "source": "RippleMem idea",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "event_window": 4,
+            "link_threshold": 0.7
+          },
+          "requires": [
+            "event extraction"
+          ],
+          "notes": "Cheap, weaker multi-hop.",
+          "calibrated_priority": "P0",
+          "calibration_note": "Blue B9 needs the event-granularity level."
+        },
+        {
+          "id": "three_layer",
+          "name": "Entity/event/topic three layers",
+          "source": "report 2.3",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "layers": [
+              "entity",
+              "event",
+              "topic"
+            ],
+            "topic_resolution": 1.0,
+            "incremental": true
+          },
+          "requires": [
+            "entity extraction",
+            "event extraction"
+          ],
+          "notes": "Reference graph for R0."
+        },
+        {
+          "id": "community",
+          "name": "Leiden/Louvain communities",
+          "source": "Microsoft GraphRAG",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "resolution": 1.0,
+            "min_size": 3,
+            "summary_model": "inherit"
+          },
+          "requires": [
+            "graph",
+            "community algorithm"
+          ],
+          "notes": "Global queries; expensive build.",
+          "calibrated_priority": "P0",
+          "calibration_note": "Red R1; required for graph-granularity ablation (blue B1/B9)."
+        },
+        {
+          "id": "bitemporal_kg",
+          "name": "Bi-temporal knowledge graph",
+          "source": "Zep/Graphiti",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "time_precision": "day",
+            "invalidate": true
+          },
+          "requires": [
+            "MemoryUnit v2 with bitemporal"
+          ],
+          "notes": "Edges carry valid time and invalidation."
+        },
+        {
+          "id": "mem0_entity",
+          "name": "Entity-centric Mem0 graph",
+          "source": "Mem0",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "top_k": 8,
+            "threshold": 0.82
+          },
+          "requires": [
+            "resolver mem0_4action"
+          ],
+          "notes": "Strong update consistency, weak relation semantics."
+        }
+      ]
+    },
+    "graph.retrieval": {
+      "config_root": "graph.retrieval",
+      "description": "How graph structure is queried.",
+      "variants": [
+        {
+          "id": "slot_expand",
+          "name": "Same-slot version expansion",
+          "source": "current pipeline.graph_expand",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "limit": 8
+          },
+          "requires": [
+            "graph.repr == state_slot"
+          ],
+          "notes": "Legacy B0 behaviour."
+        },
+        {
+          "id": "vector_only",
+          "name": "No graph retrieval",
+          "source": "control",
+          "priority": "P0",
+          "status": "new",
+          "params": {},
+          "requires": [],
+          "notes": "Dense only."
+        },
+        {
+          "id": "entity_subgraph",
+          "name": "Entity-centred k-hop",
+          "source": "LightRAG",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "k_hop": 2,
+            "max_neighbors": 40
+          },
+          "requires": [
+            "graph.repr != none"
+          ],
+          "notes": "Local multi-hop."
+        },
+        {
+          "id": "dual_channel",
+          "name": "Entity subgraph + semantic triples",
+          "source": "Mem0",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "k_hop": 2,
+            "channel_weights": {
+              "entity": 0.6,
+              "semantic": 0.4
+            }
+          },
+          "requires": [
+            "graph.repr != none"
+          ],
+          "notes": "Local + global; R0 default."
+        },
+        {
+          "id": "ppr",
+          "name": "Personalised PageRank",
+          "source": "HippoRAG",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "alpha": 0.15,
+            "top_k": 30
+          },
+          "requires": [
+            "graph",
+            "connected graph",
+            "scipy or networkx"
+          ],
+          "notes": "Multi-hop aggregation without repeated LLM calls."
+        },
+        {
+          "id": "community_summary",
+          "name": "Community summary then local drill-down",
+          "source": "Microsoft GraphRAG",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "community_level": 1,
+            "top_communities": 5
+          },
+          "requires": [
+            "graph.repr == community"
+          ],
+          "notes": "Global thematic queries."
+        },
+        {
+          "id": "hybrid_graph",
+          "name": "Graph + dense + BM25",
+          "source": "report 4.1",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "weights": {
+              "dense": 0.4,
+              "bm25": 0.3,
+              "graph": 0.3
+            }
+          },
+          "requires": [
+            "fusion"
+          ],
+          "notes": "Robust default when graph is on."
+        }
+      ]
+    },
+    "planner": {
+      "config_root": "planner",
+      "description": "Query analysis and retrieval path planning.",
+      "variants": [
+        {
+          "id": "none",
+          "name": "One-shot retrieval",
+          "source": "control",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "k": 15
+          },
+          "requires": [],
+          "notes": "Current behaviour."
+        },
+        {
+          "id": "rule_router",
+          "name": "Rule-based router + DAG",
+          "source": "report 3.3",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "granularity": "medium",
+            "max_subquestions": 4,
+            "parallelism": 4,
+            "dynamic_decision": true,
+            "temporal_forced": true,
+            "analyzer": "llm"
+          },
+          "requires": [
+            "query analyzer"
+          ],
+          "notes": "Fast path for single-hop, DAG for complex, temporal channel for time questions."
+        },
+        {
+          "id": "reaper",
+          "name": "One-shot full plan",
+          "source": "REAPER",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "planner_model": "small",
+            "max_steps": 6
+          },
+          "requires": [
+            "LLM"
+          ],
+          "notes": "Plan once, execute in parallel."
+        },
+        {
+          "id": "dag",
+          "name": "Plan*RAG DAG",
+          "source": "Plan*RAG",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "granularity": "medium",
+            "parallelism": 4
+          },
+          "requires": [
+            "query analyzer"
+          ],
+          "notes": "Sub-question graph with dependencies.",
+          "calibrated_priority": "P0",
+          "calibration_note": "Red R2."
+        },
+        {
+          "id": "adaptive",
+          "name": "Adaptive retrieve-or-answer",
+          "source": "on-demand retrieval",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "confidence_threshold": 0.6,
+            "max_rounds": 3
+          },
+          "requires": [
+            "LLM"
+          ],
+          "notes": "Can skip retrieval; risk of missed evidence."
+        },
+        {
+          "id": "rl_router",
+          "name": "Learned router",
+          "source": "RouteRAG",
+          "priority": "P2",
+          "status": "optional",
+          "params": {
+            "policy_path": null,
+            "max_steps": 6
+          },
+          "requires": [
+            "training pipeline"
+          ],
+          "notes": "Falls back to rule_router when no policy is available.",
+          "calibrated_priority": "P2",
+          "calibration_note": "Red R3; interface P0, trained policy later."
+        }
+      ]
+    },
+    "fusion": {
+      "config_root": "fusion",
+      "description": "Multi-channel rank fusion.",
+      "variants": [
+        {
+          "id": "single_channel",
+          "name": "Single channel",
+          "source": "control",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "channel": "dense"
+          },
+          "requires": [],
+          "notes": "Dense or BM25 only."
+        },
+        {
+          "id": "rrf",
+          "name": "Reciprocal rank fusion",
+          "source": "Cormack et al. 2009",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "rrf_k": 60
+          },
+          "requires": [
+            "multiple channels"
+          ],
+          "notes": "Current behaviour."
+        },
+        {
+          "id": "weighted_rrf",
+          "name": "Weighted RRF",
+          "source": "SuperLocalMemory V3.3",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "rrf_k": 60,
+            "weights": {
+              "dense": 0.45,
+              "bm25": 0.35,
+              "graph": 0.2
+            }
+          },
+          "requires": [
+            "multiple channels"
+          ],
+          "notes": "R0 default."
+        },
+        {
+          "id": "linear",
+          "name": "Linear weighted score",
+          "source": "report 4.2",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "alpha": 0.5,
+            "normalize": "minmax"
+          },
+          "requires": [
+            "score normalisation"
+          ],
+          "notes": "Interpretable; scale-sensitive."
+        },
+        {
+          "id": "comb_sum",
+          "name": "CombSUM / CombMNZ",
+          "source": "classic IR",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "variant": "combsum",
+            "normalize": "zscore"
+          },
+          "requires": [
+            "score normalisation"
+          ],
+          "notes": "Baseline fusion."
+        },
+        {
+          "id": "learned",
+          "name": "Learned fusion",
+          "source": "LambdaMART / LR",
+          "priority": "P3",
+          "status": "optional",
+          "params": {
+            "model_path": null
+          },
+          "requires": [
+            "labelled training data"
+          ],
+          "notes": "Not needed for first rounds."
+        },
+        {
+          "id": "query_adaptive_weights",
+          "name": "Query-adaptive weights",
+          "source": "report 4.3",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "base_weights": {
+              "dense": 0.45,
+              "bm25": 0.35,
+              "graph": 0.2
+            },
+            "rules": [
+              "proper_noun->bm25",
+              "multi_hop->graph",
+              "fuzzy->dense"
+            ]
+          },
+          "requires": [
+            "query analyzer"
+          ],
+          "notes": "Red R10: dynamic weight adjustment by query type."
+        }
+      ]
+    },
+    "rerank": {
+      "config_root": "rerank",
+      "description": "Post-fusion precision ranking.",
+      "variants": [
+        {
+          "id": "none",
+          "name": "No reranking",
+          "source": "control",
+          "priority": "P0",
+          "status": "port",
+          "params": {},
+          "requires": [],
+          "notes": "Current behaviour."
+        },
+        {
+          "id": "cross_encoder",
+          "name": "Cross-encoder reranker",
+          "source": "report 4.2",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "model": "BAAI/bge-reranker-v2-m3",
+            "top_n": 50
+          },
+          "requires": [
+            "torch",
+            "transformers"
+          ],
+          "notes": "Expected largest precision jump (H2)."
+        },
+        {
+          "id": "llm_reranker",
+          "name": "LLM reranker",
+          "source": "optional",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "model": "inherit",
+            "top_n": 30
+          },
+          "requires": [
+            "LLM"
+          ],
+          "notes": "Flexible but expensive."
+        },
+        {
+          "id": "colbert",
+          "name": "ColBERT late interaction",
+          "source": "optional",
+          "priority": "P3",
+          "status": "optional",
+          "params": {
+            "model": "colbert-ir/colbertv2.0",
+            "top_n": 50
+          },
+          "requires": [
+            "torch",
+            "colbert"
+          ],
+          "notes": "Cost/precision trade-off."
+        }
+      ]
+    },
+    "post": {
+      "config_root": "post",
+      "description": "Diversification, temporal decay and compression after fusion/rerank.",
+      "variants": {
+        "mmr": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "mmr",
+            "priority": "P0",
+            "params": {
+              "lambda": 0.7
+            },
+            "requires": [
+              "similarity"
+            ]
+          }
+        ],
+        "dedupe": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "dedupe",
+            "priority": "P0",
+            "params": {
+              "threshold": 0.9
+            },
+            "requires": [
+              "embedding"
+            ]
+          }
+        ],
+        "decay": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "time_decay",
+            "priority": "P1",
+            "params": {
+              "lambda": 0.005,
+              "unit": "day",
+              "except_history": true
+            },
+            "requires": [
+              "t_event"
+            ]
+          }
+        ],
+        "compress": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "extractive",
+            "priority": "P1",
+            "params": {
+              "budget_tokens": 4000
+            }
+          },
+          {
+            "id": "llm_summary",
+            "priority": "P2",
+            "params": {
+              "budget_tokens": 4000
+            },
+            "requires": [
+              "LLM"
+            ]
+          },
+          {
+            "id": "hierarchy",
+            "priority": "P2",
+            "params": {
+              "levels": 4,
+              "budget_tokens": 4000
+            },
+            "requires": [
+              "summary layers"
+            ]
+          }
+        ],
+        "filter": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "threshold",
+            "priority": "P0",
+            "params": {
+              "min_relevance": 0.2,
+              "drop_stale": true,
+              "drop_conflicting": false
+            },
+            "requires": [
+              "scores"
+            ],
+            "notes": "Red R8: reranking & filtering."
+          }
+        ]
+      }
+    },
+    "temporal": {
+      "config_root": "temporal",
+      "description": "Temporal representation and conflict policy.",
+      "variants": {
+        "model": [
+          {
+            "id": "record_time",
+            "priority": "P0",
+            "params": {
+              "as_of": "record_time"
+            },
+            "source": "current"
+          },
+          {
+            "id": "event_time",
+            "priority": "P1",
+            "params": {
+              "parser": "llm+regex",
+              "precision": "day"
+            },
+            "source": "report 6.2"
+          },
+          {
+            "id": "bitemporal",
+            "priority": "P0",
+            "params": {
+              "as_of": "query_time",
+              "conflict_policy": "invalidate_edge",
+              "precision": "day"
+            },
+            "source": "Zep/Graphiti",
+            "requires": [
+              "schema.bitemporal"
+            ]
+          },
+          {
+            "id": "version_chain",
+            "priority": "P0",
+            "params": {
+              "window": 24,
+              "overlap": 4
+            },
+            "source": "current states.py"
+          },
+          {
+            "id": "interval",
+            "priority": "P1",
+            "params": {
+              "open_end": true
+            },
+            "source": "report 6.2"
+          }
+        ],
+        "conflict_policy": [
+          {
+            "id": "overwrite",
+            "priority": "P0"
+          },
+          {
+            "id": "keep_both",
+            "priority": "P0"
+          },
+          {
+            "id": "invalidate_edge",
+            "priority": "P0"
+          },
+          {
+            "id": "conflict_flag",
+            "priority": "P1"
+          }
+        ]
+      }
+    },
+    "logic": {
+      "config_root": "logic",
+      "description": "State resolution, consistency checks and audits.",
+      "variants": {
+        "state_resolver": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "offline_slot",
+            "priority": "P0",
+            "params": {
+              "window": 24
+            }
+          },
+          {
+            "id": "query_llm",
+            "priority": "P0",
+            "params": {
+              "model": "inherit",
+              "retry": 2
+            }
+          },
+          {
+            "id": "bitemporal",
+            "priority": "P0",
+            "params": {
+              "as_of": "query_time"
+            },
+            "requires": [
+              "temporal.model == bitemporal"
+            ]
+          },
+          {
+            "id": "hindsight",
+            "priority": "P2",
+            "params": {
+              "network_weights": {
+                "world": 0.3,
+                "experience": 0.3,
+                "summary": 0.2,
+                "opinion": 0.2
+              }
+            },
+            "requires": [
+              "episode/reflection fields"
+            ]
+          }
+        ],
+        "audit": [
+          {
+            "id": "none",
+            "priority": "P0",
+            "params": {}
+          },
+          {
+            "id": "rule_consistency",
+            "priority": "P1",
+            "params": {
+              "rules": [
+                "same_entity_attribute",
+                "non_overlapping_intervals"
+              ]
+            }
+          },
+          {
+            "id": "llm_audit",
+            "priority": "P0",
+            "params": {
+              "max_pairs": 48
+            }
+          },
+          {
+            "id": "adversarial",
+            "priority": "P1",
+            "params": {
+              "rounds": 2
+            }
+          },
+          {
+            "id": "entailment",
+            "priority": "P2",
+            "params": {
+              "model": "nli",
+              "threshold": 0.7
+            },
+            "requires": [
+              "NLI model"
+            ]
+          }
+        ],
+        "consistency": [
+          {
+            "id": "none",
+            "priority": "P0"
+          },
+          {
+            "id": "pair_scan",
+            "priority": "P1",
+            "params": {
+              "window": 500,
+              "threshold": 0.85
+            }
+          }
+        ]
+      }
+    },
+    "answer": {
+      "config_root": "answer",
+      "description": "Answer synthesis and verification.",
+      "variants": [
+        {
+          "id": "direct",
+          "name": "Direct answer",
+          "source": "baseline",
+          "priority": "P0",
+          "status": "port",
+          "params": {},
+          "requires": [],
+          "notes": "No state split."
+        },
+        {
+          "id": "valid_history",
+          "name": "Valid/superseded/conflicts split",
+          "source": "current dynamic",
+          "priority": "P0",
+          "status": "port",
+          "params": {
+            "verifier": "none",
+            "max_tokens": 256
+          },
+          "requires": [
+            "StateView"
+          ],
+          "notes": "Current behaviour."
+        },
+        {
+          "id": "evidence_chain",
+          "name": "Evidence-chain answer",
+          "source": "Hindsight idea",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "max_chain": 8
+          },
+          "requires": [
+            "logic.evidence_chain == true"
+          ]
+        },
+        {
+          "id": "citation_required",
+          "name": "Citation-required answer",
+          "source": "engineering",
+          "priority": "P1",
+          "status": "new",
+          "params": {
+            "strict": true
+          },
+          "requires": [
+            "evidence spans"
+          ]
+        },
+        {
+          "id": "self_consistency",
+          "name": "Self-consistency voting",
+          "source": "engineering",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "n": 3,
+            "temperature": 0.7
+          },
+          "requires": [
+            "LLM sampling"
+          ]
+        },
+        {
+          "id": "entailment_verifier",
+          "name": "Entailment verifier",
+          "source": "report 6.3",
+          "priority": "P2",
+          "status": "new",
+          "params": {
+            "threshold": 0.7
+          },
+          "requires": [
+            "NLI model"
+          ]
+        }
+      ]
+    },
+    "write.resolver": {
+      "config_root": "write.resolver",
+      "description": "How a new memory is merged with existing memories (A-axis write sub-stage).",
+      "variants": [
+        {
+          "id": "append",
+          "name": "Append only",
+          "source": "control",
+          "priority": "P0",
+          "status": "port",
+          "params": {},
+          "requires": [],
+          "notes": "No dedupe/update."
+        },
+        {
+          "id": "overwrite",
+          "name": "Overwrite same entity+attribute",
+          "source": "baseline",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "match_key": [
+              "entity",
+              "attribute"
+            ]
+          },
+          "requires": [
+            "MemoryUnit v2"
+          ],
+          "notes": "Loses history; temporal questions degrade."
+        },
+        {
+          "id": "keep_both",
+          "name": "Keep both versions",
+          "source": "current",
+          "priority": "P0",
+          "status": "port",
+          "params": {},
+          "requires": [],
+          "notes": "Current behaviour."
+        },
+        {
+          "id": "mem0_4action",
+          "name": "Mem0 ADD/UPDATE/DELETE/NOOP",
+          "source": "Mem0",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "top_k": 8,
+            "similarity": "cosine",
+            "threshold": 0.82
+          },
+          "requires": [
+            "similar memory retrieval",
+            "LLM"
+          ],
+          "notes": "Reference resolver for R0."
+        },
+        {
+          "id": "bitemporal_invalidate",
+          "name": "Bi-temporal edge invalidation",
+          "source": "Zep/Graphiti",
+          "priority": "P0",
+          "status": "new",
+          "params": {
+            "policy": "invalidate_edge"
+          },
+          "requires": [
+            "MemoryUnit v2 with bitemporal"
+          ],
+          "notes": "Preserves history with valid intervals."
+        }
+      ]
+    },
+    "write.consolidator": {
+      "config_root": "write.consolidator",
+      "description": "Optional consolidation after resolution.",
+      "variants": [
+        {
+          "id": "none",
+          "priority": "P0",
+          "params": {}
+        },
+        {
+          "id": "dedupe",
+          "priority": "P1",
+          "params": {
+            "threshold": 0.9
+          },
+          "requires": [
+            "embedding"
+          ]
+        },
+        {
+          "id": "summarize",
+          "priority": "P2",
+          "params": {
+            "budget_tokens": 200
+          },
+          "requires": [
+            "LLM"
+          ]
+        },
+        {
+          "id": "reflect",
+          "priority": "P2",
+          "params": {
+            "max_reflections": 3
+          },
+          "requires": [
+            "LLM",
+            "episode fields"
+          ]
+        }
+      ]
+    },
+    "write.auditor": {
+      "config_root": "write.auditor",
+      "description": "Write-time audit; separate from query-time logic.audit to avoid confounding.",
+      "variants": [
+        {
+          "id": "none",
+          "priority": "P0",
+          "params": {}
+        },
+        {
+          "id": "rule_consistency",
+          "priority": "P1",
+          "params": {
+            "rules": [
+              "same_entity_attribute",
+              "non_overlapping_intervals"
+            ]
+          }
+        },
+        {
+          "id": "llm_audit",
+          "priority": "P0",
+          "params": {
+            "max_pairs": 48
+          },
+          "requires": [
+            "LLM"
+          ]
+        },
+        {
+          "id": "adversarial",
+          "priority": "P1",
+          "params": {
+            "rounds": 2
+          },
+          "requires": [
+            "LLM"
+          ]
+        }
+      ]
+    },
+    "forgetting": {
+      "config_root": "forgetting",
+      "description": "Maintenance-time decay, archive and TTL.",
+      "variants": [
+        {
+          "id": "none",
+          "priority": "P0",
+          "params": {}
+        },
+        {
+          "id": "time_decay",
+          "priority": "P1",
+          "params": {
+            "lambda": 0.005,
+            "unit": "day"
+          },
+          "requires": [
+            "t_event"
+          ]
+        },
+        {
+          "id": "archive",
+          "priority": "P1",
+          "params": {
+            "age_days": 180,
+            "value_threshold": 0.3
+          },
+          "notes": "Red R26: archive low-value memories, do not delete."
+        },
+        {
+          "id": "ttl",
+          "priority": "P2",
+          "params": {
+            "ttl_days": 365
+          }
+        }
+      ]
+    }
+  },
+  "presets": {
+    "B0_legacy": {
+      "schema": {
+        "impl": "legacy_flat"
+      },
+      "write": {
+        "resolver": {
+          "impl": "append"
+        },
+        "auditor": {
+          "impl": "llm_audit"
+        }
+      },
+      "graph": {
+        "repr": {
+          "impl": "state_slot"
+        },
+        "retrieval": {
+          "impl": "slot_expand",
+          "params": {
+            "limit": 8
+          }
+        }
+      },
+      "planner": {
+        "impl": "none"
+      },
+      "fusion": {
+        "impl": "rrf",
+        "params": {
+          "rrf_k": 60
+        }
+      },
+      "rerank": {
+        "impl": "none"
+      },
+      "post": {
+        "mmr": {
+          "impl": "none"
+        },
+        "decay": {
+          "impl": "none"
+        },
+        "compress": {
+          "impl": "none"
+        }
+      },
+      "temporal": {
+        "model": "version_chain",
+        "params": {
+          "conflict_policy": "keep_both"
+        }
+      },
+      "logic": {
+        "state_resolver": "query_llm",
+        "audit": "llm_audit"
+      },
+      "answer": {
+        "impl": "valid_history"
+      }
+    },
+    "R0_reference": {
+      "schema": {
+        "impl": "meta_schema",
+        "params": {
+          "fields": 8,
+          "evidence": true,
+          "bitemporal": true,
+          "scene_plugin": "static",
+          "few_shot": 2
+        }
+      },
+      "write": {
+        "resolver": {
+          "impl": "mem0_4action",
+          "params": {
+            "top_k": 8,
+            "threshold": 0.82
+          }
+        },
+        "consolidator": {
+          "impl": "dedupe",
+          "params": {
+            "threshold": 0.9
+          }
+        },
+        "auditor": {
+          "impl": "llm_audit",
+          "params": {
+            "max_pairs": 48
+          }
+        }
+      },
+      "graph": {
+        "repr": {
+          "impl": "three_layer",
+          "params": {
+            "layers": [
+              "entity",
+              "event",
+              "topic"
+            ],
+            "incremental": true
+          }
+        },
+        "retrieval": {
+          "impl": "dual_channel",
+          "params": {
+            "k_hop": 2,
+            "max_neighbors": 40
+          }
+        }
+      },
+      "planner": {
+        "impl": "rule_router",
+        "params": {
+          "granularity": "medium",
+          "max_subquestions": 4,
+          "parallelism": 4,
+          "dynamic_decision": true,
+          "temporal_forced": true
+        }
+      },
+      "retrieval": {
+        "channels": [
+          "dense",
+          "bm25",
+          "graph",
+          "temporal"
+        ],
+        "k": 15,
+        "depth": 30
+      },
+      "fusion": {
+        "impl": "query_adaptive_weights",
+        "params": {
+          "base_weights": {
+            "dense": 0.45,
+            "bm25": 0.35,
+            "graph": 0.2
+          },
+          "rules": [
+            "proper_noun->bm25",
+            "multi_hop->graph",
+            "fuzzy_intent->dense"
+          ]
+        }
+      },
+      "rerank": {
+        "impl": "cross_encoder",
+        "params": {
+          "model": "BAAI/bge-reranker-v2-m3",
+          "top_n": 50
+        }
+      },
+      "post": {
+        "mmr": {
+          "impl": "mmr",
+          "params": {
+            "lambda": 0.7
+          }
+        },
+        "decay": {
+          "impl": "time_decay",
+          "params": {
+            "lambda": 0.005,
+            "unit": "day",
+            "except_history": true
+          }
+        },
+        "compress": {
+          "impl": "extractive",
+          "params": {
+            "budget_tokens": 4000
+          }
+        },
+        "filter": {
+          "impl": "threshold",
+          "params": {
+            "min_relevance": 0.2,
+            "drop_stale": true,
+            "drop_conflicting": false
+          }
+        }
+      },
+      "temporal": {
+        "model": "bitemporal",
+        "params": {
+          "as_of": "query_time",
+          "conflict_policy": "invalidate_edge",
+          "precision": "day"
+        }
+      },
+      "logic": {
+        "state_resolver": "query_llm",
+        "audit": "adversarial",
+        "consistency": "pair_scan",
+        "evidence_chain": true
+      },
+      "answer": {
+        "impl": "valid_history",
+        "params": {
+          "verifier": "citation",
+          "max_tokens": 256
+        }
+      },
+      "forgetting": {
+        "policy": "time_decay",
+        "params": {
+          "lambda": 0.005,
+          "unit": "day",
+          "archive_after_days": 180
+        }
+      }
+    },
+    "R0_cheap": {
+      "schema": {
+        "impl": "meta_schema",
+        "params": {
+          "fields": 6,
+          "evidence": true,
+          "bitemporal": false,
+          "scene_plugin": "none"
+        }
+      },
+      "graph": {
+        "repr": {
+          "impl": "entity_triple"
+        },
+        "retrieval": {
+          "impl": "entity_subgraph",
+          "params": {
+            "k_hop": 1
+          }
+        }
+      },
+      "planner": {
+        "impl": "rule_router",
+        "params": {
+          "granularity": "coarse",
+          "parallelism": 2,
+          "dynamic_decision": false
+        }
+      },
+      "fusion": {
+        "impl": "rrf",
+        "params": {
+          "rrf_k": 60
+        }
+      },
+      "rerank": {
+        "impl": "none"
+      },
+      "post": {
+        "mmr": {
+          "impl": "none"
+        },
+        "decay": {
+          "impl": "none"
+        },
+        "compress": {
+          "impl": "none"
+        }
+      },
+      "temporal": {
+        "model": "record_time",
+        "params": {
+          "conflict_policy": "keep_both"
+        }
+      },
+      "logic": {
+        "state_resolver": "query_llm",
+        "audit": "none"
+      },
+      "answer": {
+        "impl": "valid_history"
+      }
+    },
+    "R0_quality": {
+      "extends": "R0_reference",
+      "graph": {
+        "repr": {
+          "impl": "three_layer",
+          "params": {
+            "layers": [
+              "entity",
+              "event",
+              "topic"
+            ],
+            "incremental": true
+          }
+        },
+        "retrieval": {
+          "impl": "ppr",
+          "params": {
+            "alpha": 0.15,
+            "top_k": 30
+          }
+        }
+      },
+      "planner": {
+        "impl": "dag",
+        "params": {
+          "granularity": "fine",
+          "parallelism": 8
+        }
+      },
+      "rerank": {
+        "impl": "cross_encoder",
+        "params": {
+          "model": "BAAI/bge-reranker-v2-m3",
+          "top_n": 100
+        }
+      },
+      "post": {
+        "compress": {
+          "impl": "hierarchy",
+          "params": {
+            "levels": 4,
+            "budget_tokens": 8000
+          }
+        }
+      },
+      "logic": {
+        "state_resolver": "query_llm",
+        "audit": "adversarial",
+        "consistency": "pair_scan",
+        "evidence_chain": true
+      },
+      "answer": {
+        "impl": "evidence_chain",
+        "params": {
+          "verifier": "citation",
+          "max_chain": 8
+        }
+      }
+    }
+  }
+}

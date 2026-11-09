@@ -1,6 +1,12 @@
 __pycache__/
 *.pyc
 *.tmp
+*.log
+.env
+.DS_Store
 cache/
 data/imported/
+runs/
+reports/
+artifacts/
 eval/*.tmp
