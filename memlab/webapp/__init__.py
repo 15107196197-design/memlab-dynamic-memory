@@ -905,6 +905,9 @@ def _graph_view(sample_id: str, mode: str = "changed", limit: int = 400) -> dict
             if str(relation.type).upper() != "RETAIN":
                 changed_ids.add(relation.head_id)
                 changed_ids.add(relation.tail_id)
+        for key, units in groups.items():
+            if len(units) > 1 and any((_unit_summary(unit)["state"] or "") == "HISTORICAL" for unit in units):
+                changed_ids.update(unit.memory_id for unit in units)
         included_groups = {key for key, units in groups.items() if any(unit.memory_id in changed_ids for unit in units)}
         facts = [unit for key, units in groups.items() if key in included_groups for unit in units]
     else:
