@@ -134,16 +134,17 @@ class RunnableGateTests(unittest.TestCase):
                     self.assertTrue(plan.runnable, plan.runnable_reasons)
 
     def test_no_op_axes_are_never_valid_factors(self):
-        self.assertEqual(set(compiler.NO_OP_AXES),
-                         {"graph.retrieval.impl", "post.dedupe", "write.consolidator"})
+        # R3 wired graph.retrieval.impl into the graph channel, so it must leave
+        # the inert-axis list; the remaining two axes are still unconsumed.
+        self.assertEqual(set(compiler.NO_OP_AXES), {"post.dedupe", "write.consolidator"})
         plans = plans_for(E1_SCREENING)
-        no_op = [plan for plan in plans if "graph.retrieval.impl" in plan.factors]
+        graph_impl = [plan for plan in plans if "graph.retrieval.impl" in plan.factors]
         # dual_channel equals the R0 default and is folded into the base config;
-        # the other three levels remain as explicit inert plans.
-        self.assertEqual(len(no_op), 3)
-        for plan in no_op:
-            self.assertFalse(plan.valid)
-            self.assertEqual(plan.no_op_factors, ("graph.retrieval.impl",))
+        # the other three levels now execute through the graph-retrieval dispatch.
+        self.assertEqual(len(graph_impl), 3)
+        for plan in graph_impl:
+            self.assertTrue(plan.valid, plan.runnable_reasons)
+            self.assertEqual(plan.no_op_factors, ())
         self.assertFalse(any(plan.valid and plan.no_op_factors for plan in plans))
 
     def test_planner_fallback_is_a_warning_not_silent(self):
@@ -161,10 +162,10 @@ class RunnableGateTests(unittest.TestCase):
         self.assertEqual(code, 0)
         payload = json.loads(buffer.getvalue())
         self.assertEqual(payload["runs"], 67)
-        self.assertEqual(payload["valid_runs"], 64)
-        self.assertEqual(payload["selected_runs"], 64)
+        self.assertEqual(payload["valid_runs"], 67)
+        self.assertEqual(payload["selected_runs"], 67)
         self.assertEqual(payload["excluded_unrunnable"], 0)
-        self.assertEqual(payload["excluded_no_op"], 3)
+        self.assertEqual(payload["excluded_no_op"], 0)
         self.assertEqual(payload["duplicates"], 28)
         self.assertEqual(payload["deferred_factors"], 5)
         self.assertTrue(all(item["reason"] for item in payload["deferred"]))
@@ -213,10 +214,23 @@ class DedupeTests(unittest.TestCase):
         self.assertNotIn("E3_WINNER", {plan.factors["candidate"] for plan in plans_for(E4_GRID)})
 
     def test_duplicate_alias_on_noop_axis_is_annotated(self):
-        plans = plans_for(E1_SCREENING)
-        annotated = [plan for plan in plans
-                     if any("duplicate alias varies no-op axis" in note for note in plan.notes)]
-        self.assertTrue(annotated)
+        config = {"seed": 13}
+        digest = lab_config.digest(config)
+        base = compiler.RunPlan(
+            run_id="a", spec_id="T", design="full_factorial", config=config,
+            requested_config=config, effective_config=config, config_hash=digest,
+            environment={}, dataset={}, factors={"f": 1},
+            no_op_factors=("post.dedupe",),
+        )
+        duplicate = compiler.RunPlan(
+            run_id="b", spec_id="T", design="full_factorial", config=config,
+            requested_config=config, effective_config=config, config_hash=digest,
+            environment={}, dataset={}, factors={"f": 2},
+        )
+        kept = compiler.dedupe_plans([base, duplicate])
+        self.assertEqual(len(kept), 1)
+        self.assertEqual(kept[0].run_id, "b")
+        self.assertTrue(any("duplicate alias varies no-op axis" in note for note in kept[0].notes))
 
 
 class PlanDatasetTests(unittest.TestCase):

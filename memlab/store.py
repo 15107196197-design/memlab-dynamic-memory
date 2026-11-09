@@ -85,18 +85,28 @@ class GraphIndex:
     def neighbors(self, node: str) -> list[str]:
         return sorted(self.adj.get(node, ()))
 
-    def expand(self, seeds: Iterable[str], k_hop: int = 1) -> list[tuple[str, int]]:
-        """Return ``(node, distance)`` reachable within ``k_hop``, seeds first."""
+    def expand(self, seeds: Iterable[str], k_hop: int = 1,
+               max_neighbors: int | None = None) -> list[tuple[str, int]]:
+        """Return ``(node, distance)`` reachable within ``k_hop``, seeds first.
+
+        ``max_neighbors=None`` preserves the original all-neighbour expansion.
+        A positive integer caps how many neighbours each frontier node expands;
+        this is the S2 ``graph.retrieval.params.max_neighbors`` knob.
+        """
         distances: dict[str, int] = {}
         frontier: list[str] = []
         for seed in seeds:
             if seed in self.nodes and seed not in distances:
                 distances[seed] = 0
                 frontier.append(seed)
+        cap = None if max_neighbors is None else max(0, int(max_neighbors))
         for depth in range(1, max(0, int(k_hop)) + 1):
             next_frontier: list[str] = []
             for node in frontier:
-                for neighbor in sorted(self.adj.get(node, ())):
+                neighbors = sorted(self.adj.get(node, ()))
+                if cap is not None:
+                    neighbors = neighbors[:cap]
+                for neighbor in neighbors:
                     if neighbor not in distances:
                         distances[neighbor] = depth
                         next_frontier.append(neighbor)

@@ -37,10 +37,16 @@ def load_questions(spec: Spec, *, limit: int | None = None, samples: Sequence[st
     store = legacy_dataset.store()
     ids = list(samples if samples is not None else data.get("samples") or store.ids())
     per_conversation = limit if limit is not None else data.get("question_limit")
+    categories = data.get("categories")
+    allowed = {int(item) for item in categories} if categories else None
     out: list[Question] = []
     for sample_id in ids:
         sample = store.get(sample_id)
         selected = evaluation.stratified(sample.get("qa", []), int(per_conversation) if per_conversation else 0)
+        if allowed is not None:
+            # Category-scoped subsets (e.g. multi-hop = category 1) are selected
+            # after the same stratified cap, so the cap remains per conversation.
+            selected = [(index, qa) for index, qa in selected if qa.get("category") in allowed]
         for index, qa in selected:
             out.append(Question(sample_id, index, qa))
     return out

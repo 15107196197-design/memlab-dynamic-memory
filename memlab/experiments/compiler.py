@@ -27,7 +27,7 @@ from . import spec as spec_module
 # list explicit is what stops an inert switch from entering a screening matrix as
 # if it were a real experimental factor.
 NO_OP_AXES: dict[str, str] = {
-    "graph.retrieval.impl": "retrieve.py reads graph.retrieval.params only; the impl switch is never consumed",
+    # R3 wired graph.retrieval.impl into the graph channel; it is no longer inert.
     "post.dedupe": "MergePipeline has no dedupe stage",
     "write.consolidator": "WritePipeline has no consolidator stage",
 }
@@ -388,21 +388,37 @@ class Compiler:
         levels = []
         for factor in factors:
             if isinstance(factor.get("levels"), list):
-                levels.append([(factor["id"], level) for level in factor["levels"]])
+                entries = []
+                for level in factor["levels"]:
+                    # A level may carry its own applies_when; the combination is
+                    # skipped when the condition does not hold for the built config.
+                    if isinstance(level, Mapping):
+                        entries.append((factor["id"], level.get("value"), level.get("applies_when")))
+                    else:
+                        entries.append((factor["id"], level, None))
+                levels.append(entries)
             else:
-                levels.append([(factor["id"], factor.get("low")), (factor["id"], factor.get("high"))])
+                levels.append([(factor["id"], factor.get("low"), None),
+                               (factor["id"], factor.get("high"), None)])
         plans: list[RunPlan] = []
         base = self._base()
         for combination in itertools.product(*levels):
             requested = copy.deepcopy(base)
             values = {}
-            for factor, (_, value) in zip(factors, combination):
+            skipped = False
+            for factor, (_, value, condition) in zip(factors, combination):
                 path = self._factor_path(factor)
                 if path.endswith(".impl"):
                     set_impl(requested, path, value)
                 else:
                     set_path(requested, path, value)
                 values[factor["id"]] = value
+            for factor, (_, value, condition) in zip(factors, combination):
+                if isinstance(condition, Mapping) and not _matches(requested, condition):
+                    skipped = True
+                    break
+            if skipped:
+                continue
             plans.append(self._plan(len(plans), requested, factors=values,
                                     notes=["fractional spec compiled as full factorial; generator not implemented"]
                                     if self.spec.design == "fractional_factorial" else ()))

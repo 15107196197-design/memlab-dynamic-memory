@@ -1,0 +1,115 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "E1-R3-graph-retrieval-dispatch",
+  "title": "Graph retrieval impl x graph representation on the multi-hop subset",
+  "design": "full_factorial",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H5"
+  ],
+  "environment": {
+    "llm": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "multi_hop",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category",
+    "categories": [
+      1
+    ],
+    "repeat": 1,
+    "note": "LoCoMo category 1 (multi-hop) only. The same 60-question cap is applied per conversation before the category filter, so each configuration runs about 60 multi-hop questions over four development conversations."
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "offline": true,
+    "note": "graph.retrieval.impl is now consumed by retrieve.py. slot_expand is only generated for graph.repr.impl=state_slot via a level-level applies_when; the two invalid combinations are skipped, not relabelled.",
+    "derived_rules": []
+  },
+  "factors": [
+    {
+      "id": "graph.retrieval.impl",
+      "axis": "graph.retrieval",
+      "levels": [
+        "vector_only",
+        {
+          "value": "slot_expand",
+          "applies_when": {
+            "graph.repr.impl": "state_slot"
+          }
+        },
+        "entity_subgraph",
+        "dual_channel",
+        "ppr"
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "p95_latency_ms",
+        "graph_nodes",
+        "graph_edges"
+      ]
+    },
+    {
+      "id": "graph.repr.impl",
+      "axis": "graph.repr",
+      "levels": [
+        "state_slot",
+        "entity_triple",
+        "three_layer"
+      ],
+      "hypothesis": "H5",
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "p95_latency_ms",
+        "graph_nodes",
+        "graph_edges"
+      ]
+    }
+  ],
+  "metrics": [
+    "evidence_recall",
+    "ndcg",
+    "multi_hop_recall",
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "graph_nodes",
+    "graph_edges",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "subgroups": [
+      "category",
+      "multi_hop"
+    ]
+  },
+  "budget": {
+    "max_configs": 15,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/r3-graph"
+  }
+}
