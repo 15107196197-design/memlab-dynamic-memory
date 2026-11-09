@@ -208,18 +208,6 @@
       },
     };
   }
-  async function waitJob(jobId, timeoutMs = 120000) {
-    const started = Date.now();
-    while (Date.now() - started < timeoutMs) {
-      const job = await wapi(`/api/v2/jobs/${encodeURIComponent(jobId)}`);
-      if (["done", "error", "cancelled"].includes(job.status)) return job;
-      await new Promise((resolve) => setTimeout(resolve, 350));
-    }
-    const e = new Error("运行超时（job_timeout）");
-    e.code = "job_timeout";
-    throw e;
-  }
-
   const courseSamples = () => (app.samples || []).filter((s) => s.split === "development" || s.split === "test");
   const extensionSamples = () => (app.samples || []).filter((s) => s.split === "extension" || !["development", "test"].includes(s.split));
   function courseChips() {
@@ -1371,14 +1359,14 @@
     const tabs = { results: "Results 结果", comparison: "Comparison 对照", analysis: "Analysis 分析", conclusion: "Conclusion 结论", plan: "Plan 实验计划" };
     const tabBody = (tab) => {
       if (tab === "results") {
-        return `<table class="v2-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
+        return `<table class="v2-table v2-report-table"><thead><tr><th>run</th><th>question</th><th>tokens</th><th>latency</th><th>candidates</th><th>answer</th></tr></thead><tbody>
           ${(report.results.runs || []).map((r) => `<tr><td class="mono">${esc(r.run_id)}</td><td>${esc(na(r.question))}</td><td>${esc(na(r.tokens))}</td><td>${esc(na(r.latency_ms))}</td><td>${esc(na(r.candidates))}</td><td>${esc(r.answer ? r.answer.slice(0, 80) : "not_available")}</td></tr>`).join("")}
         </tbody></table><pre class="v2-pre">${esc(JSON.stringify(report.results.metrics, null, 2))}</pre>`;
       }
       if (tab === "comparison") {
         const comps = Array.isArray(report.comparisons) ? report.comparisons : [];
         const hasCI = comps.some((r) => Array.isArray(r.ci95) && r.ci95.length === 2);
-        return `<table class="v2-table ev-analysis-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th>${hasCI ? "<th>是否跨 0</th>" : ""}</tr></thead><tbody>
+        return `<table class="v2-table ev-analysis-table v2-report-table"><thead><tr><th>metric</th><th>baseline</th><th>candidate</th><th>delta</th>${hasCI ? "<th>是否跨 0</th>" : ""}</tr></thead><tbody>
           ${comps.map((r) => {
             const cross = crossesZero(r.ci95);
             const crossText = cross === null ? "not_available" : (cross ? "是" : "否");
@@ -1824,61 +1812,7 @@
     evaluation2: safeView(renderEvaluation2), system: safeView(renderSystem),
   };
 
-  // TEMP-SMOKE: removed before commit.
-  (() => {
-    const params = new URLSearchParams((location.hash.split("?")[1] || ""));
-    const mode = params.get("smoke");
-    if (!mode) return;
-    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const pickQuestion = (selector) => {
-      const q = document.querySelector(selector);
-      if (q && q.options.length > 1) { q.selectedIndex = 1; q.dispatchEvent(new Event("change", { bubbles: true })); }
-    };
-    const changeAxis = () => {
-      const sel = document.querySelector('#lab-M select[data-path="fusion.impl"]');
-      if (!sel) return;
-      const values = [...sel.options].map((o) => o.value);
-      sel.value = values.find((v) => v !== sel.value) || sel.value;
-      sel.dispatchEvent(new Event("change", { bubbles: true }));
-    };
-    const validate = async () => { document.querySelector("#v2-lab-validate")?.click(); await sleep(1400); };
-    const run = async () => { document.querySelector("#v2-lab-run")?.click(); await sleep(4000); };
-    setTimeout(async () => {
-      try {
-        if (mode === "axis") changeAxis();
-        if (["question", "run", "run2", "report", "reportpage"].includes(mode)) pickQuestion("#v2-lab-qselect");
-        if (["run", "run2", "report", "reportpage"].includes(mode)) { await validate(); await run(); }
-        if (["run2", "report", "reportpage"].includes(mode)) await run();
-        if (mode === "report" || mode === "reportpage") {
-          document.querySelector("[data-report-toggle]")?.click();
-          await sleep(250);
-          document.querySelector("[data-report-submit]")?.click();
-          await sleep(2200);
-        }
-        if (mode === "reportpage") {
-          const link = document.querySelector("[data-report-result] a");
-          if (link) location.hash = link.getAttribute("href").replace(/^#/, "");
-          await sleep(1800);
-        }
-        if (mode === "ask" || mode === "ask-online") {
-          pickQuestion("#v2-ask-qselect");
-          if (mode === "ask-online") {
-            const offline = document.querySelector("#v2-ask-offline");
-            if (offline) offline.checked = false;
-          }
-          document.querySelector("#v2-run")?.click();
-          await sleep(4000);
-        }
-        const scrollTo = (selector, offset) => {
-          const el = document.querySelector(selector);
-          if (el) { el.scrollIntoView({ block: "start" }); window.scrollBy(0, offset || 0); }
-        };
-        if (mode === "axis") scrollTo("#lab-M", -20);
-        if (mode === "question") scrollTo(".lab-run-card", -20);
-        if (mode === "run" || mode === "run2") scrollTo("#v2-lab-out", -90);
-        if (mode === "report") scrollTo("[data-report-result]", -120);
-        if (mode === "ask" || mode === "ask-online") scrollTo("#v2-run-out", -90);
-      } catch (err) { console.error(err); }
-    }, 1500);
-  })();
+
+
+
 })();

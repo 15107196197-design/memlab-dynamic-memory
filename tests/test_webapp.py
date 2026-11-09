@@ -259,6 +259,45 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("#/home", html)
         self.assertIn("/v2.js", html)
 
+    def test_lab_v2_axis_feedback_and_question_bank_guards(self):
+        root = Path(__file__).resolve().parents[1]
+        js = (root / "web" / "v2.js").read_text(encoding="utf-8")
+        for needle in (
+            "当前选择",
+            "配置已修改",
+            "effective config 摘要",
+            "config_hash",
+            "单题运行 = 1 题；批量运行 = N 题；两者都不是论文级结论。",
+            "/api/v2/questions?sample=",
+            "limit=100",
+            "LoCoMo 题库",
+            "随机一题",
+            "gold answer",
+            "answer_f1",
+            "tokens",
+            "latency_ms",
+            "与上一次运行对比",
+            "单题对比，仅描述性",
+            "生成实验报告",
+            "/api/v2/reports/from-runs",
+            "conclusion.status",
+            "四 tab：Results / Comparison / Analysis / Conclusion",
+        ):
+            self.assertIn(needle, js)
+        css = (root / "web" / "v2.css").read_text(encoding="utf-8")
+        for needle in ("lab-current", "lab-diff", "v2-qbank", "v2-qmeta", "v2-gold", "v2-compare", "v2-report", "run-hint"):
+            self.assertIn(needle, css)
+
+    def test_ask2_defaults_r0_and_handles_model_unavailable(self):
+        js = (Path(__file__).resolve().parents[1] / "web" / "v2.js").read_text(encoding="utf-8")
+        self.assertIn('p.name === "R0"', js)
+        for needle in ("model_unavailable", "本地模型不可用：已自动切离线？", "用离线演示重跑", "去系统页看模型配置", "#/system"):
+            self.assertIn(needle, js)
+        # Raw transport exceptions must never be printed as-is.
+        self.assertNotIn("${esc(err.message)}", js)
+        self.assertNotIn("textContent = err.message", js)
+        self.assertIn("cleanMessage", js)
+
 
 if __name__ == "__main__":
     unittest.main()

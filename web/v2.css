@@ -372,3 +372,7 @@ html, body { max-width: 100%; overflow-x: hidden; }
 .v2-batch-table th { width: auto; padding: 5px 8px; white-space: nowrap; }
 .v2-batch-table td { padding: 5px 8px; }
 @media (max-width: 820px) { .v2-gold-row { grid-template-columns: 1fr; gap: 0; } .v2-qmeta-row .v1-label { min-width: 0; } }
+.v2-report-table { table-layout: auto; }
+.v2-report-table th { width: auto; padding: 6px 12px 6px 0; white-space: nowrap; }
+.v2-report-table td { padding: 6px 12px 6px 0; vertical-align: top; word-break: break-word; }
+.v2-report-table td.mono { white-space: nowrap; }
