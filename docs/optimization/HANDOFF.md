@@ -24,7 +24,7 @@
 | 仓库 | `hunmingtianzi-boop/dynamic-memory-workbench` |
 | 本地路径 | `repo/` |
 | 基线 commit | `ff6c7a1`（tag `legacy-b0`） |
-| 当前 commit | `git log -1 --oneline`；前序 `29261f1`（控制面 P0/P1）、`33a8ec2`、`d272184`、`a8c6dfd` |
+| 当前 commit | `git log -1 --oneline`；收尾提交 `5a68024`；前序 `29261f1`（控制面 P0/P1）、`33a8ec2`、`d272184`、`a8c6dfd` |
 | 分支 | `main` |
 | 工作区状态 | S1–S5 + hardening + S7a + S6 + 控制面修复 + 审计遗留项收尾已提交；`memwb/`、`server.py`、`web/` 未改；`activity-dashboard/` 是未跟踪原型 |
 | 测试 | `python -m unittest discover -s tests -t .` → **209 passed**（203 + 6 净新增：deferred 契约、E4 候选、event_sparse） |
@@ -692,6 +692,7 @@ artifacts/
 ### 7.1 交接记录（最新在上）
 
 ### 2026-11-09 / 审计遗留项收尾 + S7b/B 决策 / 会话
+- commit：`5a68024`（代码/配置/测试/文档）；后续只允许 docs pin 提交。
 - 本次完成：A E1b 10 个 `runnable=false` 清零（2 个 derived_rules 修复 + 1 个 `event_sparse` 实现 + 7 个正式延后）；B E4 补 B0/CHEAP/QUALITY 配置（108 个唯一 plan、0 alias），E3_WINNER 正式延后；C 新增 spec `deferred` 契约与 sweep 报告；D S7b 决策（offline A 级先跑、B 级作结论）与只读可行性核验；E 6 个净新增测试。
 - 改动文件：`memlab/store.py`（event_sparse）；`memlab/experiments/{compiler,spec,cli}.py`（candidate→reference 映射、`deferred` 校验/报告）；`configs/experiments/{e1-screening,e4-environment-grid}.json`；新增 `configs/reference-{cheap,quality}.json`、`docs/optimization/S7B-DECISION.md`；更新 `tests/test_experiments_repair.py`、`tests/test_memlab_s3.py`、HANDOFF、AUDIT-2026-11-09、S6-REPORT、SESSION-PROMPTS、PHASE-CHECKLIST。`memwb/`、`server.py`、`web/` 未改。
 - 测试：`python -m unittest discover -s tests -t .` → **209 passed**（203 + 6 净新增）；未 push upstream。
