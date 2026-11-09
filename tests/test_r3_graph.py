@@ -3,10 +3,12 @@
 Each implementation must produce a different, explainable candidate set or score;
 vector_only must remove the graph channel; unimplemented impls must fail closed.
 """
+import tempfile
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 
-from memlab import config as lab_config, model, retrieve, store as store_module
+from memlab import cache, config as lab_config, model, retrieve, store as store_module
 from memlab.contracts import Interval, MemoryUnit, Span
 
 
@@ -120,10 +122,35 @@ class GraphGateTests(unittest.TestCase):
     def test_vector_only_removes_the_graph_channel_and_returns_nothing(self):
         ctx = context("vector_only", "state_slot")
         self.assertNotIn("graph_khop", retrieve._channels_for(FRAME, ctx))
-        plan = retrieve.RuleRouterPlanner().plan(FRAME, ctx)
-        self.assertNotIn("graph_khop", [node.channel for node in plan.nodes])
+        for planner in (retrieve.RuleRouterPlanner(), retrieve.DagPlanner()):
+            plan = planner.plan(FRAME, ctx)
+            self.assertNotIn("graph_khop", [node.channel for node in plan.nodes])
         node = retrieve.PlanNode("n1", FRAME.query, "graph_khop", filters={"seed_ids": ["f3"]})
         self.assertEqual(retrieve.GraphKHopRetriever().retrieve(FRAME, node, 10, ctx), [])
+
+    def test_cache_key_separates_graph_impls_on_the_same_store(self):
+        # Without graph_impl in the cache key the second impl replays the first
+        # impl's candidates, which is exactly the pre-R3 "always k-hop" symptom.
+        with tempfile.TemporaryDirectory() as directory:
+            shared = cache.ArtifactCache(Path(directory) / "artifacts")
+            store = fixture("state_slot")
+
+            def ctx(impl):
+                data = {"graph": {"repr": {"impl": "state_slot"},
+                                  "retrieval": {"impl": impl, "params": {}}}}
+                return SimpleNamespace(store=store, cache=shared,
+                                       config=lab_config.RunConfig.from_dict(data, validate=False),
+                                       embedding=None)
+
+            runner = retrieve.RetrievalRunner(analyzer="rule", planner="rule_router")
+            query = "How did Caroline and Melanie meet and then move?"
+            entity = runner.run(query, ctx("entity_subgraph"), 10)
+            slot = runner.run(query, ctx("slot_expand"), 10)
+            entity_ids = [c.memory_id for c in entity.by_channel["graph_khop"]]
+            slot_ids = [c.memory_id for c in slot.by_channel["graph_khop"]]
+            self.assertNotEqual(entity_ids, slot_ids)
+            self.assertTrue(any(memory_id.startswith("t") for memory_id in entity_ids))
+            self.assertFalse(any(memory_id.startswith("t") for memory_id in slot_ids))
 
     def test_graph_impl_still_routes_in_the_graph_channel(self):
         ctx = context("dual_channel", "state_slot")
