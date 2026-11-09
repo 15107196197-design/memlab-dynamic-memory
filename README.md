@@ -29,7 +29,29 @@ Windows 下也可以运行 `./start.ps1`，它会先检查模型再启动服务�
 | `EMBED_MODEL` | `bge-m3` | 向量模型 |
 | `MEMORY_CONTEXT` | `32768` | 上下文窗口（Full Text 基线需要） |
 | `MEMORY_PORT` | `8765` | Web 端口 |
+| `MEMORY_HOST` | `127.0.0.1` | 监听地址；容器 / 云上部署时设为 `0.0.0.0` |
 | `MEMORY_CPU_ONLY` / `EMBED_CPU_ONLY` | – | 设为 `1` 时只用 CPU |
+
+## 在线演示（ModelScope 创空间）
+
+**https://www.modelscope.cn/studios/A1211JOY/dynamic-memory-workbench**
+
+不想装 Ollama 也可以先看效果：这个创空间跑的是同一份代码（Docker Studio，`0.0.0.0:7860`，免费 CPU 实例）。
+
+- **能看**：记忆库（turn / fact / 状态 / 证据来源）、图谱、评测对照页（online B0 / R0-before / R0-fixed 与 offline 折叠表）、实验报告页。
+- **不能看**：提问与状态、实验台的在线问答——空间里没有 Ollama，页面会显式标注不可用，属于预期行为。
+- **只读**：演示环境不写回本项目，数据和报告是 2026-11-09 的快照。
+- 免费 CPU 实例空闲后会休眠，首次打开可能等十几秒到一分钟。
+- 应用域名 `https://a1211joy-dynamic-memory-workbench.ms.show` 对非浏览器客户端会返回 403；需要程序化访问时走 API 域名 `https://studio-a1211joy-dynamic-memory-workbench.api-inference.modelscope.net` 并带 ModelScope token，细节见 [deploy/modelscope/DEPLOYED.md](deploy/modelscope/DEPLOYED.md)。
+
+自己部署一份（需要已实名认证的 ModelScope 账号和访问令牌）：
+
+```bash
+python deploy/modelscope/build_bundle.py                                   # 生成 7.6 MiB 精简包
+deploy/modelscope/publish.sh <owner>/<studio-name>                         # 推送并触发 ModelScope 构建
+```
+
+`build_bundle.py` 只打包 `web/ memlab/ memwb/ data/ eval/ reports/experiments/` 等运行必需文件，不含 `runs/`、`cache/`、`.venv-memlab/`；令牌从工作区的 `.secrets/modelscope_token` 读取，不会进入仓库。
 
 ## 数据
 

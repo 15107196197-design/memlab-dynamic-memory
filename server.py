@@ -129,9 +129,10 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main():
+    host = os.getenv("MEMORY_HOST", "127.0.0.1")
     port = int(os.getenv("MEMORY_PORT", "8765"))
-    server = ThreadingHTTPServer(("127.0.0.1", port), Handler)
-    print(f"Open http://127.0.0.1:{port}", flush=True)
+    server = ThreadingHTTPServer((host, port), Handler)
+    print(f"Open http://{host}:{port}", flush=True)
     server.serve_forever()
 
 
