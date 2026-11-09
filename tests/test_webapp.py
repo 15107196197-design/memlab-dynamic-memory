@@ -173,7 +173,8 @@ class WebAppTests(unittest.TestCase):
         self.assertGreater(data["status_counts"].get("partial", 0), 0)
         self.assertGreater(data["status_counts"].get("blocked_on_code", 0), 0)
         self.assertGreater(data["status_counts"].get("blocked_on_hardware", 0), 0)
-        self.assertGreater(data["status_counts"].get("no_op", 0) + data["status_counts"].get("not_wired", 0), 0)
+        flags = data.get("status_flag_counts", {})
+        self.assertGreater(flags.get("no_op", 0) + flags.get("not_wired", 0), 0)
 
     def test_evaluation_archive_is_available(self):
         data = webapp.get("/api/v2/evaluation")

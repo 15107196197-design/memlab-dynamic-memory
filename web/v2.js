@@ -199,16 +199,16 @@
           <h3 style="margin:12px 0 8px">回答 · Answer</h3>
           <p class="v2-answer">${esc(a.answer || "（无回答）")}</p>
           ${a.refused ? `<div class="note warn">拒答：${esc(a.refusal_reason || "证据不足")}</div>` : ""}
-          <div class="muted small">citations 引用: ${cites.length ? cites.map((c) => `<span class="mono">${esc(typeof c === "string" ? c : c.turn_id || JSON.stringify(c))}</span>`).join(", ") : "—"}</div>
+          <div class="muted small">citations 引用: ${cites.length ? cites.map((c) => `<span class="mono">${esc(typeof c === "string" ? c : c.turn_id || JSON.stringify(c))}</span>`).join(", ") : "not_available"}</div>
           ${out.graph ? `<div class="muted small">图谱 Graph：${esc(out.graph.nodes)} 节点 / ${esc(out.graph.edges)} 边（${esc(out.graph.representation)}）</div>` : ""}
         </div>
         <div class="v2-cols">
           <div class="card pad"><h3>有效 Memory · Valid</h3>
-            <div class="v2-ids">${(st.valid_ids || []).length ? st.valid_ids.map((id) => `<span class="mono chip">${esc(id)}</span>`).join("") : `<span class="muted">—</span>`}</div>
+            <div class="v2-ids">${(st.valid_ids || []).length ? st.valid_ids.map((id) => `<span class="mono chip">${esc(id)}</span>`).join("") : `<span class="muted">not_available</span>`}</div>
             <h3 style="margin-top:14px">被替代 · Superseded</h3>
-            <div class="v2-ids">${(st.superseded_ids || []).length ? st.superseded_ids.map((id) => `<span class="mono chip">${esc(id)}</span>`).join("") : `<span class="muted">—</span>`}</div>
+            <div class="v2-ids">${(st.superseded_ids || []).length ? st.superseded_ids.map((id) => `<span class="mono chip">${esc(id)}</span>`).join("") : `<span class="muted">not_available</span>`}</div>
             <h3 style="margin-top:14px">冲突 / 未解析 · Conflict / Unresolved</h3>
-            <div class="v2-ids">${(st.conflicts || []).length ? st.conflicts.map((p) => `<span class="mono chip">${esc(p.join(" ↔ "))}</span>`).join("") : `<span class="muted">—</span>`}</div>
+            <div class="v2-ids">${(st.conflicts || []).length ? st.conflicts.map((p) => `<span class="mono chip">${esc(p.join(" ↔ "))}</span>`).join("") : `<span class="muted">not_available</span>`}</div>
             <div class="muted small" style="margin-top:8px">${esc(st.explanation || "")}</div>
           </div>
           <div class="card pad"><h3>候选 · Candidates（${(out.candidates || []).length}）</h3>
