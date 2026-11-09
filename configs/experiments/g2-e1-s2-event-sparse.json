@@ -1,0 +1,115 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "G2-E1-S2-event-sparse",
+  "title": "S2 graph representation: event_sparse x graph retrieval (multi-hop subset)",
+  "design": "full_factorial",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H5"
+  ],
+  "environment": {
+    "llm": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "multi_hop",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category",
+    "categories": [
+      1
+    ],
+    "repeat": 1,
+    "note": "LoCoMo category 1 (multi-hop) only, identical to E1-R3 so the event_sparse cells are paired with the R3 table."
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "offline": true,
+    "note": "Completes the S2 representation screen with event_sparse, which was registered in memlab/store.py but never measured. graph.repr.impl=event_sparse x graph.retrieval.impl in {vector_only, entity_subgraph}.",
+    "derived_rules": [
+      {
+        "when": {
+          "schema.impl": "legacy_flat"
+        },
+        "set": {
+          "temporal.model": "record_time",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Flat schema has no bi-temporal fields."
+      }
+    ]
+  },
+  "factors": [
+    {
+      "id": "graph.repr.impl",
+      "axis": "graph.repr",
+      "levels": [
+        "event_sparse"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "p95_latency_ms",
+        "graph_nodes",
+        "graph_edges"
+      ]
+    },
+    {
+      "id": "graph.retrieval.impl",
+      "axis": "graph.retrieval",
+      "levels": [
+        "vector_only",
+        "entity_subgraph"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "p95_latency_ms",
+        "graph_nodes",
+        "graph_edges"
+      ]
+    }
+  ],
+  "metrics": [
+    "evidence_recall",
+    "ndcg",
+    "multi_hop_recall",
+    "p50_latency_ms",
+    "p95_latency_ms",
+    "graph_nodes",
+    "graph_edges",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "subgroups": [
+      "category",
+      "multi_hop"
+    ]
+  },
+  "budget": {
+    "max_configs": 2,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/graph-completion"
+  }
+}

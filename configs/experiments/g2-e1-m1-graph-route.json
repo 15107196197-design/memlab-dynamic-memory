@@ -1,0 +1,126 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "G2-E1-M1-graph-route",
+  "title": "M1 graph route arm: graph on/off x RRF/weighted RRF on the multi-hop subset",
+  "design": "full_factorial",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H5",
+    "H6"
+  ],
+  "environment": {
+    "llm": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "multi_hop",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category",
+    "categories": [
+      1
+    ],
+    "repeat": 1
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "offline": true,
+    "note": "The requested retrieval.channels=[dense,bm25] vs [dense,bm25,graph_khop] arm cannot be executed as written: RuleRouterPlanner builds its route from query intent and never reads retrieval.channels (config only validates the list). Adding graph is therefore expressed with the wired switch graph.retrieval.impl=vector_only/entity_subgraph, which is exactly the route difference the question asks about. fused channels: bm25 + dense when graph is off, bm25 + graph_khop when graph is on.",
+    "route_arm": {
+      "requested_axis": "retrieval.channels",
+      "executed_axis": "graph.retrieval.impl",
+      "reason": "retrieval.channels is not consumed by any planner; see GRAPH-EXPERIMENTS.md deviation note."
+    },
+    "derived_rules": [
+      {
+        "when": {
+          "schema.impl": "legacy_flat"
+        },
+        "set": {
+          "temporal.model": "record_time",
+          "temporal.params.conflict_policy": "keep_both",
+          "logic.state_resolver": "query_llm"
+        },
+        "reason": "Flat schema has no bi-temporal fields."
+      },
+      {
+        "when": {
+          "fusion.impl": "weighted_rrf"
+        },
+        "set": {
+          "fusion.params.weights": {
+            "bm25": 0.35,
+            "dense": 0.45,
+            "graph_khop": 0.2,
+            "temporal": 0.3
+          }
+        },
+        "reason": "Weighted RRF needs explicit channel weights; reference base_weights has a stale 'graph' key and is dropped when the impl changes."
+      }
+    ]
+  },
+  "factors": [
+    {
+      "id": "graph.retrieval.impl",
+      "axis": "graph.retrieval",
+      "levels": [
+        "vector_only",
+        "entity_subgraph"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "unique_hits"
+      ]
+    },
+    {
+      "id": "fusion.impl",
+      "axis": "fusion",
+      "levels": [
+        "rrf",
+        "weighted_rrf"
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "context_precision"
+      ]
+    }
+  ],
+  "metrics": [
+    "evidence_recall",
+    "ndcg",
+    "answer_f1",
+    "context_precision",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "interaction": "difference_of_differences"
+  },
+  "budget": {
+    "max_configs": 4,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/graph-completion"
+  }
+}

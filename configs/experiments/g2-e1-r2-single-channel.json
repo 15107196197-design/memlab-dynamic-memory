@@ -1,0 +1,100 @@
+{
+  "schema": "memlab/experiment@1",
+  "id": "G2-E1-R2-single-channel",
+  "title": "R2 single-channel recall and unique hits on the multi-hop subset",
+  "design": "full_factorial",
+  "reference_config": "../../configs/reference-r0.json",
+  "hypotheses": [
+    "H5"
+  ],
+  "environment": {
+    "llm": "qwen3.8:27b-q4_K_M",
+    "embedding": "bge-m3",
+    "data_scale": "S2",
+    "scene": "personal_assistant",
+    "context_budget": 32768,
+    "query_mix": "multi_hop",
+    "seed": 13
+  },
+  "dataset": {
+    "adapter": "locomo",
+    "split": "development",
+    "samples": [
+      "conv-26",
+      "conv-30",
+      "conv-43",
+      "conv-44"
+    ],
+    "question_limit": 60,
+    "stratify": "category",
+    "categories": [
+      1
+    ],
+    "repeat": 1
+  },
+  "protocol": {
+    "paired": true,
+    "same_questions_across_configs": true,
+    "fixed_candidate_budget": 15,
+    "offline": true,
+    "channel_harness": true,
+    "note": "retrieval.channels is validated but not consumed by RuleRouterPlanner, so the four channel levels are executed by a direct single-channel harness (eval/graph_completion_analyze.py) using the same plan config, store and 61 questions. It calls the registered retrieval.channel implementation once per question; fusion is bypassed by design. Not comparable to the fused cells.",
+    "derived_rules": [
+      {
+        "when": {},
+        "set": {
+          "graph.retrieval.impl": "entity_subgraph"
+        },
+        "reason": "Single-channel graph route uses the canonical k-hop implementation rather than the R0 dual_channel approximation."
+      }
+    ]
+  },
+  "factors": [
+    {
+      "id": "retrieval.channels",
+      "axis": "retrieval.channels",
+      "levels": [
+        [
+          "bm25"
+        ],
+        [
+          "dense"
+        ],
+        [
+          "graph_khop"
+        ],
+        [
+          "temporal"
+        ]
+      ],
+      "metrics": [
+        "evidence_recall",
+        "ndcg",
+        "unique_hits"
+      ]
+    }
+  ],
+  "metrics": [
+    "evidence_recall",
+    "ndcg",
+    "context_precision",
+    "candidates",
+    "p95_latency_ms",
+    "error_rate"
+  ],
+  "analysis": {
+    "unit": "question",
+    "paired": true,
+    "cluster_by": "conversation",
+    "unique_hits": "gold turn found by exactly one channel"
+  },
+  "budget": {
+    "max_configs": 4,
+    "max_questions_per_config": 60,
+    "max_gpu_hours": 0,
+    "max_api_usd": 0
+  },
+  "output": {
+    "runs_dir": "runs/graph-completion"
+  }
+}
