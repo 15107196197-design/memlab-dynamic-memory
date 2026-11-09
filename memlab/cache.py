@@ -18,7 +18,9 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 import tempfile
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -33,10 +35,42 @@ class CacheError(RuntimeError):
     """The cache entry exists but cannot be read as an artifact."""
 
 
+@lru_cache(maxsize=8)
+def _code_version(root: str) -> str:
+    """Short git commit plus ``-dirty`` when tracked files differ.
+
+    A cache key without a code version can return an artifact produced by an older
+    implementation with the same ``impl`` name and parameters.  That is a cached
+    lie, not a speedup.
+    """
+    try:
+        commit = subprocess.run(
+            ["git", "-C", root, "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=10,
+        )
+        revision = commit.stdout.strip()
+        if commit.returncode != 0 or not revision:
+            return "unknown"
+        status = subprocess.run(
+            ["git", "-C", root, "status", "--porcelain", "--untracked-files=no"],
+            capture_output=True, text=True, timeout=10,
+        )
+        dirty = bool(status.stdout.strip()) if status.returncode == 0 else False
+        return revision + ("-dirty" if dirty else "")
+    except (OSError, subprocess.SubprocessError):
+        return "unknown"
+
+
+def code_version(root: str | Path | None = None) -> str:
+    """Code identity for cache keys; ``unknown`` outside a git checkout."""
+    return _code_version(str(Path(root or lab_config.ROOT).resolve()))
+
+
 def make_key(stage: str, payload: Any, *, impl: str | None = None,
              params: Mapping[str, Any] | None = None, prompt_hash: str | None = None,
              model_fingerprint: str | None = None,
-             schema_version: str | None = None) -> str:
+             schema_version: str | None = None,
+             code_version: str | None = None) -> str:
     """Deterministic cache key for one stage artifact."""
     if not isinstance(stage, str) or not stage.strip():
         raise ValueError("cache stage must be a non-empty string")
@@ -48,14 +82,17 @@ def make_key(stage: str, payload: Any, *, impl: str | None = None,
         "prompt_hash": prompt_hash,
         "model_fingerprint": model_fingerprint,
         "schema_version": schema_version,
+        "code_version": code_version,
     })
 
 
 class ArtifactCache:
     """A filesystem cache keyed by :func:`make_key`."""
 
-    def __init__(self, root: str | Path | None = None, *, log: Callable[[dict[str, Any]], None] | None = None):
+    def __init__(self, root: str | Path | None = None, *, code_version: str | None = None,
+                 log: Callable[[dict[str, Any]], None] | None = None):
         self.root = Path(root) if root is not None else DEFAULT_ROOT
+        self.code_version = code_version if code_version is not None else _code_version(str(lab_config.ROOT.resolve()))
         self.hits = 0
         self.misses = 0
         self._log = log
@@ -63,6 +100,7 @@ class ArtifactCache:
     # ---- keys ---------------------------------------------------------
     def key(self, stage: str, payload: Any, **fields: Any) -> str:
         """``make_key`` bound to this cache (same signature minus ``stage``/``payload``)."""
+        fields.setdefault("code_version", self.code_version)
         return make_key(stage, payload, **fields)
 
     def path_for(self, key: str) -> Path:

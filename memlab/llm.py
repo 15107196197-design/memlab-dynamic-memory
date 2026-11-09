@@ -152,7 +152,10 @@ class LLMClient:
         error: str | None = None
         try:
             with _recording_post(usage):
-                text = legacy_llm.generate(prompt, json_mode=json_mode, model=self.model, max_tokens=max_tokens)
+                text = legacy_llm.generate(
+                    prompt, json_mode=json_mode, model=self.model, max_tokens=max_tokens,
+                    temperature=self.temperature, num_ctx=self.context, options=self.options,
+                )
             return text
         except Exception as exc:
             error = f"{type(exc).__name__}: {exc}"

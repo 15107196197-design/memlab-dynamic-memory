@@ -420,3 +420,32 @@ def to_legacy(unit: MemoryUnit, relations: Iterable[Relation] = ()) -> dict[str,
                           "reason": relation.provenance.get("reason", "")})
     record["relations"] = links
     return record
+
+
+def validity_known(unit: MemoryUnit) -> bool:
+    """Whether the unit's validity endpoint is actually known.
+
+    A HISTORICAL fact with no recorded invalidating relation has ``end=None`` in
+    its interval, which :meth:`Interval.contains` would read as "open-ended".
+    That is not evidence that the fact is still true; it is missing evidence.
+    Consumers doing as-of filtering must check this helper instead of treating
+    ``end is None`` as "valid forever".
+    """
+    if unit.kind != "fact":
+        return True
+    validity = unit.provenance.get("validity")
+    if not isinstance(validity, Mapping):
+        return unit.valid_interval is not None
+    if validity.get("endpoint") == "unknown" and unit.structured.get("state") == "HISTORICAL":
+        return False
+    return True
+
+
+def is_valid_at(unit: MemoryUnit, moment: datetime) -> bool | None:
+    """Three-valued as-of test: True, False, or None when validity is unknown."""
+    if not validity_known(unit):
+        return None
+    interval = unit.valid_interval
+    if interval is None:
+        return True
+    return interval.contains(moment)
