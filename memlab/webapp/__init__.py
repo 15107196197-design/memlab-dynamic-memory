@@ -276,6 +276,7 @@ def _detail(sample_id: str, memory_id: str) -> dict[str, Any]:
         "summary": _unit_summary(unit),
         "source_turns": source_turns,
         "relations": relations,
+        "why_invalid": "后续会话（关系未接入）" if _unit_summary(unit)["state"] == "HISTORICAL" else None,
     }
 
 
@@ -424,6 +425,13 @@ def _run_module(sample_id: str, question: str, cfg: lab_config.RunConfig,
         },
         "candidates": [_unit_summary(unit) for unit in units],
         "candidate_details": [model.unit_to_dict(unit) for unit in units],
+        "citation_details": [
+            {"id": cid, "turn": (store_unit.evidence[0].turn_id if store_unit.evidence else None),
+             "text": store_unit.text, "entity": (store_unit.structured or {}).get("entity") or (store_unit.structured or {}).get("speaker") or ""}
+            for cid in result.answer.citations
+            for store_unit in [({u.memory_id: u for u in store.units}).get(cid)]
+            if store_unit is not None
+        ],
         "relations": relations,
         "merge": result.merge.as_dict(),
         "trace": result.trace,
@@ -1086,39 +1094,64 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
 
     if route == "/memories":
         sample_id = str(_one(args, "sample", ""))
-        sample = _sample(sample_id)
+        _sample(sample_id)
         view = _view(sample_id)
         kind = str(_one(args, "kind", "") or "")
+        type_filter = str(_one(args, "type", "") or "")
         state = str(_one(args, "state", "") or "")
+        entity_filter = str(_one(args, "entity", "") or "")
         query = str(_one(args, "q", "") or "").strip().lower()
         page = max(1, int(_one(args, "page", 1) or 1))
-        size = min(100, max(1, int(_one(args, "page_size", 50) or 50)))
+        size = min(100, max(1, int(_one(args, "page_size", 40) or 40)))
         units = []
-        counts = {"turn": 0, "fact": 0, "event": 0}
+        counts = {"turn": 0, "fact": 0, "fact_only": 0, "event": 0}
+        status_counts = Counter()
+        entity_counts = Counter()
         for unit in view.units:
             summary = _unit_summary(unit)
             if summary["kind"] == "turn":
                 counts["turn"] += 1
+                continue
+            counts["fact"] += 1
+            status_counts[summary["state"] or "UNRESOLVED"] += 1
+            if summary["entity"]:
+                entity_counts[summary["entity"]] += 1
+            if summary["event"]:
+                counts["event"] += 1
             else:
-                counts["fact"] += 1
-                if summary["event"]:
-                    counts["event"] += 1
-            if kind == "event":
-                if not (unit.kind == "fact" and summary["event"]):
+                counts["fact_only"] += 1
+            wanted = type_filter or kind
+            if wanted == "event":
+                if not summary["event"]:
                     continue
-            elif kind and unit.kind != kind:
+            elif wanted in ("fact", "事实"):
+                if summary["event"]:
+                    continue
+            elif wanted in ("turn",):
+                continue
+            elif wanted in ("all", "全部", ""):
+                pass
+            elif wanted:
                 continue
             if state and summary["state"].upper() != state.upper():
                 continue
-            haystack = f"{unit.memory_id} {unit.text} {summary['entity']} {unit.structured}".lower()
+            if entity_filter and summary["entity"] != entity_filter:
+                continue
+            haystack = f"{unit.text} {summary['entity']} {summary['attribute']} {summary['value']} {summary['event']}".lower()
             if query and query not in haystack:
                 continue
             units.append(summary)
         start = (page - 1) * size
+        entities = [{"name": name, "count": count} for name, count in entity_counts.most_common(20)]
         return {
             "sample": sample_id, "split": legacy_config.split_of(sample_id),
             "total": len(units), "page": page, "page_size": size,
             "counts": counts,
+            "facets": {
+                "status": {key: status_counts.get(key, 0) for key in ("ACTIVE", "HISTORICAL", "CONFLICT", "UNRESOLVED")},
+                "kind": {"fact": counts["fact"], "event": counts["event"], "fact_only": counts["fact_only"]},
+                "entities": entities,
+            },
             "memories": units[start:start + size],
         }
 
