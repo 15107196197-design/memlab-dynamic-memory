@@ -105,3 +105,9 @@
 .plan-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 10px 0 12px; }
 .plan-filters .field { width: auto; min-width: 120px; font-size: 12px; padding: 7px 9px; }
 .plan-filters input.field { flex: 1; min-width: 200px; }
+.prov-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 10px; }
+.prov-col { border: 1px solid var(--line-2); border-radius: 8px; padding: 10px 12px; background: #fcfcfc; }
+.prov-col ul { padding-left: 16px; margin: 6px 0 0; }
+.prov-col li { margin-bottom: 8px; }
+.prov-col li b { font-size: 13px; }
+@media (max-width: 820px) { .prov-grid { grid-template-columns: 1fr; } }

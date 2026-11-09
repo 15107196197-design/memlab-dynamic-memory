@@ -1096,8 +1096,53 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
                 "hardware": HARDWARE, **data}
 
     if route == "/system":
+        reports = _report_list()["experiments"]
         return {
             "commit": lab_manifest.git_commit(),
+            "provenance": {
+                "course": {
+                    "label": "课程/搜集数据（不是本项目生成）",
+                    "items": [
+                        {"name": "LoCoMo 10 段对话 + QA/evidence", "path": "data/locomo10.json",
+                         "origin": "课程提供 / LoCoMo 数据集"},
+                    ],
+                },
+                "inherited": {
+                    "label": "上一版继承（ff6c7a1 之前已存在）",
+                    "items": [
+                        {"name": "缓存 facts", "path": "data/facts/*.json",
+                         "origin": "上一版 qwen3.8:27b 抽取产物"},
+                        {"name": "缓存 states/relations", "path": "data/states/*.json",
+                         "origin": "上一版状态链产物"},
+                        {"name": "27B 评测归档", "path": "eval/results.json",
+                         "origin": "上一版 Full/Vector/Hybrid/Dynamic 结果"},
+                        {"name": "状态标注", "path": "eval/state_benchmark.json",
+                         "origin": "上一版自建参考集（非课程官方标注）"},
+                        {"name": "旧 Web/legacy pipeline", "path": "memwb/, web/, /api/*",
+                         "origin": "上一版代码与页面"},
+                    ],
+                },
+                "this_project": {
+                    "label": "本项目新增",
+                    "items": [
+                        {"name": "memlab v2 + Web /api/v2", "path": "memlab/, server.py, web/v2.js",
+                         "origin": "本项目实现"},
+                        {"name": "S6 E1 离线筛选", "path": "runs/s6/e1.sqlite",
+                         "origin": "本项目 36 runs offline（4 dev，80题×2 seeds）"},
+                        {"name": "W3 test 离线最终评测", "path": "eval/archive/final-w3.json",
+                         "origin": "本项目 B0/R0，test 2 段，80题/配置，2 seeds"},
+                        {"name": "Web 实验报告", "path": "reports/experiments/*.json",
+                         "origin": "本项目 Web 运行/报告；当前含 final-w3"},
+                        {"name": "实验计划矩阵", "path": "configs/experiment-catalog.json",
+                         "origin": "本项目按 04 整理的 24 项计划/状态"},
+                    ],
+                },
+                "notes": [
+                    "v2 记忆/图谱的内容仍来自继承的 facts/states；本项目新增的是映射、构图、检索、运行与展示。",
+                    "本项目没有重新跑 27B 抽取；final-w3 的 F1/Recall 是新跑的 offline E2E，不是新 LLM 抽取。",
+                    "Web 评测页上方的 Full/Vector/Hybrid/Dynamic 表是继承归档；下方 Web 报告才是本项目运行。",
+                ],
+            },
             "dataset": {
                 "file": str(legacy_config.DATA_FILE),
                 "hash": lab_manifest.dataset_hash(),
@@ -1110,7 +1155,7 @@ def get(path: str, args: dict[str, Any] | None = None) -> dict[str, Any]:
                 "offline_available": True,
                 "ollama_url": legacy_config.ollama_url(),
             },
-            "web": {"version": "w1", "api": "/api/v2", "legacy_api": "/api"},
+            "web": {"version": "w1", "api": "/api/v2", "legacy_api": "/api", "reports": reports},
             "hardware": HARDWARE,
             "gaps": [
                 "本地 7B/27B/72B 规模实验：硬件受限（8GB 内存/无独显），设计保留但当前不可执行；用 API 档位替代。",

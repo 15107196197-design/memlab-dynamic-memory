@@ -53,7 +53,7 @@
     root.innerHTML = `${header("MEMORY EXPLORER · 记忆库", "记忆库", "结构化 Memory v2、原始证据与关系；课程 4 段开发 + 2 段测试，另有扩展集。")}
       <div class="row" style="margin:18px 0 8px">${courseChips()}</div>
       <div class="note">当前：<b>${esc(app.sampleId)}</b> · ${esc(splitLabel(s))} · ${esc((s.speakers || []).join(" 与 "))}
-        <span class="muted">（顶部下拉也可切换）</span></div>
+        <span class="muted">（顶部下拉也可切换）</span><br><span class="muted small">内容来源：继承的 data/facts + data/states（qwen3.8:27b 旧抽取）；v2 映射/证据/关系展示为本项目新增。</span></div>
       <div class="toolbar">
         <input id="v2-q" class="field" placeholder="搜索 content / entity / id…">
         <select id="v2-kind" class="field"><option value="fact" selected>结构化事实 Fact</option><option value="event">事件 Event</option><option value="turn">对话轮次 Turn</option><option value="">全部类型 All</option></select>
@@ -249,7 +249,7 @@
     const list = await presets();
     const options = list.filter((p) => !p.error).map((p) => `<option value="${esc(p.name)}" ${p.name === "B0" ? "selected" : ""}>${esc(p.name)} · ${esc(p.description || "")}</option>`).join("");
     root.innerHTML = `${header("ASK & STATE · 提问与状态", "提问与状态", "从长期历史检索 Memory，判断 RETAIN / UPDATE / SUPERSEDE / CONFLICT，再给出当前有效状态与回答。")}
-      <div class="note">当前：<b>${esc(app.sampleId)}</b> · ${esc(splitLabel(v2sample()))}。offline 为抽取式演示；online 需要 Ollama/API。</div>
+      <div class="note">当前：<b>${esc(app.sampleId)}</b> · ${esc(splitLabel(v2sample()))}。offline 为抽取式演示；online 需要 Ollama/API。<br><span class="muted small">Memory 内容来自继承 facts/states；本次检索/状态/回答是新的 E2E 运行，不是新的 27B 抽取。</span></div>
       <div class="card pad">
         <div class="toolbar">
           <select id="v2-preset" class="field">${options}</select>
@@ -675,7 +675,7 @@
     const rrows = Object.entries(retrieval.summary || {}).filter(([k]) => k !== "dynamic_candidates").map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v["@15"] ?? "—")}</td></tr>`).join("");
     root.innerHTML = `${header("EVALUATION · 评测对照", "评测对照", "课程要求的 F1 / Recall@K / 状态准确率，以及 Full Text / Vector RAG 对照。归档结果来自 eval/results.json，明确标注模型与 split。")}
       ${hardwareBanner(data.hardware)}
-      <div class="note">来源：<span class="mono">${esc(data.source)}</span> · 模型 ${esc(data.answer_model || "—")} / ${esc(data.embedding_model || "—")} · 测试对话 ${esc((data.split?.test || []).join(", "))} · 归档时间 ${esc(data.generated_at || "—")}</div>
+      <div class="note"><b>继承上一版的归档结果</b>（不是本项目新跑）：<span class="mono">${esc(data.source)}</span> · 模型 ${esc(data.answer_model || "—")} / ${esc(data.embedding_model || "—")} · 测试对话 ${esc((data.split?.test || []).join(", "))} · 归档时间 ${esc(data.generated_at || "—")}。<br><span class="muted small">本项目自己的 test 离线结果在下方 Web 实验报告 final-w3；两表不能混成一个结论。</span></div>
       <div class="v2-cols">
         <div class="card pad"><h3>QA（test）</h3><table class="v2-table"><thead><tr><th>method</th><th>F1</th><th>evidence recall</th><th>sec</th><th>state acc</th></tr></thead><tbody>${rows || `<tr><td colspan="5" class="muted">—</td></tr>`}</tbody></table>
           <p class="muted small">这是归档的 27B 结果；当前 W2 的 offline 单题不写入此表。</p></div>
@@ -696,6 +696,13 @@
       <div class="v2-cols">
         <div class="card pad"><h3>数据</h3><pre class="v2-pre">${esc(JSON.stringify(data.dataset, null, 2))}</pre></div>
         <div class="card pad"><h3>模型</h3><pre class="v2-pre">${esc(JSON.stringify(data.model, null, 2))}</pre></div>
+      </div>
+      <div class="card pad" style="margin-top:16px"><h3>数据来源与归属 <span class="muted small">Provenance</span></h3>
+        <div class="prov-grid">${["course", "inherited", "this_project"].map((key) => {
+          const block = data.provenance?.[key] || {};
+          return `<div class="prov-col"><b>${esc(block.label || key)}</b><ul>${(block.items || []).map((x) => `<li><b>${esc(x.name)}</b><div class="mono small">${esc(x.path)}</div><div class="muted small">${esc(x.origin)}</div></li>`).join("")}</ul></div>`;
+        }).join("")}</div>
+        <ul class="small">${(data.provenance?.notes || []).map((x) => `<li>${esc(x)}</li>`).join("")}</ul>
       </div>
       <div class="card pad" style="margin-top:16px"><h3>已知边界</h3><ul>${data.gaps.map((g) => `<li>${esc(g)}</li>`).join("")}</ul>
         <div class="row"><button id="v2-download-all" class="btn primary">下载 6 段 v2 JSON</button><a class="btn" href="#/memories">去记忆库</a></div>

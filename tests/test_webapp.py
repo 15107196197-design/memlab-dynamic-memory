@@ -140,6 +140,7 @@ class WebAppTests(unittest.TestCase):
         self.assertEqual(report["conclusion"]["status"], "inconclusive")
         self.assertTrue(report["web"]["published"])
         self.assertEqual(webapp.get("/api/v2/experiments/w1-test/report")["experiment_id"], "w1-test")
+        (Path(__file__).resolve().parents[1] / "reports" / "experiments" / "w1-test.json").unlink(missing_ok=True)
 
     def test_batch_run_reports_f1_and_recall(self):
         out = webapp.post("/api/v2/runs", {
@@ -176,6 +177,13 @@ class WebAppTests(unittest.TestCase):
         self.assertIn("full", data["qa"]["test"]["summary"])
         self.assertIn("vector", data["qa"]["test"]["summary"])
         self.assertIn("test", data["split"])
+
+    def test_system_exposes_provenance(self):
+        data = webapp.get("/api/v2/system")
+        self.assertIn("course", data["provenance"])
+        self.assertIn("inherited", data["provenance"])
+        self.assertIn("this_project", data["provenance"])
+        self.assertTrue(any("final-w3" in item["path"] for item in data["provenance"]["this_project"]["items"]))
 
     def test_static_shell_has_v2_navigation(self):
         html = (Path(__file__).resolve().parents[1] / "web" / "index.html").read_text(encoding="utf-8")
